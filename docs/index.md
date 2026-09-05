@@ -18,7 +18,9 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `EUROHPC-PLAN-2026-08-07.md` — eligibility, two-stage access, trainability checklist, sizing.
 - `EXECUTION-2026-08-07.md` — the N1 execution list (E0–E7) with the test → EuroHPC gate.
 - `EXTRACTION-K3-2026-08-08.md` — knowledge harvested from the two K3 repositories, with per-item legal status (zero code copied).
+- `SEQUENCE.md` — **the stage-by-stage synthesis**: everything that ships at each step/wave, one page, status-stamped (synthesizes with pointers, never overrides).
 - `EXTRACTION-LANDSCAPE-2026-08-08.md` — the August-2026 landscape pass: 15 repos, licenses verified, ideas mapped, legal PASS.
+- `concepts/README.md` — concepts index + the deep-dive schedule (a region earns its dive when its wave opens).
 - `concepts/brain-atlas.md` — the systematic brain → cortex transposition atlas (mapped / candidate / deliberately not transposed). `concepts/hippocampus.md` — the memory-organ deep dive.
 - `benchmarks/hm-protocol.md` — the H.M. episodic/semantic dissociation diagnostic, spec v1 (thresholds frozen before any run).
 - `glossary.md` — coined terms. `roadmap.md` — ordered steps with gates.
