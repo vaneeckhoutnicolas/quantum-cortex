@@ -1,0 +1,12 @@
+{
+  "kind": "control",
+  "notes": "N1 control run - first real-data execution of the scaffold",
+  "provider": "kaggle",
+  "n_layer": 8, "n_head": 8, "n_embd": 512, "block_size": 1024,
+  "data_mode": "bin", "bin_path": "data/fineweb_edu_bytes.bin",
+  "dataset_id": "fineweb-edu", "data_slice": "sample-10BT, first 600,000,000 utf-8 bytes, byte-level",
+  "val_fraction": 0.01,
+  "max_tokens": 500000000, "batch_size": 16, "lr": 0.0006, "warmup_steps": 400,
+  "eval_every": 500, "eval_batches": 16, "ckpt_every": 1000,
+  "seed": 1337, "out_dir": "runs/kaggle_t4"
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "control",
+  "notes": "CPU smoke test only (ADR-002: CPU never pretrains)",
+  "provider": "other",
+  "n_layer": 2, "n_head": 2, "n_embd": 64, "block_size": 128,
+  "data_mode": "synthetic", "dataset_id": "synthetic-v0",
+  "data_slice": "seeded 4096-byte pattern, 5% noise", "val_fraction": 0.02,
+  "max_tokens": 200000, "batch_size": 8, "lr": 0.001, "warmup_steps": 20,
+  "eval_every": 50, "eval_batches": 4, "ckpt_every": 100,
+  "seed": 1337, "out_dir": "runs/smoke"
+}

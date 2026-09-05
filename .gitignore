@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Training artefacts are never committed - the ledger record is the only trace of a run (ADR-001).
+# metrics/runs.jsonl and metrics/LATEST.md ARE committed (one commit per run).
+runs/
+data/
+*.pt
+*.bin
+
+# Notebook and container noise
+.ipynb_checkpoints/
+*.sif
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

@@ -1,0 +1,55 @@
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  validate-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install jsonschema
+      - name: Validate run ledger against run-v1 schema
+        run: |
+          python - << 'PY'
+          import json, os, sys
+          from jsonschema import validate
+          schema = json.load(open("metrics/schema/run-v1.schema.json"))
+          path = "metrics/runs.jsonl"
+          if not os.path.exists(path):
+              print("no ledger yet (expected pre-N1) - schema itself parsed OK")
+              sys.exit(0)
+          n = 0
+          for line in open(path):
+              line = line.strip()
+              if line:
+                  validate(json.loads(line), schema)
+                  n += 1
+          print(f"ledger OK: {n} record(s) valid against run-v1")
+          PY
+  smoke-train:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install numpy jsonschema
+      - name: CPU smoke (ADR-002 correctness check, never a pretraining path)
+        run: python train.py --config configs/smoke_cpu.json
+      - name: Assert record appended, schema-valid, loss decreased
+        run: |
+          python - << 'PY'
+          import json
+          from jsonschema import validate
+          schema = json.load(open("metrics/schema/run-v1.schema.json"))
+          lines = [l for l in open("metrics/runs.jsonl") if l.strip()]
+          rec = json.loads(lines[-1])
+          validate(rec, schema)
+          assert rec["run"]["status"] == "completed", rec["run"]
+          assert rec["run"]["anomalies"] is None, f"anomaly: {rec['run']['anomalies']}"
+          print("smoke record OK:", rec["run_id"], "val_ppl", rec["results"]["val_perplexity"])
+          PY

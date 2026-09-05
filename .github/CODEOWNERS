@@ -1,0 +1,25 @@
+# Code owners for quantum-cortex.
+#
+# A pull request that touches any path below requires review and approval from
+# the listed owner before it can be merged — once branch protection on `main`
+# enables "Require review from Code Owners" (Settings -> Branches -> branch
+# protection rule for `main`: require a pull request, at least 1 approval,
+# require review from Code Owners). Without that setting this file only
+# requests review; it does not block a merge.
+
+# Licence and legal files.
+/LICENSE                  @vaneeckhoutnicolas
+/NOTICE                   @vaneeckhoutnicolas
+/DISCLAIMER.md            @vaneeckhoutnicolas
+
+# Security policy and authorship.
+/SECURITY.md              @vaneeckhoutnicolas
+/AUTHORS.md               @vaneeckhoutnicolas
+
+# Community health.
+/CONTRIBUTING.md          @vaneeckhoutnicolas
+/CODE_OF_CONDUCT.md       @vaneeckhoutnicolas
+
+# The measurement contract and the decision series: changing them is a decision.
+/metrics/schema/          @vaneeckhoutnicolas
+/docs/adr/                @vaneeckhoutnicolas

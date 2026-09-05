@@ -1,0 +1,15 @@
+# quantum-cortex training container (EuroHPC plan section 4).
+# ROCm systems (LUMI-class): swap the base image for a rocm/pytorch tag and
+# rebuild - no code change required (ADR-002: pure-framework ops only).
+Bootstrap: docker
+From: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+
+%post
+    pip install --no-cache-dir numpy jsonschema datasets
+
+%environment
+    export HF_HUB_OFFLINE=1
+    export PYTHONUNBUFFERED=1
+
+%runscript
+    exec python train.py "$@"
