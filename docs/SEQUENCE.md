@@ -4,6 +4,15 @@
 
 **Status stamp:** 2026-09-05 — E1 done (both repos live, hub decision 019 recorded), E2 green — **2 successful checks confirmed** on commit `59976a4`: `ci/smoke-train` in 44 s, `ci/validate-ledger` in 9 s. Next action: **E3**.
 
+### The two CI checks (E2), decoded
+
+Both are defined in `.github/workflows/ci.yml` and run on **every push and pull request** — they are the MVP's self-test, catching any future change that breaks training or the ledger discipline before a human even looks.
+
+- **`ci/validate-ledger` (~9 s) — the metrics guardian.** Installs `jsonschema`, parses `metrics/schema/run-v1.schema.json`, then validates **every line** of `metrics/runs.jsonl` against it. Before the first real run (ledger absent) it passes with the explicit notice *"no ledger yet (expected pre-N1)"*. Green = the ledger, or its declared absence, is schema-clean — ADR-001's law ("a run without its valid committed record does not exist") enforced by machine. Red = a malformed or hand-edited record entered the repository.
+- **`ci/smoke-train` (~44 s) — the living proof.** On a plain GitHub CPU runner it installs torch (CPU) + numpy + jsonschema, then executes the **real trainer end to end**: `python train.py --config configs/smoke_cpu.json` — a tiny 2-layer model, 195 steps over ~200k synthetic byte-tokens (the seeded pattern with its deliberately unlearnable 5% noise), CPU-only per ADR-002 (CPU proves *correctness*, never pretraining speed). A second step then asserts: a record was appended, it validates against run-v1, `status: completed`, and `anomalies: null` — the last one encodes *"the loss actually decreased"*, since the trainer flags an anomaly when it did not. Green = the whole chain **trains → learns → emits its record → self-validates** on a machine nobody configured. Red = the scaffold itself is broken. Of the 44 seconds, most is dependency install; the actual training takes ~10–15 s.
+
+In one sentence: `validate-ledger` guards **the truth of the numbers**, `smoke-train` guards **the machine that produces them**.
+
 ## Track 1 — Execution (E-list, from `EXECUTION-2026-08-07.md`)
 
 | Step | What happens | Status |
