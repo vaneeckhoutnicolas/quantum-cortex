@@ -2,14 +2,14 @@
 
 **Purpose.** The build order is normatively scattered across `roadmap.md` (steps and gates), `adr/ADR-003-brain-feature-map.md` (the 26-row map and waves), the `IDEAS-REGISTER` (26 entries), and `FEATURES` (F1–F12). Two months later, reconstructing the micro-sequence from four files is unreasonable. **This document is the synthesis: one page, every stage, everything that ships in it.** Rule: it *synthesizes with pointers, never overrides* — if this page and a normative source disagree, the source wins and this page gets a dated fix. It is regenerated at every gate passage.
 
-**Status stamp:** 2026-09-05 — E1 done (both repos live, hub decision 019 recorded), E2 green (CI: ledger validation + CPU smoke passed on commit `59976a4`). Next action: **E3**.
+**Status stamp:** 2026-09-05 — E1 done (both repos live, hub decision 019 recorded), E2 green — **2 successful checks confirmed** on commit `59976a4`: `ci/smoke-train` in 44 s, `ci/validate-ledger` in 9 s. Next action: **E3**.
 
 ## Track 1 — Execution (E-list, from `EXECUTION-2026-08-07.md`)
 
 | Step | What happens | Status |
 |---|---|---|
 | E1 | Repo born: extract, init, push; hub records decision 019 + reference page | ✅ 2026-09-05 |
-| E2 | CI self-test: `validate-ledger` + `smoke-train` green on every push | ✅ (commit 59976a4) |
+| E2 | CI self-test: `validate-ledger` + `smoke-train` green on every push | ✅ 2/2 (smoke 44 s, ledger 9 s) |
 | E3 | First real run: Kaggle notebook (T4 + Internet, ~2 h, 25.8M control on 500M FineWeb-Edu byte-tokens) | ⬅ next |
 | E4 | Sanity read: `completed`, `anomalies: null`, finite ppl — the run *defines* the baseline | pending |
 | E5 | Commit the record + `--regen-latest` → **N1 gate passes**. Proposed here: repo flips **public** at this step (founder's call) | pending |

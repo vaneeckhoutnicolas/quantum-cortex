@@ -7,15 +7,17 @@
 
 **The rule (no empty scaffolding, ever):** a region earns its deep dive **when its wave opens** — written at the moment the mechanisms get implemented and ablated, so the document carries evidence, not padding. Until then, the atlas entry is the truth.
 
+**Amended 2026-09-05 (founder decision):** every queued cluster now gets its dedicated page **upfront, as living groundwork** — substantive biology→architecture prose with a status banner, updated by dated amendments. The wave still gates **claims and evidence**, never prose. Original rule kept above, as always.
+
 ## Deep-dive queue (trigger → planned document)
 
 | Region cluster | Trigger | Planned dive |
 |---|---|---|
-| Thalamus + colliculi (admission gateway, interrupt shortcut) | N3 / W1b opens | `thalamus.md` |
-| Basal ganglia (selection, dopamine, habit cache) | habit cache lands (W2) | `basal-ganglia.md` |
-| Amygdala + hypothalamus + **pituitary** + pineal + locus coeruleus — the endocrine cluster | RES-9 bus development (W3) | `endocrine-axis.md` |
-| Cerebellum (forward model, timing) | NOW-2 speculative-graft work (W2) | `cerebellum.md` |
-| Insula + ACC (interoception, conflict) | W3 | `interoception.md` |
-| Hemispheres, corpus callosum, connectome profiles | RES-10 (W4) | `connectome.md` |
+| Thalamus + colliculi (admission gateway, interrupt shortcut) | N3 / W1b opens | `thalamus.md` — **page live** |
+| Basal ganglia (selection, dopamine, habit cache) | habit cache lands (W2) | `basal-ganglia.md` — **page live** |
+| Amygdala + hypothalamus + **pituitary** + pineal + locus coeruleus — the endocrine cluster | RES-9 bus development (W3) | `endocrine-axis.md` — **page live** |
+| Cerebellum (forward model, timing) | NOW-2 speculative-graft work (W2) | `cerebellum.md` — **page live** |
+| Insula + ACC (interoception, conflict) | W3 | `interoception.md` — **page live** |
+| Hemispheres, corpus callosum, connectome profiles | RES-10 (W4) | `connectome.md` — **page live** |
 
 Anyone may request an earlier dive by opening an issue with the use case; the promotion rule applies as everywhere — a dive without its wave ships no claims, only groundwork.
