@@ -13,6 +13,17 @@ Both are defined in `.github/workflows/ci.yml` and run on **every push and pull 
 
 In one sentence: `validate-ledger` guards **the truth of the numbers**, `smoke-train` guards **the machine that produces them**.
 
+### What is actually trained, stage by stage
+
+| Stage | Model trained | Data | Weights kept? | Purpose |
+|---|---|---|---|---|
+| CI smoke (every push) | throwaway ~0.13M (2 layers, 64 dim, vocab 256+8 oracle ids) | ~200k **synthetic** byte-tokens (seeded pattern, 5% unlearnable noise) | **No** — weights *and* its run record die with the ephemeral runner; the repo ledger only ever holds committed real runs | prove the factory: data → train → learn → record → validate |
+| E3 / N1 (Kaggle) | **the control**: 25.8M vanilla GPT-2-style (deliberately plain: LayerNorm, GELU, tied embeddings, AdamW) | 500M **real** byte-tokens, FineWeb-Edu | checkpoint downloadable from Kaggle (DVC versioning arrives in W2); its **record** is committed at E5 — the ledger's first inhabitant | define the baseline every idea must beat |
+| N2 → waves | **the cortex, one organ per run**: same size, same tokens, same seeds as the control, plus the feature under test (Hopfield variant, delta-rule variant, oracle curriculum, …) | same declared mix (NOW-7) | per advancement-rule outcome | each organ earns its place *against the control* |
+| post-N5 | the validated **combination**, retrained as one; then the 1–3B scale-up | granted/rented compute | yes — the release candidates | the model people will actually use |
+
+In one sentence: **so far we have only trained the proof that the factory works; E3 trains the reference; the waves train the brain.** "The final model" does not exist yet *by design* — it will be the combination of whatever beats the control on the ledger.
+
 ## Track 1 — Execution (E-list, from `EXECUTION-2026-08-07.md`)
 
 | Step | What happens | Status |
