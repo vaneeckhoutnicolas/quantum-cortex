@@ -2,7 +2,7 @@
 
 **Purpose.** The build order is normatively scattered across `roadmap.md` (steps and gates), `adr/ADR-003-brain-feature-map.md` (the 26-row map and waves), the `IDEAS-REGISTER` (26 entries), and `FEATURES` (F1–F12). Two months later, reconstructing the micro-sequence from four files is unreasonable. **This document is the synthesis: one page, every stage, everything that ships in it.** Rule: it *synthesizes with pointers, never overrides* — if this page and a normative source disagree, the source wins and this page gets a dated fix. It is regenerated at every gate passage.
 
-**Status stamp:** 2026-09-06 — **N1 gate PASSED.** E1–E5 done. Control `be1fa8139f59` committed: val_perplexity **2.601** on 500M FineWeb-Edu byte-tokens (30,517 steps, 3 sessions with budgeted resume). CI green (2 checks). The Pareto frontier (ADR-004 / D16) now has its lower-left corner. Next action: **NOW-7 (data first-class), the mandatory prerequisite before N2.**
+**Status stamp:** 2026-09-06 — **N1 gate PASSED.** E1–E5 done. Control `be1fa8139f59` committed: val_perplexity **2.601** on 500M FineWeb-Edu byte-tokens (30,517 steps, 3 sessions with budgeted resume). CI green (2 checks). The Pareto frontier (ADR-004 / D16) now has its lower-left corner. Next action: **implement ADR-005 Slice 1** (the data composition layer's minimal path + invariant harness) — the mandatory prerequisite before N2.
 
 ### The two CI checks (E2), decoded
 
@@ -53,7 +53,7 @@ Optimisations are **not linear**, so results are never read as a single score. T
 ## Track 2 — Build waves (from ADR-003; features from FEATURES/register)
 
 ### Pre-N2 — mandatory prerequisite
-- **NOW-7 · Data first-class**: the mix becomes declared, config-hashed, ablatable; decontamination policy active. Source leads: OLMo's open mixes; later fed by **RES-12** (legal distillation, teacher mix published).
+- **NOW-7 · Data first-class** (designed: `adr/ADR-005-data-composition-layer.md`): the mix is a **hashed DAG of typed operators** — lazy/streaming, comparable iff same `mix_hash`, five structural invariants tested from the start (incl. `mix([S,S])≡S`), decontamination as a Bloom-filter algebra, weight a pluggable resolver (the RES-14 data-β seam). Engine from-scratch over licensed sources (FineWeb-Edu ODC-By, OLMo per-shard) on credited recipes. Build wide, execute narrow: **Slice 1** (operator interface + DAG + hashing + source/decontaminate/mix + invariant harness + `mix_hash` schema field + N1 retro-migration) is all N2 needs; memoisation, Bloom-at-scale, and the data-β estimator are later slices. Source leads: OLMo; later fed by **RES-12**.
 
 ### N2 = W1 — the C2 core family (memory in the weights)
 - Integrate **two associative variants against the control**: Hopfield/energy (RES-1) **and** gated delta-rule (extraction K1–K2 as the numeric starting shape) — both as *stackable attention-layer citizens* (hub-019 constraint, promoted into the hub decision at this step).
