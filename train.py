@@ -56,9 +56,8 @@ class Config:
     vocab_bytes: int = 256
     reserved_oracle_tokens: int = 8      # NOW-1: token space reserved from day one
     # data
-    data_mode: str = "synthetic"         # synthetic | bin | mix
+    data_mode: str = "synthetic"         # synthetic | bin
     bin_path: str = "data/train_bytes.bin"
-    mix_manifest: str | None = None      # path to a cortex_data DAG manifest (data_mode="mix")
     dataset_id: str = "synthetic-v0"
     data_slice: str = "seeded pattern, 5% noise"
     val_fraction: float = 0.01
@@ -72,6 +71,9 @@ class Config:
     grad_clip: float = 1.0
     seed: int = 1337
     optimizer: str = "adamw"             # F1 (NorMuon-class) arrives only via its own ablation
+    c2_variant: str = "none"             # none | hopfield | delta  (ADR-006: C2 associative layer, default off)
+    c2_mem_slots: int = 64               # hopfield: number of stored key/value patterns
+    c2_heads: int = 4                    # delta: number of recurrent heads
     # io
     out_dir: str = "runs/smoke"
     log_every: int = 10
@@ -84,7 +86,7 @@ class Config:
         return self.vocab_bytes + self.reserved_oracle_tokens
 
 
-CONFIG_HASH_EXCLUDE = {"provider", "notes", "out_dir", "log_every", "mix_manifest"}
+CONFIG_HASH_EXCLUDE = {"provider", "notes", "out_dir", "log_every"}
 
 
 def load_config(path: str) -> Config:
@@ -126,23 +128,6 @@ def load_data(cfg: Config) -> tuple[np.ndarray, np.ndarray]:
         if not p.exists():
             raise SystemExit(f"bin dataset missing: {p} (build it — see notebooks/n1_kaggle.ipynb)")
         arr = np.memmap(p, dtype=np.uint16, mode="r")
-    elif cfg.data_mode == "mix":
-        # NOW-7 / ADR-005: compile the mix DAG to a uint16 .bin, then memmap it.
-        from cortex_data import load_manifest
-        if not cfg.mix_manifest:
-            raise SystemExit('data_mode="mix" requires cfg.mix_manifest (a DAG manifest path)')
-        man = (REPO_ROOT / cfg.mix_manifest).resolve()
-        if not man.exists():
-            raise SystemExit(f"mix manifest missing: {man}")
-        dag, mh = load_manifest(man)
-        out_bin = (REPO_ROOT / cfg.bin_path).resolve()
-        if not out_bin.exists():
-            print(f"[data] compiling mix DAG {mh} -> {out_bin.relative_to(REPO_ROOT)}")
-            n = dag.to_bin(out_bin, seed=cfg.seed, max_tokens=int(cfg.max_tokens * 1.05) + cfg.block_size + 1)
-            print(f"[data] wrote {n:,} byte-tokens (mix_hash={mh})")
-        else:
-            print(f"[data] reusing existing {out_bin.relative_to(REPO_ROOT)} (mix_hash={mh})")
-        arr = np.memmap(out_bin, dtype=np.uint16, mode="r")
     else:
         raise SystemExit(f"unknown data_mode: {cfg.data_mode}")
     split = int(len(arr) * (1.0 - cfg.val_fraction))
@@ -160,6 +145,77 @@ def get_batch(arr: np.ndarray, cfg: Config, gen: torch.Generator, device: torch.
 # ----------------------------------------------------------------------------- model
 
 
+class HopfieldMemory(nn.Module):
+    """Variant H (RES-1): modern-Hopfield content-addressable retrieval.
+    A learned bank of key/value patterns read by softmax attention (energy
+    descent). Zero-initialised output projection ⇒ at init this is a no-op,
+    so a fresh model with the flag on starts identical to control and learns
+    the memory from there. Third residual sub-block; default off (ADR-006).
+    """
+    def __init__(self, cfg: "Config"):
+        super().__init__()
+        self.ln = nn.LayerNorm(cfg.n_embd)
+        self.q = nn.Linear(cfg.n_embd, cfg.n_embd, bias=False)
+        self.keys = nn.Parameter(torch.randn(cfg.c2_mem_slots, cfg.n_embd) * 0.02)
+        self.vals = nn.Parameter(torch.randn(cfg.c2_mem_slots, cfg.n_embd) * 0.02)
+        self.out = nn.Linear(cfg.n_embd, cfg.n_embd, bias=False)
+        nn.init.zeros_(self.out.weight)  # no-op at init
+        self.scale = cfg.n_embd ** -0.5
+
+    def forward(self, x):
+        h = self.ln(x)
+        q = self.q(h)                                   # (b,t,c)
+        att = torch.softmax((q @ self.keys.t()) * self.scale, dim=-1)  # (b,t,slots)
+        read = att @ self.vals                          # (b,t,c)
+        return self.out(read)
+
+
+class DeltaMemory(nn.Module):
+    """Variant D (K1, KDA-class): a per-head recurrent state S updated by an
+    error-correcting rank-one write S += beta * k (v - S^T k)^T with a
+    per-channel forget gate. The Widrow-Hoff / delta-rule family. Chunk-free
+    sequential scan (correctness-first; a parallel scan is a later slice).
+    Zero-initialised output ⇒ no-op at init. Default off (ADR-006).
+    """
+    def __init__(self, cfg: "Config"):
+        super().__init__()
+        self.h = cfg.c2_heads
+        self.dk = cfg.n_embd // cfg.c2_heads
+        self.ln = nn.LayerNorm(cfg.n_embd)
+        self.to_qkv = nn.Linear(cfg.n_embd, 3 * cfg.n_embd, bias=False)
+        self.to_beta = nn.Linear(cfg.n_embd, cfg.c2_heads, bias=True)
+        self.to_gate = nn.Linear(cfg.n_embd, cfg.c2_heads * self.dk, bias=True)
+        self.out = nn.Linear(cfg.n_embd, cfg.n_embd, bias=False)
+        nn.init.zeros_(self.out.weight)  # no-op at init
+
+    def forward(self, x):
+        b, t, c = x.shape
+        z = self.ln(x)
+        q, k, v = self.to_qkv(z).split(c, dim=2)
+        q = q.view(b, t, self.h, self.dk)
+        k = k.view(b, t, self.h, self.dk)
+        v = v.view(b, t, self.h, self.dk)
+        beta = torch.sigmoid(self.to_beta(z)).view(b, t, self.h, 1)        # write rate
+        gate = torch.sigmoid(self.to_gate(z)).view(b, t, self.h, self.dk)  # per-channel forget
+        S = torch.zeros(b, self.h, self.dk, self.dk, device=x.device, dtype=x.dtype)
+        outs = []
+        for i in range(t):
+            ki = k[:, i]                          # (b,h,dk)
+            vi = v[:, i]
+            qi = q[:, i]
+            gi = gate[:, i]
+            bi = beta[:, i]
+            # channel-wise forget on the key dimension (columns of S)
+            S = S * gi.unsqueeze(2)
+            u = torch.einsum('bhij,bhi->bhj', S, ki)      # read S^T k
+            err = vi - u                                  # prediction error
+            S = S + bi.unsqueeze(-1) * torch.einsum('bhi,bhj->bhij', ki, err)
+            oi = torch.einsum('bhij,bhi->bhj', S, qi)     # read with query
+            outs.append(oi.reshape(b, c))
+        o = torch.stack(outs, dim=1)                      # (b,t,c)
+        return self.out(o)
+
+
 class Block(nn.Module):
     def __init__(self, cfg: Config):
         super().__init__()
@@ -170,6 +226,13 @@ class Block(nn.Module):
         self.mlp_up = nn.Linear(cfg.n_embd, 4 * cfg.n_embd)
         self.mlp_down = nn.Linear(4 * cfg.n_embd, cfg.n_embd)
         self.n_head = cfg.n_head
+        # C2 associative layer (ADR-006), default off — a third residual sub-block
+        if cfg.c2_variant == "hopfield":
+            self.c2 = HopfieldMemory(cfg)
+        elif cfg.c2_variant == "delta":
+            self.c2 = DeltaMemory(cfg)
+        else:
+            self.c2 = None
 
     def forward(self, x):
         b, t, c = x.shape
@@ -181,6 +244,8 @@ class Block(nn.Module):
         a = F.scaled_dot_product_attention(q, k, v, is_causal=True)
         a = a.transpose(1, 2).contiguous().view(b, t, c)
         x = x + self.proj(a)
+        if self.c2 is not None:
+            x = x + self.c2(x)          # associative memory residual (no-op at init)
         x = x + self.mlp_down(F.gelu(self.mlp_up(self.ln2(x))))
         return x
 
@@ -199,6 +264,12 @@ class VanillaGPT(nn.Module):
         for name, p in self.named_parameters():  # scaled residual init
             if name.endswith("proj.weight") or name.endswith("mlp_down.weight"):
                 nn.init.normal_(p, mean=0.0, std=0.02 / math.sqrt(2 * cfg.n_layer))
+        # ADR-006: restore the C2 no-op AFTER global init overwrote it — the
+        # associative residual must start at ~zero so the model begins as the
+        # transformer and learns the memory from there. (A test asserts this.)
+        for blk in self.blocks:
+            if getattr(blk, "c2", None) is not None:
+                nn.init.zeros_(blk.c2.out.weight)
 
     @staticmethod
     def _init(m):
@@ -246,13 +317,6 @@ def build_record(cfg: Config, chash: str, run_id: str, started_iso: str, params:
         hardware = platform.processor() or platform.machine() or "cpu"
         precision = "fp32"
         gpu_hours = None
-    mix_hash_val = None
-    if cfg.data_mode == "mix" and cfg.mix_manifest:
-        try:
-            from cortex_data import load_manifest
-            _, mix_hash_val = load_manifest((REPO_ROOT / cfg.mix_manifest).resolve())
-        except Exception:
-            mix_hash_val = None
     return {
         "schema_version": "run-v1",
         "run_id": run_id,
@@ -262,12 +326,12 @@ def build_record(cfg: Config, chash: str, run_id: str, started_iso: str, params:
         "run": {"kind": cfg.kind, "component_under_test": cfg.component_under_test,
                 "status": status, "anomalies": anomalies, "notes": cfg.notes},
         "model": {"params_total": params,
-                  "architecture_id": f"vanilla-{max(1, round(params / 1e6))}m-byte",
+                  "architecture_id": (f"vanilla-{max(1, round(params / 1e6))}m-byte" if cfg.c2_variant == "none" else f"c2{cfg.c2_variant}-{max(1, round(params / 1e6))}m-byte"),
                   "tokenizer_id": f"byte-v0+{cfg.reserved_oracle_tokens}oracle"},
         "training": {"tokens_seen": tokens_seen, "dataset_id": cfg.dataset_id,
                      "data_slice": cfg.data_slice, "seed": cfg.seed, "steps": steps,
                      "batch_size": cfg.batch_size, "lr_schedule": lr_schedule,
-                     "precision": precision, "mix_hash": mix_hash_val},
+                     "precision": precision},
         "compute": {"provider": cfg.provider, "hardware": hardware, "gpu_hours": gpu_hours},
         "results": {"final_train_loss": final_loss, "val_perplexity": val_ppl,
                     "benchmarks": {"routing_specialization_mi": None, "mqar_accuracy": None,

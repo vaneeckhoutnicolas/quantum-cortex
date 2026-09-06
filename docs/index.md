@@ -24,6 +24,6 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `concepts/README.md` — concepts index + the deep-dive schedule (a region earns its dive when its wave opens).
 - `concepts/brain-atlas.md` — the systematic brain → cortex transposition atlas (mapped / candidate / deliberately not transposed). `concepts/hippocampus.md` — the memory-organ deep dive.
 - `adr/ADR-004-evaluation-pareto.md` — the evaluation law (**D16**) and its publication twin (**D17**, open-results, revises D6): a Pareto frontier over declared axes is what we measure *and* what we publish.
-- `adr/ADR-005-data-composition-layer.md` — data first-class (**NOW-7**): the mix as a hashed DAG of typed operators, lazy/streaming, invariant-tested; decontamination as a Bloom-filter algebra; the weight a pluggable resolver (RES-14 seam).
+- `adr/ADR-006-c2-ablation-protocol.md` — the C2 ablation protocol (N2): Hopfield vs delta-rule vs control, MQAR + serial-position, advancement rule frozen before runs.
 - `benchmarks/hm-protocol.md` — the H.M. episodic/semantic dissociation diagnostic, spec v1 (thresholds frozen before any run).
 - `glossary.md` — coined terms. `roadmap.md` — ordered steps with gates.
