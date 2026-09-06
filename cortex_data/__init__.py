@@ -390,3 +390,50 @@ def write_manifest(root: Op, path: str | Path) -> str:
 def mix_hash(root: Op) -> str:
     """The sink hash — two runs are comparable iff equal (ADR-005 D2)."""
     return root.node_hash()
+
+
+# --------------------------------------------------------------------------- #
+# Manifest -> DAG (build an Op tree from a JSON recipe, ADR-005 D2)            #
+# --------------------------------------------------------------------------- #
+def from_manifest(doc: dict) -> "Op":
+    """Build an operator DAG from a mix manifest (the reproducible recipe).
+
+    Schema (minimal, Slice 1):
+      {"op": "source", "path": "...", "dataset_id": "...", "license": "...",
+       "slice": "...", "content_sha": "..."?}
+      {"op": "decontaminate", "input": <node>, "n": 13, "strict": true,
+       "eval_ngrams": [[...], ...]?}
+      {"op": "mix", "inputs": [<node>, ...], "weights": [...], "block": 4096,
+       "total": null?}
+    A bare {"dag": <node>, ...} wrapper is unwrapped.
+    """
+    if "dag" in doc and "op" not in doc:
+        doc = doc["dag"]
+    op = doc["op"]
+    if op == "source":
+        return BinSource(
+            path=doc["path"], dataset_id=doc["dataset_id"],
+            license=doc.get("license", "unspecified"),
+            slice=doc.get("slice", ""), content_sha=doc.get("content_sha"),
+        )
+    if op == "decontaminate":
+        return Decontaminate(
+            from_manifest(doc["input"]),
+            eval_ngrams=[list(g) for g in doc.get("eval_ngrams", [])],
+            n=int(doc.get("n", 13)), strict=bool(doc.get("strict", True)),
+        )
+    if op == "mix":
+        return Mix(
+            [from_manifest(c) for c in doc["inputs"]],
+            list(doc["weights"]),
+            block=int(doc.get("block", 4096)),
+            total=doc.get("total"),
+        )
+    raise ValueError(f"from_manifest: unknown op '{op}'")
+
+
+def load_manifest(path: str | Path) -> tuple["Op", str]:
+    """Load a mix manifest file → (dag, mix_hash)."""
+    doc = json.loads(Path(path).read_text())
+    dag = from_manifest(doc)
+    return dag, dag.node_hash()

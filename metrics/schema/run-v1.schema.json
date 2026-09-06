@@ -4,93 +4,308 @@
   "title": "quantum-cortex training run record, schema v1",
   "description": "One record per training/ablation run, appended to metrics/runs.jsonl. Unknown = null (not measured), never invented, never zero-filled. Breaking changes require run-v2 plus a migration note (ADR-001).",
   "type": "object",
-  "required": ["schema_version", "run_id", "timestamp_utc", "git_commit", "config_hash", "run", "model", "training", "compute", "results"],
+  "required": [
+    "schema_version",
+    "run_id",
+    "timestamp_utc",
+    "git_commit",
+    "config_hash",
+    "run",
+    "model",
+    "training",
+    "compute",
+    "results"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schema_version": { "const": "run-v1" },
-    "run_id": { "type": "string", "description": "Stable unique id, recommended: sha256 of (config_hash + timestamp_utc), first 12 hex chars." },
-    "timestamp_utc": { "type": "string", "format": "date-time" },
-    "git_commit": { "type": "string", "description": "Commit hash of the code state that produced the run." },
-    "config_hash": { "type": "string", "description": "Hash of the full resolved training config (model + data + optimizer + seeds)." },
+    "schema_version": {
+      "const": "run-v1"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Stable unique id, recommended: sha256 of (config_hash + timestamp_utc), first 12 hex chars."
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "git_commit": {
+      "type": "string",
+      "description": "Commit hash of the code state that produced the run."
+    },
+    "config_hash": {
+      "type": "string",
+      "description": "Hash of the full resolved training config (model + data + optimizer + seeds)."
+    },
     "run": {
       "type": "object",
-      "required": ["kind", "component_under_test", "status"],
+      "required": [
+        "kind",
+        "component_under_test",
+        "status"
+      ],
       "additionalProperties": false,
       "properties": {
-        "kind": { "enum": ["control", "ablation", "combo"] },
-        "component_under_test": { "enum": ["C1", "C2", "C3", "C4", null], "description": "null for control and combo runs; combos list components in notes." },
-        "status": { "enum": ["completed", "aborted", "invalid"] },
-        "anomalies": { "type": ["string", "null"], "description": "Free text. Honest data: anything odd is written down, never omitted." },
-        "notes": { "type": ["string", "null"] }
+        "kind": {
+          "enum": [
+            "control",
+            "ablation",
+            "combo"
+          ]
+        },
+        "component_under_test": {
+          "enum": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            null
+          ],
+          "description": "null for control and combo runs; combos list components in notes."
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "aborted",
+            "invalid"
+          ]
+        },
+        "anomalies": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Free text. Honest data: anything odd is written down, never omitted."
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "model": {
       "type": "object",
-      "required": ["params_total", "architecture_id", "tokenizer_id"],
+      "required": [
+        "params_total",
+        "architecture_id",
+        "tokenizer_id"
+      ],
       "additionalProperties": false,
       "properties": {
-        "params_total": { "type": "integer", "minimum": 1 },
-        "architecture_id": { "type": "string", "description": "e.g. vanilla-30m, c2-hopfield-30m." },
-        "tokenizer_id": { "type": "string" }
+        "params_total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "architecture_id": {
+          "type": "string",
+          "description": "e.g. vanilla-30m, c2-hopfield-30m."
+        },
+        "tokenizer_id": {
+          "type": "string"
+        }
       }
     },
     "training": {
       "type": "object",
-      "required": ["tokens_seen", "dataset_id", "data_slice", "seed", "steps", "precision"],
+      "required": [
+        "tokens_seen",
+        "dataset_id",
+        "data_slice",
+        "seed",
+        "steps",
+        "precision"
+      ],
       "additionalProperties": false,
       "properties": {
-        "tokens_seen": { "type": "integer", "minimum": 0 },
-        "dataset_id": { "type": "string", "description": "Open corpus identifier, e.g. fineweb-edu." },
-        "data_slice": { "type": "string", "description": "Exact slice/shard spec for reproducibility." },
-        "seed": { "type": "integer" },
-        "steps": { "type": "integer", "minimum": 0 },
-        "batch_size": { "type": ["integer", "null"] },
-        "lr_schedule": { "type": ["string", "null"] },
-        "precision": { "type": "string", "description": "e.g. bf16, fp16, fp32." }
+        "tokens_seen": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dataset_id": {
+          "type": "string",
+          "description": "Open corpus identifier, e.g. fineweb-edu."
+        },
+        "data_slice": {
+          "type": "string",
+          "description": "Exact slice/shard spec for reproducibility."
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "batch_size": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "lr_schedule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "precision": {
+          "type": "string",
+          "description": "e.g. bf16, fp16, fp32."
+        },
+        "mix_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "cortex_data mix DAG hash (ADR-005). Two runs are comparable iff equal. Null for non-mix data modes."
+        }
       }
     },
     "compute": {
       "type": "object",
-      "required": ["provider", "hardware", "gpu_hours"],
+      "required": [
+        "provider",
+        "hardware",
+        "gpu_hours"
+      ],
       "additionalProperties": false,
       "properties": {
-        "provider": { "enum": ["kaggle", "colab", "local", "eurohpc", "trc", "rented", "other"] },
-        "hardware": { "type": "string", "description": "e.g. 2xT4-16GB." },
-        "gpu_hours": { "type": ["number", "null"], "minimum": 0 }
+        "provider": {
+          "enum": [
+            "kaggle",
+            "colab",
+            "local",
+            "eurohpc",
+            "trc",
+            "rented",
+            "other"
+          ]
+        },
+        "hardware": {
+          "type": "string",
+          "description": "e.g. 2xT4-16GB."
+        },
+        "gpu_hours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
       }
     },
     "results": {
       "type": "object",
-      "required": ["final_train_loss", "val_perplexity", "benchmarks"],
+      "required": [
+        "final_train_loss",
+        "val_perplexity",
+        "benchmarks"
+      ],
       "additionalProperties": false,
       "properties": {
-        "final_train_loss": { "type": ["number", "null"] },
-        "val_perplexity": { "type": ["number", "null"] },
+        "final_train_loss": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "val_perplexity": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
         "benchmarks": {
           "type": "object",
-          "required": ["routing_specialization_mi", "mqar_accuracy", "oracle_shift_recovery", "invariant_compliance_rate", "standard_suite"],
+          "required": [
+            "routing_specialization_mi",
+            "mqar_accuracy",
+            "oracle_shift_recovery",
+            "invariant_compliance_rate",
+            "standard_suite"
+          ],
           "additionalProperties": false,
           "properties": {
-            "routing_specialization_mi": { "type": ["number", "null"], "description": "C1 — mutual information expert/domain." },
-            "mqar_accuracy": { "type": ["number", "null"], "description": "C2 — multi-query associative recall accuracy." },
-            "oracle_shift_recovery": { "type": ["number", "null"], "description": "C3 — recovery quality after mid-sequence context shift." },
-            "invariant_compliance_rate": { "type": ["number", "null"], "description": "C4 — share of typed outputs respecting their contract." },
-            "standard_suite": { "type": ["object", "null"], "description": "Small standard eval results, keyed by task name.", "additionalProperties": { "type": "number" } }
+            "routing_specialization_mi": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "C1 \u2014 mutual information expert/domain."
+            },
+            "mqar_accuracy": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "C2 \u2014 multi-query associative recall accuracy."
+            },
+            "oracle_shift_recovery": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "C3 \u2014 recovery quality after mid-sequence context shift."
+            },
+            "invariant_compliance_rate": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "C4 \u2014 share of typed outputs respecting their contract."
+            },
+            "standard_suite": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "Small standard eval results, keyed by task name.",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
           }
         }
       }
     },
     "comparison": {
-      "type": ["object", "null"],
+      "type": [
+        "object",
+        "null"
+      ],
       "description": "null for control runs.",
       "additionalProperties": false,
       "properties": {
-        "control_run_id": { "type": ["string", "null"] },
-        "perplexity_delta_pct": { "type": ["number", "null"], "description": "Positive = worse than control. Advancement rule (hub decision 019): must stay <= 2." },
+        "control_run_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "perplexity_delta_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Positive = worse than control. Advancement rule (hub decision 019): must stay <= 2."
+        },
         "verdicts": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "description": "Per declared capability: win | loss | tie | not_applicable | not_measured.",
-          "additionalProperties": { "enum": ["win", "loss", "tie", "not_applicable", "not_measured"] }
+          "additionalProperties": {
+            "enum": [
+              "win",
+              "loss",
+              "tie",
+              "not_applicable",
+              "not_measured"
+            ]
+          }
         }
       }
     }

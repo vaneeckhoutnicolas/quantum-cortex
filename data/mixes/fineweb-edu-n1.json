@@ -1,0 +1,12 @@
+{
+  "op": "decontaminate",
+  "n": 13,
+  "strict": false,
+  "input": {
+    "op": "source",
+    "path": "data/fineweb_edu_bytes.bin",
+    "dataset_id": "fineweb-edu",
+    "license": "ODC-By-1.0",
+    "slice": "sample-10BT, first 600,000,000 utf-8 bytes, byte-level"
+  }
+}

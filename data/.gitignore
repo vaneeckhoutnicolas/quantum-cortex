@@ -1,0 +1,2 @@
+# compiled corpora are large and reproducible from manifests — never commit them
+*.bin

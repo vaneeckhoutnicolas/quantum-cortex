@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 __pycache__/
 *.py[cod]
 .venv/
@@ -8,7 +8,6 @@ venv/
 # Training artefacts are never committed - the ledger record is the only trace of a run (ADR-001).
 # metrics/runs.jsonl and metrics/LATEST.md ARE committed (one commit per run).
 runs/
-data/
 *.pt
 *.bin
 
@@ -20,3 +19,10 @@ data/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# NOW-7: compiled corpora are large & reproducible from manifests — ignore them,
+# but keep the manifests (the recipe) under version control
+data/**/*.bin
+data/*.bin
+!data/mixes/
+!data/mixes/*.json

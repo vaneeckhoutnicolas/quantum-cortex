@@ -56,8 +56,9 @@ class Config:
     vocab_bytes: int = 256
     reserved_oracle_tokens: int = 8      # NOW-1: token space reserved from day one
     # data
-    data_mode: str = "synthetic"         # synthetic | bin
+    data_mode: str = "synthetic"         # synthetic | bin | mix
     bin_path: str = "data/train_bytes.bin"
+    mix_manifest: str | None = None      # path to a cortex_data DAG manifest (data_mode="mix")
     dataset_id: str = "synthetic-v0"
     data_slice: str = "seeded pattern, 5% noise"
     val_fraction: float = 0.01
@@ -83,7 +84,7 @@ class Config:
         return self.vocab_bytes + self.reserved_oracle_tokens
 
 
-CONFIG_HASH_EXCLUDE = {"provider", "notes", "out_dir", "log_every"}
+CONFIG_HASH_EXCLUDE = {"provider", "notes", "out_dir", "log_every", "mix_manifest"}
 
 
 def load_config(path: str) -> Config:
@@ -125,6 +126,23 @@ def load_data(cfg: Config) -> tuple[np.ndarray, np.ndarray]:
         if not p.exists():
             raise SystemExit(f"bin dataset missing: {p} (build it — see notebooks/n1_kaggle.ipynb)")
         arr = np.memmap(p, dtype=np.uint16, mode="r")
+    elif cfg.data_mode == "mix":
+        # NOW-7 / ADR-005: compile the mix DAG to a uint16 .bin, then memmap it.
+        from cortex_data import load_manifest
+        if not cfg.mix_manifest:
+            raise SystemExit('data_mode="mix" requires cfg.mix_manifest (a DAG manifest path)')
+        man = (REPO_ROOT / cfg.mix_manifest).resolve()
+        if not man.exists():
+            raise SystemExit(f"mix manifest missing: {man}")
+        dag, mh = load_manifest(man)
+        out_bin = (REPO_ROOT / cfg.bin_path).resolve()
+        if not out_bin.exists():
+            print(f"[data] compiling mix DAG {mh} -> {out_bin.relative_to(REPO_ROOT)}")
+            n = dag.to_bin(out_bin, seed=cfg.seed, max_tokens=int(cfg.max_tokens * 1.05) + cfg.block_size + 1)
+            print(f"[data] wrote {n:,} byte-tokens (mix_hash={mh})")
+        else:
+            print(f"[data] reusing existing {out_bin.relative_to(REPO_ROOT)} (mix_hash={mh})")
+        arr = np.memmap(out_bin, dtype=np.uint16, mode="r")
     else:
         raise SystemExit(f"unknown data_mode: {cfg.data_mode}")
     split = int(len(arr) * (1.0 - cfg.val_fraction))
@@ -228,6 +246,13 @@ def build_record(cfg: Config, chash: str, run_id: str, started_iso: str, params:
         hardware = platform.processor() or platform.machine() or "cpu"
         precision = "fp32"
         gpu_hours = None
+    mix_hash_val = None
+    if cfg.data_mode == "mix" and cfg.mix_manifest:
+        try:
+            from cortex_data import load_manifest
+            _, mix_hash_val = load_manifest((REPO_ROOT / cfg.mix_manifest).resolve())
+        except Exception:
+            mix_hash_val = None
     return {
         "schema_version": "run-v1",
         "run_id": run_id,
@@ -242,7 +267,7 @@ def build_record(cfg: Config, chash: str, run_id: str, started_iso: str, params:
         "training": {"tokens_seen": tokens_seen, "dataset_id": cfg.dataset_id,
                      "data_slice": cfg.data_slice, "seed": cfg.seed, "steps": steps,
                      "batch_size": cfg.batch_size, "lr_schedule": lr_schedule,
-                     "precision": precision},
+                     "precision": precision, "mix_hash": mix_hash_val},
         "compute": {"provider": cfg.provider, "hardware": hardware, "gpu_hours": gpu_hours},
         "results": {"final_train_loss": final_loss, "val_perplexity": val_ppl,
                     "benchmarks": {"routing_specialization_mi": None, "mqar_accuracy": None,
