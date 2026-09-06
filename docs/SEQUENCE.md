@@ -2,7 +2,7 @@
 
 **Purpose.** The build order is normatively scattered across `roadmap.md` (steps and gates), `adr/ADR-003-brain-feature-map.md` (the 26-row map and waves), the `IDEAS-REGISTER` (26 entries), and `FEATURES` (F1–F12). Two months later, reconstructing the micro-sequence from four files is unreasonable. **This document is the synthesis: one page, every stage, everything that ships in it.** Rule: it *synthesizes with pointers, never overrides* — if this page and a normative source disagree, the source wins and this page gets a dated fix. It is regenerated at every gate passage.
 
-**Status stamp:** 2026-09-06 — **N1 gate PASSED.** E1–E5 done. Control `be1fa8139f59` committed: val_perplexity **2.601** on 500M FineWeb-Edu byte-tokens (30,517 steps, 3 sessions with budgeted resume). CI green (2 checks). The Pareto frontier (ADR-004 / D16) now has its lower-left corner. Next action: **implement ADR-005 Slice 1** (the data composition layer's minimal path + invariant harness) — the mandatory prerequisite before N2.
+**Status stamp:** 2026-09-06 — **N1 gate PASSED.** E1–E5 done. Control `be1fa8139f59` committed: val_perplexity **2.601** on 500M FineWeb-Edu byte-tokens (30,517 steps, 3 sessions with budgeted resume). CI green (2 checks). The Pareto frontier (ADR-004 / D16) now has its lower-left corner. Next action: **wire `cortex_data` into `train.py`** (source→.bin + `mix_hash` in the record + N1 retro-migration), then build the first real FineWeb-Edu DAG → N2. *(ADR-005 Slice 1 implemented and green on all five invariants, 2026-09-06.)*
 
 ### The two CI checks (E2), decoded
 

@@ -17,7 +17,8 @@ The mix is a **declarative directed acyclic graph** of composable, typed operato
 
 - **Sources** (`source`): a licensed corpus/shard, content-addressed, with a declared `license`. e.g. FineWeb-Edu (ODC-By), an OLMo shard (license verified at ingestion).
 - **Unary transforms** (`filter`, `dedup`, `decontaminate`, `normalize`): actions on one stream.
-- **N-ary combinators** (`mix`, `concat`, `interleave`, `sample`): actions that fuse streams.
+- **Intra-source distribution** (landscape-driven, 2026-09-06): `repeat` (deliberate repetition, **bounded ≤2 epochs** — OLMo/Kimi report diminishing returns beyond) and `rephrase` (amplification by *synthesis* — Kimi K2's token-utility approach, superior to naive repetition; a teacher-LLM rewrites in varied styles under **RES-12** provenance, Kimi's factuality caveat kept). `upsample` (quality-aware, OLMo 3). Distinct from `mix`: **mixing sets the distribution *across* sources; upsample/repeat/rephrase set it *within* a source** (OLMo 3 distinction, credited).
+- **N-ary combinators** (`mix`, `concat`, `interleave`, `sample`): actions that fuse streams. Future: `schedule`/`curriculum` — a mix that changes over training (OLMo/Kimi late-stage annealing).
 - **Sink**: the final byte-stream, hashed.
 
 A one-variable run = a DAG with one source + decontaminate. An n-variable run = the *same engine*, a richer DAG. Complexity lives in the manifest (data), never in the engine (code). This mirrors RES-8's typed, composable decode contracts — architectural coherence, not coincidence.
@@ -49,9 +50,11 @@ The decontamination operator is thus a Bloom-filter algebra. **Specified now; th
 
 `mix` consumes a **resolved weight**; *how* it resolves is behind a clean seam. **Today: a declared constant.** **Later (RES-14, infrastructure-gated): the output of a data-β estimator** measured from the Pareto frontier. This ADR implements only the constant resolver and the seam — never the estimator (a data-β is a *result read from the frontier*, not an input declared before it; implementing it now would invert measure-first). Weight semantics (Decision 6) are chosen so the seam accepts a β unchanged later.
 
-## Decision 6 — Weight semantics: proportional sampling without replacement
+## Decision 6 — Weight semantics: signature-aware multiset redistribution
 
-A `mix` weight means **proportional contribution of a source's tokens to the final stream, sampled without replacement** (the OLMo-recipe convention). This makes the identity and duplication invariants (Decision 7) naturally true, and is the semantics a future data-β slots into. The choice is graved here so it is explicit and tested, never tacit.
+A `mix` weight means **proportional contribution of a source's tokens to a bounded output budget** (default = weighted mean of source lengths — mixing *redistributes*, it does not inflate corpus size). The founder's plumbing test (`mix([S,S]) ≡ S`) exposed that naive without-replacement block sampling over overlapping sources front-loads the shared prefix — so the honest semantics is **signature-aware**: identical sources are **folded by content hash** before sampling (the founder's bit-vector insight — the signature *identifies* redundancy, so overlapping halves are never re-sampled), and each real source is then covered **uniformly** (even stride). Result: `mix([S,S], budget=|S|)` is a multiset-equivalent of S because the duplicate is *recognised, not re-drawn*. Deliberate repetition is the separate, bounded `repeat` operator. This folding is RES-16 (content-addressed consolidation) inside the combinator. The semantics accepts a future data-β resolver (Decision 5, RES-14) unchanged.
+
+*Design note (resolved 2026-09-06):* three semantics were weighed — strict positional equality (forbids legitimate repetition), naive weighted concatenation (inflates to 2|S|), signature-aware multiset redistribution (chosen: makes the duplication invariant true *and* keeps repetition explicit/bounded — validated against OLMo mixing≠upsampling and Kimi rephrase>repeat).
 
 ## Decision 7 — The invariant harness (built from the start — the founder's plumbing test)
 
@@ -82,7 +85,7 @@ The record's `training` block gains `mix_hash` and a `data_mix` summary (the man
 
 Abstraction is graved in full here; **implementation is incremental, wave-driven** (build wide, execute narrow, widen per wave):
 
-1. **Slice 1 (W1-enabling):** operator interface + DAG manifest + node hashing + lazy `source`/`decontaminate`/`mix` + the five-invariant harness in `tests/`. Schema `mix_hash` field + N1 retro-migration. This is all N2 needs.
+1. **Slice 1 (W1-enabling) — IMPLEMENTED & GREEN 2026-09-06:** `cortex_data/` — operator interface (`Op`), hashed DAG manifest, lazy pull-based `BinSource`/`ArraySource`/`Decontaminate`/`Mix` (signature-aware multiset), compilation to a memmap-readable uint16 `.bin` (train.py-compatible), and the **five-invariant harness** in `tests/test_invariants.py` (all passing). Integration verified: engine → `.bin` → trainer memmap. Wiring `mix_hash` into `train.py`'s record + N1 retro-migration remains (next).
 2. **Slice 2 (when a 2nd mix exists):** node memoisation cache; `concat`/`interleave`.
 3. **Slice 3 (when n sizeable sources cross):** the Bloom-filter algebra at scale.
 4. **Slice 4 (post-W1, RES-14):** the data-β estimator behind the Decision-5 seam, once the frontier has points.

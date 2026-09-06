@@ -20,7 +20,19 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/vaneeckhoutnicolas/quantum-cortex"
 
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["train"]
+
+[tool.setuptools.packages.find]
+include = ["cortex_data*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 markers = ["slow: end-to-end tests that train a model (seconds); run in CI"]
+# make the repo root importable so `import cortex_data` works without install
+pythonpath = ["."]
