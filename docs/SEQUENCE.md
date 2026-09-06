@@ -2,7 +2,7 @@
 
 **Purpose.** The build order is normatively scattered across `roadmap.md` (steps and gates), `adr/ADR-003-brain-feature-map.md` (the 26-row map and waves), the `IDEAS-REGISTER` (26 entries), and `FEATURES` (F1–F12). Two months later, reconstructing the micro-sequence from four files is unreasonable. **This document is the synthesis: one page, every stage, everything that ships in it.** Rule: it *synthesizes with pointers, never overrides* — if this page and a normative source disagree, the source wins and this page gets a dated fix. It is regenerated at every gate passage.
 
-**Status stamp:** 2026-09-05 — E1 done (both repos live, hub decision 019 recorded), E2 green — **2 successful checks confirmed** on commit `59976a4`: `ci/smoke-train` in 44 s, `ci/validate-ledger` in 9 s. Next action: **E3**.
+**Status stamp:** 2026-09-06 — **N1 gate PASSED.** E1–E5 done. Control `be1fa8139f59` committed: val_perplexity **2.601** on 500M FineWeb-Edu byte-tokens (30,517 steps, 3 sessions with budgeted resume). CI green (2 checks). The Pareto frontier (ADR-004 / D16) now has its lower-left corner. Next action: **NOW-7 (data first-class), the mandatory prerequisite before N2.**
 
 ### The two CI checks (E2), decoded
 
@@ -24,16 +24,23 @@ In one sentence: `validate-ledger` guards **the truth of the numbers**, `smoke-t
 
 In one sentence: **so far we have only trained the proof that the factory works; E3 trains the reference; the waves train the brain.** "The final model" does not exist yet *by design* — it will be the combination of whatever beats the control on the ledger.
 
+## How we read results (ADR-004 / D16) — read this before interpreting any number
+
+Optimisations are **not linear**, so results are never read as a single score. The law (full text: `adr/ADR-004-evaluation-pareto.md`):
+- **A Pareto frontier over declared axes, never a scalar.** Axes: the continuity triad (episodic persistence, oracle-shift revision, non-regeneration) + the two efficiency denominators (per parameter, per bit). The ≤2% perplexity rule is a *guard* to be cleared, not an axis.
+- **"Progress" = moving the frontier**, not climbing a number: a candidate advances if it is strictly better on ≥1 axis without regressing another past the guard. The ledger stores the frontier; the N1 control is its lower-left corner (organ-free — a reference, not a capability).
+- **Three corollaries:** organs ablated *in isolation to understand*, the validated combination *retrained as one to decide* (non-additivity is expected); the **joint** effect of co-shipped features is recorded next to the sum of isolated effects; each record notes the **addressed composition** that produced it. No composite score is ever computed.
+
 ## Track 1 — Execution (E-list, from `EXECUTION-2026-08-07.md`)
 
 | Step | What happens | Status |
 |---|---|---|
 | E1 | Repo born: extract, init, push; hub records decision 019 + reference page | ✅ 2026-09-05 |
 | E2 | CI self-test: `validate-ledger` + `smoke-train` green on every push | ✅ 2/2 (smoke 44 s, ledger 9 s) |
-| E3 | First real run: Kaggle notebook (T4 + Internet, 25.8M control on 500M FineWeb-Edu byte-tokens). **2026-09-06:** V1 hit the 12 h wall at ~10k tok/s (13.7 h needed — my ×5 estimate error, recorded in EXECUTION); superseded by the **budgeted multi-session protocol** (`--time-budget-min 645` + auto-resume from Input-mounted checkpoint): every session ends cleanly, outputs publish, versions chain until the record prints. **Falsified in the good direction same day:** the timed-out V1 *did* publish outputs — checkpoint (step 26,000) recovered, V2 = the ~2 h final stretch | ⏳ V2 resuming |
-| E4 | Sanity read: `completed`, `anomalies: null`, finite ppl — the run *defines* the baseline | pending |
-| E5 | Commit the record + `--regen-latest` → **N1 gate passes**. Proposed here: repo flips **public** at this step (founder's call) | pending |
-| E6 | GATE → EuroHPC **Playground** application citing the run_id (portal re-verified at submission) | pending |
+| E3 | First real run: Kaggle T4, 25.8M control on 500M FineWeb-Edu byte-tokens. Ran in **3 sessions** (12 h wall at ~10k tok/s ⇒ 13.7 h needed; budgeted `--time-budget-min 645` + auto-resume from Input-mounted checkpoint chained V1→V2→V3). Both August planning errors recorded in EXECUTION, corrected in opposite directions | ✅ 2026-09-06 |
+| E4 | Sanity read passed: `completed`, `anomalies: null`, val_ppl 2.601, 30,517 steps | ✅ |
+| E5 | Record committed (`be1fa8139f59`) + LATEST regenerated → **N1 gate PASSED**, CI green. Public-visibility switch deferred (founder: open-results stance under discussion) | ✅ 2026-09-06 |
+| E6 | GATE → EuroHPC **Development Access** application citing the run_id. **2026-09-06 note:** Win2Win SRL (industry, EU) is eligible; Development Access is continuously open, monthly cut-offs (1st), ~2–3 week access; "open-results" stance is compatible (Open Science = open *results*, not open *code*) — verify the call text at submission | pending |
 | E7 | Stage 1 on EuroHPC: Apptainer, pre-staged data, `provider:"eurohpc"` | pending |
 
 ## Track 2 — Build waves (from ADR-003; features from FEATURES/register)
