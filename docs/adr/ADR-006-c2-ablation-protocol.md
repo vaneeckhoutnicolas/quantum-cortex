@@ -39,6 +39,23 @@ The `comparison` slot (already top-level in run-v1) is populated for ablation ru
 2. **Slice B (a benchmark, no full run):** wire MQAR (zoology) and the serial-position harness as evaluation-only; validate on the control (they must produce numbers, even poor ones).
 3. **Slice C (the runs):** train control + H + D at equal everything on the FineWeb-Edu manifest; populate `comparison`; publish the frontier. This is the GPU step, at N2 proper.
 
+## Decision 7 — The circuit breaker (amendment, 2026-09-06): aggressive early-abort with bounded refine-and-retry
+
+The advancement rule says when a variable *wins*; this says when a variable *must die*. An ablation that destabilises must not be run to term — it burns GPU on a known result ("it breaks"), and inside a combination an unstable variable masks the others' signal. So a run gains a third verdict beside "advances" and "held": **"aborted — unstable"**, and — the founder's refinement — an abort triggers a **bounded refine-and-retry loop**, exactly as noise is eliminated then re-admitted refined (D4.8).
+
+**Abort criteria (aggressive; declared before the run, never tuned post-hoc — the honesty guard):**
+- **Hard:** NaN/Inf in the loss → immediate abort, non-negotiable.
+- **Divergence:** train loss > **2× the control's loss at the same step** over a window of 3 consecutive evals → abort (aggressive multiplier; the founder chose aggressive over conservative, paired with retry).
+- **Stagnation:** no val improvement over 5 consecutive evals *while the control is still improving* → abort.
+
+**Refine-and-retry (bounded — the guard that keeps aggressive cheaper than conservative):** an abort does not end the variable; it triggers up to **2 retries**, each applying a **pre-declared** refinement in order: (1) tighter gradient clip (grad_clip ×0.5), (2) lower LR (×0.5); a third failure is **permanent death**. Refinements are declared before the run so the loop is deterministic and honest. Without this bound, aggressive-with-retry could cost *more* GPU than conservative-without-retry — the bound is mandatory.
+
+**Ledger (honest data — deaths are published, including resurrected-then-re-killed):** every attempt records `status: "aborted"` with `anomalies` naming cause + step + attempt (e.g. `"diverged at step 4200: loss 2.3× baseline, attempt 2/3"`). A variable that recovers records `"recovered-after-refine"` in its notes with the refinement that saved it. An aborted variable is a **result on the frontier** ("this variable at this setting destabilises"), not a non-observation.
+
+**Conservative on the slow, ruthless on the broken:** NaN is instant death; divergence/stagnation are windowed (3–5 evals) so a slowly-converging recurrent architecture (Mamba2-style "fails then learns") is not killed prematurely. Better a wasted run than a good path buried — except NaN, which is beyond appeal.
+
+**One primitive at three scales (RES-17 instance):** this circuit breaker (protocol level — kill a variable) is the same law as the **hyperdirect veto** (decode level — abort mid-decode on contract violation, ADR-003 basal-ganglia) and **eviction** (memory level — kill noise that never consolidates, D4.8): *cut cleanly what destabilises to preserve the whole*. A variable transitions live → destabilising → killed-or-refined — a textbook RES-17 type×state transition.
+
 ## Consequences
 
 `train.py`'s `Config` gains `c2_variant` (default `none`) and the associative layers ship behind it, default off — N1 reproducibility is untouched, and a test proves it. The benchmarks are evaluation-only until Slice C. The advancement rule and tolerances are frozen here, before numbers exist — the honest order. N2 produces the first frontier points that *decide* something; until Slice C runs, nothing is claimed.

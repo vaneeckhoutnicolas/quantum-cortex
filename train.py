@@ -74,6 +74,11 @@ class Config:
     c2_variant: str = "none"             # none | hopfield | delta  (ADR-006: C2 associative layer, default off)
     c2_mem_slots: int = 64               # hopfield: number of stored key/value patterns
     c2_heads: int = 4                    # delta: number of recurrent heads
+    # circuit breaker (ADR-006 D7): aggressive early-abort, thresholds declared pre-run
+    cb_enabled: bool = True              # NaN/Inf abort is always on; divergence check needs a baseline
+    cb_divergence_mult: float = 2.0      # abort if loss > mult × baseline-at-step over a window
+    cb_window: int = 3                   # consecutive divergent evals before abort
+    cb_baseline_losses: str | None = None  # optional path to control's per-eval losses (jsonl or json list)
     # io
     out_dir: str = "runs/smoke"
     log_every: int = 10
@@ -478,6 +483,32 @@ def main() -> None:
     val_loss = None
     anomalies = None
     status = "completed"
+    cb_divergent = 0
+    # build a baseline lookup for the divergence check (ADR-006 D7), if provided
+    baseline_at = None
+    if cfg.cb_baseline_losses:
+        try:
+            bp = (REPO_ROOT / cfg.cb_baseline_losses).resolve()
+            raw = bp.read_text().strip()
+            if raw.startswith("["):
+                _bvals = json.loads(raw)                     # [{"step":s,"val_loss":v}, ...] or [v, ...]
+            else:
+                _bvals = [json.loads(l) for l in raw.splitlines() if l.strip()]
+            _bmap = {}
+            for i, item in enumerate(_bvals):
+                if isinstance(item, dict):
+                    _bmap[int(item["step"])] = float(item["val_loss"])
+                else:
+                    _bmap[(i + 1) * cfg.eval_every] = float(item)
+            _bsteps = sorted(_bmap)
+            def baseline_at(s, _m=_bmap, _ss=_bsteps):
+                # nearest recorded baseline step <= s
+                cand = [k for k in _ss if k <= s]
+                return _m[cand[-1]] if cand else (_m[_ss[0]] if _ss else None)
+            print(f"[circuit-breaker] divergence check armed against {len(_bmap)} baseline points")
+        except Exception as e:
+            print(f"[circuit-breaker] baseline load failed ({e}); NaN/Inf abort still active")
+            baseline_at = None
     try:
         cur_step = start_step
         for step in range(start_step, total_steps):
@@ -494,6 +525,16 @@ def main() -> None:
             scaler.step(opt)
             scaler.update()
             loss_val = loss.item()
+            # circuit breaker — hard criterion: NaN/Inf is instant death (ADR-006 D7)
+            if cfg.cb_enabled and (math.isnan(loss_val) or math.isinf(loss_val)):
+                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
+                            "tokens_seen": tokens_seen, "config_hash": chash,
+                            "started_iso": started_iso, "run_id": run_id}, ckpt_path)
+                anomalies = f"NaN/Inf loss at step {step} — circuit breaker (hard abort)"
+                print(f"[circuit-breaker] {anomalies}")
+                status = "aborted"
+                cur_step = step
+                break
             if first_loss is None:
                 first_loss = loss_val
             tokens_seen += tokens_per_step
@@ -503,6 +544,26 @@ def main() -> None:
             if step and step % cfg.eval_every == 0:
                 val_loss = evaluate()
                 print(f"  eval: val_loss {val_loss:.4f} ppl {math.exp(val_loss):.3f}")
+                # circuit breaker — divergence criterion vs a control baseline (ADR-006 D7)
+                if cfg.cb_enabled and baseline_at is not None:
+                    b = baseline_at(step)
+                    if b is not None and val_loss > cfg.cb_divergence_mult * b:
+                        cb_divergent += 1
+                        print(f"[circuit-breaker] divergent eval {cb_divergent}/{cfg.cb_window} "
+                              f"(val {val_loss:.4f} > {cfg.cb_divergence_mult}× baseline {b:.4f} at step {step})")
+                    else:
+                        cb_divergent = 0
+                    if cb_divergent >= cfg.cb_window:
+                        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
+                                    "tokens_seen": tokens_seen, "config_hash": chash,
+                                    "started_iso": started_iso, "run_id": run_id}, ckpt_path)
+                        anomalies = (f"diverged at step {step}: val {val_loss:.4f} > "
+                                     f"{cfg.cb_divergence_mult}× baseline {b:.4f} over {cfg.cb_window} evals "
+                                     f"— circuit breaker")
+                        print(f"[circuit-breaker] {anomalies}")
+                        status = "aborted"
+                        cur_step = step
+                        break
             if step and step % cfg.ckpt_every == 0:
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
                             "tokens_seen": tokens_seen, "config_hash": chash,
