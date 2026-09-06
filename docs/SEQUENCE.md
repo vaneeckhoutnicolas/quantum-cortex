@@ -30,7 +30,7 @@ In one sentence: **so far we have only trained the proof that the factory works;
 |---|---|---|
 | E1 | Repo born: extract, init, push; hub records decision 019 + reference page | ✅ 2026-09-05 |
 | E2 | CI self-test: `validate-ledger` + `smoke-train` green on every push | ✅ 2/2 (smoke 44 s, ledger 9 s) |
-| E3 | First real run: Kaggle notebook (T4 + Internet, ~2 h, 25.8M control on 500M FineWeb-Edu byte-tokens) | ⬅ next |
+| E3 | First real run: Kaggle notebook (T4 + Internet, 25.8M control on 500M FineWeb-Edu byte-tokens). **2026-09-06:** V1 hit the 12 h wall at ~10k tok/s (13.7 h needed — my ×5 estimate error, recorded in EXECUTION); superseded by the **budgeted multi-session protocol** (`--time-budget-min 645` + auto-resume from Input-mounted checkpoint): every session ends cleanly, outputs publish, versions chain until the record prints. **Falsified in the good direction same day:** the timed-out V1 *did* publish outputs — checkpoint (step 26,000) recovered, V2 = the ~2 h final stretch | ⏳ V2 resuming |
 | E4 | Sanity read: `completed`, `anomalies: null`, finite ppl — the run *defines* the baseline | pending |
 | E5 | Commit the record + `--regen-latest` → **N1 gate passes**. Proposed here: repo flips **public** at this step (founder's call) | pending |
 | E6 | GATE → EuroHPC **Playground** application citing the run_id (portal re-verified at submission) | pending |

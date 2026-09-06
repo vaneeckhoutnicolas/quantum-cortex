@@ -315,6 +315,8 @@ def main() -> None:
     ap.add_argument("--config", type=str, help="path to config json")
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--regen-latest", action="store_true")
+    ap.add_argument("--time-budget-min", type=float, default=None,
+                    help="stop cleanly after N minutes of training: checkpoint + exit 0, no record; rerun with --resume (session-wall / preemption survival)")
     args = ap.parse_args()
     if args.regen_latest:
         regen_latest()
@@ -388,7 +390,9 @@ def main() -> None:
     anomalies = None
     status = "completed"
     try:
+        cur_step = start_step
         for step in range(start_step, total_steps):
+            cur_step = step
             for g in opt.param_groups:
                 g["lr"] = lr_at(step, total_steps, cfg)
             x, y = get_batch(train_arr, cfg, gen, device)
@@ -414,6 +418,13 @@ def main() -> None:
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
                             "tokens_seen": tokens_seen, "config_hash": chash,
                             "started_iso": started_iso, "run_id": run_id}, ckpt_path)
+            if args.time_budget_min is not None and (time.time() - t0) / 60.0 >= args.time_budget_min:
+                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
+                            "tokens_seen": tokens_seen, "config_hash": chash,
+                            "started_iso": started_iso, "run_id": run_id}, ckpt_path)
+                print(f"[budget] {args.time_budget_min:.0f} min reached at step {step}/{total_steps} — "
+                      f"checkpoint saved, exiting cleanly (no record); rerun with --resume to continue")
+                return
     except KeyboardInterrupt:
         status, anomalies = "aborted", "KeyboardInterrupt — checkpoint holds last saved step"
     val_loss = evaluate() if status == "completed" else val_loss
@@ -421,7 +432,8 @@ def main() -> None:
     if status == "completed" and first_loss is not None and loss_val is not None and loss_val >= first_loss:
         anomalies = f"train loss did not decrease ({first_loss:.4f} -> {loss_val:.4f})"
     val_ppl = round(math.exp(val_loss), 4) if isinstance(val_loss, float) else None
-    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": total_steps - 1,
+    torch.save({"model": model.state_dict(), "opt": opt.state_dict(),
+                "step": (total_steps - 1) if status == "completed" else cur_step,
                 "tokens_seen": tokens_seen, "config_hash": chash,
                 "started_iso": started_iso, "run_id": run_id}, ckpt_path)
     record = build_record(cfg, chash, run_id, started_iso, params, tokens_seen,
