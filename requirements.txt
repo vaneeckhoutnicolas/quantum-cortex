@@ -1,0 +1,8 @@
+# quantum-cortex runtime + test dependencies (see docs/GETTING-STARTED.md).
+# torch: for CPU-only verification, prefer the CPU wheel to avoid a large CUDA download:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# then: pip install -r requirements.txt
+numpy>=1.26
+torch>=2.2
+jsonschema>=4.20
+pytest>=8.0

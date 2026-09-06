@@ -1,0 +1,26 @@
+[project]
+name = "quantum-cortex"
+version = "0.1.0"
+description = "An open-source pure LLM whose cognitive concepts live in the weights and the decode loop. Signature capability: continuity."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "quantum-cortex contributors" }]
+readme = "README.md"
+dependencies = [
+    "numpy>=1.26",
+    "torch>=2.2",
+    "jsonschema>=4.20",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/vaneeckhoutnicolas/quantum-cortex"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+markers = ["slow: end-to-end tests that train a model (seconds); run in CI"]
