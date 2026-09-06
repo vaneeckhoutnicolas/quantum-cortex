@@ -36,7 +36,7 @@ The `comparison` slot (already top-level in run-v1) is populated for ablation ru
 ## Decision 6 — Sequencing (measure-first, one variable at a time)
 
 1. **Slice A (code, no run) — IMPLEMENTED 2026-09-06:** the two associative layers in the model behind `c2_variant: none | hopfield | delta` (default `none`), parameter-counted, with a **bit-identity test** (flag off ⇒ control unchanged) and a **forward-shape test** (flags on ⇒ model runs, shapes intact). No training yet.
-2. **Slice B (a benchmark, no full run):** wire MQAR (zoology) and the serial-position harness as evaluation-only; validate on the control (they must produce numbers, even poor ones).
+2. **Slice B (benchmarks, no full run) — IMPLEMENTED & GREEN 2026-09-06:** `cortex_eval/` — MQAR by difficulty tiers (`mqar.py`, curriculum kv×seq, the curve as deliverable), the serial-position curve (`serial_position.py`, primacy/recency/U-shape, Rev7.b), and a standalone MQAR runner (`run_mqar.py`, option (a): trains a small model per tier, reusing train.py's VanillaGPT so the C2 layers under test are the exact ones N2 trains). Executable proof: a trained control beats chance on easy MQAR (acc 0.25 vs ~0.03 chance) — the pipeline works; the signal is non-flat. The circuit breaker (D7) applies per tier.
 3. **Slice C (the runs):** train control + H + D at equal everything on the FineWeb-Edu manifest; populate `comparison`; publish the frontier. This is the GPU step, at N2 proper.
 
 ## Decision 7 — The circuit breaker (amendment, 2026-09-06): aggressive early-abort with bounded refine-and-retry
