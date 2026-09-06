@@ -41,3 +41,15 @@ Multi-objective optimisation and Pareto frontiers are an established field (cred
 ## Consequences
 
 SEQUENCE gains a standing "How we read results" section pointing here — the first thing a contributor reads before interpreting any number. The record schema already carries per-axis fields (`results.benchmarks.*`) and null-by-default honesty, so no schema change is required today; a `composition` note and a joint-vs-isolated field are added to the record when N2 produces the first comparison (`comparison` is already a top-level schema slot). N1 is untouched. The frontier has its origin; from N2, every run either moves it or is published as a loss that didn't.
+
+## Linked decision — D17 (open-results), the publication counterpart of D16
+
+D16 fixes *what we measure* (a Pareto frontier over declared axes); **D17 fixes what we publish**, and the two are deliberately coupled: **the frontier is the public object; the recipe is the private workshop.** Decision D17 (revises D6), accepted by Nicolas Van Eeckhout 2026-09-06:
+
+- **Public** (the object of D16): the ledger (`metrics/`, dated verifiable numbers), the benchmarks, the `run-v1` schema, and a README stating the thesis and the signature capability. Results are made to be shown.
+- **Private until an explicit founder decision**: the innovation register, the *design* ADRs (the architecture), the concept dives, the extractions, and the core code (`train.py`, C1–C6 once written). The recipe is not published.
+- **Coherence note (honest):** this narrows D6's open-source adoption flywheel — an assumed IP-protection trade-off for a solo founder. It is reversible: the founder may open more at any time, typically once a module is mature and dated.
+- **EuroHPC compatibility (verified 2026-09-06):** eligibility is geographic/institutional (Win2Win SRL, EU industry — eligible), never conditioned on open code. Open Science asks for open *results*, not open *code*. D17 is compatible.
+- **Mechanism, deferred by design:** the *principle* is graved now; the concrete split (single private repo with results published out-of-repo, vs. a public "shopfront" repo carrying README + ledger only) is decided at **N5**, when there are real ablation results to show. Until then the repository stays private — no premature switch.
+
+D16 and D17 are twin decisions: *we measure on a frontier, therefore that frontier — and only that — is what we show.*

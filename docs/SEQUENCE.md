@@ -31,6 +31,13 @@ Optimisations are **not linear**, so results are never read as a single score. T
 - **"Progress" = moving the frontier**, not climbing a number: a candidate advances if it is strictly better on ≥1 axis without regressing another past the guard. The ledger stores the frontier; the N1 control is its lower-left corner (organ-free — a reference, not a capability).
 - **Three corollaries:** organs ablated *in isolation to understand*, the validated combination *retrained as one to decide* (non-additivity is expected); the **joint** effect of co-shipped features is recorded next to the sum of isolated effects; each record notes the **addressed composition** that produced it. No composite score is ever computed.
 
+## What we publish (D17) — the twin of D16
+
+*We measure on a frontier, therefore that frontier — and only that — is what we show.* Decision D17 (revises D6, full text in `adr/ADR-004-evaluation-pareto.md`): **open-results, not full open-source.**
+- **Public:** the ledger (`metrics/`), the benchmarks, the run-v1 schema, the README (thesis + signature capability) — the Pareto frontier is the public object.
+- **Private until an explicit founder decision:** the innovation register, the design ADRs, the concept dives, the extractions, the core code. The recipe stays in the workshop.
+- **Reversible**, an assumed IP trade-off for a solo founder; it narrows D6's adoption flywheel, knowingly. **EuroHPC-compatible** (Open Science = open *results*, not open *code*; Win2Win SRL is eligible as EU industry). **Mechanism deferred to N5** — the repo simply stays private until there are real results to show.
+
 ## Track 1 — Execution (E-list, from `EXECUTION-2026-08-07.md`)
 
 | Step | What happens | Status |

@@ -23,6 +23,6 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `EXTRACTION-LANDSCAPE-2026-08-08.md` — the August-2026 landscape pass: 15 repos, licenses verified, ideas mapped, legal PASS.
 - `concepts/README.md` — concepts index + the deep-dive schedule (a region earns its dive when its wave opens).
 - `concepts/brain-atlas.md` — the systematic brain → cortex transposition atlas (mapped / candidate / deliberately not transposed). `concepts/hippocampus.md` — the memory-organ deep dive.
-- `adr/ADR-004-evaluation-pareto.md` — the evaluation law (D16): a Pareto frontier over declared axes, never a scalar.
+- `adr/ADR-004-evaluation-pareto.md` — the evaluation law (**D16**) and its publication twin (**D17**, open-results, revises D6): a Pareto frontier over declared axes is what we measure *and* what we publish.
 - `benchmarks/hm-protocol.md` — the H.M. episodic/semantic dissociation diagnostic, spec v1 (thresholds frozen before any run).
 - `glossary.md` — coined terms. `roadmap.md` — ordered steps with gates.
