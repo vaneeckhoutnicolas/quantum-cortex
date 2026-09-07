@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -169,3 +170,85 @@ def _cli():
 
 if __name__ == "__main__":
     _cli()
+
+
+# ============================================================================ #
+# (b) D19 Level 1b — the router on REAL MQAR spans, not the synthetic task     #
+# ============================================================================ #
+def _real_span_ctx(kv: int, seq: int) -> np.ndarray:
+    """Context feature for a real MQAR span-type: normalised (kv, seq) + simple
+    interactions. The router must learn which path wins from THIS, never from
+    the truth. (8 dims to stay compatible with RouterV2(ctx_dim=8).)"""
+    k = math.log2(kv) / 5.0          # kv ∈ {4..32} → ~0.4..1.0
+    s = math.log2(seq) / 9.0         # seq ∈ {128..512} → ~0.78..1.0
+    return np.array([k, s, k * s, k * k, s * s, k - s, 1.0 - k, 1.0 - s], dtype=np.float32)
+
+
+def run_router_ablation_on_real_mqar(curves_by_path: dict, steps: int = 800,
+                                     seed: int = 1337, holdout_frac: float = 0.34) -> dict:
+    """Train RouterV2 on real per-tier MQAR accuracies (from an ablation artefact)
+    and test on held-out tiers. curves_by_path = {"none": [...], "hopfield": [...],
+    "delta": [...]} where each item is {"kv_pairs","seq_len","accuracy"} (same tier
+    order). Held-out tiers are chosen by seed so the router never sees their scores.
+    """
+    import torch
+    from cortex_c2.router_v2 import RouterV2
+
+    tiers = [(t["kv_pairs"], t["seq_len"]) for t in curves_by_path["none"]]
+    n = len(tiers)
+    scores = np.array([[curves_by_path["none"][i]["accuracy"],
+                        curves_by_path["hopfield"][i]["accuracy"],
+                        curves_by_path["delta"][i]["accuracy"]] for i in range(n)],
+                      dtype=np.float32)
+    ctx = np.array([_real_span_ctx(kv, sq) for kv, sq in tiers], dtype=np.float32)
+
+    rng = np.random.default_rng(seed)
+    perm = rng.permutation(n)
+    n_test = max(2, int(round(n * holdout_frac)))
+    test_idx, train_idx = perm[:n_test], perm[n_test:]
+
+    torch.manual_seed(seed)
+    router = RouterV2(ctx_dim=8, floor_margin=0.0)
+    opt = torch.optim.Adam(router.parameters(), lr=1e-2)
+    Xtr = torch.from_numpy(ctx[train_idx]); Ytr = torch.from_numpy(scores[train_idx])
+    for _ in range(steps):
+        loss = router.score_loss(Xtr, Ytr)
+        opt.zero_grad(); loss.backward(); opt.step()
+
+    # readings on held-out tiers
+    te_scores = scores[test_idx]
+    auc_control = float(te_scores[:, PATH_CONTROL].mean())
+    avg = te_scores.mean(axis=0); best_single_path = int(np.argmax(avg))
+    auc_best_single = float(te_scores[:, best_single_path].mean())
+    oracle = RouterV1()
+    orc = [oracle.route(path_scores=te_scores[i].tolist()).path for i in range(len(test_idx))]
+    auc_oracle = float(np.mean([te_scores[i, orc[i]] for i in range(len(test_idx))]))
+    Xte = torch.from_numpy(ctx[test_idx])
+    learned = [router.route(span_ctx=Xte[i]).path for i in range(len(test_idx))]
+    auc_learned = float(np.mean([te_scores[i, learned[i]] for i in range(len(test_idx))]))
+
+    lift_o = auc_oracle - auc_best_single
+    lift_l = auc_learned - auc_best_single
+    frac = (lift_l / lift_o) if lift_o > 1e-9 else float("nan")
+    return {
+        "benchmark": "router_ablation_real_mqar",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "regime": {"n_tiers": n, "held_out": [tiers[i] for i in test_idx],
+                   "train": [tiers[i] for i in train_idx], "steps": steps, "seed": seed},
+        "auc_heldout": {
+            "control_only": round(auc_control, 4),
+            "best_single_memory": round(auc_best_single, 4),
+            "oracle_ceiling": round(auc_oracle, 4),
+            "learned_router": round(auc_learned, 4),
+        },
+        "best_single_path": PATH_NAMES[best_single_path],
+        "learned_routes_heldout": [PATH_NAMES[p] for p in learned],
+        "oracle_routes_heldout": [PATH_NAMES[p] for p in orc],
+        "lift_over_best_single": {"oracle": round(lift_o, 4), "learned": round(lift_l, 4),
+                                  "learned_fraction_of_oracle_ceiling": round(frac, 3) if frac == frac else None},
+        "verdict": (f"on REAL MQAR held-out tiers the learned router captures "
+                    f"{frac*100:.0f}% of the oracle lift" if frac == frac else
+                    "no oracle lift on held-out tiers (paths do not separate there)"),
+        "note": "D19 Level 1b — router trained/tested on real per-tier MQAR accuracies "
+                "(held-out tiers never seen). Small-N caveat: 12 tiers only; repeat across seeds/holdouts.",
+    }

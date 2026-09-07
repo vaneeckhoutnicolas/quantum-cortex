@@ -1,0 +1,285 @@
+{
+  "benchmark": "router_ablation_real_mqar_multi_holdout",
+  "timestamp_utc": "2026-09-07T20:40:14.382392+00:00",
+  "holdouts": [
+    {
+      "benchmark": "router_ablation_real_mqar",
+      "timestamp_utc": "2026-09-07T20:40:13.637163+00:00",
+      "regime": {
+        "n_tiers": 12,
+        "held_out": [
+          [
+            32,
+            128
+          ],
+          [
+            16,
+            256
+          ],
+          [
+            8,
+            512
+          ],
+          [
+            8,
+            256
+          ]
+        ],
+        "train": [
+          [
+            32,
+            256
+          ],
+          [
+            4,
+            512
+          ],
+          [
+            16,
+            128
+          ],
+          [
+            16,
+            512
+          ],
+          [
+            4,
+            256
+          ],
+          [
+            32,
+            512
+          ],
+          [
+            4,
+            128
+          ],
+          [
+            8,
+            128
+          ]
+        ],
+        "steps": 800,
+        "seed": 1337
+      },
+      "auc_heldout": {
+        "control_only": 0.092,
+        "best_single_memory": 0.098,
+        "oracle_ceiling": 0.1092,
+        "learned_router": 0.0938
+      },
+      "best_single_path": "hopfield",
+      "learned_routes_heldout": [
+        "delta",
+        "hopfield",
+        "hopfield",
+        "hopfield"
+      ],
+      "oracle_routes_heldout": [
+        "hopfield",
+        "delta",
+        "control",
+        "hopfield"
+      ],
+      "lift_over_best_single": {
+        "oracle": 0.0112,
+        "learned": -0.0043,
+        "learned_fraction_of_oracle_ceiling": -0.378
+      },
+      "verdict": "on REAL MQAR held-out tiers the learned router captures -38% of the oracle lift",
+      "note": "D19 Level 1b \u2014 router trained/tested on real per-tier MQAR accuracies (held-out tiers never seen). Small-N caveat: 12 tiers only; repeat across seeds/holdouts."
+    },
+    {
+      "benchmark": "router_ablation_real_mqar",
+      "timestamp_utc": "2026-09-07T20:40:14.021028+00:00",
+      "regime": {
+        "n_tiers": 12,
+        "held_out": [
+          [
+            4,
+            256
+          ],
+          [
+            16,
+            256
+          ],
+          [
+            16,
+            512
+          ],
+          [
+            4,
+            128
+          ]
+        ],
+        "train": [
+          [
+            8,
+            128
+          ],
+          [
+            32,
+            128
+          ],
+          [
+            4,
+            512
+          ],
+          [
+            32,
+            256
+          ],
+          [
+            16,
+            128
+          ],
+          [
+            8,
+            256
+          ],
+          [
+            8,
+            512
+          ],
+          [
+            32,
+            512
+          ]
+        ],
+        "steps": 800,
+        "seed": 7
+      },
+      "auc_heldout": {
+        "control_only": 0.1388,
+        "best_single_memory": 0.16,
+        "oracle_ceiling": 0.1632,
+        "learned_router": 0.1615
+      },
+      "best_single_path": "hopfield",
+      "learned_routes_heldout": [
+        "hopfield",
+        "hopfield",
+        "control",
+        "delta"
+      ],
+      "oracle_routes_heldout": [
+        "hopfield",
+        "delta",
+        "control",
+        "hopfield"
+      ],
+      "lift_over_best_single": {
+        "oracle": 0.0033,
+        "learned": 0.0015,
+        "learned_fraction_of_oracle_ceiling": 0.462
+      },
+      "verdict": "on REAL MQAR held-out tiers the learned router captures 46% of the oracle lift",
+      "note": "D19 Level 1b \u2014 router trained/tested on real per-tier MQAR accuracies (held-out tiers never seen). Small-N caveat: 12 tiers only; repeat across seeds/holdouts."
+    },
+    {
+      "benchmark": "router_ablation_real_mqar",
+      "timestamp_utc": "2026-09-07T20:40:14.382304+00:00",
+      "regime": {
+        "n_tiers": 12,
+        "held_out": [
+          [
+            4,
+            128
+          ],
+          [
+            32,
+            256
+          ],
+          [
+            16,
+            256
+          ],
+          [
+            8,
+            512
+          ]
+        ],
+        "train": [
+          [
+            32,
+            512
+          ],
+          [
+            32,
+            128
+          ],
+          [
+            8,
+            256
+          ],
+          [
+            16,
+            128
+          ],
+          [
+            4,
+            256
+          ],
+          [
+            16,
+            512
+          ],
+          [
+            8,
+            128
+          ],
+          [
+            4,
+            512
+          ]
+        ],
+        "steps": 800,
+        "seed": 42
+      },
+      "auc_heldout": {
+        "control_only": 0.1198,
+        "best_single_memory": 0.1198,
+        "oracle_ceiling": 0.1258,
+        "learned_router": 0.1238
+      },
+      "best_single_path": "control",
+      "learned_routes_heldout": [
+        "delta",
+        "hopfield",
+        "hopfield",
+        "control"
+      ],
+      "oracle_routes_heldout": [
+        "hopfield",
+        "control",
+        "delta",
+        "control"
+      ],
+      "lift_over_best_single": {
+        "oracle": 0.006,
+        "learned": 0.004,
+        "learned_fraction_of_oracle_ceiling": 0.667
+      },
+      "verdict": "on REAL MQAR held-out tiers the learned router captures 67% of the oracle lift",
+      "note": "D19 Level 1b \u2014 router trained/tested on real per-tier MQAR accuracies (held-out tiers never seen). Small-N caveat: 12 tiers only; repeat across seeds/holdouts."
+    }
+  ],
+  "learned_fraction_of_oracle_ceiling": {
+    "per_holdout": [
+      -0.378,
+      0.462,
+      0.667
+    ],
+    "mean": 0.25,
+    "n": 3
+  },
+  "verdict": "NOT DEMONSTRATED on real MQAR spans: the learned router captures ~25% of the oracle ceiling on average across 3 held-out splits (range -38% .. +67%), versus 88-93% on the synthetic routing task.",
+  "diagnosis": [
+    "12 tiers only: the router trains on 8 points and is tested on 4 \u2014 no learner is reliable from 8 examples (the synthetic task had 4000). The regime is under-sampled, not the router broken.",
+    "Real per-path gaps are tiny on hard tiers (0.010/0.011/0.012) \u2014 noise, nothing robust to learn there.",
+    "One holdout (seed 42) has the CONTROL as best single path \u2014 no memory helps on average there; the control floor is doing its job."
+  ],
+  "correction_to_prior_claim": "The 'learned router captures 93% of the oracle ceiling' claim (Rev18) is RETROGRADED: true on a synthetic routing task, NOT demonstrated on real MQAR spans at 12 tiers. Retained as an oracle result (+21% ceiling) plus an open question.",
+  "what_is_needed": "Train the router on thousands of REAL spans \u2014 i.e. wire it into the language model where every sequence is a span (the next step in SEQUENCE). The 12-tier bench cannot answer this.",
+  "note": "D19 Level 1b caught an over-claim before publication. Honest data: the negative result is recorded, not hidden."
+}
