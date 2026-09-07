@@ -1,0 +1,170 @@
+{
+  "benchmark": "domain_map",
+  "timestamp_utc": "2026-09-07T23:13:16.955678+00:00",
+  "law": "RES-20: a ranking that flips between regimes is not a contradiction \u2014 it is \u03a3 (which tiers are held). Read the map, not a ranking.",
+  "per_tier": [
+    {
+      "kv_pairs": 4,
+      "seq_len": 128,
+      "scores": {
+        "none": 0.23,
+        "hopfield": 0.234,
+        "delta": 0.234
+      },
+      "winner": "hopfield",
+      "margin": 0.0,
+      "basis": "12-tier, 1 seed",
+      "separable": false
+    },
+    {
+      "kv_pairs": 8,
+      "seq_len": 128,
+      "scores": {
+        "none": 0.115,
+        "hopfield": 0.139,
+        "delta": 0.172
+      },
+      "winner": "delta",
+      "margin": 0.033,
+      "basis": "12-tier, 1 seed",
+      "separable": true
+    },
+    {
+      "kv_pairs": 16,
+      "seq_len": 128,
+      "scores": {
+        "none": 0.024,
+        "hopfield": 0.06,
+        "delta": 0.057
+      },
+      "winner": "hopfield",
+      "margin": 0.003,
+      "basis": "12-tier, 1 seed",
+      "separable": false
+    },
+    {
+      "kv_pairs": 32,
+      "seq_len": 128,
+      "scores": {
+        "none": 0.01,
+        "hopfield": 0.024,
+        "delta": 0.007
+      },
+      "winner": "hopfield",
+      "margin": 0.014,
+      "basis": "12-tier, 1 seed",
+      "separable": true
+    },
+    {
+      "kv_pairs": 4,
+      "seq_len": 256,
+      "scores": {
+        "none": 0.211,
+        "hopfield": 0.285,
+        "delta": 0.234
+      },
+      "winner": "hopfield",
+      "margin": 0.051,
+      "basis": "12-tier, 1 seed",
+      "separable": true
+    },
+    {
+      "kv_pairs": 8,
+      "seq_len": 256,
+      "scores": {
+        "none": 0.121,
+        "hopfield": 0.156,
+        "delta": 0.072
+      },
+      "winner": "hopfield",
+      "margin": 0.035,
+      "basis": "12-tier, 1 seed",
+      "separable": true
+    },
+    {
+      "kv_pairs": 16,
+      "seq_len": 256,
+      "scores": {
+        "none": 0.049,
+        "hopfield": 0.062,
+        "delta": 0.069
+      },
+      "winner": "delta",
+      "margin": 0.007,
+      "basis": "12-tier, 1 seed",
+      "separable": false
+    },
+    {
+      "kv_pairs": 32,
+      "seq_len": 256,
+      "scores": {
+        "none": 0.012,
+        "hopfield": 0.011,
+        "delta": 0.012
+      },
+      "winner": "control",
+      "margin": 0.0,
+      "basis": "12-tier, 1 seed",
+      "separable": false
+    },
+    {
+      "kv_pairs": 4,
+      "seq_len": 512,
+      "scores": {
+        "none": 0.238,
+        "hopfield": 0.258,
+        "delta": 0.242
+      },
+      "winner": "hopfield",
+      "margin": 0.016,
+      "basis": "12-tier, 1 seed",
+      "separable": true
+    },
+    {
+      "kv_pairs": 8,
+      "seq_len": 512,
+      "scores": {
+        "none": 0.188,
+        "hopfield": 0.15,
+        "delta": 0.148
+      },
+      "winner": "control",
+      "margin": 0.038,
+      "basis": "12-tier, 1 seed",
+      "separable": true
+    },
+    {
+      "kv_pairs": 16,
+      "seq_len": 512,
+      "scores": {
+        "none": 0.065,
+        "hopfield": 0.059,
+        "delta": 0.046
+      },
+      "winner": "control",
+      "margin": 0.006,
+      "basis": "12-tier, 1 seed",
+      "separable": false
+    },
+    {
+      "kv_pairs": 32,
+      "seq_len": 512,
+      "scores": {
+        "none": 0.009,
+        "hopfield": 0.01,
+        "delta": 0.005
+      },
+      "winner": "hopfield",
+      "margin": 0.001,
+      "basis": "12-tier, 1 seed",
+      "separable": false
+    }
+  ],
+  "separable_winner_counts": {
+    "control": 1,
+    "hopfield": 4,
+    "delta": 1
+  },
+  "discriminating_multiseed": {},
+  "reading": "no single memory dominates \u2014 each path has a domain; the per-tier map is the result and the multi-path router (RES-18) is the answer"
+}

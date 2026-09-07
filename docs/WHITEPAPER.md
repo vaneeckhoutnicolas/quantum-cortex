@@ -78,12 +78,29 @@ The router is versioned behind a stable interface: a v1 oracle (which reads the 
 
 **3.4 One mechanism at three scales.** We observe that the same consolidation law — *what has been computed and remains valid is not recomputed; what changes recomposes only its delta* — governs the memory hierarchy inside the model, the soft-to-hard migration of the router, and the accumulation of tested components and dated decisions in the project itself. We do not claim this as a theorem; we record it as the organizing principle that made the three levels mutually consistent, and as the reason efficiency appears in §4 as a consequence rather than a trade-off.
 
-### 4. Results — what has passed the gate
-*(only gate-passing claims; each with artefact + seeds + CI)*
-- **[ADMISSIBLE, pending multi-seed]** N1 baseline: control `be1fa8139f59`, val_ppl 2.601 on 500M FineWeb-Edu byte-tokens. *(reproducible, anchored; single run — a baseline, not a comparison, so rule 1 does not apply)*
-- **[PENDING gate — needs 5 seeds]** Both associative memories beat the control on MQAR (hopfield +14% AUC, delta +2%, 12 tiers). Per-tier domains: hopfield 6 / delta 2 / control 3. Oracle upper-envelope +21%.
-- **[PENDING gate — needs multi-seed]** Hopfield is structure-limited (capacity sweep: more slots degrade).
-- **[PENDING gate — needs 1500 steps + multi-seed]** The recurrent ladder: pure recurrents stay ~1/4 of the hybrids at every rung.
+### 4. Results — read as a domain map, not a ranking
+
+*(Only gate-passing claims enter as results; each with artefact, seeds, CI. Cells are filled from `metrics/mqar/domain-map.json` as evidence accrues.)*
+
+**4.1 Baseline.** Control `be1fa8139f59`: byte-level GPT-2-style, 25.9M parameters, val_ppl 2.601 on 500M FineWeb-Edu byte-tokens. Reproducible; anchored; a baseline, not a comparison (rule 1 does not apply).
+
+**4.2 The reading rule (why a map).** The first ablation (12 tiers, one seed) ranked the memories by whole-curve AUC: Hopfield +14%, delta +2% over the control. The confirmation run, restricted to the hard/short tiers where the paths actually separate, ranked them the other way: delta first, Hopfield at the control. Under rule 6 this is not a contradiction; it is the omitted factor Σ — *which tiers are held*. The honest object is therefore a **domain map**: for each tier, the winning path and its margin, with the evidence basis. Of the 12 tiers, only 6 are separable (margin ≥ 0.01); on the other 6 no path can be distinguished, and a whole-curve ranking silently averages over them.
+
+**4.3 The domain map** *(single-seed basis unless marked; multi-seed rows carry a 95% paired test).*
+
+| regime | separable tiers | winner | evidence |
+|:--|:--|:--|:--|
+| easy / dense recall (kv 4, seq 128–512) | 3 | **Hopfield** (margins 0.016–0.051) | 12-tier, 1 seed — *pending multi-seed* |
+| hard / short (kv 8–16, seq 128) | 1 + confirmation tiers | **delta** (0.033 at kv 8/128; leads on both completed confirmation seeds) | 12-tier 1 seed + confirmation *(3 seeds, in progress)* |
+| long sequences (kv 8–16, seq 512) | 1 | **control** — memory hurts (0.188 vs 0.150) | 12-tier, 1 seed — *pending multi-seed* |
+| saturated (kv 32, seq 256–512) | 0 | none — noise-level (all ≈ 0.01) | not a result |
+
+**4.4 What passes the gate.** *(filled at v0 from the confirmation GATE READOUT — the paired tests over seeds decide which rows above are claims and which remain open)*
+- [PENDING] delta > control on hard/short tiers (3 seeds, paired t-test).
+- [PENDING] Hopfield > control on easy tiers (needs a multi-seed run on those tiers).
+- [PENDING] hybrids > best pure recurrent on the ladder (3 seeds).
+
+**4.5 The result that the map itself constitutes.** No single memory dominates: Hopfield, delta and the control each own a regime. This is the empirical content behind the architecture of §3: a router on a control floor is not an elegance, it is what a per-domain result *requires*. The upper envelope of the map (best path per tier) exceeds the best single path by +6% and the control by +21% on the 12-tier basis — the ceiling a router may reach (§5 records how far the learned router currently is from it).
 
 ### 5. Open questions (valued, explicitly not results)
 - **The learned router on real spans** — 93% of the oracle ceiling on a synthetic task, ~25% on real MQAR spans (12 tiers, under-sampled). Needs thousands of real spans (router wired into the LM). [Rev20]
