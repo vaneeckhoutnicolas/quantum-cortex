@@ -20,6 +20,7 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `EXTRACTION-K3-2026-08-08.md` — knowledge harvested from the two K3 repositories, with per-item legal status (zero code copied).
 - `GETTING-STARTED.md` — set up the local Python env and run/verify everything locally (smoke, ledger, the E5 commit loop). Start here to reproduce.
 - `SEQUENCE.md` — **the stage-by-stage synthesis**: everything that ships at each step/wave, one page, status-stamped (synthesizes with pointers, never overrides).
+- `WHITEPAPER.md` — the paper's living skeleton: sections, the **admission gate** for claims (statistical, anchored, real, reproducible, bounded), what is admissible vs open, and the gates for v0/v1.
 - `EXTRACTION-LANDSCAPE-2026-08-08.md` — the August-2026 landscape pass: 15 repos, licenses verified, ideas mapped, legal PASS.
 - `concepts/README.md` — concepts index + the deep-dive schedule (a region earns its dive when its wave opens).
 - `concepts/brain-atlas.md` — the systematic brain → cortex transposition atlas (mapped / candidate / deliberately not transposed). `concepts/hippocampus.md` — the memory-organ deep dive.
