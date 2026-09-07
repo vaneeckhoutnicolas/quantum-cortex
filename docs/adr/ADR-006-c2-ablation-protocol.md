@@ -56,6 +56,18 @@ The advancement rule says when a variable *wins*; this says when a variable *mus
 
 **One primitive at three scales (RES-17 instance):** this circuit breaker (protocol level — kill a variable) is the same law as the **hyperdirect veto** (decode level — abort mid-decode on contract violation, ADR-003 basal-ganglia) and **eviction** (memory level — kill noise that never consolidates, D4.8): *cut cleanly what destabilises to preserve the whole*. A variable transitions live → destabilising → killed-or-refined — a textbook RES-17 type×state transition.
 
+## Decision 8 — Multi-path C2: the router design (amendment, 2026-09-07, post-first-result)
+
+The first complete ablation (hopfield +14% AUC, delta +2%, control baseline; per-tier hopfield 6 / delta 2 / **control 3** — each has a domain; upper-envelope router +21% vs control, +6% over Hopfield; Hopfield capacity sweep → **structure-limited**, enlarging it does not help) motivates evolving C2 from *one memory* to a **router of memories on a control floor** (full rationale + unification: register RES-18). Actionable design:
+
+- **Paths:** control (floor, always available), Hopfield, delta. Router selects per span.
+- **Floor guarantee:** a memory is used only where it beats the control; else the control. C2 cannot degrade the model. *The data proves the floor is needed — control won 3/12 tiers.* Falling to control is a result, not a failure.
+- **Regime = consolidation:** hard routing (pre-compute, one path) where learned/confident/stable; soft (compute + weight) where unsure. Migrate soft→hard as learned (cost falls, precision rises). Hardening threshold **declared, measurable, conservative**.
+- **Breaker = fallback:** on degrade/diverge, re-route to the best remaining path above the control (else floor), re-softening. **Declared hysteresis** prevents oscillation. Completes the hyperdirect veto (redirect, not void).
+- **Test:** router AUC ≥ max single-path AUC (ceiling shown: +21% envelope); mean cost falls; no flapping.
+
+Implementation order (measure-first, slices, each tested before the next): **(A)** offline upper-envelope oracle — pick per-span the best of the three *known* accuracies, bounding the ceiling (the ablation already gives this: +21%); **(B)** a soft router (learned gate over the three paths) trained on MQAR; **(C)** hardening + hysteresis + breaker-fallback wired; **(D)** the ablation: router vs each single path — must reach the envelope.
+
 ## Consequences
 
 `train.py`'s `Config` gains `c2_variant` (default `none`) and the associative layers ship behind it, default off — N1 reproducibility is untouched, and a test proves it. The benchmarks are evaluation-only until Slice C. The advancement rule and tolerances are frozen here, before numbers exist — the honest order. N2 produces the first frontier points that *decide* something; until Slice C runs, nothing is claimed.

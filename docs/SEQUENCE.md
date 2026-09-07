@@ -24,6 +24,11 @@ In one sentence: `validate-ledger` guards **the truth of the numbers**, `smoke-t
 
 In one sentence: **so far we have only trained the proof that the factory works; E3 trains the reference; the waves train the brain.** "The final model" does not exist yet *by design* — it will be the combination of whatever beats the control on the ledger.
 
+## N2 first result (2026-09-07) — the first Pareto point that decides
+
+The first complete MQAR ablation (12 tiers × control/hopfield/delta, 9h GPU):
+**both associative memories beat the control** (AUC: hopfield +14%, delta +2%; verdict "advances"). Per-tier each path has a domain (**hopfield 6, delta 2, control 3**). The **upper-envelope multi-path router (RES-18) reaches +21% vs control, +6% over the best single path** — validating the router design *by data before it is built*. Hopfield is **structure-limited** (capacity sweep: more slots degrade) — the way past its ceiling is combining paths. DeltaMemory was stabilised (L2-normalised keys) and the circuit breaker proved itself. Full artefact: `metrics/mqar/`. **Next:** implement the RES-18 multi-path C2 router (ADR-006 D8, order A→B→C→D).
+
 ## How we read results (ADR-004 / D16) — read this before interpreting any number
 
 Optimisations are **not linear**, so results are never read as a single score. The law (full text: `adr/ADR-004-evaluation-pareto.md`):
