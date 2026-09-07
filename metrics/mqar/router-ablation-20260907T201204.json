@@ -1,0 +1,30 @@
+{
+  "benchmark": "router_ablation",
+  "timestamp_utc": "2026-09-07T20:12:04.425033+00:00",
+  "regime": {
+    "train_n": 4000,
+    "test_n": 1000,
+    "steps": 600,
+    "seed": 1337
+  },
+  "auc": {
+    "control_only": 0.1445,
+    "best_single_memory": 0.2039,
+    "oracle_ceiling": 0.2951,
+    "learned_router": 0.2889
+  },
+  "best_single_path": "hopfield",
+  "lift_over_best_single": {
+    "oracle": 0.0912,
+    "learned": 0.085,
+    "learned_fraction_of_oracle_ceiling": 0.932
+  },
+  "controller": {
+    "keys": 3,
+    "hardened": 0,
+    "soft": 3,
+    "in_cooldown": 0
+  },
+  "verdict": "learned router captures 93% of the oracle's lift over the best single path",
+  "note": "RES-18 Slice D \u2014 the learned router predicts (never reads truth); reaching most of the oracle ceiling means the multi-path design pays off. Synthetic routing task; a fuller run trains on real MQAR spans."
+}
