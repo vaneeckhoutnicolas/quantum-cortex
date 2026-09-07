@@ -38,6 +38,25 @@
 
 ## Tier NOW — integrate into planning immediately (low risk, high anticipation value)
 
+## Implementation status (updated 2026-09-07)
+
+This register holds ideas at three maturity levels. **What is coded and green is marked here**, distinct from designs awaiting their wave. Implementation lives under `cortex_data/`, `cortex_eval/`, `cortex_c2/`, and `train.py`; tests under `tests/`.
+
+| Idea | Status | Where |
+|---|---|---|
+| **NOW-7** data composition layer | 🟢 **implemented** (Slice 1) — hashed operator DAG, lazy streaming, five invariants green; wired to `train.py` (`mix_hash`) | `cortex_data/`, ADR-005 |
+| **NOW-6** benchmarks as open deliverables | 🟢 **implemented** — MQAR + serial-position harnesses; artefacts published | `cortex_eval/`, `metrics/mqar/` |
+| **RES-1** energy/Hopfield associative memory | 🟢 **implemented** (C2 HopfieldMemory) — **wins the first MQAR ablation** (+14% AUC) | `train.py`, ADR-006 |
+| K1 delta-rule (KDA-class) | 🟢 **implemented** (C2 DeltaMemory) — stabilised (L2-normalised keys); +2% AUC | `train.py`, ADR-006 |
+| **RES-18** multi-path C2 router | 🟡 **in progress** — Slice A done (versioned `Router` contract + RouterV1 oracle, reaches the +21% ceiling); Slices B/C/D next | `cortex_c2/`, ADR-006 D8 |
+| circuit breaker (ADR-006 **D7**) | 🟢 **implemented** — aggressive early-abort + bounded retry; **proven in production** (12 clean aborts) | `train.py`, ADR-006 D7 |
+| Pareto evaluation (**D16**) | 🟢 **implemented** — AUC / whole-curve reading in the ablation driver | `cortex_eval/ablation_mqar.py`, ADR-004 |
+| **RES-14** data-portfolio β | 🔵 seam only — pluggable weight resolver in place; estimator deferred (infra-gated) | `cortex_data/`, ADR-005 |
+| **RES-15/16/17** meta-tokens / consolidation / type×state | 🔵 **design** — organising principles, implemented where a wave exercises them | register |
+| RES-2/3/4/5/6/7/8/9/10/11/12/13, NOW-1/2/3/4/5/8/9, SPEC-1..4 | 🔵 **design** — await their wave (see each entry's Status/Maps) | register |
+
+Legend: 🟢 implemented & green · 🟡 in progress · 🔵 design (awaiting its wave). The ledger and `metrics/mqar/` are the ground truth for what has actually run.
+
 ### NOW-1 · Oracle in pretraining, not bolted on — *the trap everyone would hit*
 **What:** train with the C3 oracle channel active from the start: inject controlled distribution shifts and exogenous event tokens *during pretraining*, so the model learns to condition on them. **Why:** an input channel the model never saw in training is noise at inference; C3 only works if it is a curriculum citizen. **Test:** oracle-shift recovery of oracle-trained vs oracle-naive model, equal budget. **Status:** Established principle (conditioning channels), novel application. **Impact:** N1's data pipeline must already reserve the token space for oracle events.
 
