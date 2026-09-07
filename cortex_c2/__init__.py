@@ -126,9 +126,13 @@ class RouterV1(Router):
 
 
 def make_router(version: int = CURRENT_ROUTER_VERSION, **kw) -> Router:
-    """Factory — version dispatch for construction (one branch today)."""
+    """Factory — version dispatch for construction. Retro-compat in action:
+    v2 is one more branch, v1 is untouched (the contract fixed at v1 holds)."""
     if version == 1:
         return RouterV1(**kw)
+    if version == 2:
+        from cortex_c2.router_v2 import RouterV2   # torch-dependent, imported lazily
+        return RouterV2(**kw)
     raise ValueError(f"no Router implementation for version {version}")
 
 
