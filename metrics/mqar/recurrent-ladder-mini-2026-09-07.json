@@ -1,0 +1,48 @@
+{
+  "benchmark": "recurrent_ladder",
+  "run": "mini-2026-09-07",
+  "timestamp_utc": "2026-09-07T21:37:16.724862+00:00",
+  "regime": {
+    "tier": [
+      4,
+      48
+    ],
+    "steps": 300,
+    "seed": 1,
+    "d_model": 48,
+    "note": "mini CPU run \u2014 shape of the curve, not final numbers"
+  },
+  "curve": [
+    {
+      "rung": "L0-canonical-gla",
+      "auc": 0.0117
+    },
+    {
+      "rung": "L1-+selective-gate",
+      "auc": 0.0156
+    },
+    {
+      "rung": "L2-+channel-decay",
+      "auc": 0.0195
+    },
+    {
+      "rung": "L3-+local-conv",
+      "auc": 0.0352
+    },
+    {
+      "rung": "L4-+delta-rule",
+      "auc": 0.0156
+    }
+  ],
+  "hybrids_same_regime": {
+    "transformer_control": 0.0703,
+    "hopfield": 0.1211,
+    "delta": 0.1289
+  },
+  "readings": [
+    "Refinements stack up through L3: selectivity, channel-decay (Kimi's finding reproduced: channel > head), local conv (largest single gain).",
+    "Even at the ladder's best pure rung (L3, 0.035) the recurrent family sits at ~1/2 the transformer and ~1/4 our hybrids \u2014 the hybrid thesis holds at tout-egal, at every rung.",
+    "L4 (+delta-rule) REGRESSES when pure (0.016) \u2014 yet the same delta-rule inside our hybrid reaches 0.129: the delta-rule appears to pay only when combined with attention. A candidate finding for the whitepaper; needs 1500 steps + multi-seed before any claim."
+  ],
+  "claim_discipline": "compared to 'GLA + named rungs', never to 'Mamba'; an official pre-trained recurrent remains a separate non-equalised reference."
+}
