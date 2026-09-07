@@ -56,7 +56,7 @@ The journal engine is written from scratch (our filon), as `cortex_data` and `co
 
 ## Implementation order (measure-first, slices; each tested before the next)
 
-1. **Slice A — the store:** entry schema, payload store with content hashing (reuse `cortex_data` hashing), append-only journal file, the RES-17 state field; invariants: size law (≤1 KB), no payload duplication, read never O(N) (a test that fails on a scan).
+1. **Slice A — the store — IMPLEMENTED & GREEN 2026-09-08:** `cortex_c2b/` — `Entry` (cue, pointer, salience, schema_id, timestamps, RES-17 state), `PayloadStore` (content-addressed by hash — same bytes stored once), `Journal` (append-only JSONL log replayable to the same state; keyed cue index so reads never scan; legal-only lifecycle transitions live→consolidated→demoted→evicted; inspectable snapshot). **Nine invariants green, including `test_read_never_scans`** (2000 entries; a read by cue must touch < N/10 — a scan fails the test), the size law (≤1 KB, pointer never content) and no-duplication (two entries, one payload).
 2. **Slice B — the write path:** DG separation, CA1 comparator (surprise as computed distance against the existing C2 reconstruction), the two-stage gate; tests: a planted duplicate is rejected, a novel fact passes, a corrupted input is admitted-then-evicted (the noise tribunal).
 3. **Slice C — the read path via the router:** the journal as path 4 of `Router`; ANN over cues; test: the floor guarantee holds with the journal on/off.
 4. **Slice D — the H.M. protocol, end to end:** the generator (open, seeded, config-hashed), the ON/OFF harness, the negative control, `hm_dissociation_pass` — **the milestone.** Then lifecycle (consolidate/demote/evict) as Slice E, and the protocol at every checkpoint.
