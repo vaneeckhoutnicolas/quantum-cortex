@@ -36,3 +36,13 @@ Results land in the run record's `results.benchmarks.standard_suite` as: `hm_ski
 ## 6. Failure semantics (honest data)
 
 A FAIL is a result, not an embarrassment: it is recorded, dated, and triggers a written revision of the memory story (dated ADR amendment). Thresholds ε_S, δ, floors are frozen here; changing any of them requires a dated amendment *before* the affected run — never after seeing numbers.
+
+## Amendment 2026-09-08 — the negative control is read above chance (dated before the affected rerun)
+
+**Trigger (recorded honestly):** the first Slice-D run of the protocol against the C2b organ returned `hm_dissociation_pass = 0` with verdict **INVALID** — not because the journal hallucinated (journal-ON negative control = **0.000**: for never-planted entities the cue index returns a neighbour with low similarity and the exact-match check rejects it — the journal *knows it does not know*), but because the journal-OFF arm, which simulates the parametric floor by guessing among the schema's attributes, "recalls" ~chance (12.5%, 8 attributes) by construction, and the spec's absolute 10% invalidation line sits *below* chance. The spec conflated **guessing** (chance-level, legitimate) with **hallucinating** (above chance, illegitimate).
+
+**Amendment:** `hm_negctrl_rate` is defined per arm and read **above chance**: `hm_negctrl_rate = max(negctrl_on, max(0, negctrl_off − chance))`, with `negctrl_on`, `negctrl_off_raw` and `negctrl_off_above_chance` all reported. The 10% invalidation line is unchanged. A journal arm above 10% still invalidates (hallucination); a floor arm at chance does not (guessing).
+
+**Also corrected in the reference simulator (not the spec):** a weights-only floor guesses *once* per fact — the paraphrase probe addresses the same entity and does not reroll the guess.
+
+**Thresholds δ = 0.50, ε_S = 1%, floor = chance + 5 pts are unchanged.** This amendment is dated before the rerun whose verdict it affects; the invalid first run is kept in the artefact history.

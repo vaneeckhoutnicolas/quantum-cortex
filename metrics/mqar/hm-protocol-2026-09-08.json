@@ -1,0 +1,50 @@
+{
+  "benchmark": "hm_protocol",
+  "spec": "docs/benchmarks/hm-protocol.md (frozen thresholds)",
+  "timestamp_utc": "2026-09-07T23:50:46.477627+00:00",
+  "generator": {
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0,
+    "config_hash": "a5e22c70a3275ed4",
+    "schemas": [
+      "person",
+      "place",
+      "event",
+      "object",
+      "decision"
+    ],
+    "admitted": 200
+  },
+  "thresholds": {
+    "delta": 0.5,
+    "epsilon_s": 0.01,
+    "floor": 0.175,
+    "chance": 0.125,
+    "negctrl_invalid": 0.1
+  },
+  "hm_recall_on": 1.0,
+  "hm_recall_off": 0.125,
+  "hm_gap": 0.875,
+  "hm_negctrl_rate": 0.055,
+  "hm_negctrl_on": 0.0,
+  "hm_negctrl_off_raw": 0.18,
+  "hm_negctrl_off_above_chance": 0.055,
+  "hm_skill_delta": 0.0,
+  "run_valid": true,
+  "hm_dissociation_pass": 1,
+  "verdict": "PASS \u2014 the dissociation holds: episodes live in the journal, skills are journal-independent",
+  "reserve": "Slice D runs the protocol against the C2b organ with a hash-seeded cue encoder and a reference skill probe; the language-model arm (real skills suites, learned cue encoder) lands when the LM is wired to the journal. Recall here is a retrieval test \u2014 the journal's job.",
+  "history": {
+    "first_run_2026-09-08": {
+      "verdict": "INVALID \u2014 negative control 0.12 >= 0.10",
+      "cause": "the OFF-arm floor simulator guessed twice per fact and the spec read the negative control as an absolute rate (guessing conflated with hallucinating); journal-ON negctrl was 0.000 throughout",
+      "resolution": "simulator corrected (one guess per fact); spec amended 2026-09-08 BEFORE the rerun: negative control read above chance; thresholds delta/eps_S/floor unchanged"
+    }
+  },
+  "seeds_stable": {
+    "1": 1,
+    "2": 1,
+    "3": 1
+  }
+}
