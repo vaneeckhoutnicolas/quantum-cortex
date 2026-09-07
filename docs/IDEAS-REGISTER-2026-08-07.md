@@ -75,6 +75,8 @@ Legend: 🟢 implemented & green · 🟡 in progress · 🔵 design (awaiting it
 ### NOW-7 · Data as a first-class citizen — the missing pillar
 **What:** at 25M–3B, **data quality is the multiplier**: the capability-per-parameter thesis is won or lost in curation, dedup, filtering, and the **mix**. Decision path: the data mix becomes a declared, config-hashed, *ablatable* object (mix A vs mix B at equal tokens is a legitimate ablation row), with a decontamination policy (eval sets never in training data — generalizing the H.M. leakage controls). **Status:** Established practice (phi/SmolLM lineage, credited), missing from our stack until now. Maps to N1+, ADR-001. **Mandatory before N2.**
 
+**Implementation (2026-09-07):** 🟢 implemented (Slice 1) — `cortex_data/`: hashed operator DAG, lazy streaming, signature-aware multiset `mix`, decontamination; five invariants green; wired into `train.py` (`data_mode=mix`, `mix_hash` in the record + schema); first FineWeb-Edu manifest committed; N1 retro-migrated. Full design: ADR-005.
+
 ### NOW-8 · Organ-use post-training — teach the model to use its own organs
 **What:** a journal the model never learned to consult, an oracle it never learned to heed, contracts it never learned to respect — are dead weight. Post-training traces (SFT-class, later preference-tuned) teaching the *behaviors*: consult-then-answer, cite spans instead of regenerating (RES-8), react to oracle events, emit contract-compliant outputs. Synthetic traces generated from our own benchmark generators. **Status:** Frontier gap — the architecture literature under-covers organ-use training; ours cannot. Maps to C2b, C3, C4, RES-8; lands after W1.
 
@@ -117,11 +119,18 @@ Legend: 🟢 implemented & green · 🟡 in progress · 🔵 design (awaiting it
 
 **The unification (the point):** not three ideas — *one system* branching seven mechanisms graved separately: **C1** (router), **RES-4** (confidence routing), **RES-16** (consolidation + reminiscence), **RES-9 endocrine** (explore/exploit), **basal-ganglia** (habit + hyperdirect veto), **circuit breaker D7**, **RES-17** (a span transitions hard↔soft↔fallen-back). The project was the same system seen through seven windows. **Test (when built):** router AUC ≥ max single-path AUC by construction (the ablation shows the ceiling: +21% vs control, the upper envelope); mean routing cost falls over training; no oscillation under hysteresis. **Status:** Frontier — the design of C2 proper. Maps to C1, RES-4, RES-9, RES-16, RES-17, ADR-006 D7/D8, brain-atlas basal-ganglia/endocrine.
 
+**Implementation (2026-09-07):** 🟡 Slice A implemented — `cortex_c2/`: the versioned `Router` contract (retro-compat from v1: tagged serialisation + version dispatch) and `RouterV1` (the upper-envelope oracle), which **reaches the measured ceiling** (+21% vs control, +6% over the best single path) on the real ablation curves. Slices B (learned gate), C (hard/soft + hysteresis + breaker fallback), D (router-vs-single-path ablation) next.
+
 ### RES-12 · Legal distillation — the strongest solo-founder capability lever
 **What:** the Kimi K3 license (read in full) explicitly permits fine-tuning and derivative works; teacher-generated synthetic curricula aimed at **our declared capabilities** (recall, oracle-shift, contract compliance, continuity) are a legal, powerful path to capability-per-parameter. Rules: per-teacher license compliance recorded; the **teacher mix is published** in the ledger (radical transparency where others whisper "distillation chatter"); distilled data feeds NOW-7's mix as a declared component, ablated like any other. **Status:** Established technique, Frontier as a capability-targeted program under full public provenance. Maps to NOW-7, NOW-8, D3.
 
 ### NOW-6 · Benchmarks as open deliverables
 **What:** the oracle-shift corpus and the long-range MQAR variants do not exist off the shelf — build them, version them in-repo, publish them as citable datasets. **Why:** whoever defines the benchmark frames the field; also required for anyone reproducing the ledger. **Status:** Established practice. Maps to ADR-001.
+
+### NOW-6 · Benchmarks as open deliverables
+**What:** the oracle-shift corpus and the long-range MQAR variants do not exist off the shelf — build them, version them in-repo, publish them as citable datasets. **Why:** whoever defines the benchmark frames the field; also required for anyone reproducing the ledger. **Status:** Established practice. Maps to ADR-001.
+
+**Implementation (2026-09-07):** 🟢 implemented — `cortex_eval/`: MQAR by difficulty tiers (`mqar.py`, the curve is the deliverable), the serial-position curve (`serial_position.py`, Rev7.b), a standalone MQAR runner and the 3-variant ablation driver with AUC reading. Artefacts published under `metrics/mqar/` (NOW-6).
 
 ---
 
@@ -134,6 +143,8 @@ Legend: 🟢 implemented & green · 🟡 in progress · 🔵 design (awaiting it
 
 where `M` is the associative memory, `o_t` the oracle state, `T(o_t)` an oracle-driven temperature, and — the interesting variant — the oracle may also **reshape the landscape** (add/remove attractor terms in `E_mem`) rather than only heating it. Gray state = the distribution itself, not a sampled branch. **Why:** one equation the whitepaper can stand on; each term is independently ablatable. **Test:** landscape-reshaping vs temperature-only on oracle-shift recovery. **Status:** Frontier; the sketch is a hypothesis, not a result.
 
+**Implementation (2026-09-07):** 🟢 implemented as the C2 `HopfieldMemory` layer — and it **wins the first MQAR ablation** (+14% AUC vs control, ~3× cheaper than delta). The 2026-08-07 "hypothesis, not a result" above is now *superseded by measured data* (kept per errors-noted-never-erased). Full result: `metrics/mqar/mqar-ablation-final-2026-09-07.json`.
+
 ### RES-2 · Journal-backed test-time memory ("a model that remembers your project")
 **What:** Titans-class fast-weight memory that writes on **surprise** — but with the QM per-project encrypted journal as the persistence substrate: surprise moments are journaled (agent-side, I13) and re-loaded as fast-weight state per project scope. **Why:** turns QM's existing journal into a literal long-term memory organ; standalone models forget, this one resumes. Strong differentiation + strong QM flywheel. **Test:** cross-session task continuation vs stateless baseline. **Status:** Frontier (test-time training is active literature; the journal substrate is the novel part). Maps to C2b, respects the trust boundary by construction.
 
@@ -142,6 +153,8 @@ where `M` is the associative memory, `o_t` the oracle state, `T(o_t)` an oracle-
 
 ### RES-4 · Trust-weighted routing — Kern's slashing inside the weights
 **What:** each zone carries a learned trust score updated by an auxiliary loss: a zone whose confident contributions correlate with errors loses routing weight (an epistemic bond, slashed on equivocation — the Kern attestation mechanism transposed into training). Extends to grafted zones at inference via C6 telemetry. **Test:** robustness under deliberately corrupted experts vs vanilla gating. **Status:** Frontier. Maps to C1 + C5 + the trust-score vocabulary already in the glossary.
+
+**Implementation (2026-09-07):** 🔵 not yet trained, but its confidence-routing role is now *structurally present* — the RES-18 multi-path C2 router (Slice A, `cortex_c2/`) carries per-path confidence in its `RouteDecision`; the corrupted-expert robustness test lands with the learned router (Slice B) and trust dynamics.
 
 ### RES-5 · Heterogeneous placement by magnetism — the resource pool done right
 **What:** treat hardware backends the way the router treats zones: a **pool of measured resources**. Each backend (CPU/ggml, consumer GPU, big GPU, NPU) carries live-measured throughput, cost and energy; a placement scheduler — same scoring philosophy as QM proposal magnetism — assigns work per request: NOW-2's draft runs on cheap silicon, verification on strong silicon, memory tiers spill by locality. The model itself stays device-blind (frameworks already provide that); the *scheduler* is deliberately device-aware, because pretending silicon is uniform is exactly how the "quintessence" of each resource is lost — Go's scheduler wins by measuring and work-stealing, not by pretending cores are identical. **Test:** tokens-per-dollar and tokens-per-joule vs single-backend serving at equal output quality. **Status:** Frontier (primitive forms exist — llama.cpp CPU/GPU offload, disaggregated serving; the per-request, energy-signal-driven, magnetism-scored placement is the novel combination). Maps to C5 + C6 + NOW-2. *Rev3 evidence:* kimi-k3-in-c ("memory is a dial"), prima.cpp/Halda, PowerInfer-2 neuron clusters — the pool thesis now has three independent living exhibits.
