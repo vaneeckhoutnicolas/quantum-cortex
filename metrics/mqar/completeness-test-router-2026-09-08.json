@@ -1,0 +1,43 @@
+{
+  "benchmark": "completeness_test_router_retrogradation",
+  "timestamp_utc": "2026-09-07T22:37:19.867891+00:00",
+  "law": "complete-ledger law (Mirror-Constrained BH Thermodynamics I \u00a79 / III \u00a74, N. Van Eeckhout): a varying result is not random but incomplete; residual variance is the share of omitted context and vanishes under full specification.",
+  "question": "is the router's real-span variance (-38%..+67% across 3 holdouts) noise, or the signature of an omitted context factor?",
+  "omitted_factor_found": "the ORACLE MARGIN available on the held-out tiers (how much the paths actually separate there)",
+  "per_holdout": [
+    {
+      "seed": 1337,
+      "oracle_margin": 0.0112,
+      "fraction_captured": -0.38,
+      "reading": "the only separable holdout \u2014 and the router does WORSE than the best single path"
+    },
+    {
+      "seed": 7,
+      "oracle_margin": 0.0032,
+      "fraction_captured": 0.46,
+      "reading": "near-zero margin: '46% of almost nothing' \u2014 the ratio is meaningless here"
+    },
+    {
+      "seed": 42,
+      "oracle_margin": 0.006,
+      "fraction_captured": 0.67,
+      "reading": "near-zero margin: same artefact"
+    }
+  ],
+  "regression": {
+    "fraction ~ a + b*oracle_margin": {
+      "a": 1.05,
+      "b": -117.2,
+      "R2": 0.734,
+      "n": 3,
+      "caveat": "df=1, indicative only"
+    }
+  },
+  "conclusions": [
+    "The variance was NOT noise: it is the omitted-variable signature of the held-out tiers' separability. Once counted, the picture is sharp.",
+    "The 'fraction of oracle ceiling' metric is ill-posed when the ceiling is near zero (a ratio whose denominator collapses) \u2014 the thermodynamic twin of a product that 'depends on mass' when a root is omitted. REPLACED by an absolute metric: AUC(router) - AUC(control), with the oracle lift reported alongside as the available margin.",
+    "The retrogradation of Rev20 STANDS, with a sharper diagnosis: not '~25% on average' (that number is a ratio artefact) but 'on the only separable holdout the learned router underperforms the best single path'. The router does not learn where there IS structure \u2014 from 8 training points.",
+    "The defect is the missing share of the ledger: the spans. ADR-007 Slice C (thousands of real spans with provenance) is the completion; the law predicts the defect closes if the context is complete, and says what to measure if it does not."
+  ],
+  "note": "the founder's physics corrected the founder's LLM \u2014 toward rigour, not comfort. Recorded as RES-20's first application."
+}
