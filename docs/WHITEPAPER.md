@@ -99,13 +99,17 @@ Single seeds where noted; one capability (associative recall) measured so far; s
 - **v1 (submittable)** requires the continuity triad measured on at least one organ (C2b or C3 built) **and** a 100M+ run — i.e. the capability the paper is named after must exist as a measurement, not a specification.
 - Target: arXiv (cs.LG), then a workshop; open-results (D17): the paper, ledger and benchmarks are public; the recipe stays the workshop's.
 
-## References (working list — completed at v0)
-- Scoville, W.B., Milner, B. (1957). Loss of recent memory after bilateral hippocampal lesions. *J. Neurol. Neurosurg. Psychiatry.*
-- Ramsauer, H. et al. (2020). Hopfield Networks is All You Need. *arXiv:2008.02217.*
-- Schlag, I., Irie, K., Schmidhuber, J. (2021). Linear Transformers Are Secretly Fast Weight Programmers. *ICML.*
-- Yang, S. et al. (2024). Parallelizing Linear Transformers with the Delta Rule over Sequence Length (DeltaNet). *NeurIPS.*
-- Arora, S. et al. (2023). Zoology: Measuring and Improving Recall in Efficient Language Models. *arXiv:2312.04927.* (MQAR)
-- Gu, A., Dao, T. (2023). Mamba: Linear-Time Sequence Modeling with Selective State Spaces. *arXiv:2312.00752.*
-- Kimi Team (2025). Kimi Linear: An Expressive, Efficient Attention Architecture. *arXiv.* (KDA, channel-wise decay)
-- Ma, S. et al. (2024). The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits (BitNet b1.58). *arXiv:2402.17764.*
-- Penedo, G. et al. (2024). The FineWeb Datasets. *arXiv:2406.17557.* (FineWeb-Edu, ODC-By)
+## References (verified 2026-09-08 against arXiv / publisher pages; completed at v0)
+- Scoville, W.B., Milner, B. (1957). Loss of recent memory after bilateral hippocampal lesions. *J. Neurol. Neurosurg. Psychiatry* 20(1):11–21. doi:10.1136/jnnp.20.1.11.
+- Ramsauer, H., Schäfl, B., Lehner, J., Seidl, P., Widrich, M., Adler, T., et al. (2021). Hopfield Networks is All You Need. *ICLR 2021.* arXiv:2008.02217.
+- Schlag, I., Irie, K., Schmidhuber, J. (2021). Linear Transformers Are Secretly Fast Weight Programmers. *ICML 2021.* arXiv:2102.11174.
+- Yang, S., Wang, B., Shen, Y., Panda, R., Kim, Y. (2024). Gated Linear Attention Transformers with Hardware-Efficient Training. *ICML 2024.* arXiv:2312.06635. *(GLA — the canonical rung L0 of the recurrent ladder)*
+- Yang, S., Wang, B., Zhang, Y., Shen, Y., Kim, Y. (2024). Parallelizing Linear Transformers with the Delta Rule over Sequence Length. *NeurIPS 2024.* arXiv:2406.06484. *(DeltaNet)*
+- Yang, S., Kautz, J., Hatamizadeh, A. (2024). Gated Delta Networks: Improving Mamba2 with Delta Rule. arXiv:2412.06464. *(Gated DeltaNet — the family of our DeltaMemory; rung L4)*
+- Kimi Team, Zhang, Y., Lin, Z., Yao, X., Hu, J., Meng, F., et al. (2025). Kimi Linear: An Expressive, Efficient Attention Architecture. arXiv:2510.26692. *(KDA extends Gated DeltaNet with channel-wise gating; rung L2)*
+- Arora, S., Eyuboglu, S., Timalsina, A., Johnson, I., Poli, M., Zou, J., Rudra, A., Ré, C. (2024). Zoology: Measuring and Improving Recall in Efficient Language Models. *ICLR 2024.* arXiv:2312.04927. *(MQAR)*
+- Gu, A., Dao, T. (2023). Mamba: Linear-Time Sequence Modeling with Selective State Spaces. arXiv:2312.00752. *(selective gate — rung L1; local conv — rung L3)*
+- Ma, S., Wang, H., Ma, L., Wang, L., Wang, W., Huang, S., Dong, L., Wang, R., Xue, J., Wei, F. (2024). The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits. arXiv:2402.17764. *(BitNet b1.58)*
+- Penedo, G., Kydlíček, H., Ben Allal, L., Lozhkov, A., Mitchell, M., Raffel, C., von Werra, L., Wolf, T. (2024). The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale. *NeurIPS 2024 Datasets & Benchmarks.* arXiv:2406.17557. *(FineWeb-Edu, ODC-By)*
+
+*Verification note (method §2.7 applied to the bibliography): every entry above was checked against its arXiv abstract page or publisher record before being kept. The first draft had one missing identifier (Kimi Linear), two missing venues (Ramsauer: ICLR 2021; Zoology: ICLR 2024), and two missing lineage papers (GLA; Gated DeltaNet) — corrected here. Language-model-generated citations are treated as hypotheses until verified.*
