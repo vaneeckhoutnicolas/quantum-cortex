@@ -1,0 +1,66 @@
+# ADR 007 — C2b, the persistent tier: the organ that makes continuity measurable
+
+- **Status:** Proposed (Nicolas Van Eeckhout, 2026-09-08) — design; implementation in slices, each tested before the next
+- **Deciders:** Nicolas Van Eeckhout
+- **Context:** the paper is named after continuity (D15), yet its central capability is today a *specified protocol* (H.M., `docs/benchmarks/hm-protocol.md`) awaiting its organ. Whitepaper v1 is gated on measuring the continuity triad on a built organ. C2b is that organ: the episodic store that lives *outside* the weights and survives the session boundary. This ADR turns the scattered specifications already graved (hippocampus pipeline, retention law ADR-003 D4, the noise ruling D4.8, the H.M. thresholds) into an implementable design, and states what it reuses.
+- **Cites:** hub-019, ADR-003 D4 (retention law, D4.8 noise ruling), ADR-005 (content addressing), ADR-006 D8 (the router), `docs/concepts/hippocampus.md`, `docs/benchmarks/hm-protocol.md`, register RES-2, RES-9, RES-11, RES-15, RES-16, RES-17, RES-19.
+
+## Context — what C2b is, and is not
+
+**Weights = semantic and procedural; journal = episodic.** The two-store model (patient H.M.: no new episodes, skills intact) is the founding prediction of the memory story. C2b is the journal: an append-only, content-addressed store of *episodes* — things that happened in a session — written by a gated path, read by a fixed-size associative state plus sub-linear search, consolidated on a rhythm into the weights, and forgotten on schedule. Its existence is what makes the H.M. dissociation *testable*: cut the journal, recall must collapse while skills hold.
+
+C2b is **not** retrieval-augmented generation over documents (that is a different object: exogenous, non-episodic, not gated by surprise), and **not** a bigger context window (which forgets at the boundary by construction). It is the organ the continuity triad measures.
+
+## Decision 1 — The entry (the retention law, made concrete)
+
+An entry is `(cue, pointer, salience, schema_id, t_written, t_last_read, state)`:
+- `cue` — a fixed-size embedding of the episode's *address* (matryoshka-truncatable for cold entries; NOW-3);
+- `pointer` — a content hash of the episode's payload (the payload lives in a payload store, never duplicated in the journal — ADR-005 content addressing reused);
+- `salience` — a scalar updated by surprise at write (CA1), by outcome credit later (RES-11), decayed on schedule;
+- `schema_id` — the span-contract tag (RES-8), so episodes are typed;
+- `state` — the RES-17 lifecycle cell: `live → consolidated → demoted → evicted`.
+**Size law:** ≤ 1 KB per entry; content never duplicated. **Read law:** never a scan — retrieval = fixed-size associative state (constant memory) + ANN over cues (sub-linear). O(N) reads are prohibited by test.
+
+## Decision 2 — The write path = the hippocampal pipeline (each stage ablatable)
+
+`separate (DG) → associate (CA3) → compare (CA1) → gate`:
+1. **DG — pattern separation:** expand-then-sparsify the cue so near-duplicates decorrelate before storage (interference guard).
+2. **CA3 — pattern completion:** the existing C2 associative memory *reconstructs* from the cue (reuse: the Hopfield/delta layer of ADR-006 — C2 is CA3).
+3. **CA1 — the comparator:** `surprise = distance(reconstruction, input)`. Surprise stops being a heuristic and becomes a computed quantity at the memory interface (RES-2 made concrete).
+4. **Write gate — the noise ruling (D4.8), two stages:** *admission* rejects the redundant/already-known (low surprise) — but surprise alone is not signal (a corrupted input is maximally surprising), so *the verdict is retrospective*: an entry that never consolidates, never gains salience, never earns outcome credit is noise and is evicted. Scheduled forgetting is the tribunal.
+Each stage is a flag (default off) and an ablation row: interference without DG; recall without CA3; write precision without CA1.
+
+## Decision 3 — Reads route through the RES-18 router (reuse, not invention)
+
+The read path is a fourth path for the multi-path router: `control | hopfield | delta | journal`. The journal path is used only where its predicted score beats the control (the floor guarantee holds — C2b can never degrade the model); routing hardens as it consolidates; the breaker falls back if the journal degrades. **No new router is built** — the versioned `Router` contract gains one path. This is the first exercise of the router on a *real* new component, and the natural place to test whether it learns to route with thousands of real spans (the open question of D9/Rev20).
+
+## Decision 4 — Consolidation and forgetting (the lifecycle, scheduled)
+
+- **Consolidate:** on a rhythm (RES-9 phases — the "sleep" of the model), replay live entries forward into the persistent associative memory / weights; an entry that consolidates transitions `live → consolidated`.
+- **Demote:** K consolidated entries → 1 summary entry keeping pointers (`consolidated → demoted`).
+- **Evict:** below a salience floor, already consolidated, aged (`demoted → evicted`). Reverse replay (RES-11) keeps salience honest: outcome credit walks the trajectory backward.
+- **Budgets are homeostatic setpoints:** per-scope caps on bytes and read p95 are regulated variables — approaching a cap raises consolidation/eviction pressure. Scoping (per-project journals) partitions N.
+This lifecycle *is* RES-16 (content-addressed hierarchical consolidation) and *is* a RES-17 state machine — the same law the router uses, at the memory scale.
+
+## Decision 5 — The first measurable milestone: the H.M. protocol runs
+
+C2b is not "done" when it stores things; it is done when **the H.M. protocol produces a number**. Frozen thresholds (from the spec, never adjusted after seeing numbers): 200 synthetic facts (`Vorel-3f2a`-class, leakage-proof), written through the normal gated path; `hm_recall_on − hm_recall_off ≥ δ = 0.50`; `hm_recall_off ≤ chance + 5 pts`; `hm_skill_delta ≤ ε_S = 1%`; negative control. `hm_dissociation_pass` is 0/1 and is published either way. **A FAIL is a result** and triggers a dated revision of the memory story. From this milestone on, the protocol runs at every checkpoint.
+
+## Decision 6 — Safety and telemetry
+
+The H.M. diagnostic doubles as the **eviction-safety check**: consolidate-then-evict must never silently degrade skills or contracted recall. Journal size, hit rate, read p95, and the lifecycle counts (live/consolidated/demoted/evicted — the RES-17 snapshot) are emitted in C6 telemetry and land in the run record's `standard_suite`. The journal is per-scope and, in the QM setting, encrypted at rest (the trust boundary of RES-2 is respected by construction — the model never sees another scope's journal).
+
+## Decision 7 — Legality and provenance
+
+The journal engine is written from scratch (our filon), as `cortex_data` and `cortex_c2` were. ANN search may use an established library (HNSW-class; license checked at ingestion) — an index is infrastructure, not a claim. Episodes carry provenance (RES-15 origin meta-tokens: which session, which source) and are never persisted across scopes.
+
+## Implementation order (measure-first, slices; each tested before the next)
+
+1. **Slice A — the store:** entry schema, payload store with content hashing (reuse `cortex_data` hashing), append-only journal file, the RES-17 state field; invariants: size law (≤1 KB), no payload duplication, read never O(N) (a test that fails on a scan).
+2. **Slice B — the write path:** DG separation, CA1 comparator (surprise as computed distance against the existing C2 reconstruction), the two-stage gate; tests: a planted duplicate is rejected, a novel fact passes, a corrupted input is admitted-then-evicted (the noise tribunal).
+3. **Slice C — the read path via the router:** the journal as path 4 of `Router`; ANN over cues; test: the floor guarantee holds with the journal on/off.
+4. **Slice D — the H.M. protocol, end to end:** the generator (open, seeded, config-hashed), the ON/OFF harness, the negative control, `hm_dissociation_pass` — **the milestone.** Then lifecycle (consolidate/demote/evict) as Slice E, and the protocol at every checkpoint.
+
+## Consequences
+
+C2b turns the continuity triad from a specification into a measurement — the gate for whitepaper v1. It reuses three built things (C2 as CA3, `cortex_data` hashing, the RES-18 router) rather than inventing new ones (RES-19: what does this consolidate? — everything already built). Its first success criterion is a *number* (`hm_dissociation_pass`), and its first honest outcome may be a FAIL that revises the memory story. Nothing here is claimed until the H.M. protocol has run.
