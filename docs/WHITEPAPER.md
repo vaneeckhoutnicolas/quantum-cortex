@@ -26,23 +26,54 @@ A finding that fails any rule is an **open question**, not a result — and open
 *(written last)*
 
 ### 1. Thesis — continuity as a capability
-- The frontier game is closed (D3); the open question is **continuity** (D15): a model that remembers your project and visibly changes its mind when the world changes.
-- Measured as a **triad, never a scalar**: episodic persistence (H.M. protocol), adaptive revision (oracle-shift), non-regeneration of the known (reference ratio). [ADR-004/D16]
-- Positioning: a big fish in a small pond — define the question, own the efficiency niche, make the method the contribution. [D19]
 
-### 2. Method — how an individual and an AI alter-ego built this
-- Measure-first; a run without its committed record does not exist (ADR-001, the ledger).
-- One variable at a time, control equal-at-everything (hub-019), flags default-off (ADR-003).
-- Tests from day one — the plumbing invariants caught **five real bugs** before they could poison an ablation (mix duplication semantics ×2, zero-init overwritten by global init, hysteresis ordering, DeltaMemory divergence).
-- Errors noted, never erased: dated amendments, retrogradations published (Rev20).
-- The circuit breaker (ADR-006 D7): aggressive early-abort with bounded refine-retry — proven in production (12 clean aborts).
-- Data as a hashed, comparable object (ADR-005, `mix_hash`).
-- *This section is the D19 demonstration; the repo is its evidence.*
+**1.1 Scope.** This paper does not compete on general language-modeling capability. At the scale accessible to a single researcher (tens to hundreds of millions of parameters, commodity or shared-HPC compute), that contest is settled by resources rather than ideas. We instead isolate one capability that current evaluation practice does not measure, and ask whether it can be specified, measured, and improved reproducibly at small scale.
 
-### 3. Architecture — the cortex and the C2 memory router
-- The six components C1–C6 (hub-019); the brain-derived feature map (ADR-003).
-- **C2 as a multi-path router on a control floor** (RES-18): a memory is used only where it beats the control — C2 can never degrade the model; routing regime follows consolidation (hard-on-learned, soft-on-new); the breaker as re-routing fallback with hysteresis. Versioned, retro-compatible `Router` contract (v1 oracle, v2 learned gate).
-- Consolidation as one law at three scales (RES-16/RES-19): model, architecture, project.
+**1.2 The capability.** We call it *continuity*: the property of a model that (i) retains episodic content across the boundary of a session or context window, (ii) revises its predictions when an exogenous signal indicates that the world has changed, and (iii) does not regenerate content it already holds, referencing it instead. We deliberately treat continuity as a **triad** rather than a scalar. The three components are dissociable — a system may persist without revising, or revise without persisting — and a blended score would hide exactly the trade-offs of interest. Each component receives its own protocol:
+
+- *Episodic persistence* — an H.M.-style dissociation protocol, after the neuropsychological case in which episodic memory was lost while skills were retained [Scoville & Milner, 1957]. Synthetic facts introduced in a session are probed after the session boundary, with a matched control that must show no persistence; leakage controls use synthetic entities absent from any pretraining corpus.
+- *Adaptive revision* — an oracle-shift protocol: a first-class input channel carries exogenous events, and the model's predictive distribution is measured before and after a controlled shift.
+- *Non-regeneration* — a reference-ratio protocol: the fraction of output tokens that cite existing spans rather than re-emit them.
+
+The protocols are specified before any model exists that scores well on them, and are published as an open, versioned suite. We consider defining the measurement to be a contribution independent of the model.
+
+**1.3 Evaluation stance.** All results are read as a Pareto frontier over declared axes — the three continuity components plus two efficiency denominators (capability per parameter, capability per bit) — never as a single scalar. A perplexity tolerance of 2% relative to the control is a *guard* that a candidate must clear to be considered, not an axis on which it can win. No composite score is computed. Optimizations across components are not assumed additive; joint effects are recorded next to isolated effects.
+
+**1.4 Positioning.** The intended contribution is threefold: a specification of continuity as a measurable capability; an architecture in which memory components are arbitrated on a guaranteed non-regression floor (§3); and a method by which a single researcher, working with an AI system as a design and engineering collaborator, can produce reproducible results under a strict evidentiary discipline (§2). We make no claim to state-of-the-art general capability.
+
+### 2. Method — an evidentiary discipline for single-researcher work
+
+The project was carried out by one researcher in continuous collaboration with a large language model acting as a design, implementation and review partner. We describe the discipline that governed this collaboration, because we consider it to be the primary reason the results in §4 can be trusted, and because it is reproducible independently of the architecture.
+
+**2.1 Measure-first.** No architectural component enters the model on the strength of an argument. Every component is introduced behind a configuration flag that defaults to off, so that the control configuration is bit-identical to the baseline (a test asserts this). A component advances only if an ablation, at equal parameters, data, seed and schedule, extends the Pareto frontier of §1.3. Components that do not clear the bar are recorded as losses.
+
+**2.2 The ledger.** A training run that has not been committed to an append-only ledger does not exist. Each record follows a versioned JSON schema (`run-v1`) validated in continuous integration, and carries a configuration hash and a content hash of the data mix (`mix_hash`). Two runs are comparable only if their `mix_hash` coincide; "at equal data" is thereby a machine-checkable property rather than a claim.
+
+**2.3 Data as a first-class object.** The data mix is a directed acyclic graph of typed operators (sources, transforms, combinators), evaluated lazily and hashed per node. Identical sources are folded by content signature before sampling, so that a mix of a source with itself is a multiset-equivalent of the source — a property enforced by an invariant test. Decontamination is a first-class operator: evaluation *n*-grams may not appear in training data, and a quantified contamination report is archived per mix.
+
+**2.4 Tests from the first day.** Structural invariants were written before, not after, the components they protect. Five defects were caught by these tests prior to any ablation: two in the sampling semantics of the data mixer, one in which a global weight initializer silently overwrote the zero-initialization that guarantees a memory layer starts as a no-op, one ordering error in a routing-hysteresis counter, and one numerical divergence of a recurrent memory under unnormalized keys. Each would have invalidated an ablation without producing a visible failure. We report them because the discipline that catches such defects is part of the method, not an incident.
+
+**2.5 The circuit breaker.** Training runs are subject to an aggressive early-abort rule with a bounded refine-and-retry loop: NaN or Inf losses abort immediately; divergence beyond a declared multiple of the control's loss over a window aborts; each abort may trigger at most two pre-declared refinements (tighter gradient clipping, then a reduced learning rate) before the configuration is retired. Thresholds are fixed before the run and never adjusted post hoc. Every abort is a ledger record. In the ablation of §4 the rule fired twelve times on a divergent configuration, cleanly, before the defect of §2.4 was corrected.
+
+**2.6 Admission of claims.** A finding enters a results section of this paper only if it is (i) measured on at least three seeds with the relevant gap significant at the 95% level under a paired test, (ii) situated against external references at equal size, (iii) demonstrated on the real task rather than a synthetic surrogate, (iv) reproducible from a committed artefact, and (v) stated with its reserves. Findings that fail any criterion are reported as open questions. This rule was adopted after a result obtained on a synthetic routing task (a learned router capturing ~93% of an oracle ceiling) was found to shrink to ~25% on the real task with the same code; we regard the retrogradation as a result of the method rather than a failure of the model.
+
+**2.7 Decisions and errors.** Every design decision is a dated record; amendments are appended, never substituted, so that the record of what was believed and when is preserved. Nineteen such decisions and twenty dated revisions of the idea register underlie this paper. We note that the collaboration with the language model was itself subject to this discipline: proposals from either party were treated as hypotheses to be tested, not as conclusions.
+
+### 3. Architecture — a memory router on a non-regression floor
+
+**3.1 Base model.** The base model is a byte-level decoder-only transformer of the GPT-2 lineage, trained from scratch, with a reserved block of token identifiers for exogenous (oracle) events. We keep the base deliberately conventional so that every departure from it is attributable to a single ablated component. The design draws on a mapping from brain systems to model components — associative memory, a thalamic-style gating channel, basal-ganglia-style action vetoing, a neuromodulatory bus — recorded as a validated feature map; we use the mapping as a source of hypotheses, not as a claim of biological fidelity.
+
+**3.2 Associative memory (C2).** Two memory layers are implemented as an additional residual sub-block in each transformer block, each zero-initialized at the output projection so that the model begins as the control and learns the memory: a modern-Hopfield layer (a learned bank of key/value patterns read by softmax attention — a static, content-addressable memory) [Ramsauer et al., 2020], and a gated delta-rule layer (a per-head recurrent state updated by an error-correcting rank-one write with a per-channel forget gate, keys L2-normalized) [Schlag et al., 2021; Yang et al., 2024]. The two belong to the same fast-weight family and differ in whether the memory is static or written online.
+
+**3.3 The router.** The central architectural proposal is that C2 should not be one memory, nor a fixed choice between memories, but a **router** over paths — the control (no memory), the Hopfield layer, the delta layer — subject to three constraints:
+
+1. *A guaranteed floor.* The control path is always available. A memory path is selected on a span only where its predicted score exceeds the control's; if no memory path does, the control is used. Consequently the router cannot degrade the model relative to the control: at worst it equals it. Falling to the control on a span is recorded as a result, not a failure.
+2. *Routing regime follows consolidation.* Where the router has learned, over repeated passes, which path wins for a span type — confidently and stably — it routes *hard* (one path, selected before computation, at minimal cost). Where it has not, it routes *soft* (paths computed and mixed), which is more expensive but generates the signal from which hardening is later decided. The system migrates from soft to hard as it learns; average cost falls as routing precision rises. Hardening is deliberately conservative: an uncertain decision is never hardened.
+3. *Fallback with hysteresis.* When a selected path degrades or diverges, the breaker of §2.5 re-routes to the best remaining path above the control, or to the control, and re-softens the decision. A declared cooldown prevents oscillation between paths.
+
+The router is versioned behind a stable interface: a v1 oracle (which reads the true per-path scores and therefore computes the ceiling any learned router may reach) and a v2 learned gate (which predicts per-path scores from the span context alone). State is serialized with a version tag and dispatched by version, so later versions extend the interface without breaking earlier ones.
+
+**3.4 One mechanism at three scales.** We observe that the same consolidation law — *what has been computed and remains valid is not recomputed; what changes recomposes only its delta* — governs the memory hierarchy inside the model, the soft-to-hard migration of the router, and the accumulation of tested components and dated decisions in the project itself. We do not claim this as a theorem; we record it as the organizing principle that made the three levels mutually consistent, and as the reason efficiency appears in §4 as a consequence rather than a trade-off.
 
 ### 4. Results — what has passed the gate
 *(only gate-passing claims; each with artefact + seeds + CI)*
@@ -67,3 +98,14 @@ Single seeds where noted; one capability (associative recall) measured so far; s
 - **v0 (internal)** may be drafted once §4 holds ≥ 1 gate-passing comparison (the 5-seed C2 ablation).
 - **v1 (submittable)** requires the continuity triad measured on at least one organ (C2b or C3 built) **and** a 100M+ run — i.e. the capability the paper is named after must exist as a measurement, not a specification.
 - Target: arXiv (cs.LG), then a workshop; open-results (D17): the paper, ledger and benchmarks are public; the recipe stays the workshop's.
+
+## References (working list — completed at v0)
+- Scoville, W.B., Milner, B. (1957). Loss of recent memory after bilateral hippocampal lesions. *J. Neurol. Neurosurg. Psychiatry.*
+- Ramsauer, H. et al. (2020). Hopfield Networks is All You Need. *arXiv:2008.02217.*
+- Schlag, I., Irie, K., Schmidhuber, J. (2021). Linear Transformers Are Secretly Fast Weight Programmers. *ICML.*
+- Yang, S. et al. (2024). Parallelizing Linear Transformers with the Delta Rule over Sequence Length (DeltaNet). *NeurIPS.*
+- Arora, S. et al. (2023). Zoology: Measuring and Improving Recall in Efficient Language Models. *arXiv:2312.04927.* (MQAR)
+- Gu, A., Dao, T. (2023). Mamba: Linear-Time Sequence Modeling with Selective State Spaces. *arXiv:2312.00752.*
+- Kimi Team (2025). Kimi Linear: An Expressive, Efficient Attention Architecture. *arXiv.* (KDA, channel-wise decay)
+- Ma, S. et al. (2024). The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits (BitNet b1.58). *arXiv:2402.17764.*
+- Penedo, G. et al. (2024). The FineWeb Datasets. *arXiv:2406.17557.* (FineWeb-Edu, ODC-By)
