@@ -74,6 +74,8 @@ class Config:
     c2_variant: str = "none"             # none | hopfield | delta  (ADR-006: C2 associative layer, default off)
     c2_mem_slots: int = 64               # hopfield: number of stored key/value patterns
     c2_heads: int = 4                    # delta: number of recurrent heads
+    c2_delta_l2_keys: bool = True        # delta: L2-normalise q,k before the write (KDA-style stability)
+    c2_delta_state_clip: float = 0.0     # delta: optional |S| clip (0 = off); belt-and-braces guard
     # circuit breaker (ADR-006 D7): aggressive early-abort, thresholds declared pre-run
     cb_enabled: bool = True              # NaN/Inf abort is always on; divergence check needs a baseline
     cb_divergence_mult: float = 2.0      # abort if loss > mult × baseline-at-step over a window
@@ -192,6 +194,8 @@ class DeltaMemory(nn.Module):
         self.to_gate = nn.Linear(cfg.n_embd, cfg.c2_heads * self.dk, bias=True)
         self.out = nn.Linear(cfg.n_embd, cfg.n_embd, bias=False)
         nn.init.zeros_(self.out.weight)  # no-op at init
+        self.l2_keys = cfg.c2_delta_l2_keys
+        self.state_clip = cfg.c2_delta_state_clip
 
     def forward(self, x):
         b, t, c = x.shape
@@ -200,9 +204,15 @@ class DeltaMemory(nn.Module):
         q = q.view(b, t, self.h, self.dk)
         k = k.view(b, t, self.h, self.dk)
         v = v.view(b, t, self.h, self.dk)
+        # KDA-style stability: L2-normalise q,k so the rank-one write stays bounded
+        # (unnormalised keys let |S| grow unboundedly across the scan → the v1 divergence).
+        if getattr(self, "l2_keys", True):
+            q = torch.nn.functional.normalize(q, dim=-1, eps=1e-6)
+            k = torch.nn.functional.normalize(k, dim=-1, eps=1e-6)
         beta = torch.sigmoid(self.to_beta(z)).view(b, t, self.h, 1)        # write rate
         gate = torch.sigmoid(self.to_gate(z)).view(b, t, self.h, self.dk)  # per-channel forget
         S = torch.zeros(b, self.h, self.dk, self.dk, device=x.device, dtype=x.dtype)
+        clip = getattr(self, "state_clip", 0.0)
         outs = []
         for i in range(t):
             ki = k[:, i]                          # (b,h,dk)
@@ -215,6 +225,8 @@ class DeltaMemory(nn.Module):
             u = torch.einsum('bhij,bhi->bhj', S, ki)      # read S^T k
             err = vi - u                                  # prediction error
             S = S + bi.unsqueeze(-1) * torch.einsum('bhi,bhj->bhij', ki, err)
+            if clip > 0.0:                                 # optional belt-and-braces guard
+                S = torch.clamp(S, -clip, clip)
             oi = torch.einsum('bhij,bhi->bhj', S, qi)     # read with query
             outs.append(oi.reshape(b, c))
         o = torch.stack(outs, dim=1)                      # (b,t,c)

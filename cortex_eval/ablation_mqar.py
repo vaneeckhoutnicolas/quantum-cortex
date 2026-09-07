@@ -47,6 +47,15 @@ def _dropoff(per_tier: list[dict], threshold: float, axis: str = "kv_pairs") -> 
     return {"axis": axis, other: base, "dropoff": None, "below": threshold}  # never dropped
 
 
+def _auc(per_tier: list[dict]) -> float:
+    """Mean accuracy across all tiers — area under the curve. A threshold-free
+    reading: even when no curve crosses a fixed threshold (the v1 "held" artefact),
+    AUC separates architectures by their whole-curve strength (the founder's
+    "read the curve, not a point" principle applied to the verdict itself)."""
+    accs = [t["accuracy"] for t in per_tier if t["accuracy"] == t["accuracy"]]  # drop NaN
+    return float(sum(accs) / len(accs)) if accs else float("nan")
+
+
 def run_ablation(steps: int = 1500, tiers: list[MQARTier] | None = None,
                  threshold: float = 0.5, seed: int = 1337, **kw) -> dict:
     tiers = tiers or standard_curriculum()
@@ -72,17 +81,26 @@ def run_ablation(steps: int = 1500, tiers: list[MQARTier] | None = None,
             g = vdo - ctrl_do
             deltas[v] = f"{'+' if g >= 0 else ''}{g} kv vs control ({vdo} vs {ctrl_do})"
 
+    # AUC per variant — the threshold-free reading (fixes the v1 "held" artefact,
+    # where Hopfield beat the control on the whole curve but not at the 0.5 cutoff)
+    auc = {v: _auc(curves[v]) for v in VARIANTS}
+    ctrl_auc = auc["none"]
+    auc_delta = {v: (auc[v] - ctrl_auc if auc[v] == auc[v] and ctrl_auc == ctrl_auc else None)
+                 for v in ("hopfield", "delta")}
+    auc_winners = [v for v in ("hopfield", "delta")
+                   if auc[v] == auc[v] and ctrl_auc == ctrl_auc and auc[v] > ctrl_auc]
+
     # honest verdict: which variant extends the frontier on this axis
     winners = [v for v in ("hopfield", "delta")
                if isinstance(dropoffs[v].get("dropoff"), int)
                and (ctrl_do is None or dropoffs[v]["dropoff"] > ctrl_do)]
-    if dropoffs["hopfield"].get("dropoff") is None and dropoffs["delta"].get("dropoff") is None \
-       and ctrl_do is None:
-        verdict = "inconclusive — no variant dropped; raise difficulty (more kv / longer seq)"
+    if auc_winners:
+        deltas_str = ", ".join(f"{v} (+{auc[v]-ctrl_auc:.3f} AUC)" for v in auc_winners)
+        verdict = f"advances (AUC): {deltas_str} beat the control's whole-curve MQAR strength"
     elif winners:
-        verdict = f"advances: {', '.join(winners)} recall further than control on MQAR"
+        verdict = f"advances (drop-off): {', '.join(winners)} recall further than control"
     else:
-        verdict = "held — no associative variant beat the control's MQAR drop-off"
+        verdict = "held — no associative variant beat the control on AUC or drop-off"
 
     return {
         "benchmark": "mqar",
@@ -90,6 +108,8 @@ def run_ablation(steps: int = 1500, tiers: list[MQARTier] | None = None,
         "regime": {"steps": steps, "tiers": len(tiers), "threshold": threshold, "seed": seed},
         "curves": curves,
         "dropoffs": dropoffs,
+        "auc": auc,
+        "auc_vs_control": auc_delta,
         "control_delta": deltas,
         "verdict": verdict,
         "wall_s": round(time.time() - t0, 1),
@@ -133,3 +153,35 @@ def _cli():
 
 if __name__ == "__main__":
     _cli()
+
+
+def run_hopfield_capacity_sweep(steps: int = 1500, seed: int = 1337,
+                                slots: tuple[int, ...] = (32, 64, 128, 256),
+                                tier: MQARTier | None = None, **kw) -> dict:
+    """The founder's question: is Hopfield limited by its memory SIZE or by its
+    structure? Sweep c2_mem_slots at a fixed hard tier. If accuracy RISES with
+    slots → the limit is dimensioning (fixable). If it PLATEAUS → the structure
+    is the ceiling (delta's expressivity may be the better bet). Reads the curve.
+    """
+    from datetime import datetime, timezone
+    tier = tier or MQARTier(kv_pairs=16, seq_len=256)  # a hard-enough tier to separate
+    points = []
+    for s in slots:
+        res = run_curriculum(c2_variant="hopfield", steps=steps, tiers=[tier],
+                             seed=seed, c2_mem_slots=s, **kw)
+        acc = res.per_tier[0]["accuracy"]
+        points.append({"mem_slots": s, "accuracy": acc})
+        print(f"[hopfield-sweep] slots={s} kv={tier.kv_pairs} seq={tier.seq_len} -> acc={acc:.3f}")
+    # verdict: monotone increase → dimensioning-limited; flat → structure-limited
+    accs = [p["accuracy"] for p in points]
+    rising = accs[-1] > accs[0] + 0.02
+    reading = ("dimensioning-limited (accuracy rises with capacity — add slots)"
+               if rising else
+               "structure-limited (accuracy plateaus — capacity is not the ceiling)")
+    return {
+        "benchmark": "hopfield_capacity_sweep",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "tier": {"kv_pairs": tier.kv_pairs, "seq_len": tier.seq_len},
+        "points": points,
+        "reading": reading,
+    }

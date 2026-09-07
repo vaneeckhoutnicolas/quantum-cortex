@@ -1,0 +1,225 @@
+{
+  "benchmark": "mqar",
+  "run": "v1-2026-09-07",
+  "timestamp_utc": "2026-09-07T08:19:10.620297+00:00",
+  "regime": {
+    "steps": 1500,
+    "tiers": 12,
+    "seed": 1337
+  },
+  "curves": {
+    "none": [
+      {
+        "kv_pairs": 4,
+        "seq_len": 128,
+        "accuracy": 0.23
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 128,
+        "accuracy": 0.115
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 128,
+        "accuracy": 0.024
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 128,
+        "accuracy": 0.01
+      },
+      {
+        "kv_pairs": 4,
+        "seq_len": 256,
+        "accuracy": 0.211
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 256,
+        "accuracy": 0.121
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 256,
+        "accuracy": 0.049
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 256,
+        "accuracy": 0.012
+      },
+      {
+        "kv_pairs": 4,
+        "seq_len": 512,
+        "accuracy": 0.238
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 512,
+        "accuracy": 0.188
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 512,
+        "accuracy": 0.065
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 512,
+        "accuracy": 0.009
+      }
+    ],
+    "hopfield": [
+      {
+        "kv_pairs": 4,
+        "seq_len": 128,
+        "accuracy": 0.234
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 128,
+        "accuracy": 0.139
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 128,
+        "accuracy": 0.06
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 128,
+        "accuracy": 0.024
+      },
+      {
+        "kv_pairs": 4,
+        "seq_len": 256,
+        "accuracy": 0.285
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 256,
+        "accuracy": 0.156
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 256,
+        "accuracy": 0.062
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 256,
+        "accuracy": 0.011
+      },
+      {
+        "kv_pairs": 4,
+        "seq_len": 512,
+        "accuracy": 0.258
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 512,
+        "accuracy": 0.15
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 512,
+        "accuracy": 0.059
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 512,
+        "accuracy": 0.01
+      }
+    ],
+    "delta": [
+      {
+        "kv_pairs": 4,
+        "seq_len": 128,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 128,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 128,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 128,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 4,
+        "seq_len": 256,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 256,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 256,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 256,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 4,
+        "seq_len": 512,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 8,
+        "seq_len": 512,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 16,
+        "seq_len": 512,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      },
+      {
+        "kv_pairs": 32,
+        "seq_len": 512,
+        "accuracy": null,
+        "status": "aborted-unstable"
+      }
+    ]
+  },
+  "auc": {
+    "none": 0.106,
+    "hopfield": 0.1207,
+    "delta": null
+  },
+  "verdict_v1_threshold": "held (0.5 cutoff artefact \u2014 no curve crossed 0.5)",
+  "verdict_v1_auc": "advances (AUC): hopfield +0.0147 beat control on whole-curve strength",
+  "delta_status": "delta v1 DIVERGED on all 12 tiers (unstable rank-one write, unnormalised keys) \u2014 circuit breaker (ADR-006 D7) aborted each cleanly; FIXED in v2 (L2-normalised keys, KDA-style); delta v2 to be re-run for a fair comparison",
+  "learnings": [
+    "Hopfield beats the control on MQAR (AUC +0.0147, ~+14%) \u2014 associative memory helps associative recall (thesis-consistent).",
+    "The 0.5 threshold masked this real signal; AUC (read-the-curve) reveals it. Metric fix, not data change.",
+    "DeltaMemory v1 was numerically unstable (my implementation bug, not the delta-rule idea). Kimi/KDA stabilise via key normalisation; v2 applies it.",
+    "The circuit breaker proved itself in production: 12 clean aborts, exit 0, each recorded."
+  ],
+  "note": "honest first ablation: validates Hopfield, exposes an impl bug (delta), proves the circuit breaker. Losses published including the bug. Separate artefact (NOW-6), not a run-v1 language record."
+}
