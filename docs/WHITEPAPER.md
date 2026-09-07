@@ -95,10 +95,15 @@ The router is versioned behind a stable interface: a v1 oracle (which reads the 
 | long sequences (kv 8–16, seq 512) | 1 | **control** — memory hurts (0.188 vs 0.150) | 12-tier, 1 seed — *pending multi-seed* |
 | saturated (kv 32, seq 256–512) | 0 | none — noise-level (all ≈ 0.01) | not a result |
 
-**4.4 What passes the gate.** *(filled at v0 from the confirmation GATE READOUT — the paired tests over seeds decide which rows above are claims and which remain open)*
-- [PENDING] delta > control on hard/short tiers (3 seeds, paired t-test).
-- [PENDING] Hopfield > control on easy tiers (needs a multi-seed run on those tiers).
-- [PENDING] hybrids > best pure recurrent on the ladder (3 seeds).
+**4.4 What passes the gate — the confirmation run (3 seeds, 1000 steps, tiers kv 16 and 8 at seq 128; a budget run within a 3-hour GPU quota).**
+
+| comparison | mean gap | paired t (df=2) | t_crit 95% | passes? |
+|:--|--:|--:|--:|:--|
+| delta vs control | **+0.0129** (+16%) | 3.21 | 4.30 | **not yet** — leads on 3/3 seeds |
+| Hopfield vs control | −0.0034 | −0.58 | 4.30 | no — at the control on this regime |
+| delta vs Hopfield | +0.0163 | 3.09 | 4.30 | not yet |
+
+Nothing from this run enters as a claim. The gate is doing precisely its job: delta is ahead on every seed (0.096 / 0.104 / 0.078 vs control 0.080 / 0.086 / 0.073), yet three seeds at df = 2 face a critical value of 4.30; a t of 3.21 is visible signal, not established fact. At five seeds (t_crit 2.78) the same effect size would pass — that run is scheduled at the next quota reset. Hopfield, whose domain is the easy tiers (§4.3), does not beat the control on the hard/short tiers, as the map predicts; its own multi-seed run must be made on *its* tiers. Under rule 6, the inter-seed variance is not noise: seed 7 is a "hard" seed on which every path collapses at kv 16 (control 0.017, delta 0.027) — the effective difficulty a seed fixes through data order is the omitted factor, and regressing on it is the next step before the five-seed run.
 
 **4.5 The result that the map itself constitutes.** No single memory dominates: Hopfield, delta and the control each own a regime. This is the empirical content behind the architecture of §3: a router on a control floor is not an elegance, it is what a per-domain result *requires*. The upper envelope of the map (best path per tier) exceeds the best single path by +6% and the control by +21% on the 12-tier basis — the ceiling a router may reach (§5 records how far the learned router currently is from it).
 

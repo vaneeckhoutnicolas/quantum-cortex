@@ -1,0 +1,91 @@
+{
+  "benchmark": "confirmation_run",
+  "source": "reconstructed from the Kaggle log of 2026-09-08 (the original LATEST-confirmation.json from the notebook output is the record of truth; commit it alongside)",
+  "timestamp_utc": "2026-09-07T23:44:19.939645+00:00",
+  "regime": {
+    "seeds": [
+      1337,
+      2024,
+      7
+    ],
+    "steps": 1000,
+    "tiers": [
+      [
+        16,
+        128
+      ],
+      [
+        8,
+        128
+      ]
+    ],
+    "note": "budget run (3h GPU quota): 3 seeds, 2 sharpest tiers"
+  },
+  "c2_ablation": {
+    "per_seed_auc": {
+      "none": [
+        0.0796,
+        0.0864,
+        0.0732
+      ],
+      "hopfield": [
+        0.0879,
+        0.0781,
+        0.063
+      ],
+      "delta": [
+        0.0957,
+        0.104,
+        0.0781
+      ]
+    },
+    "stats": {
+      "none": {
+        "mean": 0.0797,
+        "sd": 0.0066
+      },
+      "hopfield": {
+        "mean": 0.0763,
+        "sd": 0.0125
+      },
+      "delta": {
+        "mean": 0.0926,
+        "sd": 0.0132
+      }
+    },
+    "paired_tests": {
+      "delta_vs_control": {
+        "mean_diff": 0.0129,
+        "t": 3.21,
+        "df": 2,
+        "t_crit_95": 4.303,
+        "significant_95": false
+      },
+      "hopfield_vs_control": {
+        "mean_diff": -0.0034,
+        "t": -0.58,
+        "df": 2,
+        "t_crit_95": 4.303,
+        "significant_95": false
+      },
+      "delta_vs_hopfield": {
+        "mean_diff": 0.0163,
+        "t": 3.09,
+        "df": 2,
+        "t_crit_95": 4.303,
+        "significant_95": false
+      }
+    }
+  },
+  "gate_readout": {
+    "delta_beats_control_significant": false,
+    "hopfield_beats_control_significant": false,
+    "note": "delta leads on 3/3 seeds (+16% mean) but t=3.21 < t_crit 4.30 at df=2 \u2014 NOT YET established; 5 seeds (t_crit 2.78) would pass at this effect size"
+  },
+  "readings": [
+    "Nothing enters WHITEPAPER \u00a74 as a claim from this run \u2014 the gate did its job: the signal is visible (delta 3/3 seeds) but not statistically established at 3 seeds.",
+    "Domain map CONFIRMED, not contradicted: on hard/short tiers delta > control >= hopfield \u2014 the inverse of the 12-tier average (Hopfield +14%). Rule 6 (RES-20): that is \u03a3 (which tiers are held), not a reversal. No single memory dominates.",
+    "Completeness (rule 6) points to the omitted factor: seed 7 is a 'hard' seed (everyone collapses on kv=16: control 0.017, delta 0.027) \u2014 inter-seed variance is the effective difficulty the seed fixes (data order), not noise. Regressing gaps on per-seed control level should recover power for the 5-seed run.",
+    "Next: the full 5-seed run at the weekly quota reset (t_crit 2.78) \u2014 at this effect size delta-vs-control would pass; Hopfield-vs-control needs its own multi-seed run on the EASY tiers (its domain)."
+  ]
+}
