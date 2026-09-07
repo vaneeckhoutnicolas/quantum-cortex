@@ -103,13 +103,21 @@ def _cli():
     ap = argparse.ArgumentParser()
     ap.add_argument("--steps", type=int, default=1500)
     ap.add_argument("--seeds", type=int, nargs="+", default=[1337, 2024, 7, 42, 99])
+    ap.add_argument("--tiers", type=int, default=4,
+                    help="how many discriminating tiers to use (1-4, sharpest first) — "
+                         "use 2 to fit a ~3h GPU budget with 3 seeds at 1000 steps")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
     if args.quick:
         r = run_confirmation(seeds=(1, 2, 3), steps=150,
                              tiers=[MQARTier(kv_pairs=4, seq_len=48)], d_model=48)
     else:
-        r = run_confirmation(seeds=tuple(args.seeds), steps=args.steps)
+        # sharpest-first ordering: the tiers where paths separated most in the 12-tier run
+        sharpest = [MQARTier(kv_pairs=16, seq_len=128), MQARTier(kv_pairs=8, seq_len=128),
+                    MQARTier(kv_pairs=16, seq_len=256), MQARTier(kv_pairs=8, seq_len=256)]
+        tiers = sharpest[:max(1, min(4, args.tiers))]
+        print(f"[confirmation] seeds={args.seeds} steps={args.steps} tiers={[(t.kv_pairs,t.seq_len) for t in tiers]}")
+        r = run_confirmation(seeds=tuple(args.seeds), steps=args.steps, tiers=tiers)
     p = write_artefact(r)
     print("\n=== GATE READOUT ===")
     print(json.dumps(r["gate_readout"], indent=2))
