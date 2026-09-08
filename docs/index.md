@@ -1,5 +1,8 @@
 # quantum-cortex — documentation index
 
+**Start with [`RESULTS.md`](RESULTS.md)** — every number, its artefact, its test, its status (measured / gated / held / open). Then [`WHITEPAPER.md`](WHITEPAPER.md) for the argument and [`SEQUENCE.md`](SEQUENCE.md) for what comes next.
+
+
 Doc organization follows the quantum-meridian discipline (named reading paths, ADRs, glossary, thin roadmap). `docs/concepts/` opened 2026-08-08 with its first document — no empty scaffolding, ever.
 
 ## Reading paths
