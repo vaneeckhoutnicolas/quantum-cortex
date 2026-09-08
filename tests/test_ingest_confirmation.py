@@ -15,7 +15,7 @@ def _fake(seeds, d_sig, h_sig):
             "paired_tests": {
                 "hopfield_vs_control": {"mean_diff": 0.018, "t": 3.4 if h_sig else 1.1, "df": n-1, "t_crit_95": 2.776, "significant_95": h_sig},
                 "delta_vs_control":    {"mean_diff": 0.016, "t": 3.9 if d_sig else 1.3, "df": n-1, "t_crit_95": 2.776, "significant_95": d_sig},
-                "delta_vs_hopfield":   {"mean_diff": -0.002, "t": -0.3, "df": n-1, "t_crit_95": 2.776, "significant_95": False}},
+                "hopfield_vs_delta":   {"mean_diff": 0.002, "t": 0.3, "df": n-1, "t_crit_95": 2.776, "significant_95": False}},  # the REAL key name (multiseed.py writes it this way)
             "per_seed_auc": {"none": [0.08]*n, "hopfield": [0.10]*n, "delta": [0.098]*n},
             "claims": []},
         "gate_readout": {"delta_beats_control_significant": d_sig, "hopfield_beats_control_significant": h_sig},
@@ -57,3 +57,13 @@ def test_three_seeds_significant_still_gated_but_two_never():
     tmp = Path(tempfile.mkdtemp()); _setup(tmp, _fake([1,2], d_sig=True, h_sig=True))
     a = ing.read_artefact(tmp/"metrics"/"mqar"/"LATEST-confirmation.json")
     assert a["rows"]["delta_vs_control"]["status"] == "held"   # 2 seeds can never claim
+
+
+def test_reads_the_real_kaggle_artefact_key_names():
+    """Regression: the real artefact names the third comparison 'hopfield_vs_delta';
+    the ingest must accept it and flip the sign. Caught by --dry-run on 2026-09-09."""
+    tmp = Path(tempfile.mkdtemp()); art = _fake([1,2,3], d_sig=False, h_sig=False)
+    assert "hopfield_vs_delta" in art["c2_ablation"]["paired_tests"]
+    _setup(tmp, art)
+    a = ing.read_artefact(tmp/"metrics"/"mqar"/"LATEST-confirmation.json")
+    assert a["rows"]["delta_vs_hopfield"]["diff"] == -0.002   # sign flipped

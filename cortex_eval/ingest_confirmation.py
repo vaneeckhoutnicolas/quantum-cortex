@@ -45,7 +45,18 @@ def read_artefact(path: Path = ART) -> dict:
     for key, a, b in (("hopfield_vs_control", "hopfield", "none"),
                       ("delta_vs_control", "delta", "none"),
                       ("delta_vs_hopfield", "delta", "hopfield")):
-        t = pt[key]
+        # the artefact may name the third comparison the other way round
+        # (multiseed.py writes "hopfield_vs_delta"); accept both, flip the sign.
+        if key in pt:
+            t = dict(pt[key])
+        else:
+            rev = "_vs_".join(reversed(key.split("_vs_")))
+            if rev not in pt:
+                raise KeyError(f"artefact has neither {key!r} nor {rev!r}")
+            t = dict(pt[rev])
+            t["mean_diff"] = -t["mean_diff"]
+            if t.get("t") is not None:
+                t["t"] = -t["t"]
         rows[key] = {
             "a": a, "b": b, "mean_a": st[a]["mean"], "mean_b": st[b]["mean"],
             "diff": t["mean_diff"], "t": t.get("t"), "df": t.get("df"),
@@ -154,8 +165,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--artefact", default=str(ART))
+    ap.add_argument("--expect-seeds", type=int, default=None,
+                    help="refuse to write unless the artefact has exactly this many seeds "
+                         "(guards against ingesting the wrong run — lesson of 2026-09-09)")
     args = ap.parse_args()
     a = read_artefact(Path(args.artefact))
+    if args.expect_seeds is not None and a["n_seeds"] != args.expect_seeds and not args.dry_run:
+        raise SystemExit(f"refusing to write: artefact has {a['n_seeds']} seeds, expected {args.expect_seeds} "
+                         f"(is this the right run? see metrics/mqar/PROVENANCE-confirmation.json)")
     print(f"=== confirmation artefact: {a['n_seeds']} seeds, {a['steps']} steps, tiers {a['tiers']} ===")
     for k, x in a["rows"].items():
         print(f"  {k:22s} diff {x['diff']:+.4f}  t={x['t']}  crit={x['t_crit']}  -> {x['status'].upper()}")
