@@ -147,5 +147,43 @@
     "Nothing passes the gate (third time it holds). A t of 2.65 claimed as significant would be the p-hacking the gate exists to prevent.",
     "At 8 seeds the critical value is 2.36; whether the effect clears it is for that run to decide \u2014 added seeds may widen the dispersion as they did from 3 to 5.",
     "The founder's physics (RES-20) corrected optimism twice today: the first completeness test replaced an ill-posed metric; this one refused to explain away genuine variance."
-  ]
+  ],
+  "recurrent_ladder_and_hybrid_vs_pure": {
+    "note": "the ladder and the floor ran on only 3 of the 5 seeds \u2014 the GPU quota cut the run (df=2, t_crit 4.303 for these rows)",
+    "best_pure_rung": "L4-+delta-rule",
+    "hopfield_vs_best_pure": {
+      "mean_diff": 0.048,
+      "t": 3.783,
+      "df": 2,
+      "t_crit_95": 4.303,
+      "significant_95": false
+    },
+    "delta_hybrid_vs_best_pure": {
+      "mean_diff": 0.0618,
+      "t": 4.088,
+      "df": 2,
+      "t_crit_95": 4.303,
+      "significant_95": false
+    },
+    "L4_vs_L3": {
+      "mean_diff": 0.0083,
+      "t": 0.903,
+      "df": 2,
+      "significant_95": false,
+      "reading": "'delta regresses when pure' is NOT supported \u2014 the earlier mini-run was a seed artefact; demoted to open"
+    },
+    "floor_mlp": {
+      "mean": 0.0103,
+      "sd": 0.0056,
+      "n": 3
+    },
+    "reading": "hybrids reach 3-4x the best pure recurrent (+0.048, +0.062) with t = 3.78 / 4.09 \u2014 held ONLY because df=2 (quota cut). This is a quota-limited hold, not a variance-limited one: the natural next run is the ladder at 5 seeds. No prediction of passage is made."
+  },
+  "gate_readout_official": {
+    "hopfield_beats_control_significant": false,
+    "delta_beats_control_significant": false,
+    "delta_regresses_when_pure_significant": false,
+    "hybrid_beats_best_pure_significant": false,
+    "source": "Kaggle log 2026-09-09, artefact confirmation-20260908T010143.json (to be committed from the notebook output)"
+  }
 }
