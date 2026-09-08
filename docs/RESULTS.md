@@ -23,6 +23,6 @@ The single page a reviewer needs. One row per claim or non-claim; nothing here w
 | 16 | Non-regeneration / reference ratio (triad component 3) | **open** | — | — | — | needs RES-8 typed span references (not built) |
 | 17 | Anything at 100M+ parameters | **open** | — | — | — | EuroHPC run scheduled |
 
-**Gate status (whitepaper §2.6):** as of 2026-09-09, **zero** comparisons have passed the six-rule gate — the 5-seed confirmation held delta at t = 2.65 (t_crit 2.78) and Hopfield at 2.21; both beat the control on 4/5 seeds. An 8-seed run (t_crit 2.36) is the honest next step; rule 6 found the variance genuine, so no adjusted analysis is admissible.
+**Gate status (whitepaper §2.6):** as of 2026-09-09, **zero** comparisons have passed the six-rule gate — the 5-seed confirmation held delta at t = 2.65 (t_crit 2.78) and Hopfield at 2.21; both beat the control on 4/5 seeds. An 8-seed run (t_crit 2.36) is the next test — it may pass or hold; rule 6 found the variance genuine, so no adjusted analysis is admissible.
 
 **How to add a row:** a row needs (a) a committed artefact under `metrics/`, (b) a test in `tests/` exercising the code path, (c) a status from the vocabulary above, (d) the reserve stated. Rows are never deleted; a superseded row keeps its date and gains a pointer to what superseded it.

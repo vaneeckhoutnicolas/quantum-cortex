@@ -145,7 +145,7 @@
   "readings": [
     "Effect stable across both runs (3-seed: +16%; 5-seed: +16%) \u2014 the 5-seed run did not weaken the signal, it revealed its true dispersion.",
     "Nothing passes the gate (third time it holds). A t of 2.65 claimed as significant would be the p-hacking the gate exists to prevent.",
-    "At 8 seeds (t_crit 2.36) this effect size passes comfortably \u2014 the honest path.",
+    "At 8 seeds the critical value is 2.36; whether the effect clears it is for that run to decide \u2014 added seeds may widen the dispersion as they did from 3 to 5.",
     "The founder's physics (RES-20) corrected optimism twice today: the first completeness test replaced an ill-posed metric; this one refused to explain away genuine variance."
   ]
 }
