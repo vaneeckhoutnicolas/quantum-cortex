@@ -1,0 +1,56 @@
+{
+  "purpose": "provenance of the confirmation artefacts \u2014 what each file is a record of. Read before citing any of them.",
+  "date": "2026-09-09",
+  "verdict": "ONE confirmation run is verified: run A, 3 seeds. The '5-seed run B' is WITHDRAWN (2026-09-09): its numbers came from a log pasted into a chat and never retained as a file; every retained log shows run A only; the maintainer could not locate a 5-seed version in Kaggle. The founder's own reading \u2014 'we measured 3 seeds, not 5' \u2014 is the record.",
+  "run_A": {
+    "notebook": "28165b4e4a (2026-09-08 ~01:00)",
+    "regime": "3 seeds [1337,2024,7], 1000 steps, tiers (16,128),(8,128)",
+    "status": "COMPLETE in one pass (2h46): C2 ablation + recurrent ladder + floor",
+    "evidence": "log retained as a file (three copies agree) + Kaggle artefact confirmation-20260908T010143.json (= LATEST, byte-identical)",
+    "verified": true,
+    "results": {
+      "delta_vs_control": {
+        "diff": 0.0107,
+        "t": 1.756,
+        "df": 2,
+        "t_crit": 4.303,
+        "held": true
+      },
+      "hopfield_vs_control": {
+        "diff": -0.0031,
+        "t": -0.542,
+        "df": 2,
+        "held": true
+      },
+      "hopfield_hybrid_vs_best_pure_L4": {
+        "diff": 0.048,
+        "t": 3.783,
+        "df": 2,
+        "t_crit": 4.303,
+        "held": true
+      },
+      "delta_hybrid_vs_best_pure_L4": {
+        "diff": 0.0618,
+        "t": 4.088,
+        "df": 2,
+        "t_crit": 4.303,
+        "held": true
+      },
+      "L4_vs_L3": {
+        "diff": 0.0083,
+        "t": 0.903,
+        "held": true,
+        "note": "'delta regresses when pure' withdrawn"
+      },
+      "floor_mlp": 0.0103
+    }
+  },
+  "run_B_withdrawn": {
+    "what_was_claimed": "5 seeds, 1500 steps, 4 tiers; delta +0.0134 (t 2.65), Hopfield +0.0104 (t 2.21) at df 4",
+    "why_withdrawn": "no retained source; not reproducible from any file in the maintainer's possession",
+    "file": "confirmation-5seed-2026-09-09-reconstructed.json is KEPT (never deleted) with status WITHDRAWN, so the error is visible, not hidden",
+    "if_recovered": "should a Kaggle log with 'seeds=[1337, 2024, 7, 42, 99]' ever be found, verify its five [multiseed] lines against that file and, if they match, restore the rows with status 'held'"
+  },
+  "next_run": "the recurrent ladder at 8 seeds (see SEQUENCE): at df 7 the 95% critical value is 2.365; the run will decide whether the df-2 effect (t 3.78 / 4.09) clears it. No prediction is made.",
+  "lesson": "a reconstruction is a hypothesis until checked against its source; a source that lives only in a chat window is not a source. Retain every log as a file. confirmation_run.py now writes a partial artefact after each phase."
+}

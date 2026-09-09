@@ -185,5 +185,6 @@
     "delta_regresses_when_pure_significant": false,
     "hybrid_beats_best_pure_significant": false,
     "source": "Kaggle log 2026-09-09, artefact confirmation-20260908T010143.json (to be committed from the notebook output)"
-  }
+  },
+  "STATUS": "WITHDRAWN (2026-09-09): source log not retained; no 5-seed run could be located in Kaggle. Kept so the error is visible. See PROVENANCE-confirmation.json."
 }

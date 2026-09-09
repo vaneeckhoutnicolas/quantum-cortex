@@ -101,18 +101,18 @@ The router is versioned behind a stable interface: a v1 oracle (which reads the 
 | long sequences (kv 8–16, seq 512) | 1 | **control** — memory hurts (0.188 vs 0.150) | 12-tier, 1 seed — *pending multi-seed* |
 | saturated (kv 32, seq 256–512) | 0 | none — noise-level (all ≈ 0.01) | not a result |
 
-**4.4 What passes the gate — the confirmation runs.** Two runs were made. **Run A** (3 seeds, 1000 steps, tiers kv 16 and 8 at seq 128) is fully verified: its log is retained and its Kaggle artefact committed. **Run B** (believed 5 seeds, 1500 steps, four tiers) completed its ablation but its ladder was cut by the GPU quota and it wrote no artefact; its per-seed numbers were read from a log that was not retained as a file, and they are therefore reported here as *unverified* — kept, not claimed — until that log is recovered (`metrics/mqar/PROVENANCE-confirmation.json` states how).
+**4.4 What passes the gate — the confirmation run (3 seeds, 1000 steps, tiers kv 16 and 8 at seq 128; verified by its retained log and its committed Kaggle artefact).**
 
-| comparison (run A, 3 seeds, verified) | mean gap | paired t (df = 2) | t_crit 95% | verdict |
+| comparison | mean gap | paired t (df = 2) | t_crit 95% | verdict |
 |:--|--:|--:|--:|:--|
 | delta vs control | +0.0107 (+13%) | 1.76 | 4.30 | does not pass |
 | Hopfield vs control | −0.0031 (−4%) | −0.54 | 4.30 | does not pass |
 | Hopfield-hybrid vs best pure recurrent (L4) | **+0.048** | **3.78** | 4.30 | does not pass |
 | delta-hybrid vs best pure recurrent (L4) | **+0.062** | **4.09** | 4.30 | does not pass |
 
-Nothing enters as a claim. The two rows that matter are the last two: against the best rung of the recurrent ladder (the gated delta rule, L4), the hybrids reach three to four times its accuracy, with t statistics of 3.78 and 4.09 — held only because three seeds set the critical value at 4.30. This is a design-limited hold, not a variance-limited one; the ladder at five seeds (t_crit 2.78) is the next run, and whether the effect clears that bar is for the run to decide. One candidate finding is withdrawn by run A: "the delta rule regresses when pure" (L4 − L3 = +0.008, t = 0.90) was a single-seed artefact of an earlier mini-run.
+Nothing enters as a claim. The two rows that matter are the last two: against the best rung of the recurrent ladder (the gated delta rule, L4), the hybrids reach three to four times its accuracy with t statistics of 3.78 and 4.09, held only because three seeds set the critical value at 4.30. This is a design-limited hold, not a variance-limited one. The next run is the ladder at eight seeds (t_crit 2.37 at df 7); whether the effect clears that bar is for the run to decide. One candidate finding is withdrawn by this run: "the delta rule regresses when pure" (L4 − L3 = +0.008, t = 0.90) was a single-seed artefact of an earlier mini-run.
 
-*Unverified (run B, 5 seeds, log not retained):* delta +0.0134 (+16%, t 2.65, df 4), Hopfield +0.0104 (+13%, t 2.21), each ahead on 4 of 5 seeds; a completeness test (rule 6) on those numbers found the inter-seed variance genuine (control level explains R² 0.15–0.20). These are reported for the record and carry no weight until verified.
+*A second run at five seeds was reported during preparation of this paper and is withdrawn: its numbers were read from a log that was not retained as a file and could not be located afterwards. Under §2.6 an unverifiable source yields no result; the withdrawn figures are kept in the repository's artefact history so the error is visible.*
 
 **4.5 Continuity, first measurement — the H.M. dissociation.** The episodic-persistence component of the triad (§1.2) has its first number. Against the C2b organ (§3; store, hippocampal write path, journal as router path), the H.M. protocol — 200 leakage-proof synthetic facts planted through the gated write path, probed in a fresh context with the journal on and off, a 50-fact negative control, thresholds frozen on 2026-08-08 — returns `hm_dissociation_pass = 1`, stable across four seeds: recall 1.000 with the journal, 0.125 without (the chance floor; threshold 0.175), a gap of 0.875 against the required 0.50, a journal negative-control rate of 0.000 (the store never returns an attribute for an entity it does not hold), and a skill delta of 0. *Cut the journal: episodic recall collapses; skills hold.* The founding prediction — weights carry the semantic and procedural, the journal carries the episodic — is thereby a measurement rather than a design premise. **Scope (rule 5):** this is a measurement of the organ, with a hash-seeded cue encoder and a reference skill probe; it establishes that the journal stores, retrieves and refuses to confabulate, and that the two stores are separable. The language-model arm — real skill suites, a learned encoder, the model reading the journal in generation — is the v1 requirement (§5). **Method note (rule 5):** the first run was invalid on the negative control (0.12); the journal was clean (0.000) and the fault lay in the reference floor simulator and in a specification that read guessing as hallucination; the simulator was corrected and the specification amended, dated before the rerun, with δ, ε_S and the floor untouched (`docs/benchmarks/hm-protocol.md`, amendment of 2026-09-08).
 
@@ -131,7 +131,7 @@ Single seeds where noted; one capability (associative recall) measured so far; s
 `docs/GETTING-STARTED.md`; `pytest tests/` (the CI runs it); the ledger `metrics/runs.jsonl`; artefacts `metrics/mqar/`; every decision dated in `docs/adr/` and the hub decision log D1–D19.
 
 ## Gates for the paper itself
-- **v0 (internal)** may be drafted once §4 holds ≥ 1 gate-passing comparison (the 5-seed C2 ablation).
+- **v0 (internal)** may be drafted once §4 holds ≥ 1 gate-passing comparison (the first candidate: the recurrent ladder at 8 seeds).
 - **v1 (submittable)** requires the continuity triad measured on at least one organ (C2b or C3 built) **and** a 100M+ run — i.e. the capability the paper is named after must exist as a measurement, not a specification.
 - Target: arXiv (cs.LG), then a workshop; open-results (D17): the paper, ledger and benchmarks are public; the recipe stays the workshop's.
 
