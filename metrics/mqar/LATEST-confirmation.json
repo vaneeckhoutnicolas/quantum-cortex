@@ -1,0 +1,222 @@
+{
+  "benchmark": "confirmation_run",
+  "timestamp_utc": "2026-09-08T01:01:43.768741+00:00",
+  "regime": {
+    "seeds": [
+      1337,
+      2024,
+      7
+    ],
+    "steps": 1000,
+    "tiers": [
+      [
+        16,
+        128
+      ],
+      [
+        8,
+        128
+      ]
+    ],
+    "note": "discriminating tiers"
+  },
+  "c2_ablation": {
+    "stats": {
+      "none": {
+        "mean": 0.0796,
+        "sd": 0.0068,
+        "ci95": [
+          0.0626,
+          0.0966
+        ],
+        "n": 3
+      },
+      "hopfield": {
+        "mean": 0.0765,
+        "sd": 0.0123,
+        "ci95": [
+          0.046,
+          0.107
+        ],
+        "n": 3
+      },
+      "delta": {
+        "mean": 0.0903,
+        "sd": 0.017,
+        "ci95": [
+          0.0481,
+          0.1326
+        ],
+        "n": 3
+      }
+    },
+    "paired_tests": {
+      "hopfield_vs_control": {
+        "mean_diff": -0.0031,
+        "t": -0.542,
+        "df": 2,
+        "t_crit_95": 4.303,
+        "significant_95": false
+      },
+      "delta_vs_control": {
+        "mean_diff": 0.0107,
+        "t": 1.756,
+        "df": 2,
+        "t_crit_95": 4.303,
+        "significant_95": false
+      },
+      "hopfield_vs_delta": {
+        "mean_diff": -0.0138,
+        "t": -2.297,
+        "df": 2,
+        "t_crit_95": 4.303,
+        "significant_95": false
+      }
+    },
+    "claims": [
+      "hopfield_vs_control: -0.0031 AUC \u2014 NOT significant at 95% (t=-0.542)",
+      "delta_vs_control: 0.0107 AUC \u2014 NOT significant at 95% (t=1.756)",
+      "hopfield_vs_delta: -0.0138 AUC \u2014 NOT significant at 95% (t=-2.297)"
+    ],
+    "per_seed_auc": {
+      "none": [
+        0.07958984375,
+        0.08642578125,
+        0.07275390625
+      ],
+      "hopfield": [
+        0.087890625,
+        0.078125,
+        0.0634765625
+      ],
+      "delta": [
+        0.095703125,
+        0.10400390625,
+        0.0712890625
+      ]
+    }
+  },
+  "recurrent_ladder": {
+    "per_seed": {
+      "L0-canonical-gla": [
+        0.0142,
+        0.0088,
+        0.0112
+      ],
+      "L1-+selective-gate": [
+        0.0146,
+        0.0078,
+        0.0088
+      ],
+      "L2-+channel-decay": [
+        0.0142,
+        0.0088,
+        0.0112
+      ],
+      "L3-+local-conv": [
+        0.0273,
+        0.019,
+        0.0142
+      ],
+      "L4-+delta-rule": [
+        0.021,
+        0.0249,
+        0.0396
+      ]
+    },
+    "stats": {
+      "L0-canonical-gla": {
+        "mean": 0.0114,
+        "sd": 0.0027,
+        "ci95": [
+          0.0047,
+          0.0181
+        ],
+        "n": 3
+      },
+      "L1-+selective-gate": {
+        "mean": 0.0104,
+        "sd": 0.0037,
+        "ci95": [
+          0.0013,
+          0.0195
+        ],
+        "n": 3
+      },
+      "L2-+channel-decay": {
+        "mean": 0.0114,
+        "sd": 0.0027,
+        "ci95": [
+          0.0047,
+          0.0181
+        ],
+        "n": 3
+      },
+      "L3-+local-conv": {
+        "mean": 0.0202,
+        "sd": 0.0066,
+        "ci95": [
+          0.0037,
+          0.0366
+        ],
+        "n": 3
+      },
+      "L4-+delta-rule": {
+        "mean": 0.0285,
+        "sd": 0.0098,
+        "ci95": [
+          0.0041,
+          0.0529
+        ],
+        "n": 3
+      }
+    },
+    "L4_vs_L3": {
+      "mean_diff": 0.0083,
+      "t": 0.903,
+      "df": 2,
+      "t_crit_95": 4.303,
+      "significant_95": false
+    }
+  },
+  "floor_mlp": {
+    "per_seed": [
+      0.009765625,
+      0.0048828125,
+      0.01611328125
+    ],
+    "stats": {
+      "mean": 0.0103,
+      "sd": 0.0056,
+      "ci95": [
+        -0.0037,
+        0.0242
+      ],
+      "n": 3
+    }
+  },
+  "hybrid_vs_pure": {
+    "best_pure_rung": "L4-+delta-rule",
+    "hopfield_vs_best_pure": {
+      "mean_diff": 0.048,
+      "t": 3.783,
+      "df": 2,
+      "t_crit_95": 4.303,
+      "significant_95": false
+    },
+    "delta_hybrid_vs_best_pure": {
+      "mean_diff": 0.0618,
+      "t": 4.088,
+      "df": 2,
+      "t_crit_95": 4.303,
+      "significant_95": false
+    }
+  },
+  "gate_readout": {
+    "hopfield_beats_control_significant": false,
+    "delta_beats_control_significant": false,
+    "delta_regresses_when_pure_significant": false,
+    "hybrid_beats_best_pure_significant": false
+  },
+  "note": "Feeds WHITEPAPER.md \u00a74 only where the gate passes; otherwise \u00a75 open questions."
+}
