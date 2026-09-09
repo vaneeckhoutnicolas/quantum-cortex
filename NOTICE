@@ -1,6 +1,24 @@
 quantum-cortex
-Copyright 2026 Nicolas Van Eeckhout — Win2Win SRL (Belgium)
+Copyright 2026 Nicolas Van Eeckhout (Win2Win SRL, Brussels, Belgium)
+ORCID: https://orcid.org/0000-0002-5256-3185
+Original work: https://github.com/vaneeckhoutnicolas/quantum-cortex
 
-Licensed under the Apache License, Version 2.0.
-Part of the Quantum Meridian ecosystem. This repository is fully open;
-it contains no proprietary Quantum Meridian control-plane code.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this work except in compliance with the License. You may obtain a copy of
+the License at http://www.apache.org/licenses/LICENSE-2.0
+
+ATTRIBUTION NOTICE (required by Section 4(d) of the Apache License 2.0):
+This NOTICE file must be included, unmodified, in any redistribution or
+Derivative Work of this software, in source or object form, whether or not
+the work is modified, forked, renamed, or incorporated into a larger work.
+Any Derivative Work must retain the statement that quantum-cortex was
+originally created by Nicolas Van Eeckhout. Removing or altering this
+attribution is a breach of the License and terminates the rights it grants.
+
+This repository is the pure-LLM member of the Quantum Meridian ecosystem
+(a project of Win2Win SRL). It is fully open and contains no proprietary
+Quantum Meridian control-plane code. The continuity benchmarks it publishes
+(the H.M. protocol, oracle shift, the reference ratio) are part of this work
+and carry the same attribution requirement.
+
+How to cite this work: see CITATION.cff in this repository.

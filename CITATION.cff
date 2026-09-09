@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use quantum-cortex, its continuity benchmarks, or any derivative work, please cite it as below and retain the NOTICE file (Apache License 2.0, Section 4(d))."
+title: "quantum-cortex: an open language model built to measure continuity"
+abstract: "A from-scratch, byte-level language model whose cognitive concepts (expert zones, associative memory, an oracle channel, typed decode contracts) live in the weights and the decode loop, built to measure one capability: continuity, as a triad of episodic persistence (the H.M. protocol), adaptive revision (oracle shift) and non regeneration (the reference ratio). Independent member of the Quantum Meridian ecosystem."
+type: software
+authors:
+  - family-names: "Van Eeckhout"
+    given-names: "Nicolas"
+    orcid: "https://orcid.org/0000-0002-5256-3185"
+    affiliation: "Win2Win SRL, Brussels, Belgium"
+repository-code: "https://github.com/vaneeckhoutnicolas/quantum-cortex"
+license: Apache-2.0
+version: "0.1.0"
+date-released: "2026-09-09"
+keywords:
+  - language model
+  - continuity
+  - episodic memory
+  - associative memory
+  - H.M. protocol
+  - Quantum Meridian
+references:
+  - type: software
+    title: "Quantum Meridian (hub)"
+    authors:
+      - family-names: "Van Eeckhout"
+        given-names: "Nicolas"
+    repository-code: "https://github.com/vaneeckhoutnicolas/quantum-meridian"
+  - type: software
+    title: "Mirror-Constrained Black Hole Thermodynamics: A Two-Horizon Companion"
+    authors:
+      - family-names: "Van Eeckhout"
+        given-names: "Nicolas"
+    repository-code: "https://github.com/vaneeckhoutnicolas/mirror-bh-thermodynamics"
+    notes: "The complete-ledger observation of this parallel program became rule 6 of the whitepaper's admission gate."

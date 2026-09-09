@@ -77,4 +77,10 @@ Contributions welcome on any of the four — see [`CONTRIBUTING.md`](CONTRIBUTIN
 
 ---
 
+## License and attribution
+
+Apache License 2.0, unmodified. You may use, modify, fork and redistribute this work freely, on one condition that the License itself imposes (Section 4(d)): **the `NOTICE` file must travel with any copy or derivative work, unmodified**, and with it the statement that quantum-cortex was originally created by Nicolas Van Eeckhout. Removing that attribution is a breach of the License. To cite the work, use [`CITATION.cff`](CITATION.cff) (GitHub renders it as "Cite this repository"). The continuity benchmarks published here carry the same requirement.
+
+---
+
 *Author: Nicolas Van Eeckhout (Win2Win SRL, Brussels) · [ORCID 0000-0002-5256-3185](https://orcid.org/0000-0002-5256-3185) · License Apache-2.0 · Companion physics program: [mirror-bh-thermodynamics](https://github.com/vaneeckhoutnicolas/mirror-bh-thermodynamics).*
