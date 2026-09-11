@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="640" viewBox="0 0 1080 640" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1080" height="640" fill="#0f1116"/>
+  <text x="540" y="40" text-anchor="middle" fill="#e6e6e6" font-size="20" font-weight="bold">One law, four regimes: what has been computed and remains valid is never recomputed (RES-16)</text>
+  <text x="540" y="62" text-anchor="middle" fill="#9aa0a6" font-size="13">quantum-cortex — original figure, no external dependency. Each regime is an object the repository actually contains.</text>
+
+  <!-- panel 1: recompute (the anti-pattern) -->
+  <rect x="30" y="90" width="245" height="500" rx="10" fill="none" stroke="#e05a3a" stroke-width="2"/>
+  <text x="152" y="118" text-anchor="middle" fill="#e05a3a" font-size="14" font-weight="bold">RECOMPUTE</text>
+  <text x="152" y="136" text-anchor="middle" fill="#9aa0a6" font-size="11">a run that writes only at the end</text>
+  <!-- tree of repeated work -->
+  <g fill="#e05a3a" stroke="none">
+    <circle cx="152" cy="180" r="10"/>
+    <circle cx="112" cy="225" r="9"/><circle cx="192" cy="225" r="9"/>
+    <circle cx="88" cy="268" r="8"/><circle cx="134" cy="268" r="8"/><circle cx="170" cy="268" r="8"/><circle cx="214" cy="268" r="8"/>
+    <circle cx="74" cy="308" r="7"/><circle cx="102" cy="308" r="7"/><circle cx="124" cy="308" r="7"/><circle cx="146" cy="308" r="7"/><circle cx="160" cy="308" r="7"/><circle cx="182" cy="308" r="7"/><circle cx="204" cy="308" r="7"/><circle cx="226" cy="308" r="7"/>
+  </g>
+  <g stroke="#7a3a2a" stroke-width="1.2">
+    <line x1="152" y1="190" x2="112" y2="216"/><line x1="152" y1="190" x2="192" y2="216"/>
+    <line x1="112" y1="234" x2="88" y2="260"/><line x1="112" y1="234" x2="134" y2="260"/><line x1="192" y1="234" x2="170" y2="260"/><line x1="192" y1="234" x2="214" y2="260"/>
+    <line x1="88" y1="276" x2="74" y2="301"/><line x1="88" y1="276" x2="102" y2="301"/><line x1="134" y1="276" x2="124" y2="301"/><line x1="134" y1="276" x2="146" y2="301"/><line x1="170" y1="276" x2="160" y2="301"/><line x1="170" y1="276" x2="182" y2="301"/><line x1="214" y1="276" x2="204" y2="301"/><line x1="214" y1="276" x2="226" y2="301"/>
+  </g>
+  <text x="152" y="350" text-anchor="middle" fill="#e6e6e6" font-size="12">a quota cut at unit 37</text>
+  <text x="152" y="368" text-anchor="middle" fill="#e6e6e6" font-size="12">loses all 37 units</text>
+  <text x="152" y="400" text-anchor="middle" fill="#9aa0a6" font-size="11">cost: O(N) per restart</text>
+  <text x="152" y="440" text-anchor="middle" fill="#e05a3a" font-size="11" font-style="italic">what run B did (2026-09-08)</text>
+
+  <!-- panel 2: memoise on demand (resumable units) -->
+  <rect x="295" y="90" width="245" height="500" rx="10" fill="none" stroke="#3aa0e0" stroke-width="2"/>
+  <text x="417" y="118" text-anchor="middle" fill="#3aa0e0" font-size="14" font-weight="bold">MEMOISE</text>
+  <text x="417" y="136" text-anchor="middle" fill="#9aa0a6" font-size="11">resumable units, written as they finish</text>
+  <g>
+    <rect x="315" y="175" width="40" height="28" rx="4" fill="#3aa0e0"/><text x="335" y="194" text-anchor="middle" fill="#0f1116" font-size="11">u1</text>
+    <rect x="360" y="175" width="40" height="28" rx="4" fill="#3aa0e0"/><text x="380" y="194" text-anchor="middle" fill="#0f1116" font-size="11">u2</text>
+    <rect x="405" y="175" width="40" height="28" rx="4" fill="#3aa0e0"/><text x="425" y="194" text-anchor="middle" fill="#0f1116" font-size="11">u3</text>
+    <rect x="450" y="175" width="40" height="28" rx="4" fill="none" stroke="#3aa0e0" stroke-dasharray="4 3"/><text x="470" y="194" text-anchor="middle" fill="#3aa0e0" font-size="11">u4</text>
+    <rect x="495" y="175" width="40" height="28" rx="4" fill="none" stroke="#3aa0e0" stroke-dasharray="4 3"/><text x="515" y="194" text-anchor="middle" fill="#3aa0e0" font-size="11">…</text>
+  </g>
+  <text x="417" y="230" text-anchor="middle" fill="#e6e6e6" font-size="12">each unit → one file on disk</text>
+  <text x="417" y="248" text-anchor="middle" fill="#e6e6e6" font-size="12">the moment it finishes</text>
+  <text x="417" y="290" text-anchor="middle" fill="#e6e6e6" font-size="12">a quota cut at unit 37</text>
+  <text x="417" y="308" text-anchor="middle" fill="#e6e6e6" font-size="12">loses at most unit 37</text>
+  <text x="417" y="340" text-anchor="middle" fill="#9aa0a6" font-size="11">cost: O(1) per restart</text>
+  <text x="417" y="380" text-anchor="middle" fill="#9aa0a6" font-size="11">resume = read Input, write Output</text>
+  <text x="417" y="440" text-anchor="middle" fill="#3aa0e0" font-size="11" font-style="italic">cortex_eval/resumable_ladder.py</text>
+
+  <!-- panel 3: tabulate on a schedule (router hardening) -->
+  <rect x="560" y="90" width="245" height="500" rx="10" fill="none" stroke="#3ad08a" stroke-width="2"/>
+  <text x="682" y="118" text-anchor="middle" fill="#3ad08a" font-size="14" font-weight="bold">CONSOLIDATE</text>
+  <text x="682" y="136" text-anchor="middle" fill="#9aa0a6" font-size="11">router decisions harden as they repeat</text>
+  <g>
+    <text x="582" y="185" fill="#9aa0a6" font-size="11">pass</text>
+    <text x="640" y="185" fill="#9aa0a6" font-size="11">regime</text>
+    <text x="735" y="185" fill="#9aa0a6" font-size="11">cost</text>
+    <text x="582" y="210" fill="#e6e6e6" font-size="12">1–4</text><text x="640" y="210" fill="#e6c34a" font-size="12">soft (3 paths)</text><text x="735" y="210" fill="#e6c34a" font-size="12">3×</text>
+    <text x="582" y="235" fill="#e6e6e6" font-size="12">5</text><text x="640" y="235" fill="#3ad08a" font-size="12">hardens</text><text x="735" y="235" fill="#3ad08a" font-size="12">1×</text>
+    <text x="582" y="260" fill="#e6e6e6" font-size="12">6…</text><text x="640" y="260" fill="#3ad08a" font-size="12">hard (1 path)</text><text x="735" y="260" fill="#3ad08a" font-size="12">1×</text>
+  </g>
+  <text x="682" y="300" text-anchor="middle" fill="#e6e6e6" font-size="12">what has been decided, confidently,</text>
+  <text x="682" y="318" text-anchor="middle" fill="#e6e6e6" font-size="12">stably, is not re-deliberated</text>
+  <text x="682" y="350" text-anchor="middle" fill="#9aa0a6" font-size="11">cost falls as precision rises</text>
+  <text x="682" y="380" text-anchor="middle" fill="#9aa0a6" font-size="11">breaker re-softens on degradation</text>
+  <text x="682" y="440" text-anchor="middle" fill="#3ad08a" font-size="11" font-style="italic">cortex_c2/consolidation.py (RES-18)</text>
+
+  <!-- panel 4: keep only what persists (journal + noise tribunal) -->
+  <rect x="825" y="90" width="225" height="500" rx="10" fill="none" stroke="#b08ae6" stroke-width="2"/>
+  <text x="937" y="118" text-anchor="middle" fill="#b08ae6" font-size="14" font-weight="bold">PERSIST</text>
+  <text x="937" y="136" text-anchor="middle" fill="#9aa0a6" font-size="11">the journal keeps what time confirms</text>
+  <g>
+    <text x="845" y="180" fill="#9aa0a6" font-size="11">t0  admit by surprise</text>
+    <rect x="845" y="190" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="880" y="190" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="915" y="190" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="950" y="190" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="985" y="190" width="30" height="22" rx="3" fill="#b08ae6"/>
+    <text x="845" y="245" fill="#9aa0a6" font-size="11">t1  time passes; credit accrues</text>
+    <rect x="845" y="255" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="880" y="255" width="30" height="22" rx="3" fill="none" stroke="#5a4a7a"/><rect x="915" y="255" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="950" y="255" width="30" height="22" rx="3" fill="none" stroke="#5a4a7a"/><rect x="985" y="255" width="30" height="22" rx="3" fill="none" stroke="#5a4a7a"/>
+    <text x="845" y="310" fill="#9aa0a6" font-size="11">t2  the tribunal evicts the rest</text>
+    <rect x="845" y="320" width="30" height="22" rx="3" fill="#b08ae6"/><rect x="915" y="320" width="30" height="22" rx="3" fill="#b08ae6"/>
+  </g>
+  <text x="937" y="372" text-anchor="middle" fill="#e6e6e6" font-size="12">noise is what never contributes;</text>
+  <text x="937" y="390" text-anchor="middle" fill="#e6e6e6" font-size="12">spacing in time is the judge</text>
+  <text x="937" y="440" text-anchor="middle" fill="#b08ae6" font-size="11" font-style="italic">cortex_c2b/write_path.py (D4.8)</text>
+
+  <!-- footer: the method rule -->
+  <rect x="30" y="600" width="1020" height="30" rx="6" fill="#1a1d24"/>
+  <text x="540" y="620" text-anchor="middle" fill="#e6e6e6" font-size="12">Applied to the method itself (gate rule 7): a result enters only after it survives a deferred re-reading — the 5-seed figures did not survive four days; the 3-seed run did.</text>
+</svg>
