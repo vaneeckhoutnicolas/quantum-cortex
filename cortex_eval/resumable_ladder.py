@@ -38,13 +38,27 @@ import numpy as np
 from cortex_eval.mqar import MQARTier
 from cortex_eval.recurrent_ladder import LADDER, Rung, run_rung
 from cortex_eval.multiseed import _mean_ci, _paired_test
+from cortex_eval.run_mqar import run_curriculum
+
+# The three ARCHITECTURE paths measured alongside the pure ladder, same seeds, same
+# tiers, same steps — so every comparison below is a PAIRED test on identical data.
+ARCH = ("none", "hopfield", "delta")     # control / Hopfield hybrid / delta hybrid
 
 DEFAULT_SEEDS = (1337, 2024, 7, 42, 99, 3, 11, 2026)      # 8 seeds → df 7, t_crit 2.365
 DEFAULT_TIERS = [MQARTier(kv_pairs=16, seq_len=128), MQARTier(kv_pairs=8, seq_len=128)]
 
 
-def unit_id(rung: Rung, seed: int, tier: MQARTier) -> str:
-    return f"{rung.name}__s{seed}__kv{tier.kv_pairs}_seq{tier.seq_len}"
+def unit_id(rung, seed: int, tier: MQARTier) -> str:
+    """rung is a Rung (pure ladder) or a str in ARCH (control / hybrids)."""
+    name = rung.name if isinstance(rung, Rung) else f"ARCH-{rung}"
+    return f"{name}__s{seed}__kv{tier.kv_pairs}_seq{tier.seq_len}"
+
+
+def run_unit(rung, tier: MQARTier, steps: int, seed: int, **kw) -> float:
+    if isinstance(rung, Rung):
+        return run_rung(rung, tier, steps, seed, **kw)
+    res = run_curriculum(c2_variant=rung, steps=steps, tiers=[tier], seed=seed, **kw)
+    return float(res.per_tier[0]["accuracy"])
 
 
 def load_done(dirs: list[Path]) -> dict[str, dict]:
@@ -71,7 +85,7 @@ def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
     ckpt = Path(ckpt_dir); ckpt.mkdir(parents=True, exist_ok=True)
     dirs = [Path(p) for p in (resume_from or [])] + [ckpt]
     done = load_done(dirs)
-    units = [(r, s, t) for r in LADDER for s in seeds for t in tiers]
+    units = [(r, s, t) for r in (list(LADDER) + list(ARCH)) for s in seeds for t in tiers]
     todo = [u for u in units if unit_id(*u) not in done]
     print(f"[resumable] {len(units)} units total, {len(done)} already done, {len(todo)} to run")
     t0 = time.time()
@@ -83,8 +97,8 @@ def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
             break
         uid = unit_id(rung, seed, tier)
         t1 = time.time()
-        acc = run_rung(rung, tier, steps, seed, **kw)
-        rec = {"unit_id": uid, "rung": rung.name, "seed": seed, "kv_pairs": tier.kv_pairs,
+        acc = run_unit(rung, tier, steps, seed, **kw)
+        rec = {"unit_id": uid, "rung": rung.name if isinstance(rung, Rung) else f"ARCH-{rung}", "seed": seed, "kv_pairs": tier.kv_pairs,
                "seq_len": tier.seq_len, "steps": steps, "accuracy": acc,
                "status": "done" if acc == acc else "diverged",
                "wall_s": round(time.time() - t1, 1), "written_utc": datetime.now(timezone.utc).isoformat()}
@@ -118,12 +132,28 @@ def aggregate(done: dict, seeds, tiers) -> dict:
             accs = [done[unit_id(r, s, t)]["accuracy"] for t in tiers]
             vals.append(float(np.mean(accs)))
         per_rung[r.name] = vals
-    stats = {r: _mean_ci(v) for r, v in per_rung.items()}
+    per_arch: dict[str, list[float]] = {}
+    for a in ARCH:
+        vals = []
+        for s in seeds:
+            accs = [done[unit_id(a, s, t)]["accuracy"] for t in tiers]
+            vals.append(float(np.mean(accs)))
+        per_arch[a] = vals
+    stats = {r: _mean_ci(v) for r, v in {**per_rung, **{f"ARCH-{a}": v for a, v in per_arch.items()}}.items()}
     best_pure = max(per_rung, key=lambda r: np.mean(per_rung[r]))
-    return {"per_rung_per_seed": per_rung, "stats": stats, "best_pure_rung": best_pure,
-            "L4_vs_L3": _paired_test(per_rung["L4-+delta-rule"], per_rung["L3-+local-conv"]),
-            "note": "hybrid-vs-best-pure needs the hybrids' per-seed AUC at the same regime "
-                    "(from the C2 ablation units, or a matching hybrid run) — join on seed."}
+    n = len(seeds)
+    tests = {
+        "hopfield_hybrid_vs_best_pure": _paired_test(per_arch["hopfield"], per_rung[best_pure]),
+        "delta_hybrid_vs_best_pure":    _paired_test(per_arch["delta"],    per_rung[best_pure]),
+        "control_vs_best_pure":         _paired_test(per_arch["none"],     per_rung[best_pure]),
+        "hopfield_vs_control":          _paired_test(per_arch["hopfield"], per_arch["none"]),
+        "delta_vs_control":             _paired_test(per_arch["delta"],    per_arch["none"]),
+        "L4_vs_L3":                     _paired_test(per_rung["L4-+delta-rule"], per_rung["L3-+local-conv"]),
+    }
+    gate = {k: bool(v.get("significant_95")) and n >= 3 for k, v in tests.items()}
+    return {"per_rung_per_seed": per_rung, "per_arch_per_seed": per_arch, "stats": stats,
+            "best_pure_rung": best_pure, "paired_tests": tests, "gate_readout": gate,
+            "note": "every test is paired on seed at identical steps/tiers; gated = significant at 95% with >= 3 seeds."}
 
 
 def _cli():
