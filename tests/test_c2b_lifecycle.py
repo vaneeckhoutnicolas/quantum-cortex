@@ -1,12 +1,18 @@
 """Slice E -- the lifecycle (ADR-007 D4/D6): one test per validated invariant, plus
 the cascade, the hierarchy and the frozen protocol after a series of phases."""
+import gc
 import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
 
 from cortex_c2b import (Journal, STATE_LIVE, STATE_CONSOLIDATED, STATE_DEMOTED, STATE_EVICTED,
-                        SCHEMA_SUMMARY, ENTRY_MAX_BYTES)
+                        SCHEMA_SUMMARY, ENTRY_MAX_BYTES, lifecycle_declaration)
+from cortex_c2b.crypto import generate_key, LINE_PREFIX, MAGIC
 from cortex_c2b.write_path import WritePath
 from cortex_c2b.read_path import JournalPath
 from cortex_c2b.lifecycle import LifecycleScheduler, LifecycleConfig, PersistentMemory
@@ -26,8 +32,8 @@ def near(base, rng, eps=0.02):
     return v / np.linalg.norm(v)
 
 
-def make(cfg=None, path=None, memory=None):
-    j = Journal(path)
+def make(cfg=None, path=None, memory=None, key=None):
+    j = Journal(path, key=key)
     wp = WritePath(j, seed=0)
     jp = JournalPath(j)
     sch = LifecycleScheduler(j, wp, jp, cfg or LifecycleConfig(), memory=memory, now=0.0)
@@ -299,3 +305,121 @@ def test_frozen_protocol_still_passes_after_a_series_of_phases():
     assert sum(reader.recall(f, None) for f in facts) / len(facts) == 1.0
     assert sum(reader.recall(f, None) for f in neg) == 0
     assert run_hm_protocol()["hm_dissociation_pass"] == 1  # the protocol itself, untouched
+
+
+# ------------------------------------------------------ invariant 9 (Decision 8)
+ROOT = Path(__file__).resolve().parents[1]
+
+SESSION_B = r"""
+import json, os, sys
+import numpy as np
+from cortex_c2b import Journal, STATE_EVICTED, SCHEMA_SUMMARY, lifecycle_declaration
+from cortex_c2b.crypto import key_from_env
+from cortex_c2b.write_path import WritePath
+from cortex_c2b.read_path import JournalPath
+from cortex_c2b.lifecycle import LifecycleScheduler, LifecycleConfig
+from cortex_c2b.hm_protocol import generate_facts, Reader
+path, cfg = sys.argv[1], LifecycleConfig(**json.loads(sys.argv[2]))
+j = Journal(path, key=key_from_env())                      # a NEW process: nothing but the disk
+wp, jp = WritePath(j, seed=0), JournalPath(j)
+sch = LifecycleScheduler(j, wp, jp, cfg)
+facts, _ = generate_facts(40, seed=3); neg, _ = generate_facts(20, seed=10_003)
+reader = Reader(jp, chance=0.0)
+recall = sum(reader.recall(f, None) for f in facts) / len(facts)
+negctrl = sum(reader.recall(f, None) for f in neg) / len(neg)
+dup = wp.write(facts[0].cue, facts[0].statement.encode(), facts[0].schema, now=9_000.0).admitted
+demoted = [e for e in j._entries.values() if e.schema_id == "note" and e.state == "demoted"]
+via_summary = None
+if demoted:
+    (eff, payload, _), = jp.retrieve(np.asarray(demoted[0].cue, dtype=np.float32), k=1)
+    via_summary = [eff.schema_id == SCHEMA_SUMMARY, payload == j.payloads.get(demoted[0].pointer)]
+out = {"recall": recall, "negctrl": negctrl, "sentinel": list(sch.sentinel_probe()), "dup_admitted": dup,
+       "snapshot": {k: v for k, v in j.snapshot().items() if k in ("live", "consolidated", "demoted", "evicted", "summaries")},
+       "memory": len(sch.memory), "phases": sch.phases, "ca3": len(wp.ca3._codes), "via_summary": via_summary,
+       "declaration": lifecycle_declaration(j), "writes_since_phase": sch.writes_since_phase}
+r = sch.phase(now=10_000.0)                                # continuity: the next sleep applies
+out["next_phase_refused"] = r["refused"]
+print(json.dumps(out))
+"""
+
+
+@pytest.mark.parametrize("sealed", [True, False])
+def test_the_journal_survives_a_full_process_restart(tmp_path, sealed):
+    key = generate_key() if sealed else None
+    path = tmp_path / "journal.jsonl"
+    cfg = LifecycleConfig(period_writes=7, demote_k=3, demote_min_cosine=0.85, bytes_setpoint=200_000,
+                          sentinel_facts=20)                 # no pressure: what is recallable before must be after
+    j, wp, jp, sch = make(cfg, path, key=key)
+    rng = np.random.default_rng(12)
+    base = unit(rng)
+    drive(sch, 45, rng, cue_fn=lambda i: near(base, rng, eps=0.05) if i % 2 == 0 else unit(rng))
+    facts, _ = generate_facts(40, seed=3)                 # session A: episodes planted, not contracted
+    for i, f in enumerate(facts):
+        sch.write(f.cue, f.statement.encode(), f.schema, now=500.0 + i)
+    assert any(e.state == STATE_DEMOTED for e in j._entries.values())
+    assert sum(Reader(jp, 0.0).recall(f, None) for f in facts) == len(facts)   # recallable before the restart
+    before = {"snapshot": {k: v for k, v in j.snapshot().items() if k in ("live", "consolidated", "demoted", "evicted", "summaries")},
+              "memory": len(sch.memory), "phases": sch.phases, "ca3": len(wp.ca3._codes),
+              "writes_since_phase": sch.writes_since_phase}
+    del sch, jp, wp, j                                    # destroy every Python object
+    gc.collect()
+
+    lines = [l for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    files = list((tmp_path / "journal.payloads").iterdir())
+    assert files, "the bytes must live on disk"
+    if sealed:
+        assert all(l.startswith(LINE_PREFIX) for l in lines)
+        assert all(f.read_bytes().startswith(MAGIC) for f in files)
+        assert b"works as a" not in path.read_bytes() and not any(b"works as a" in f.read_bytes() for f in files)
+        with pytest.raises(ValueError):                   # no key: loud, not garbage
+            Journal(path)
+        with pytest.raises(Exception):                    # wrong key: loud, not garbage
+            Journal(path, key=generate_key())
+    else:
+        assert not any(l.startswith(LINE_PREFIX) for l in lines)
+        assert any(b"works as a" in f.read_bytes() for f in files)
+
+    env = {**os.environ, "PYTHONPATH": str(ROOT)}
+    if sealed:
+        env["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()
+    cfg_json = json.dumps({k: getattr(cfg, k) for k in cfg.__dataclass_fields__})
+    run = subprocess.run([sys.executable, "-c", SESSION_B, str(path), cfg_json],
+                         capture_output=True, text=True, cwd=ROOT, env=env, timeout=120)
+    assert run.returncode == 0, run.stderr
+    r = json.loads(run.stdout.strip().splitlines()[-1])
+    assert r["recall"] == 1.0 and r["negctrl"] == 0.0           # session B, in another process
+    assert r["sentinel"] == [1.0, 0.0]
+    assert r["dup_admitted"] is False                          # CA3 rebuilt: the known is still known
+    assert r["snapshot"] == before["snapshot"]
+    assert r["memory"] == before["memory"] and r["phases"] == before["phases"] and r["ca3"] == before["ca3"]
+    assert r["writes_since_phase"] == before["writes_since_phase"]
+    assert r["via_summary"] == [True, True]                    # a demoted source still reads through its summary
+    d = r["declaration"]
+    assert all(d[c]["survives_restart"] for c in ("structure", "bytes", "index", "associative_memory"))
+    assert d["bytes"]["encrypted_at_rest"] is sealed and d["structure"]["encrypted_at_rest"] is sealed
+    assert r["next_phase_refused"] is False
+
+
+def test_a_tampered_payload_or_line_fails_loudly(tmp_path):
+    key = generate_key()
+    path = tmp_path / "journal.jsonl"
+    j = Journal(path, key=key)
+    rng = np.random.default_rng(13)
+    e = j.write(unit(rng), b"a secret episode", 0.9, "note", now=1.0)
+    f = tmp_path / "journal.payloads" / e.pointer
+    blob = bytearray(f.read_bytes()); blob[-1] ^= 0x01; f.write_bytes(bytes(blob))
+    j2 = Journal(path, key=key)
+    with pytest.raises(Exception):
+        j2.payloads.get(e.pointer)
+    lines = path.read_text(encoding="utf-8").splitlines()
+    lines[0] = lines[0][:-4] + "AAAA"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with pytest.raises(Exception):
+        Journal(path, key=key)
+
+
+def test_lifecycle_declaration_names_the_four_components():
+    d = lifecycle_declaration(Journal())                   # memory only: nothing survives, and it says so
+    assert set(d) == {"structure", "bytes", "index", "associative_memory"}
+    assert not any(v["survives_restart"] for v in d.values())
+    assert not d["bytes"]["encrypted_at_rest"]

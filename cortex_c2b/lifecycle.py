@@ -51,9 +51,17 @@ one exercised by `tests/test_c2b_lifecycle.py`:
      exists (invariant 2), so the check comes first -- as the breaker re routes
      instead of killing. The protocol's thresholds are untouched.
 
+  9. The journal survives a full process restart (ADR-007 Decision 8, founder,
+     2026-09-12). A scheduler opened on a journal continues it: the persistent
+     memory is rebuilt from the consolidation order, the sentinels are found
+     again through their events, the phase and write counters resume. The test
+     that counts runs session B in a new process started from the disk alone,
+     sealed and clear (`test_the_journal_survives_a_full_process_restart`).
+
 Design choices taken by the founder (2026-09-12): reference counting on
 identity; the summary indexed under its source cues; refuse before commit; K,
-P and the similarity radius in the hashed configuration.
+P and the similarity radius in the hashed configuration; persistence declared
+per component, sealed at rest per scope with the hub's QJE1 framing.
 
 Pure Python over numpy; no torch. The persistent memory here is a stand-in
 (`PersistentMemory`, a modern Hopfield store over cues); the C2 layer of
@@ -179,16 +187,30 @@ class LifecycleScheduler:
         self.j, self.wp, self.jp = journal, write_path, journal_path
         self.cfg = cfg or LifecycleConfig()
         self.memory = memory if memory is not None else PersistentMemory(dim=journal.cue_dim)   # an empty memory is falsy
-        self.writes_since_phase = 0
-        self.phases = 0
-        self.refused = 0
-        self.replay_failed = 0
+        self.replay_failed = 0                       # telemetry only; the log's phase snapshots carry the totals
         self.last_phase: dict | None = None
+        # ---- Decision 8: a scheduler opened on a journal continues it, it does not restart it
+        for eid in journal.consolidated_order:       # the persistent memory, in consolidation order
+            self.memory.replay(journal._entries[eid].cue)   # verified when it was consolidated
+        self.phases = journal.phase_count
+        self.refused = journal.refused_count
         # the sentinel set: contracted facts from the frozen H.M. generator (invariant 8)
         self.sentinels: list[tuple[str, Fact]] = []
         self.negctrl: list[Fact] = []
         if self.cfg.sentinel_facts > 0:
-            self._plant_sentinels(now)
+            if journal.sentinels_recorded:
+                facts, _ = generate_facts(self.cfg.sentinel_facts, seed=self.cfg.sentinel_seed)
+                self.negctrl, _ = generate_facts(self.cfg.sentinel_negctrl, seed=self.cfg.sentinel_seed + 10_000)
+                for i, eid in journal.sentinels_recorded:
+                    if i >= len(facts) or eid not in journal._entries:
+                        raise ValueError("sentinel events do not match this configuration's sentinel set")
+                    self.sentinels.append((eid, facts[i]))
+            else:
+                self._plant_sentinels(now)
+        sentinel_ids = {eid for eid, _ in self.sentinels}
+        self.writes_since_phase = sum(1 for eid in journal.writes_since_last_phase
+                                      if eid not in sentinel_ids
+                                      and journal._entries[eid].schema_id != SCHEMA_SUMMARY)
 
     # ------------------------------------------------------------------ writes --
     def write(self, cue, payload: bytes, schema_id: str, now: float):
@@ -215,11 +237,12 @@ class LifecycleScheduler:
     def _plant_sentinels(self, now: float) -> None:
         facts, _ = generate_facts(self.cfg.sentinel_facts, seed=self.cfg.sentinel_seed)
         self.negctrl, _ = generate_facts(self.cfg.sentinel_negctrl, seed=self.cfg.sentinel_seed + 10_000)
-        for f in facts:
+        for i, f in enumerate(facts):
             rep = self.wp.write(f.cue, f.statement.encode(), f.schema, now=now)
             if rep.admitted:
                 self.jp.on_write(rep.entry)
                 self.contract(rep.entry.entry_id, now)
+                self.j.mark_sentinel(i, rep.entry.entry_id)   # an event: a restart finds them again
                 self.sentinels.append((rep.entry.entry_id, f))
 
     def _hit(self, fact: Fact) -> tuple[str | None, bytes | None]:

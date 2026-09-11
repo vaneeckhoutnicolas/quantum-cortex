@@ -120,6 +120,14 @@ class WritePath:
         self.use_dg, self.use_ca3, self.use_ca1 = use_dg, use_ca3, use_ca1
         self.dg = DentateGyrus(seed=seed) if use_dg else None
         self.ca3 = CA3Completion()
+        # Decision 8 (persistence per component): CA3 is rebuilt from the journal's
+        # `ca3` events, in admission order, with the same separation. A journal
+        # written under another separation is refused, never silently re-coded.
+        self._meta = {"dg": bool(use_dg), "seed": int(seed)}
+        for eid, meta in journal.ca3_order:
+            if {"dg": meta.get("dg"), "seed": meta.get("seed")} != self._meta:
+                raise ValueError(f"CA3 rebuild: journal written with separation {meta}, this write path has {self._meta}")
+            self.ca3.store(self._code(np.asarray(journal._entries[eid].cue, dtype=np.float32)))
 
     def _code(self, cue: np.ndarray) -> np.ndarray:
         return self.dg.separate(cue) if self.dg else cue.astype(np.float32)
@@ -133,7 +141,10 @@ class WritePath:
         if surprise < self.thr:
             return WriteReport(admitted=False, surprise=surprise, reason="redundant (below admission threshold)")
         entry = self.j.write(cue, payload, salience=surprise, schema_id=schema_id, now=now)
-        self.ca3.store(code)
+        # store the code of the cue AS JOURNALED (rounded), so a rebuild after a restart
+        # produces byte-identical CA3 contents (Decision 8)
+        self.ca3.store(self._code(np.asarray(entry.cue, dtype=np.float32)))
+        self.j.mark_ca3(entry.entry_id, self._meta)
         return WriteReport(admitted=True, surprise=surprise, reason="admitted", entry=entry)
 
     # ---- outcome credit (RES-11 hook): salience earned after the fact ---------

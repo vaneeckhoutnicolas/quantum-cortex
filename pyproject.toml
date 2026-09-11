@@ -10,6 +10,7 @@ dependencies = [
     "numpy>=1.26",
     "torch>=2.2",
     "jsonschema>=4.20",
+    "cryptography>=42",   # encryption at rest of the journal (AES-256-GCM); Apache-2.0 OR BSD-3-Clause, checked 2026-09-12
 ]
 
 [project.optional-dependencies]

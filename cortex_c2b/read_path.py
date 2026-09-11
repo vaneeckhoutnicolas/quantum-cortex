@@ -116,9 +116,12 @@ class JournalPath:
     retrieve(span_cue)-> the entries behind that score (non-evicted), with payloads.
     """
 
-    def __init__(self, journal: Journal, index: CueIndex | None = None):
+    def __init__(self, journal: Journal, index: CueIndex | None = None, seed: int = 0):
+        """`seed` is the declared seed of the cue index (Decision 8: the index is
+        recomputed at every open from the log; the seed is part of the scope's
+        configuration, so two opens build the same buckets)."""
         self.j = journal
-        self.index = index or CueIndex(dim=journal.cue_dim)
+        self.index = index or CueIndex(dim=journal.cue_dim, seed=seed)
         # index everything already in the journal (demoted sources included: a hit on
         # them resolves to their summary through the alias)
         for eid, e in journal._entries.items():

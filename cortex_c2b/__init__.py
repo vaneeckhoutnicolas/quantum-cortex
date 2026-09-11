@@ -20,6 +20,24 @@ two-stage noise gate — Slice B), the router path (Slice C), the H.M. protocol
 (Slice D), consolidation/eviction scheduling (Slice E). The store is the
 substrate they all need; it is built first so each can be tested against it.
 
+Persistence is a property PER COMPONENT (ADR-007 Decision 8, founder,
+2026-09-12): "survives the session boundary" means after a full process stop
+and relaunch, not within one process. Each component declares its lifecycle
+(`lifecycle_declaration()`):
+  structure          -- the append-only log (`journal.jsonl`): entries, states,
+                        saliences, links, references, phases;
+  bytes              -- the content-addressed payload directory next to the log
+                        (`journal.payloads/<pointer>`), one file per payload,
+                        released at the last reference;
+  index              -- recomputed at replay from the log with a declared seed
+                        (`JournalPath(journal, seed)`), aliases from the links;
+  associative memory -- CA3 (write path) and the persistent memory (lifecycle)
+                        rebuilt from their own events in the log today; checkpointed
+                        with the weights once the C2 layer takes over.
+At rest, log lines and payload files are encrypted per scope with the hub's
+QJE1 framing (AES-256-GCM; `cortex_c2b.crypto`) when a key is given; the key is
+an explicit argument, never read implicitly (key management deferred, hub 010).
+
 Written from scratch (our filon). ANN over cues is Slice C's job; Slice A uses
 an exact keyed index so the read law is enforced without a heavy dependency.
 """
@@ -33,6 +51,8 @@ from pathlib import Path
 import numpy as np
 
 from cortex_data import _hash_obj  # content hashing reused (ADR-005)
+from cortex_c2b.crypto import (seal, open_sealed, is_sealed, sealed_overhead, seal_line, open_line,
+                               MAGIC)
 
 # --- lifecycle states (RES-17 cell) -----------------------------------------
 STATE_LIVE = "live"
@@ -79,33 +99,80 @@ class Entry:
 
 class PayloadStore:
     """Content-addressed payload storage. Same bytes → same hash → stored once.
-    The journal never holds content; it holds pointers here."""
+    The journal never holds content; it holds pointers here.
 
-    def __init__(self):
-        self._blobs: dict[str, bytes] = {}
+    `directory` (optional): one file per payload, named by its pointer, next to
+    the journal log -- the bytes' own lifecycle (Decision 8). With a `key` each
+    file is sealed (QJE1 binary framing, the pointer as associated data, so a
+    file cannot be swapped under another pointer). Without a directory the
+    store is memory only -- and says so in `lifecycle_declaration()`."""
+
+    def __init__(self, directory: str | Path | None = None, key: bytes | None = None):
+        self._blobs: dict[str, bytes] = {}          # plaintext cache
+        self._sizes: dict[str, int] = {}            # pointer -> plaintext size, known without reading
+        self._dir = Path(directory) if directory else None
+        self._key = key
+        if self._dir:
+            self._dir.mkdir(parents=True, exist_ok=True)
+            for f in self._dir.iterdir():
+                if f.is_file() and len(f.name) == 16:
+                    with open(f, "rb") as fh:
+                        head = fh.read(len(MAGIC))
+                    self._sizes[f.name] = f.stat().st_size - (sealed_overhead() if head == MAGIC else 0)
 
     def put(self, payload: bytes) -> str:
         h = content_hash(payload)
-        if h not in self._blobs:
-            self._blobs[h] = payload
+        if h not in self._sizes:
+            self._sizes[h] = len(payload)
+            if self._dir:
+                blob = seal(self._key, payload, h.encode()) if self._key else payload
+                tmp = self._dir / (h + ".tmp")
+                tmp.write_bytes(blob); tmp.replace(self._dir / h)       # never a half-written file
+        self._blobs.setdefault(h, payload)
         return h
 
     def get(self, pointer: str) -> bytes:
-        return self._blobs[pointer]
+        if pointer in self._blobs:
+            return self._blobs[pointer]
+        if pointer not in self._sizes or not self._dir:
+            raise KeyError(pointer)
+        blob = (self._dir / pointer).read_bytes()
+        if is_sealed(blob):
+            if self._key is None:
+                raise ValueError(f"payload {pointer} is sealed and no key was given")
+            payload = open_sealed(self._key, blob, pointer.encode())   # InvalidTag on tampering / wrong key
+        else:
+            payload = blob                                              # legacy clear file, coexists
+        if content_hash(payload) != pointer:
+            raise ValueError(f"integrity: payload {pointer} does not match its pointer")
+        self._blobs[pointer] = payload
+        return payload
 
     def release(self, pointer: str) -> bool:
         """Drop the bytes behind a pointer. Called by the journal only when the
         last non-evicted reference is gone (Slice E, reference counting)."""
-        return self._blobs.pop(pointer, None) is not None
+        existed = pointer in self._sizes
+        self._blobs.pop(pointer, None); self._sizes.pop(pointer, None)
+        if self._dir:
+            (self._dir / pointer).unlink(missing_ok=True)
+        return existed
 
     def __contains__(self, pointer: str) -> bool:
-        return pointer in self._blobs
+        return pointer in self._sizes
 
     def __len__(self):
-        return len(self._blobs)
+        return len(self._sizes)
 
     def total_bytes(self) -> int:
-        return sum(len(b) for b in self._blobs.values())
+        return sum(self._sizes.values())
+
+    @property
+    def persistent(self) -> bool:
+        return self._dir is not None
+
+    @property
+    def sealed(self) -> bool:
+        return self._key is not None
 
 
 class Journal:
@@ -116,13 +183,24 @@ class Journal:
     as events, so the file is a full provenance log (RES-17: the object's history).
     """
 
-    def __init__(self, path: str | Path | None = None, cue_dim: int = CUE_DIM):
+    def __init__(self, path: str | Path | None = None, cue_dim: int = CUE_DIM,
+                 key: bytes | None = None, payload_dir: str | Path | None = None):
         self.cue_dim = cue_dim
-        self.payloads = PayloadStore()
+        self._path = Path(path) if path else None
+        self._key = key
+        if payload_dir is None and self._path is not None:
+            payload_dir = self._path.with_name(self._path.stem + ".payloads")   # the bytes, next to the log
+        self.payloads = PayloadStore(payload_dir, key)
         self._entries: dict[str, Entry] = {}         # entry_id -> Entry
         self._by_cue_key: dict[str, list[str]] = {}  # cue key -> entry ids (keyed index)
-        self._path = Path(path) if path else None
         self._reads_touched = 0                      # instrumentation for the no-scan test
+        # ---- what the associative memories and the scheduler rebuild from (Decision 8) ----
+        self.ca3_order: list[tuple[str, dict]] = []  # (entry_id, meta) in write-path admission order
+        self.consolidated_order: list[str] = []      # entry ids in consolidation order
+        self.sentinels_recorded: list[tuple[int, str]] = []   # (fact index, entry_id)
+        self.phase_count = 0
+        self.refused_count = 0
+        self.writes_since_last_phase: list[str] = []
         # ---- Slice E state, every item rebuilt from the log on replay ----
         self._refs: dict[str, set[str]] = {}         # pointer -> non-evicted entry ids referencing it
         self.summary_sources: dict[str, list[str]] = {}   # summary id -> its K source ids
@@ -157,6 +235,7 @@ class Journal:
         self._entries[entry.entry_id] = entry
         self._by_cue_key.setdefault(self._cue_key(cue), []).append(entry.entry_id)
         self._refs.setdefault(pointer, set()).add(entry.entry_id)
+        self.writes_since_last_phase.append(entry.entry_id)
         self._append_event({"ev": "write", "entry": asdict(entry)})
         return entry
 
@@ -188,6 +267,8 @@ class Journal:
             raise ValueError(f"illegal transition {e.state} -> {new_state}")
         e.state = new_state
         self._append_event({"ev": "transition", "entry_id": entry_id, "to": new_state})
+        if new_state == STATE_CONSOLIDATED:
+            self.consolidated_order.append(entry_id)
         if new_state == STATE_EVICTED:
             self._release_refs(entry_id)
             for src in self.summary_sources.get(entry_id, []):      # cascade: a summary takes its
@@ -257,9 +338,27 @@ class Journal:
                 self.payloads.release(p)
 
     def phase_event(self, record: dict) -> None:
-        """Telemetry snapshot of a lifecycle phase, appended to the log (ignored on
-        replay: it describes state, it does not change it)."""
+        """Telemetry snapshot of a lifecycle phase, appended to the log. Replay only
+        counts it (phases, refusals, writes since the last phase): it describes
+        state, it does not change it."""
+        self._count_phase(record)
         self._append_event({"ev": "phase", **record})
+
+    def _count_phase(self, record: dict) -> None:
+        self.phase_count += 1
+        if record.get("refused"):
+            self.refused_count += 1
+        self.writes_since_last_phase = []
+
+    def mark_ca3(self, entry_id: str, meta: dict) -> None:
+        """The write path records what it stored into CA3 (and with which
+        separation), so a restarted write path rebuilds the same memory."""
+        self.ca3_order.append((entry_id, dict(meta)))
+        self._append_event({"ev": "ca3", "entry_id": entry_id, **meta})
+
+    def mark_sentinel(self, index: int, entry_id: str) -> None:
+        self.sentinels_recorded.append((int(index), entry_id))
+        self._append_event({"ev": "sentinel", "i": int(index), "entry_id": entry_id})
 
     def references(self, pointer: str) -> set[str]:
         return set(self._refs.get(pointer, ()))
@@ -290,27 +389,35 @@ class Journal:
     def _append_event(self, ev: dict):
         if self._path:
             self._path.parent.mkdir(parents=True, exist_ok=True)
+            line = json.dumps(ev, separators=(",", ":"))
+            if self._key is not None:
+                line = seal_line(self._key, line)                     # QJE1, per line, as on the hub
             with open(self._path, "a", encoding="utf-8") as fh:
-                fh.write(json.dumps(ev, separators=(",", ":")) + "\n")
+                fh.write(line + "\n")
 
     def _replay(self):
         """Rebuild in-memory state from the append-only log: entries, states,
-        saliences, summary links and payload references. Payload BYTES are not in
-        the log (the size law keeps content out of it), so a replayed journal
-        holds pointers without bytes until payload persistence exists (ADR-007
-        item 5, reserve c) -- recorded, not hidden."""
-        for line in self._path.read_text(encoding="utf-8").splitlines():
-            if not line.strip():
+        saliences, summary links, payload references, the CA3 and sentinel
+        events, the phase counters. Payload BYTES are not in the log (the size
+        law keeps content out of it): they live in the payload directory next
+        to it, opened by `PayloadStore` (Decision 8). Before 2026-09-12 this
+        docstring claimed the payloads were re-registered from the log; they
+        were not -- recorded here so the correction stays visible."""
+        for raw in self._path.read_text(encoding="utf-8").splitlines():
+            if not raw.strip():
                 continue
-            ev = json.loads(line)
+            ev = json.loads(open_line(self._key, raw))                 # a clear line passes, a sealed one needs the key
             if ev["ev"] == "write":
                 d = ev["entry"]
                 e = Entry(**d)
                 self._entries[e.entry_id] = e
                 self._by_cue_key.setdefault(self._cue_key(e.cue), []).append(e.entry_id)
                 self._refs.setdefault(e.pointer, set()).add(e.entry_id)
+                self.writes_since_last_phase.append(e.entry_id)
             elif ev["ev"] == "transition":
                 self._entries[ev["entry_id"]].state = ev["to"]
+                if ev["to"] == STATE_CONSOLIDATED:
+                    self.consolidated_order.append(ev["entry_id"])
                 if ev["to"] == STATE_EVICTED:
                     self._release_refs(ev["entry_id"])
             elif ev["ev"] == "salience":
@@ -322,4 +429,31 @@ class Journal:
             elif ev["ev"] == "demote":
                 self._link_summary(ev["summary"], list(ev["sources"]), int(ev.get("level", 1)))
             elif ev["ev"] == "phase":
-                pass                                      # telemetry, not state
+                self._count_phase(ev)                     # telemetry: counted, not applied
+            elif ev["ev"] == "ca3":
+                self.ca3_order.append((ev["entry_id"], {k: v for k, v in ev.items() if k not in ("ev", "entry_id")}))
+            elif ev["ev"] == "sentinel":
+                self.sentinels_recorded.append((int(ev["i"]), ev["entry_id"]))
+
+
+def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
+    """Decision 8: persistence is a property per component; each declares its own.
+    With a journal, the declaration reflects that journal's actual setup."""
+    on_disk = bool(journal and journal._path)
+    sealed = bool(journal and journal._key)
+    return {
+        "structure": {"what": "entries, states, saliences, links, references, phases",
+                      "lifecycle": "append-only log, replayed at open",
+                      "survives_restart": on_disk, "encrypted_at_rest": sealed},
+        "bytes": {"what": "the payloads (content), one file per pointer",
+                  "lifecycle": "content-addressed directory next to the log, released at the last reference",
+                  "survives_restart": bool(journal and journal.payloads.persistent),
+                  "encrypted_at_rest": bool(journal and journal.payloads.sealed)},
+        "index": {"what": "the cue index (buckets) and the demotion aliases",
+                  "lifecycle": "recomputed at open from the log, with a declared seed",
+                  "survives_restart": on_disk, "encrypted_at_rest": None},
+        "associative_memory": {"what": "CA3 codes (write path) and the persistent memory (lifecycle)",
+                               "lifecycle": "rebuilt at open from their own events (ca3, consolidation order); "
+                                            "checkpointed with the weights once the C2 layer takes over",
+                               "survives_restart": on_disk, "encrypted_at_rest": None},
+    }
