@@ -137,7 +137,7 @@ Single seeds where noted; one capability (associative recall) measured so far; s
 ## Gates for the paper itself
 - **v0 (internal)** may be drafted once §4 holds ≥ 1 gate-passing comparison (the first candidate: the recurrent ladder at 8 seeds).
 - **v1 (submittable)** requires the continuity triad measured on at least one organ (C2b or C3 built) **and** a 100M+ run — i.e. the capability the paper is named after must exist as a measurement, not a specification.
-- Target: arXiv (cs.LG), then a workshop; open-results (D17): the paper, ledger and benchmarks are public; the recipe stays the workshop's.
+- **The repository goes public iff the H.M. dissociation passes on the language model** (D17 as amended 2026-09-11) — not on an architecture result, not on scale. Target: arXiv (cs.LG), then a workshop; open-results (D17): the paper, ledger and benchmarks are public; the recipe stays the workshop's.
 
 ## References (verified 2026-09-08 against arXiv / publisher pages; completed at v0)
 - Scoville, W.B., Milner, B. (1957). Loss of recent memory after bilateral hippocampal lesions. *J. Neurol. Neurosurg. Psychiatry* 20(1):11–21. doi:10.1136/jnnp.20.1.11.
