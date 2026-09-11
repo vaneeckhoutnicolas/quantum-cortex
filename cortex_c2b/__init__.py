@@ -46,6 +46,8 @@ _TRANSITIONS = {
     STATE_EVICTED: set(),
 }
 
+SCHEMA_SUMMARY = "summary"      # the schema_id of a demotion summary (Slice E)
+
 ENTRY_MAX_BYTES = 1024          # the size law
 CUE_DIM = 64                    # fixed-size cue (matryoshka-truncatable later)
 
@@ -91,6 +93,14 @@ class PayloadStore:
     def get(self, pointer: str) -> bytes:
         return self._blobs[pointer]
 
+    def release(self, pointer: str) -> bool:
+        """Drop the bytes behind a pointer. Called by the journal only when the
+        last non-evicted reference is gone (Slice E, reference counting)."""
+        return self._blobs.pop(pointer, None) is not None
+
+    def __contains__(self, pointer: str) -> bool:
+        return pointer in self._blobs
+
     def __len__(self):
         return len(self._blobs)
 
@@ -113,6 +123,12 @@ class Journal:
         self._by_cue_key: dict[str, list[str]] = {}  # cue key -> entry ids (keyed index)
         self._path = Path(path) if path else None
         self._reads_touched = 0                      # instrumentation for the no-scan test
+        # ---- Slice E state, every item rebuilt from the log on replay ----
+        self._refs: dict[str, set[str]] = {}         # pointer -> non-evicted entry ids referencing it
+        self.summary_sources: dict[str, list[str]] = {}   # summary id -> its K source ids
+        self.summary_of: dict[str, str] = {}         # source id -> summary id
+        self.summary_level: dict[str, int] = {}      # summary id -> hierarchy level (1 = of entries)
+        self.contracted: set[str] = set()            # ids credited under a contract (never decayed)
         if self._path and self._path.exists():
             self._replay()
 
@@ -140,6 +156,7 @@ class Journal:
             raise ValueError(f"entry violates the size law: {sz} B > {ENTRY_MAX_BYTES} B")
         self._entries[entry.entry_id] = entry
         self._by_cue_key.setdefault(self._cue_key(cue), []).append(entry.entry_id)
+        self._refs.setdefault(pointer, set()).add(entry.entry_id)
         self._append_event({"ev": "write", "entry": asdict(entry)})
         return entry
 
@@ -171,7 +188,88 @@ class Journal:
             raise ValueError(f"illegal transition {e.state} -> {new_state}")
         e.state = new_state
         self._append_event({"ev": "transition", "entry_id": entry_id, "to": new_state})
+        if new_state == STATE_EVICTED:
+            self._release_refs(entry_id)
+            for src in self.summary_sources.get(entry_id, []):      # cascade: a summary takes its
+                if self._entries[src].state != STATE_EVICTED:       # sources with it -- a demoted
+                    self.transition(src, STATE_EVICTED)              # source is never left unreachable
         return e
+
+    # ---- Slice E primitives: each one an event, so the log replays them ------
+    def set_salience(self, entry_id: str, value: float, why: str = "credit",
+                     now: float | None = None) -> Entry:
+        """Salience is lifecycle state: every change is an event (invariant 1).
+        `why == "contract"` marks the entry as contracted: scheduled decay never
+        touches it."""
+        e = self._entries[entry_id]
+        e.salience = float(min(1.0, max(0.0, value)))
+        if why == "contract":
+            self.contracted.add(entry_id)
+        self._append_event({"ev": "salience", "entry_id": entry_id, "to": e.salience, "why": why})
+        return e
+
+    def decay(self, factor: float, states=(STATE_CONSOLIDATED, STATE_DEMOTED)) -> int:
+        """Scheduled decay (ADR-007 D1) as ONE event; contracted entries exempt."""
+        n = self._apply_decay(factor, tuple(states))
+        self._append_event({"ev": "decay", "factor": float(factor), "states": list(states)})
+        return n
+
+    def _apply_decay(self, factor: float, states) -> int:
+        n = 0
+        for eid, e in self._entries.items():
+            if e.state in states and eid not in self.contracted:
+                e.salience = round(e.salience * factor, 6); n += 1
+        return n
+
+    def demote(self, summary_id: str, source_ids: list[str], level: int = 1) -> None:
+        """Record the link summary <- sources (ADR-007 D4: keeping pointers). The
+        summary holds a reference to every source payload, so those bytes live
+        as long as the summary does. The state transitions of the sources are
+        separate `transition` events (invariant 1)."""
+        if summary_id not in self._entries:
+            raise KeyError(summary_id)
+        for sid in source_ids:
+            if sid in self.summary_of:
+                raise ValueError(f"{sid} already belongs to summary {self.summary_of[sid]}")
+        self._link_summary(summary_id, list(source_ids), level)
+        self._append_event({"ev": "demote", "summary": summary_id, "sources": list(source_ids),
+                            "level": int(level)})
+
+    def _link_summary(self, summary_id: str, source_ids: list[str], level: int) -> None:
+        self.summary_sources[summary_id] = source_ids
+        self.summary_level[summary_id] = level
+        for sid in source_ids:
+            self.summary_of[sid] = summary_id
+            self._refs.setdefault(self._entries[sid].pointer, set()).add(summary_id)
+
+    def _release_refs(self, entry_id: str) -> None:
+        """Reference counting on identity (the pointer), never on similarity.
+        A payload is released when no non-evicted entry (or summary) points to it."""
+        e = self._entries[entry_id]
+        ptrs = [e.pointer] + [self._entries[s].pointer for s in self.summary_sources.get(entry_id, [])]
+        for p in ptrs:
+            holders = self._refs.get(p)
+            if holders is None:
+                continue
+            holders.discard(entry_id)
+            if not holders:
+                del self._refs[p]
+                self.payloads.release(p)
+
+    def phase_event(self, record: dict) -> None:
+        """Telemetry snapshot of a lifecycle phase, appended to the log (ignored on
+        replay: it describes state, it does not change it)."""
+        self._append_event({"ev": "phase", **record})
+
+    def references(self, pointer: str) -> set[str]:
+        return set(self._refs.get(pointer, ()))
+
+    def regulated_bytes(self) -> int:
+        """The bytes the budget regulates: non-evicted entries + the payloads alive.
+        Evicted entries are tombstones in memory; the append-only log is
+        provenance and grows by design (its retention is a separate decision)."""
+        return (sum(e.size_bytes() for e in self._entries.values() if e.state != STATE_EVICTED)
+                + self.payloads.total_bytes())
 
     # ---- introspection (RES-17 snapshot) -------------------------------------
     def snapshot(self) -> dict:
@@ -181,6 +279,8 @@ class Journal:
         return {"entries": len(self._entries), "payloads": len(self.payloads),
                 "payload_bytes": self.payloads.total_bytes(),
                 "journal_bytes": sum(e.size_bytes() for e in self._entries.values()),
+                "regulated_bytes": self.regulated_bytes(),
+                "summaries": len(self.summary_sources), "contracted": len(self.contracted),
                 **counts}
 
     def __len__(self):
@@ -194,8 +294,11 @@ class Journal:
                 fh.write(json.dumps(ev, separators=(",", ":")) + "\n")
 
     def _replay(self):
-        """Rebuild in-memory state from the append-only log (payloads are
-        re-registered by hash from the log's write events)."""
+        """Rebuild in-memory state from the append-only log: entries, states,
+        saliences, summary links and payload references. Payload BYTES are not in
+        the log (the size law keeps content out of it), so a replayed journal
+        holds pointers without bytes until payload persistence exists (ADR-007
+        item 5, reserve c) -- recorded, not hidden."""
         for line in self._path.read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue
@@ -205,5 +308,18 @@ class Journal:
                 e = Entry(**d)
                 self._entries[e.entry_id] = e
                 self._by_cue_key.setdefault(self._cue_key(e.cue), []).append(e.entry_id)
+                self._refs.setdefault(e.pointer, set()).add(e.entry_id)
             elif ev["ev"] == "transition":
                 self._entries[ev["entry_id"]].state = ev["to"]
+                if ev["to"] == STATE_EVICTED:
+                    self._release_refs(ev["entry_id"])
+            elif ev["ev"] == "salience":
+                self._entries[ev["entry_id"]].salience = float(ev["to"])
+                if ev.get("why") == "contract":
+                    self.contracted.add(ev["entry_id"])
+            elif ev["ev"] == "decay":
+                self._apply_decay(float(ev["factor"]), tuple(ev["states"]))
+            elif ev["ev"] == "demote":
+                self._link_summary(ev["summary"], list(ev["sources"]), int(ev.get("level", 1)))
+            elif ev["ev"] == "phase":
+                pass                                      # telemetry, not state

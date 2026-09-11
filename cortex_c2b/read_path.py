@@ -20,6 +20,8 @@ Written from scratch (our filon).
 """
 from __future__ import annotations
 
+from collections import deque
+
 import numpy as np
 
 from cortex_c2 import PATH_NAMES, PATH_CONTROL
@@ -45,6 +47,8 @@ class CueIndex:
         self.tables: list[dict[int, list[str]]] = [dict() for _ in range(n_tables)]
         self.vecs: dict[str, np.ndarray] = {}
         self.touched = 0                                     # instrumentation for the no-scan test
+        self.alias: dict[str, str] = {}                      # Slice E: source id -> summary id
+        self.touch_log: deque = deque(maxlen=256)            # Slice E: entries touched per query (latency proxy)
 
     def _sig(self, v: np.ndarray, t: int) -> int:
         bits = (v @ self.planes[t]) > 0
@@ -63,6 +67,7 @@ class CueIndex:
         for t in range(len(self.planes)):
             cand.update(self.tables[t].get(self._sig(q, t), []))
         self.touched += len(cand)
+        self.touch_log.append(len(cand))
         if not cand:
             return []
         qn = np.linalg.norm(q) + 1e-8
@@ -75,6 +80,29 @@ class CueIndex:
 
     def __len__(self):
         return len(self.vecs)
+
+    def candidates(self, cue: np.ndarray) -> list[str]:
+        """The keys sharing a bucket with `cue` in any table, sorted -- the
+        neighbourhood the Slice E scheduler groups within. Not a read: it is
+        not counted in the latency telemetry."""
+        q = np.asarray(cue, dtype=np.float32)
+        cand: set[str] = set()
+        for t in range(len(self.planes)):
+            cand.update(self.tables[t].get(self._sig(q, t), []))
+        return sorted(cand)
+
+    # ---- Slice E: demotion aliases and the latency proxy ----------------------
+    def set_alias(self, source_id: str, summary_id: str) -> None:
+        """After a demotion the summary is reachable from every source cue: the
+        source stays indexed under its own cue, and a hit on it resolves to the
+        summary (ADR-007 D4, keeping pointers). No second vector is stored."""
+        self.alias[source_id] = summary_id
+
+    def p95_touched(self) -> float:
+        """95th percentile of entries touched per query over the recent window."""
+        if not self.touch_log:
+            return 0.0
+        return float(np.percentile(np.asarray(self.touch_log, dtype=np.float64), 95))
 
 
 # ---------------------------------------------------------------------------- #
@@ -91,26 +119,39 @@ class JournalPath:
     def __init__(self, journal: Journal, index: CueIndex | None = None):
         self.j = journal
         self.index = index or CueIndex(dim=journal.cue_dim)
-        # index everything already in the journal
+        # index everything already in the journal (demoted sources included: a hit on
+        # them resolves to their summary through the alias)
         for eid, e in journal._entries.items():
-            if e.state != STATE_EVICTED:
+            if e.state != STATE_EVICTED or eid in journal.summary_of:
                 self.index.add(eid, np.asarray(e.cue, dtype=np.float32))
+        for src, sid in journal.summary_of.items():
+            self.index.set_alias(src, sid)
 
     def on_write(self, entry: Entry):
         """Keep the index in step with the journal (call after each admitted write)."""
         self.index.add(entry.entry_id, np.asarray(entry.cue, dtype=np.float32))
 
+    def _resolve(self, key: str) -> tuple[Entry, str]:
+        """A hit is an entry id or a demoted source id. Returns the effective entry
+        (the summary, for a source) and the pointer of the payload to return (the
+        source's own payload, alive as long as its summary is)."""
+        hit = self.j.get(key)
+        effective, target, hops = hit, self.index.alias.get(key), 0
+        while target is not None and hops < 64:                  # up the hierarchy (RES-16), no cycle by construction
+            effective, target, hops = self.j.get(target), self.index.alias.get(target), hops + 1
+        return effective, hit.pointer
+
     def score(self, span_cue) -> float:
         hits = self.index.query(np.asarray(span_cue, dtype=np.float32), k=1)
-        hits = [(eid, s) for eid, s in hits if self.j.get(eid).state != STATE_EVICTED]
+        hits = [(eid, s) for eid, s in hits if self._resolve(eid)[0].state != STATE_EVICTED]
         return float(max(0.0, hits[0][1])) if hits else 0.0
 
     def retrieve(self, span_cue, k: int = 3) -> list[tuple[Entry, bytes, float]]:
         out = []
         for eid, s in self.index.query(np.asarray(span_cue, dtype=np.float32), k=k):
-            e = self.j.get(eid)
+            e, pointer = self._resolve(eid)
             if e.state != STATE_EVICTED:
-                out.append((e, self.j.payloads.get(e.pointer), s))
+                out.append((e, self.j.payloads.get(pointer), s))
         return out
 
 

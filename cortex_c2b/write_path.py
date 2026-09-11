@@ -137,9 +137,9 @@ class WritePath:
         return WriteReport(admitted=True, surprise=surprise, reason="admitted", entry=entry)
 
     # ---- outcome credit (RES-11 hook): salience earned after the fact ---------
-    def credit(self, entry_id: str, amount: float):
+    def credit(self, entry_id: str, amount: float, why: str = "credit"):
         e = self.j.get(entry_id)
-        e.salience = float(min(1.0, e.salience + amount))
+        self.j.set_salience(entry_id, e.salience + amount, why=why)   # an event (Slice E, invariant 1)
 
     # ---- stage (b): the retrospective verdict — the noise tribunal -----------
     def noise_tribunal(self, salience_floor: float = 0.2, min_age: float = 0.0,
@@ -151,8 +151,15 @@ class WritePath:
         import time as _t
         now = _t.time() if now is None else now
         evicted = []
-        for eid, e in list(self.j._entries.items()):
-            if e.state == STATE_LIVE and e.salience < salience_floor and (now - e.t_written) >= min_age:
-                self.j.transition(eid, STATE_EVICTED)
-                evicted.append(eid)
+        for eid in noise_candidates(self.j, salience_floor, min_age, now):
+            self.j.transition(eid, STATE_EVICTED)
+            evicted.append(eid)
         return evicted
+
+
+def noise_candidates(journal: Journal, salience_floor: float, min_age: float, now: float) -> list[str]:
+    """The D4.8 rule as a predicate, shared by the tribunal above and by the
+    Slice E scheduler (which plans before it applies): LIVE entries that never
+    earned salience above the floor and are old enough. Deterministic order."""
+    return [eid for eid, e in sorted(journal._entries.items())
+            if e.state == STATE_LIVE and e.salience < salience_floor and (now - e.t_written) >= min_age]
