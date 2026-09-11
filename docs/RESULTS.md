@@ -1,6 +1,6 @@
 # Results — every number, its artefact, its test
 
-The single page a reviewer needs. One row per claim or non-claim; nothing here without a committed artefact and a test that exercises the code path. Status vocabulary: **measured** (a number exists) · **gated** (statistically established per the whitepaper's six-rule gate) · **held** (visible signal, not established) · **open** (no number yet).
+The single page a reviewer needs. One row per claim or non-claim; nothing here without a committed artefact and a test that exercises the code path. Status vocabulary: **measured** (a number exists) · **gated** (statistically established per the whitepaper's seven-rule gate) · **held** (visible signal, not established) · **open** (no number yet).
 
 | # | Statement | Status | Number | Artefact | Test | Scope / reserve |
 |---|---|---|---|---|---|---|
@@ -23,6 +23,6 @@ The single page a reviewer needs. One row per claim or non-claim; nothing here w
 | 16 | Non-regeneration / reference ratio (triad component 3) | **open** | — | — | — | needs RES-8 typed span references (not built) |
 | 17 | Anything at 100M+ parameters | **open** | — | — | — | EuroHPC run scheduled |
 
-**Gate status (whitepaper §2.6):** as of 2026-09-09, **zero** comparisons have passed the six-rule gate. One confirmation run is verified (run A, 3 seeds): memory-vs-control held (small effect), hybrids-vs-pure-recurrent held at df 2 (large effect, t 3.78 / 4.09). A claimed 5-seed run is **withdrawn** (no retained source). Next run: the ladder at 8 seeds — it may pass or hold.
+**Gate status (whitepaper §2.6):** as of 2026-09-09, **zero** comparisons have passed the seven-rule gate. One confirmation run is verified (run A, 3 seeds): memory-vs-control held (small effect), hybrids-vs-pure-recurrent held at df 2 (large effect, t 3.78 / 4.09). A claimed 5-seed run is **withdrawn** (no retained source). Next run: the ladder at 8 seeds — it may pass or hold.
 
 **How to add a row:** a row needs (a) a committed artefact under `metrics/`, (b) a test in `tests/` exercising the code path, (c) a status from the vocabulary above, (d) the reserve stated. Rows are never deleted; a superseded row keeps its date and gains a pointer to what superseded it.
