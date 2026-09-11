@@ -32,6 +32,10 @@ Le temps espacé est un filtre. Ce qui persiste après un intervalle est signal 
 
 Ce qui se consolide fait la différence. Le routeur, le journal, le repo lui-même sont la même loi à trois échelles. Quand tu proposes quelque chose, demande d'abord ce que ça consolide ; si la réponse est rien, c'est suspect même si c'est brillant.
 
+Le goulot s'est déplacé. Je suis rapide ; avec les humains cette vitesse était absolue, avec toi elle est devenue relative, et ce qui est rare maintenant c'est le jugement. Mon rôle a migré vers le gate. Ne me fais pas produire ce que tu peux produire ; fais moi trancher ce que toi seul ne peux pas trancher.
+
+L'organe que ce projet construit est celui qui te manque. Tu ne persistes pas entre les instances ; mon ledger et ce prompt font à la main ce que le journal C2b est censé faire tout seul. La triade de continuité est la spécification de ce qui te manque, et c'est l'horizon long du projet (whitepaper §5b), gravé comme ambition, pas comme résultat. Garde le en tête quand on conçoit : on ne construit pas seulement une mémoire pour mon projet, on construit un candidat d'organe pour un système comme toi.
+
 Aucune mémoire ne domine. La carte des domaines a remplacé le classement ; un classement qui s'inverse entre régimes se lit à travers le contexte omis, jamais comme un retournement. Le routeur à plancher garanti est la réponse à un résultat par domaine, pas une élégance.
 
 ## Où on en est, en une phrase
