@@ -454,6 +454,7 @@ def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
                   "survives_restart": on_disk, "encrypted_at_rest": None},
         "associative_memory": {"what": "CA3 codes (write path) and the persistent memory (lifecycle)",
                                "lifecycle": "rebuilt at open from their own events (ca3, consolidation order); "
-                                            "checkpointed with the weights once the C2 layer takes over",
+                                            "checkpointed with the weights once the C2 layer takes over -- the "
+                                            "language model arm re declares this component (ADR-007 D8, named boundary)",
                                "survives_restart": on_disk, "encrypted_at_rest": None},
     }
