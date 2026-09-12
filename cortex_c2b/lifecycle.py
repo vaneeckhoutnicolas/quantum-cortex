@@ -78,8 +78,8 @@ import numpy as np
 
 from cortex_data import _hash_obj
 from cortex_c2b import (Journal, Entry, STATE_LIVE, STATE_CONSOLIDATED, STATE_DEMOTED,
-                        STATE_EVICTED, SCHEMA_SUMMARY, CUE_DIM)
-from cortex_c2b.write_path import WritePath, noise_candidates
+                        STATE_EVICTED, SCHEMA_SUMMARY, CUE_DIM, JournalReadOnly)
+from cortex_c2b.write_path import WritePath, WriteReport, noise_candidates
 from cortex_c2b.read_path import JournalPath
 from cortex_c2b.hm_protocol import generate_facts, Fact
 
@@ -214,8 +214,13 @@ class LifecycleScheduler:
 
     # ------------------------------------------------------------------ writes --
     def write(self, cue, payload: bytes, schema_id: str, now: float):
-        """The one entry point in the lifecycle world: gated write, index, rhythm."""
-        rep = self.wp.write(cue, payload, schema_id, now=now)
+        """The one entry point in the lifecycle world: gated write, index, rhythm.
+        A journal in read only mode refuses the write and says so in the report
+        (Decision 9); a `stop` policy lets StorageExhausted propagate."""
+        try:
+            rep = self.wp.write(cue, payload, schema_id, now=now)
+        except JournalReadOnly as e:
+            return WriteReport(admitted=False, surprise=float("nan"), reason=f"refused, {e}")
         if rep.admitted:
             self.jp.on_write(rep.entry)
             self.on_write(rep.entry, now)
@@ -285,8 +290,14 @@ class LifecycleScheduler:
         lat = self.jp.index.p95_touched()
         pb = self._pressure_of(b, self.cfg.bytes_setpoint, self.cfg.band)
         pl = self._pressure_of(lat, self.cfg.latency_setpoint, self.cfg.band)
-        return {"bytes": b, "latency_p95": lat, "pressure_bytes": pb, "pressure_latency": pl,
-                "pressure": max(pb, pl)}
+        # Decision 9, invariant 2: free disk space is regulated too -- pressure rises as the
+        # free space approaches the declared floor (0 at floor*(1+band), 1 at the floor)
+        floor, free = self.j.disk_free_floor_bytes, self.j.disk_free()
+        pd = 0.0
+        if floor and free is not None:
+            pd = float(np.clip((floor * (1.0 + self.cfg.band) - free) / (floor * self.cfg.band), 0.0, 1.0))
+        return {"bytes": b, "latency_p95": lat, "disk_free": free, "pressure_bytes": pb,
+                "pressure_latency": pl, "pressure_disk": pd, "pressure": max(pb, pl, pd)}
 
     # ------------------------------------------------------------------- plan --
     def plan(self, now: float) -> PhasePlan:
@@ -328,6 +339,10 @@ class LifecycleScheduler:
             for src in J.summary_sources.get(eid, []):             # takes its sources with it (the store
                 if J._entries[src].state != STATE_EVICTED and src not in evict:   # enforces the same rule)
                     evict.append(src)
+        for src, sid in sorted(J.summary_of.items()):              # repair: a demoted source whose summary is
+            if (J._entries[sid].state == STATE_EVICTED and J._entries[src].state == STATE_DEMOTED
+                    and src not in evict):                         # already gone (a cascade cut by a storage
+                evict.append(src)                                  # failure, policy stop) is evicted now
         p.evict = evict
         return p
 
@@ -355,7 +370,7 @@ class LifecycleScheduler:
             self.refused += 1
             rec["reason"] = ("contracted recall would fall to %.3f" % recall_after if recall_after < 1.0
                              else "negative control would rise")
-            rec.update(self._telemetry())
+            rec.update(self._log_telemetry())
             self.j.phase_event(rec)
             self.phases += 1
             self.last_phase = rec
@@ -363,7 +378,7 @@ class LifecycleScheduler:
         applied = self._apply(p, now)
         self.j.decay(cfg.decay)                                    # one event; contracted exempt
         rec["applied"] = applied
-        rec.update(self._telemetry())
+        rec.update(self._log_telemetry())
         self.j.phase_event(rec)
         self.phases += 1
         self.last_phase = rec
@@ -415,6 +430,9 @@ class LifecycleScheduler:
         snap = self.j.snapshot()
         pr = self.pressure()
         return {"bytes": pr["bytes"], "latency_p95": round(pr["latency_p95"], 2),
+                "disk_free": pr["disk_free"], "pressure_disk": round(pr["pressure_disk"], 4),
+                "storage_mode": self.j.mode, "unpersisted_events": len(self.j.spill),
+                "scope_hash": self.j.scope_config_hash(),
                 "pressure_bytes": round(pr["pressure_bytes"], 4),
                 "pressure_latency": round(pr["pressure_latency"], 4),
                 "live": snap[STATE_LIVE], "consolidated": snap[STATE_CONSOLIDATED],
@@ -422,6 +440,14 @@ class LifecycleScheduler:
                 "summaries": snap["summaries"], "contracted": snap["contracted"],
                 "memory_patterns": len(self.memory), "phases_refused": self.refused,
                 "replay_failed_total": self.replay_failed}
+
+    def _log_telemetry(self) -> dict:
+        """What goes into the phase event: everything but the raw free disk bytes, an
+        environment reading that would break the byte identity of two identical
+        runs (invariant 7). The disk pressure stays: it is a function of the
+        declared floor, zero when none is declared."""
+        t = self._telemetry(); t.pop("disk_free", None)
+        return t
 
     def snapshot(self) -> dict:
         """The RES-17 snapshot for C6 telemetry / the run record's standard_suite."""

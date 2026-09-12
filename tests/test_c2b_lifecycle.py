@@ -33,7 +33,7 @@ def near(base, rng, eps=0.02):
 
 
 def make(cfg=None, path=None, memory=None, key=None):
-    j = Journal(path, key=key)
+    j = Journal(path, key=key, plaintext=key is None)
     wp = WritePath(j, seed=0)
     jp = JournalPath(j)
     sch = LifecycleScheduler(j, wp, jp, cfg or LifecycleConfig(), memory=memory, now=0.0)
@@ -69,7 +69,7 @@ def test_replay_rebuilds_lifecycle_state_exactly(tmp_path):
     assert any(e["ev"] == "salience" and e["why"] == "contract" for e in ev)   # the sentinels
     assert any(e["ev"] == "demote" for e in ev), "the near duplicate cluster must have been demoted"
 
-    r = Journal(path)                                        # replay from the log alone
+    r = Journal(path, plaintext=True)                        # replay from the log alone
     assert {k: (e.state, e.salience) for k, e in j._entries.items()} == \
            {k: (e.state, e.salience) for k, e in r._entries.items()}
     assert r.summary_sources == j.summary_sources and r.summary_of == j.summary_of
@@ -320,7 +320,8 @@ from cortex_c2b.read_path import JournalPath
 from cortex_c2b.lifecycle import LifecycleScheduler, LifecycleConfig
 from cortex_c2b.hm_protocol import generate_facts, Reader
 path, cfg = sys.argv[1], LifecycleConfig(**json.loads(sys.argv[2]))
-j = Journal(path, key=key_from_env())                      # a NEW process: nothing but the disk
+k = key_from_env()
+j = Journal(path, key=k, plaintext=k is None)              # a NEW process: nothing but the disk
 wp, jp = WritePath(j, seed=0), JournalPath(j)
 sch = LifecycleScheduler(j, wp, jp, cfg)
 facts, _ = generate_facts(40, seed=3); neg, _ = generate_facts(20, seed=10_003)
@@ -372,7 +373,7 @@ def test_the_journal_survives_a_full_process_restart(tmp_path, sealed):
         assert all(f.read_bytes().startswith(MAGIC) for f in files)
         assert b"works as a" not in path.read_bytes() and not any(b"works as a" in f.read_bytes() for f in files)
         with pytest.raises(ValueError):                   # no key: loud, not garbage
-            Journal(path)
+            Journal(path, plaintext=True)                 # (a plaintext scope cannot open a sealed log)
         with pytest.raises(Exception):                    # wrong key: loud, not garbage
             Journal(path, key=generate_key())
     else:
@@ -420,6 +421,7 @@ def test_a_tampered_payload_or_line_fails_loudly(tmp_path):
 
 def test_lifecycle_declaration_names_the_four_components():
     d = lifecycle_declaration(Journal())                   # memory only: nothing survives, and it says so
-    assert set(d) == {"structure", "bytes", "index", "associative_memory"}
+    assert set(d) == {"storage", "structure", "bytes", "index", "associative_memory"}
+    d = {k: v for k, v in d.items() if k != "storage"}
     assert not any(v["survives_restart"] for v in d.values())
     assert not d["bytes"]["encrypted_at_rest"]

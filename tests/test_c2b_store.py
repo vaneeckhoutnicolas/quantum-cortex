@@ -103,12 +103,12 @@ def test_snapshot_is_inspectable():
 # --- append-only persistence & replay -----------------------------------------
 def test_append_only_log_replays_to_same_state():
     d = tempfile.mkdtemp(); p = Path(d) / "journal.jsonl"
-    j = Journal(p)
+    j = Journal(p, plaintext=True)                       # a declared test scope (D8)
     e = j.write(_cue(3), b"persist me", 0.7, "person", now=10.0)
     j.transition(e.entry_id, STATE_CONSOLIDATED)
     # every event is one appended line; nothing rewritten
     lines = p.read_text().splitlines()
     assert len(lines) == 2 and '"ev":"write"' in lines[0] and '"ev":"transition"' in lines[1]
     # a fresh Journal replays the log to the same state
-    j2 = Journal(p)
+    j2 = Journal(p, plaintext=True)
     assert len(j2) == 1 and j2.get(e.entry_id).state == STATE_CONSOLIDATED

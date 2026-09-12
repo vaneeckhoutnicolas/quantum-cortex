@@ -140,11 +140,11 @@ class WritePath:
         # stage (a): admission — reject the redundant / already-known
         if surprise < self.thr:
             return WriteReport(admitted=False, surprise=surprise, reason="redundant (below admission threshold)")
-        entry = self.j.write(cue, payload, salience=surprise, schema_id=schema_id, now=now)
+        entry = self.j.write(cue, payload, salience=surprise, schema_id=schema_id, now=now,
+                             ca3=self._meta)                          # one line; a failure cannot split it (D9)
         # store the code of the cue AS JOURNALED (rounded), so a rebuild after a restart
         # produces byte-identical CA3 contents (Decision 8)
         self.ca3.store(self._code(np.asarray(entry.cue, dtype=np.float32)))
-        self.j.mark_ca3(entry.entry_id, self._meta)
         return WriteReport(admitted=True, surprise=surprise, reason="admitted", entry=entry)
 
     # ---- outcome credit (RES-11 hook): salience earned after the fact ---------

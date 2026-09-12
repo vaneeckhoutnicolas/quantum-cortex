@@ -43,7 +43,9 @@ an exact keyed index so the read law is enforced without a heavy dependency.
 """
 from __future__ import annotations
 
+import errno
 import json
+import shutil
 import time
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
@@ -67,6 +69,25 @@ _TRANSITIONS = {
 }
 
 SCHEMA_SUMMARY = "summary"      # the schema_id of a demotion summary (Slice E)
+
+# --- storage policy (ADR-007 Decision 9) --------------------------------------
+POLICY_STOP = "stop"            # a storage failure raises StorageExhausted; the caller decides (measurement runs)
+POLICY_READ_ONLY = "read_only"  # writes are refused (JournalReadOnly), reads continue, the state stays durable
+POLICY_MEMORY = "memory"        # writes continue in a bounded spill buffer, flushed when the disk returns; declared not durable
+POLICIES = (POLICY_STOP, POLICY_READ_ONLY, POLICY_MEMORY)
+MODE_DURABLE, MODE_READ_ONLY, MODE_MEMORY = "durable", "read_only", "memory"
+
+
+class StorageDegraded(OSError):
+    """Base: the journal could not persist. Never silent (invariant 1)."""
+
+
+class StorageExhausted(StorageDegraded):
+    """Policy `stop`: the journal is consistent, nothing half written, the caller decides."""
+
+
+class JournalReadOnly(StorageDegraded):
+    """Policy `read_only` (or a full spill buffer): this write is refused; reads continue."""
 
 ENTRY_MAX_BYTES = 1024          # the size law
 CUE_DIM = 64                    # fixed-size cue (matryoshka-truncatable later)
@@ -110,26 +131,52 @@ class PayloadStore:
     def __init__(self, directory: str | Path | None = None, key: bytes | None = None):
         self._blobs: dict[str, bytes] = {}          # plaintext cache
         self._sizes: dict[str, int] = {}            # pointer -> plaintext size, known without reading
+        self._pending: set[str] = set()             # registered in memory, not yet on disk (memory mode)
         self._dir = Path(directory) if directory else None
         self._key = key
         if self._dir:
-            self._dir.mkdir(parents=True, exist_ok=True)
+            self._dir.mkdir(parents=True, exist_ok=True)                 # may raise: the journal applies its policy
             for f in self._dir.iterdir():
                 if f.is_file() and len(f.name) == 16:
                     with open(f, "rb") as fh:
                         head = fh.read(len(MAGIC))
                     self._sizes[f.name] = f.stat().st_size - (sealed_overhead() if head == MAGIC else 0)
 
-    def put(self, payload: bytes) -> str:
+    def put(self, payload: bytes, durable: bool = True) -> str:
+        """Durable first: the file reaches the disk before the pointer is registered,
+        so a failure leaves nothing half registered (Decision 9, invariant 4).
+        `durable=False` registers in memory only and marks the pointer pending
+        (memory mode); `flush_pending()` writes it later."""
         h = content_hash(payload)
-        if h not in self._sizes:
-            self._sizes[h] = len(payload)
-            if self._dir:
-                blob = seal(self._key, payload, h.encode()) if self._key else payload
-                tmp = self._dir / (h + ".tmp")
-                tmp.write_bytes(blob); tmp.replace(self._dir / h)       # never a half-written file
-        self._blobs.setdefault(h, payload)
+        if h in self._sizes:
+            self._blobs.setdefault(h, payload)
+            return h
+        if self._dir and durable:
+            self._write_file(h, payload)                                 # may raise OSError
+        elif self._dir:
+            self._pending.add(h)
+        self._sizes[h] = len(payload)
+        self._blobs[h] = payload
         return h
+
+    def _write_file(self, h: str, payload: bytes) -> None:
+        blob = seal(self._key, payload, h.encode()) if self._key else payload
+        tmp = self._dir / (h + ".tmp")
+        try:
+            tmp.write_bytes(blob); tmp.replace(self._dir / h)           # never a half-written file
+        except OSError:
+            tmp.unlink(missing_ok=True); raise
+
+    def flush_pending(self) -> int:
+        """Write every pending payload (memory mode recovery). Raises on the first failure."""
+        n = 0
+        for h in sorted(self._pending):
+            self._write_file(h, self._blobs[h]); self._pending.discard(h); n += 1
+        return n
+
+    @property
+    def pending(self) -> int:
+        return len(self._pending)
 
     def get(self, pointer: str) -> bytes:
         if pointer in self._blobs:
@@ -152,9 +199,12 @@ class PayloadStore:
         """Drop the bytes behind a pointer. Called by the journal only when the
         last non-evicted reference is gone (Slice E, reference counting)."""
         existed = pointer in self._sizes
-        self._blobs.pop(pointer, None); self._sizes.pop(pointer, None)
+        self._blobs.pop(pointer, None); self._sizes.pop(pointer, None); self._pending.discard(pointer)
         if self._dir:
-            (self._dir / pointer).unlink(missing_ok=True)
+            try:
+                (self._dir / pointer).unlink(missing_ok=True)
+            except OSError:
+                pass                                                     # a release that cannot delete is retried at the next open
         return existed
 
     def __contains__(self, pointer: str) -> bool:
@@ -181,16 +231,52 @@ class Journal:
     `path` (optional): an append-only JSONL file; every write appends one line,
     nothing is rewritten (the ledger discipline). State transitions are appended
     as events, so the file is a full provenance log (RES-17: the object's history).
+
+    Decision 8 -- sealed by default: an on-disk journal needs a `key` (32 bytes);
+    `plaintext=True` declares a test scope explicitly; a memory-only journal
+    (no path) needs neither. Opening without either fails loudly.
+
+    Decision 9 -- durable first, and a declared storage policy per scope:
+    every mutation reaches the log (and the payload its file) BEFORE memory
+    changes, so a failure leaves no half state. When the disk fails (no space,
+    no permission, or free space under the declared floor), `policy` decides:
+    `stop` raises StorageExhausted; `read_only` refuses the write and keeps
+    reading; `memory` keeps writing into a bounded spill buffer, declared not
+    durable, flushed with a `storage_restored` event when the disk returns.
+    The policy, the floor, the sealing and the spill bound are the scope's
+    configuration (`scope_config_hash()`).
     """
 
     def __init__(self, path: str | Path | None = None, cue_dim: int = CUE_DIM,
-                 key: bytes | None = None, payload_dir: str | Path | None = None):
+                 key: bytes | None = None, payload_dir: str | Path | None = None,
+                 plaintext: bool = False, policy: str = POLICY_READ_ONLY,
+                 disk_free_floor_bytes: int | None = None, spill_max_events: int = 10_000,
+                 disk_check_every: int = 16):
+        if policy not in POLICIES:
+            raise ValueError(f"policy must be one of {POLICIES}, got {policy!r}")
         self.cue_dim = cue_dim
         self._path = Path(path) if path else None
+        if self._path is not None and key is None and not plaintext:
+            raise ValueError("an on-disk journal is sealed by default (ADR-007 D8): pass key=<32 bytes>, "
+                             "or plaintext=True to declare a test scope explicitly")
         self._key = key
+        self.plaintext = bool(plaintext) if self._path is not None else False
+        self.policy = policy
+        self.disk_free_floor_bytes = disk_free_floor_bytes
+        self.spill_max_events = int(spill_max_events)
+        self._disk_check_every = max(1, int(disk_check_every))
+        self._persist_count = 0
+        # ---- storage state (Decision 9) ----
+        self.mode = MODE_DURABLE if self._path is None else MODE_DURABLE
+        self.degraded_reason: str | None = None
+        self.spill: list[str] = []                   # encoded lines not yet on disk (memory mode)
+        self.refused_writes = 0                      # read_only mode: mutations refused since the failure
+        self.gap_since: float | None = None          # logical time of the first failure of the current gap
+        self._last_now: float | None = None
+        self.restorations: list[dict] = []           # storage_restored records (this object and the log)
+        # ---- the store ----
         if payload_dir is None and self._path is not None:
             payload_dir = self._path.with_name(self._path.stem + ".payloads")   # the bytes, next to the log
-        self.payloads = PayloadStore(payload_dir, key)
         self._entries: dict[str, Entry] = {}         # entry_id -> Entry
         self._by_cue_key: dict[str, list[str]] = {}  # cue key -> entry ids (keyed index)
         self._reads_touched = 0                      # instrumentation for the no-scan test
@@ -207,24 +293,51 @@ class Journal:
         self.summary_of: dict[str, str] = {}         # source id -> summary id
         self.summary_level: dict[str, int] = {}      # summary id -> hierarchy level (1 = of entries)
         self.contracted: set[str] = set()            # ids credited under a contract (never decayed)
+        # ---- open: the payload directory, the log, the writability probe ----
+        try:
+            self.payloads = PayloadStore(payload_dir, key)
+        except OSError as e:
+            self.payloads = PayloadStore(None, key)                    # memory only until the disk answers
+            self._on_open_failure(e)
+        else:
+            if self._path is not None:
+                try:
+                    self._probe_writable()
+                except OSError as e:
+                    self._on_open_failure(e)                           # the files stay readable
         if self._path and self._path.exists():
             self._replay()
+            self._collect_orphans()
+
+    # ---- scope configuration -----------------------------------------------------
+    def scope_config_hash(self) -> str:
+        """Whatever changes the journal's behaviour on disk is in the hash (Decision 9)."""
+        return _hash_obj({"policy": self.policy, "sealed": self._key is not None, "plaintext": self.plaintext,
+                          "disk_free_floor_bytes": self.disk_free_floor_bytes,
+                          "spill_max_events": self.spill_max_events, "cue_dim": self.cue_dim,
+                          "on_disk": self._path is not None})
 
     # ---- keyed index: an exact bucket over a quantised cue (sub-linear reads) ----
     @staticmethod
     def _cue_key(cue) -> str:
         c = np.asarray(cue, dtype=np.float32)
-        # coarse quantisation of the cue → a bucket key; exact, cheap, sub-linear.
+        # coarse quantisation of the cue -> a bucket key; exact, cheap, sub-linear.
         # Slice C replaces this with ANN over cues; the contract (never scan) holds.
         return _hash_obj(np.round(c[:8], 1).tolist())
 
     # ---- write ----------------------------------------------------------------
     def write(self, cue, payload: bytes, salience: float, schema_id: str,
-              now: float | None = None) -> Entry:
+              now: float | None = None, ca3: dict | None = None) -> Entry:
+        """Durable first: payload file, then the log line, then memory. `ca3` (the
+        write path's separation meta) rides on the write event so CA3 is rebuilt
+        from one line, never from two that could be split by a failure."""
         cue = np.asarray(cue, dtype=np.float32)
         assert cue.shape == (self.cue_dim,), f"cue must be ({self.cue_dim},)"
         now = time.time() if now is None else now
-        pointer = self.payloads.put(payload)          # content stored once, by hash
+        self._last_now = now
+        if self.mode == MODE_READ_ONLY:
+            self._retry_or_refuse()                                       # the disk may be back
+        pointer = self._put_payload(payload)                              # content stored once, by hash
         entry = Entry(cue=[round(float(x), 4) for x in cue], pointer=pointer,
                       salience=float(salience), schema_id=schema_id,
                       t_written=now, t_last_read=now, state=STATE_LIVE)
@@ -232,17 +345,32 @@ class Journal:
         sz = entry.size_bytes()
         if sz > ENTRY_MAX_BYTES:
             raise ValueError(f"entry violates the size law: {sz} B > {ENTRY_MAX_BYTES} B")
+        ev = {"ev": "write", "entry": asdict(entry)}
+        if ca3 is not None:
+            ev["ca3"] = dict(ca3)
+        self._persist(ev)                                                 # may raise; memory untouched then
         self._entries[entry.entry_id] = entry
         self._by_cue_key.setdefault(self._cue_key(cue), []).append(entry.entry_id)
         self._refs.setdefault(pointer, set()).add(entry.entry_id)
         self.writes_since_last_phase.append(entry.entry_id)
-        self._append_event({"ev": "write", "entry": asdict(entry)})
+        if ca3 is not None:
+            self.ca3_order.append((entry.entry_id, dict(ca3)))
         return entry
+
+    def _put_payload(self, payload: bytes) -> str:
+        if self.mode == MODE_MEMORY:
+            return self.payloads.put(payload, durable=False)
+        try:
+            self._check_disk_floor()
+            return self.payloads.put(payload, durable=True)
+        except OSError as e:
+            self._on_storage_failure(e)                                   # raises for stop / read_only
+            return self.payloads.put(payload, durable=False)             # memory policy: pending
 
     # ---- read (never a scan) --------------------------------------------------
     def read_by_cue(self, cue, now: float | None = None) -> list[Entry]:
         """Retrieve entries whose cue falls in the same bucket. Touches only that
-        bucket — never the whole journal. `_reads_touched` counts entries visited
+        bucket -- never the whole journal. `_reads_touched` counts entries visited
         so the no-scan test can assert sub-linear behaviour."""
         key = self._cue_key(np.asarray(cue, dtype=np.float32))
         ids = self._by_cue_key.get(key, [])
@@ -265,8 +393,8 @@ class Journal:
         e = self._entries[entry_id]
         if new_state not in _TRANSITIONS[e.state]:
             raise ValueError(f"illegal transition {e.state} -> {new_state}")
+        self._persist({"ev": "transition", "entry_id": entry_id, "to": new_state})
         e.state = new_state
-        self._append_event({"ev": "transition", "entry_id": entry_id, "to": new_state})
         if new_state == STATE_CONSOLIDATED:
             self.consolidated_order.append(entry_id)
         if new_state == STATE_EVICTED:
@@ -283,17 +411,17 @@ class Journal:
         `why == "contract"` marks the entry as contracted: scheduled decay never
         touches it."""
         e = self._entries[entry_id]
-        e.salience = float(min(1.0, max(0.0, value)))
+        value = float(min(1.0, max(0.0, value)))
+        self._persist({"ev": "salience", "entry_id": entry_id, "to": value, "why": why})
+        e.salience = value
         if why == "contract":
             self.contracted.add(entry_id)
-        self._append_event({"ev": "salience", "entry_id": entry_id, "to": e.salience, "why": why})
         return e
 
     def decay(self, factor: float, states=(STATE_CONSOLIDATED, STATE_DEMOTED)) -> int:
         """Scheduled decay (ADR-007 D1) as ONE event; contracted entries exempt."""
-        n = self._apply_decay(factor, tuple(states))
-        self._append_event({"ev": "decay", "factor": float(factor), "states": list(states)})
-        return n
+        self._persist({"ev": "decay", "factor": float(factor), "states": list(states)})
+        return self._apply_decay(factor, tuple(states))
 
     def _apply_decay(self, factor: float, states) -> int:
         n = 0
@@ -312,9 +440,9 @@ class Journal:
         for sid in source_ids:
             if sid in self.summary_of:
                 raise ValueError(f"{sid} already belongs to summary {self.summary_of[sid]}")
+        self._persist({"ev": "demote", "summary": summary_id, "sources": list(source_ids),
+                       "level": int(level)})
         self._link_summary(summary_id, list(source_ids), level)
-        self._append_event({"ev": "demote", "summary": summary_id, "sources": list(source_ids),
-                            "level": int(level)})
 
     def _link_summary(self, summary_id: str, source_ids: list[str], level: int) -> None:
         self.summary_sources[summary_id] = source_ids
@@ -341,8 +469,8 @@ class Journal:
         """Telemetry snapshot of a lifecycle phase, appended to the log. Replay only
         counts it (phases, refusals, writes since the last phase): it describes
         state, it does not change it."""
+        self._persist({"ev": "phase", **record})
         self._count_phase(record)
-        self._append_event({"ev": "phase", **record})
 
     def _count_phase(self, record: dict) -> None:
         self.phase_count += 1
@@ -351,14 +479,14 @@ class Journal:
         self.writes_since_last_phase = []
 
     def mark_ca3(self, entry_id: str, meta: dict) -> None:
-        """The write path records what it stored into CA3 (and with which
-        separation), so a restarted write path rebuilds the same memory."""
+        """Kept for logs written before 2026-09-12; the write path now puts the
+        meta on the write event itself (one line, never split by a failure)."""
+        self._persist({"ev": "ca3", "entry_id": entry_id, **meta})
         self.ca3_order.append((entry_id, dict(meta)))
-        self._append_event({"ev": "ca3", "entry_id": entry_id, **meta})
 
     def mark_sentinel(self, index: int, entry_id: str) -> None:
+        self._persist({"ev": "sentinel", "i": int(index), "entry_id": entry_id})
         self.sentinels_recorded.append((int(index), entry_id))
-        self._append_event({"ev": "sentinel", "i": int(index), "entry_id": entry_id})
 
     def references(self, pointer: str) -> set[str]:
         return set(self._refs.get(pointer, ()))
@@ -380,21 +508,137 @@ class Journal:
                 "journal_bytes": sum(e.size_bytes() for e in self._entries.values()),
                 "regulated_bytes": self.regulated_bytes(),
                 "summaries": len(self.summary_sources), "contracted": len(self.contracted),
+                "storage_mode": self.mode, "unpersisted_events": len(self.spill),
                 **counts}
 
     def __len__(self):
         return len(self._entries)
 
-    # ---- append-only persistence ---------------------------------------------
-    def _append_event(self, ev: dict):
-        if self._path:
-            self._path.parent.mkdir(parents=True, exist_ok=True)
-            line = json.dumps(ev, separators=(",", ":"))
-            if self._key is not None:
-                line = seal_line(self._key, line)                     # QJE1, per line, as on the hub
-            with open(self._path, "a", encoding="utf-8") as fh:
-                fh.write(line + "\n")
+    # ---- storage: durable first, then the declared policy (Decision 9) ----------
+    def disk_free(self) -> int | None:
+        if self._path is None:
+            return None
+        try:
+            return int(shutil.disk_usage(self._path.parent).free)
+        except OSError:
+            return None
 
+    def _check_disk_floor(self) -> None:
+        """The proactive wall: under the declared floor, act as if the disk were full."""
+        if self.disk_free_floor_bytes is None or self._path is None:
+            return
+        self._persist_count += 1
+        if self._persist_count % self._disk_check_every != 1 and self._disk_check_every > 1:
+            return
+        free = self.disk_free()
+        if free is not None and free < self.disk_free_floor_bytes:
+            raise OSError(errno.ENOSPC, f"free space {free} B under the declared floor {self.disk_free_floor_bytes} B")
+
+    def _probe_writable(self) -> None:
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self._path, "a", encoding="utf-8"):
+            pass
+
+    def _encode(self, ev: dict) -> str:
+        line = json.dumps(ev, separators=(",", ":"))
+        return seal_line(self._key, line) if self._key is not None else line   # QJE1, per line, as on the hub
+
+    def _write_line(self, line: str) -> None:
+        with open(self._path, "a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
+
+    def _persist(self, ev: dict) -> None:
+        """The line reaches the disk before memory changes. On failure the policy
+        applies: stop raises, read_only refuses, memory spills (bounded)."""
+        if self._path is None:
+            return
+        line = self._encode(ev)
+        if self.mode == MODE_MEMORY:
+            try:
+                self._flush_spill()                                       # the disk may be back
+            except OSError:
+                self._spill(line)
+                return
+        try:
+            self._check_disk_floor()
+            self._write_line(line)
+        except OSError as e:
+            self._on_storage_failure(e)                                   # raises for stop / read_only
+            self._spill(line)                                             # memory policy
+            return
+        if self.mode == MODE_READ_ONLY:
+            self._restored(MODE_READ_ONLY)
+
+    def _on_storage_failure(self, e: OSError) -> None:
+        reason = f"{e.strerror or e}"
+        if self.policy == POLICY_STOP:
+            raise StorageExhausted(e.errno or errno.EIO, f"storage failed, policy stop: {reason}") from e
+        if self.gap_since is None:
+            self.gap_since = self._last_now
+            self.degraded_reason = reason
+        if self.policy == POLICY_READ_ONLY:
+            self.mode = MODE_READ_ONLY
+            self.refused_writes += 1
+            raise JournalReadOnly(e.errno or errno.EIO, f"journal read only ({reason}); this write is refused") from e
+        self.mode = MODE_MEMORY                                           # policy memory: the caller spills
+
+    def _spill(self, line: str) -> None:
+        if len(self.spill) >= self.spill_max_events:
+            self.mode = MODE_READ_ONLY
+            self.refused_writes += 1
+            raise JournalReadOnly(errno.ENOSPC, f"spill buffer full ({self.spill_max_events} events); this write is refused")
+        self.spill.append(line)
+
+    def _retry_or_refuse(self) -> None:
+        """read_only mode, a new write: probe the disk once; if it answers, resume."""
+        try:
+            self._check_disk_floor()
+            self._probe_writable()
+        except OSError as e:
+            self.refused_writes += 1
+            raise JournalReadOnly(e.errno or errno.EIO, f"journal read only ({self.degraded_reason}); this write is refused") from e
+
+    def _flush_spill(self) -> None:
+        """Memory mode recovery: pending payloads, then the spilled lines in order, then
+        the restoration record. Raises on the first failure, nothing lost."""
+        self._check_disk_floor()
+        self.payloads.flush_pending()
+        while self.spill:
+            self._write_line(self.spill[0]); self.spill.pop(0)
+        self._restored(MODE_MEMORY)
+
+    def _restored(self, from_mode: str) -> None:
+        rec = {"ev": "storage_restored", "from_mode": from_mode, "reason": self.degraded_reason,
+               "since": self.gap_since, "until": self._last_now,
+               "refused_writes": self.refused_writes if from_mode == MODE_READ_ONLY else 0}
+        self.mode = MODE_DURABLE
+        self.degraded_reason, self.gap_since, self.refused_writes = None, None, 0
+        try:
+            self._write_line(self._encode(rec))
+        except OSError:
+            pass                                                          # the disk went again; the next write will see it
+        self.restorations.append(rec)
+
+    def _on_open_failure(self, e: OSError) -> None:
+        reason = f"{e.strerror or e}"
+        if self.policy == POLICY_STOP:
+            raise StorageExhausted(e.errno or errno.EACCES, f"cannot open the journal on disk, policy stop: {reason}") from e
+        self.degraded_reason = reason
+        self.gap_since = None
+        if self.policy == POLICY_READ_ONLY:
+            if not (self._path.exists() and os_readable(self._path)):
+                raise JournalReadOnly(e.errno or errno.EACCES, f"cannot open the journal and nothing to read: {reason}") from e
+            self.mode = MODE_READ_ONLY
+        else:
+            self.mode = MODE_MEMORY
+
+    def _collect_orphans(self) -> None:
+        """A payload file no entry references (a write interrupted between the file
+        and the line) is garbage, released at open."""
+        for p in [p for p in list(self.payloads._sizes) if p not in self._refs]:
+            self.payloads.release(p)
+
+    # ---- append-only persistence ---------------------------------------------
     def _replay(self):
         """Rebuild in-memory state from the append-only log: entries, states,
         saliences, summary links, payload references, the CA3 and sentinel
@@ -414,6 +658,8 @@ class Journal:
                 self._by_cue_key.setdefault(self._cue_key(e.cue), []).append(e.entry_id)
                 self._refs.setdefault(e.pointer, set()).add(e.entry_id)
                 self.writes_since_last_phase.append(e.entry_id)
+                if "ca3" in ev:
+                    self.ca3_order.append((e.entry_id, dict(ev["ca3"])))
             elif ev["ev"] == "transition":
                 self._entries[ev["entry_id"]].state = ev["to"]
                 if ev["to"] == STATE_CONSOLIDATED:
@@ -434,27 +680,44 @@ class Journal:
                 self.ca3_order.append((ev["entry_id"], {k: v for k, v in ev.items() if k not in ("ev", "entry_id")}))
             elif ev["ev"] == "sentinel":
                 self.sentinels_recorded.append((int(ev["i"]), ev["entry_id"]))
+            elif ev["ev"] == "storage_restored":
+                self.restorations.append({k: v for k, v in ev.items() if k != "ev"})
+
+
+def os_readable(path: Path) -> bool:
+    try:
+        with open(path, "rb"):
+            return True
+    except OSError:
+        return False
 
 
 def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
     """Decision 8: persistence is a property per component; each declares its own.
     With a journal, the declaration reflects that journal's actual setup."""
-    on_disk = bool(journal and journal._path)
-    sealed = bool(journal and journal._key)
+    has = journal is not None                                      # never `if journal`: an empty journal is falsy
+    on_disk = has and journal._path is not None
+    sealed = has and journal._key is not None
+    durable = on_disk and journal.mode != MODE_MEMORY               # a memory-mode journal never claims (invariant 1)
+    storage = {"mode": journal.mode if has else None, "policy": journal.policy if has else None,
+               "degraded_reason": journal.degraded_reason if has else None,
+               "unpersisted_events": len(journal.spill) if has else 0,
+               "plaintext_scope": has and journal.plaintext}
     return {
+        "storage": storage,
         "structure": {"what": "entries, states, saliences, links, references, phases",
                       "lifecycle": "append-only log, replayed at open",
-                      "survives_restart": on_disk, "encrypted_at_rest": sealed},
+                      "survives_restart": durable, "encrypted_at_rest": sealed},
         "bytes": {"what": "the payloads (content), one file per pointer",
                   "lifecycle": "content-addressed directory next to the log, released at the last reference",
-                  "survives_restart": bool(journal and journal.payloads.persistent),
-                  "encrypted_at_rest": bool(journal and journal.payloads.sealed)},
+                  "survives_restart": has and journal.payloads.persistent and durable,
+                  "encrypted_at_rest": has and journal.payloads.sealed},
         "index": {"what": "the cue index (buckets) and the demotion aliases",
                   "lifecycle": "recomputed at open from the log, with a declared seed",
-                  "survives_restart": on_disk, "encrypted_at_rest": None},
+                  "survives_restart": durable, "encrypted_at_rest": None},
         "associative_memory": {"what": "CA3 codes (write path) and the persistent memory (lifecycle)",
                                "lifecycle": "rebuilt at open from their own events (ca3, consolidation order); "
                                             "checkpointed with the weights once the C2 layer takes over -- the "
                                             "language model arm re declares this component (ADR-007 D8, named boundary)",
-                               "survives_restart": on_disk, "encrypted_at_rest": None},
+                               "survives_restart": durable, "encrypted_at_rest": None},
     }

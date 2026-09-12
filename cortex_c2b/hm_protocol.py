@@ -34,7 +34,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 
-from cortex_c2b import Journal, CUE_DIM
+from cortex_c2b import Journal, CUE_DIM, MODE_DURABLE, POLICY_STOP, lifecycle_declaration
 from cortex_c2b.write_path import WritePath
 from cortex_c2b.read_path import JournalPath
 
@@ -162,7 +162,18 @@ class SkillProbe:
 # The protocol                                                                  #
 # ---------------------------------------------------------------------------- #
 def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: int = 0,
-                    admission_threshold: float = 0.15) -> dict:
+                    admission_threshold: float = 0.15, journal_path=None, key: bytes | None = None,
+                    plaintext: bool = False, policy: str = POLICY_STOP) -> dict:
+    """Spec amendment 2026-09-12 (ADR-007 D8/D9, dated before any run that uses it):
+    the protocol reads the journal's storage state and reports `persistent` and
+    `claimable`. Without `journal_path` the journal lives in memory: session B
+    shares the process with session A, and the pass is reported with
+    `persistent: false` -- an organ level measurement, not a claim of survival
+    across a restart. With `journal_path`, session B REOPENS the journal from the
+    disk alone (a new object, the index recomputed); `persistent` is true only if
+    the journal stayed durable through both sessions. A measurement run uses the
+    `stop` policy: a storage failure aborts the run instead of continuing in
+    memory unnoticed. Thresholds are untouched."""
     facts, cfg = generate_facts(n_facts, seed)
     neg, _ = generate_facts(n_negctrl, seed + 10_000)        # never planted
     rng = np.random.default_rng(seed + 1)
@@ -172,7 +183,11 @@ def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: in
     floor = chance + FLOOR_MARGIN
 
     # --- Session A: plant every fact through the NORMAL gated write path -----
-    journal = Journal()
+    def open_journal():
+        if journal_path is None:
+            return Journal()
+        return Journal(journal_path, key=key, plaintext=plaintext, policy=policy)
+    journal = open_journal()
     wp = WritePath(journal, admission_threshold=admission_threshold, seed=seed)
     jp = JournalPath(journal)
     admitted = 0
@@ -180,8 +195,15 @@ def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: in
         rep = wp.write(f.cue, f.statement.encode(), f.schema, now=float(admitted))
         if rep.admitted:
             jp.on_write(rep.entry); admitted += 1
+    durable_a = journal.mode == MODE_DURABLE
 
     # --- Session B: fresh context (new Reader objects, nothing from A but the journal) --
+    if journal_path is not None:
+        del wp, jp                                            # nothing of session A but the disk
+        journal = open_journal()                              # reopened: structure, bytes, index recomputed
+        jp = JournalPath(journal)
+    storage = lifecycle_declaration(journal)["storage"]
+    persistent = bool(journal_path is not None and durable_a and journal.mode == MODE_DURABLE)
     reader_on = Reader(jp, chance)
     reader_off = Reader(None, chance)                        # journal cut
     def recall_rate(reader, fs):
@@ -225,10 +247,16 @@ def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: in
         "hm_skill_delta": round(skill_delta, 4),
         "run_valid": valid,
         "hm_dissociation_pass": int(dissociation_pass),
-        "verdict": ("PASS — the dissociation holds: episodes live in the journal, skills are journal-independent"
-                    if dissociation_pass else
-                    ("INVALID — hallucinated recall on the negative control" if not valid else
-                     "FAIL — the dissociation does not hold (recorded; triggers a dated revision of the memory story)")),
+        "persistent": persistent,
+        "claimable": int(dissociation_pass and persistent),
+        "storage": {"on_disk": journal_path is not None, "mode": storage["mode"], "policy": storage["policy"],
+                    "sealed": key is not None, "plaintext_scope": storage["plaintext_scope"]},
+        "verdict": (("PASS \u2014 the dissociation holds: episodes live in the journal, skills are journal-independent"
+                     if dissociation_pass else
+                     ("INVALID \u2014 hallucinated recall on the negative control" if not valid else
+                      "FAIL \u2014 the dissociation does not hold (recorded; triggers a dated revision of the memory story)"))
+                    + ("" if persistent else
+                       " \u2014 persistent: false (journal in memory or in memory mode; sessions A and B within one process): not claimable")),
         "reserve": "Slice D runs the protocol against the C2b organ with a hash-seeded cue encoder and a "
                    "reference skill probe; the language-model arm (real skills suites, learned cue encoder) "
                    "lands when the LM is wired to the journal. Recall here is a retrieval test — the journal's job.",
@@ -236,5 +264,12 @@ def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: in
 
 
 if __name__ == "__main__":
-    r = run_hm_protocol()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "--persistent":
+        import tempfile
+        from cortex_c2b.crypto import generate_key
+        with tempfile.TemporaryDirectory() as d:          # sealed on disk, session B reopened from the disk alone
+            r = run_hm_protocol(journal_path=f"{d}/hm-journal.jsonl", key=generate_key())
+    else:
+        r = run_hm_protocol()
     print(json.dumps({k: v for k, v in r.items() if k != "generator"}, indent=2))

@@ -46,3 +46,11 @@ A FAIL is a result, not an embarrassment: it is recorded, dated, and triggers a 
 **Also corrected in the reference simulator (not the spec):** a weights-only floor guesses *once* per fact — the paraphrase probe addresses the same entity and does not reroll the guess.
 
 **Thresholds δ = 0.50, ε_S = 1%, floor = chance + 5 pts are unchanged.** This amendment is dated before the rerun whose verdict it affects; the invalid first run is kept in the artefact history.
+
+## Amendment 2026-09-12 -- the verdict declares its persistence (dated before any run that uses it)
+
+**Trigger (recorded honestly):** the artefact `hm-protocol-2026-09-08.json` was produced with sessions A and B in one process: the journal lived in memory, so the PASS proved survival across a *software* session boundary, not across a restart. ADR-007 Decision 8 defines the boundary as a full process stop and relaunch; Decision 9 adds a storage policy per scope, including a `memory` mode in which nothing is durable. Without this amendment the single process trap would come back through that door.
+
+**Amendment:** the protocol reads the journal's storage state and reports three fields next to the verdict: `persistent` (true only when the journal is on disk, stayed in durable mode through both sessions, and session B **reopened it from the disk alone**, index recomputed), `claimable` (`hm_dissociation_pass` and `persistent`), and `storage` (on disk, mode, policy, sealed, plaintext scope). A pass on a journal in memory, or in `memory` mode, is reported with `persistent: false` and is **not claimable**; the verdict string says so. A measurement run opens its journal with the `stop` policy, so a storage failure aborts the run instead of continuing in memory unnoticed. Reference run: `python -m cortex_c2b.hm_protocol --persistent` (sealed on disk, session B reopened).
+
+**Thresholds d = 0.50, e_S = 1%, floor = chance + 5 pts, the 10% invalidation line, are unchanged.** The 2026-09-08 artefact keeps its status *measured, within one process*; a claimable pass needs the disk run.
