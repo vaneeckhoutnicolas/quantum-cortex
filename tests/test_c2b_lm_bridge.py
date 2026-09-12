@@ -251,3 +251,30 @@ def test_cpu_smoke_trains_the_journal_and_records_the_lm_arm():
             ledger.write_text(lb)
         if la is not None:
             latest.write_text(la)
+
+
+def test_session_b_in_a_new_process_reproduces_the_in_process_probe(tmp_path):
+    """The named boundary as a run artefact: `python -m cortex_c2b.hm_lm --session-b`
+    reopens the checkpoint and the sealed journal in a fresh process and must
+    reproduce the ON probe of the in process arm, number for number."""
+    from cortex_c2b.crypto import generate_key
+    from cortex_c2b import POLICY_STOP
+    cfg, m = tiny(seed=9); m.eval()
+    key = generate_key(); jpath = tmp_path / "journal.jsonl"
+    r_a = run_hm_lm(m, lambda: Journal(jpath, key=key, policy=POLICY_STOP), n_facts=12, n_negctrl=6,
+                    k=3, budget=96, window_len=96, on_disk=True)
+    ck = tmp_path / "ckpt.pt"
+    torch.save({"model": m.state_dict(), "run_id": "tiny", "config_hash": "x", "step": 0}, ck)
+    cfg_path = tmp_path / "cfg.json"
+    cfg_path.write_text(json.dumps({k: getattr(cfg, k) for k in cfg.__dataclass_fields__}), encoding="utf-8")
+    env = {**os.environ, "QUANTUM_CORTEX_JOURNAL_KEY": key.hex(), "PYTHONPATH": str(ROOT)}
+    out = tmp_path / "session-b.json"
+    run = subprocess.run([sys.executable, "-m", "cortex_c2b.hm_lm", "--session-b", "--ckpt", str(ck), "--journal", str(jpath),
+                          "--config", str(cfg_path), "--out", str(out), "--n-facts", "12", "--n-negctrl", "6"],
+                         capture_output=True, text=True, cwd=ROOT, env=env, timeout=300)
+    assert run.returncode == 0, run.stderr
+    r_b = json.loads(out.read_text())
+    assert r_b["journal"]["mode"] == "durable" and r_b["journal"]["planted_found"] == r_a["generator"]["admitted"]
+    for k in ("hm_recall_on", "hm_recall_off", "hm_false_abstention_on", "hm_invalid_citation_on", "hm_retrieval_hit"):
+        assert r_b[k] == r_a[k], (k, r_b[k], r_a[k])
+    assert r_b["persistent"] is True

@@ -199,3 +199,68 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
                     + " -- LM arm, cite-or-abstain contract"
                     + ("" if persistent else " -- persistent: false, not claimable")),
     }
+
+
+# ---------------------------------------------------------------------------- #
+# Session B in a NEW process: the model from its checkpoint, the journal from    #
+# the sealed disk, nothing else (ADR-007 D8, the named boundary on the model)    #
+# ---------------------------------------------------------------------------- #
+def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
+                        seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256) -> dict:
+    """Reopen everything from the disk alone and probe. The planted facts are found
+    by content addressing (a statement's pointer is the hash of its bytes), so no
+    state of session A is needed beyond the journal file and the checkpoint."""
+    import train
+    from cortex_c2b import content_hash
+    from cortex_c2b.crypto import key_from_env
+    device = torch.device("cpu")
+    model = train.VanillaGPT(cfg).to(device)
+    ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    model.load_state_dict(ck["model"]); model.eval()
+    journal = Journal(journal_path, key=key_from_env(), policy=POLICY_STOP)
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device)
+    facts, gen_hash = generate_facts(n_facts, seed)
+    neg, _ = generate_facts(n_negctrl, seed + 10_000)
+    pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
+                  if content_hash(f.statement.encode("utf-8")) in journal.payloads}
+    on = _probe(model, bridge, facts, True, window_len, pointer_of)
+    off = _probe(model, bridge, facts, False, window_len, pointer_of)
+    neg_on = _probe(model, bridge, neg, True, window_len, {})
+    storage = lifecycle_declaration(journal)["storage"]
+    return {"benchmark": "hm_protocol_lm_session_b_new_process",
+            "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
+                           "step": ck.get("step")},
+            "journal": {"path": str(journal_path), "entries": len(journal), "mode": storage["mode"],
+                        "policy": storage["policy"], "planted_found": len(pointer_of)},
+            "generator": {"config_hash": gen_hash, "n_facts": n_facts, "n_negctrl": n_negctrl, "seed": seed},
+            "hm_recall_on": on["recall_strict"], "hm_recall_off": off["recall_strict"],
+            "hm_false_abstention_on": on["abstain_rate"], "hm_invalid_citation_on": on["invalid_citation_rate"],
+            "hm_valid_citation_on": on["valid_citation_rate"], "hm_attr_exact_given_valid": on["attr_exact_given_valid"],
+            "hm_retrieval_hit": on["retrieval_hit"], "hm_attention_mass": on["attention_mass"],
+            "hm_negctrl_rate": neg_on["guess_rate"], "hm_negctrl_abstain_on": neg_on["abstain_rate"],
+            "persistent": storage["mode"] == MODE_DURABLE, "process": "new (nothing of session A but the disk)"}
+
+
+def _cli():
+    import argparse, json
+    from pathlib import Path
+    import train
+    ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
+    ap.add_argument("--session-b", action="store_true", required=True)
+    ap.add_argument("--ckpt", required=True); ap.add_argument("--journal", required=True)
+    ap.add_argument("--config", required=True, help="the run's config json (the model's shape)")
+    ap.add_argument("--out", default=None); ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--n-facts", type=int, default=N_FACTS); ap.add_argument("--n-negctrl", type=int, default=N_NEGCTRL)
+    args = ap.parse_args()
+    cfg = train.load_config(args.config)
+    r = session_b_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl,
+                            seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
+    out = Path(args.out) if args.out else Path("metrics/mqar") / f"hm-lm-{r['checkpoint']['run_id']}-session-b.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+    print(f"retained: {out}")
+    print(json.dumps(r, indent=2))
+
+
+if __name__ == "__main__":
+    _cli()

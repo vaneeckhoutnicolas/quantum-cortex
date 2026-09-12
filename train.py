@@ -540,6 +540,9 @@ def main() -> None:
         from cortex_c2b.crypto import key_from_env
         from cortex_c2b.lm_bridge import JournalBridge, contrastive_loss, journal_gate
         from cortex_c2b.organ_use import training_facts, plant_pool, make_batch, batch_stats, collate
+        if cfg.journal_path and key_from_env() is None:
+            raise SystemExit("journal_path is set but QUANTUM_CORTEX_JOURNAL_KEY is not in the environment: the run's "
+                             "journal is sealed by default (ADR-007 D8); set the key before training, not after")
         facts, negatives, rep_facts = training_facts(cfg.journal_pool_facts, cfg.journal_train_seed)
         print(f"[journal] curriculum facts {rep_facts['n_facts']} negatives {rep_facts['n_negatives']} "
               f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}")
@@ -747,13 +750,16 @@ def main() -> None:
                        k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
                        val_batches=vb, on_disk=bool(cfg.journal_path))
         (out_dir / "hm-lm.json").write_text(json.dumps(hm, indent=2) + "\n", encoding="utf-8")
+        kept = REPO_ROOT / "metrics" / "mqar" / f"hm-lm-{run_id}.json"          # runs/ is never committed; this is
+        kept.parent.mkdir(parents=True, exist_ok=True)                          # the artefact a RESULTS row cites
+        kept.write_text(json.dumps(hm, indent=2) + "\n", encoding="utf-8")
         suite = {k: (float(v) if isinstance(v, bool) else v) for k, v in hm.items()
                  if k.startswith("hm_") and isinstance(v, (int, float)) and v is not None}
         suite["hm_persistent"] = float(hm["persistent"]); suite["hm_claimable"] = float(hm["claimable"])
         record["results"]["benchmarks"]["standard_suite"] = suite
         print(f"[hm-lm] {hm['verdict']} | recall on {hm['hm_recall_on']:.3f} off {hm['hm_recall_off']:.3f} "
               f"skill delta {hm['hm_skill_delta']:.4f} invalid citation {hm['hm_invalid_citation_on']:.3f} "
-              f"| retained: {out_dir / 'hm-lm.json'}")
+              f"| retained: {kept}")
     validate_record(record)
     append_record(record)
     regen_latest()
