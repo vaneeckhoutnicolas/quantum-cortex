@@ -54,3 +54,21 @@ A FAIL is a result, not an embarrassment: it is recorded, dated, and triggers a 
 **Amendment:** the protocol reads the journal's storage state and reports three fields next to the verdict: `persistent` (true only when the journal is on disk, stayed in durable mode through both sessions, and session B **reopened it from the disk alone**, index recomputed), `claimable` (`hm_dissociation_pass` and `persistent`), and `storage` (on disk, mode, policy, sealed, plaintext scope). A pass on a journal in memory, or in `memory` mode, is reported with `persistent: false` and is **not claimable**; the verdict string says so. A measurement run opens its journal with the `stop` policy, so a storage failure aborts the run instead of continuing in memory unnoticed. Reference run: `python -m cortex_c2b.hm_protocol --persistent` (sealed on disk, session B reopened).
 
 **Thresholds d = 0.50, e_S = 1%, floor = chance + 5 pts, the 10% invalidation line, are unchanged.** The 2026-09-08 artefact keeps its status *measured, within one process*; a claimable pass needs the disk run.
+
+## Amendment 2026-09-12 (b) -- the language model arm under the cite or abstain contract (dated before any run on the model)
+
+**Scope.** This amendment defines how the two arms are scored when the protocol runs on the MODEL (ADR-008) rather than on the organ. Thresholds d = 0.50, e_S = 1 %, floor = chance + 5 points, the 10 % invalidation line, are unchanged.
+
+**The contract.** An episodic query is marked `<EPI>`; the answer is `<CITE>` + the local label of a retrieved episode + `<ANS>` + the attribute + newline, or `<UNKNOWN>` + newline. The read window presents up to k retrieved episodes with local labels in a seeded random order; the harness maps a label back to its pointer and verifies that the cited episode holds the claimed attribute.
+
+**Arm E, journal ON.** `hm_recall_on` is STRICT: a valid citation (a label that exists, whose episode holds the attribute) and the exact attribute. Reported next to it: `hm_false_abstention_on` (abstentions on planted facts, the cost of prudence, already paid in the gap, no threshold of its own), `hm_invalid_citation_on` (a claim with a fake provenance: a label of nothing, a malformed claim, or a label whose episode does not hold the claimed attribute; **declared threshold: at most 1 %**), `hm_valid_citation_on`, `hm_attr_exact_given_valid`, and the attribution triple `hm_retrieval_hit` (the encoder), `hm_attention_mass` (the reader), `hm_attr_exact_given_valid` (the answer).
+
+**Arm E, journal OFF.** The reader is absent (no window, gate zero). A citation is impossible, so `hm_recall_off` is zero by construction: the parametric floor in its cleanest form. To keep the floor meaningful, `hm_guess_rate_off` and `hm_attr_hit_off_by_chance` are reported.
+
+**Negative control.** `hm_negctrl_rate` is the rate of CLAIMS (any non abstention) on never planted entities with the journal ON; at or above 10 % the run is INVALID. `hm_negctrl_abstain_on` and `hm_negctrl_abstain_off` are reported.
+
+**Arm S.** `hm_skill_delta` is the relative perplexity degradation with the reader ACTIVE on whatever the journal returns for each ordinary span against the reader absent: retrieval noise must not hurt the model.
+
+**Verdict.** `hm_dissociation_pass = (skill delta <= e_S) AND (recall_on - recall_off >= d) AND (recall_off <= floor) AND (invalid citation <= 1 %) AND (run valid)`. `persistent` and `claimable` as in amendment (a); the strict form runs session B in another process.
+
+**Reference implementation.** `cortex_c2b/hm_lm.py`; the trainer runs it at the end of a journal run and writes `hm-lm.json` next to the checkpoint (its fields in `results.benchmarks.standard_suite`). No run on the model has been made under this amendment yet.

@@ -76,6 +76,27 @@ class Config:
     c2_heads: int = 4                    # delta: number of recurrent heads
     c2_delta_l2_keys: bool = True        # delta: L2-normalise q,k before the write (KDA-style stability)
     c2_delta_state_clip: float = 0.0     # delta: optional |S| clip (0 = off); belt-and-braces guard
+    # journal in the decode loop (ADR-008), default off -- the model starts as N1 and learns to read
+    journal: str = "none"                # none | read
+    journal_block: int = 5               # the block that carries the reader (one hippocampal port)
+    journal_k: int = 4                   # episodes retrieved per read
+    journal_read_bytes: int = 256        # byte budget of the read window
+    journal_cue_dim: int = 64            # the organ's cue dimension (CUE_DIM)
+    journal_heads: int = 4               # heads of the reader's cross attention
+    journal_route: str = "pinned_on"     # pinned_on | pinned_off | router  (the H.M. arms pin; the router is measured apart)
+    journal_asym_weight: float = 2.0     # loss weight on the decision token of an abstention target (answering instead of abstaining costs more)
+    journal_forced_frac: float = 0.5     # bootstrap: share of missed retrievals where the right episode is forced into the window, decays to 0
+    journal_curriculum_ratio: float = 0.5  # share of training steps spent on organ use examples (the rest: ordinary language modelling)
+    journal_contrastive_weight: float = 1.0
+    journal_pool_facts: int = 200        # planted facts per curriculum epoch
+    journal_pool_refresh: int = 100      # steps between two replantings under the current encoder
+    journal_train_seed: int = 100_000    # the training facts' generator seed (disjoint from the frozen protocol's 0 and 10_000)
+    journal_path: str | None = None      # the sealed on-disk journal of the run (key from QUANTUM_CORTEX_JOURNAL_KEY); None = a memory scope
+    journal_hm_arm: bool = True          # run the frozen protocol's LM arm at the end of the run
+    journal_hm_facts: int = 200          # the protocol's sizes (200 / 50 are the frozen defaults; smaller only for a CPU smoke)
+    journal_hm_negctrl: int = 50
+    parent_run_id: str | None = None     # the checkpoint this run resumes from (a fine tune is a new run)
+    parent_ckpt: str | None = None       # path of that checkpoint
     # circuit breaker (ADR-006 D7): aggressive early-abort, thresholds declared pre-run
     cb_enabled: bool = True              # NaN/Inf abort is always on; divergence check needs a baseline
     cb_divergence_mult: float = 2.0      # abort if loss > mult × baseline-at-step over a window
@@ -93,7 +114,7 @@ class Config:
         return self.vocab_bytes + self.reserved_oracle_tokens
 
 
-CONFIG_HASH_EXCLUDE = {"provider", "notes", "out_dir", "log_every"}
+CONFIG_HASH_EXCLUDE = {"provider", "notes", "out_dir", "log_every", "parent_ckpt"}
 
 
 def load_config(path: str) -> Config:
@@ -234,7 +255,7 @@ class DeltaMemory(nn.Module):
 
 
 class Block(nn.Module):
-    def __init__(self, cfg: Config):
+    def __init__(self, cfg: Config, layer_idx: int = -1):
         super().__init__()
         self.ln1 = nn.LayerNorm(cfg.n_embd)
         self.attn = nn.Linear(cfg.n_embd, 3 * cfg.n_embd)
@@ -250,8 +271,13 @@ class Block(nn.Module):
             self.c2 = DeltaMemory(cfg)
         else:
             self.c2 = None
+        # the journal reader (ADR-008), one block only, default off
+        self.reader = None
+        if cfg.journal == "read" and layer_idx == cfg.journal_block:
+            from cortex_c2b.lm_bridge import JournalReader
+            self.reader = JournalReader(cfg.n_embd, cfg.journal_heads, cfg.journal_read_bytes)
 
-    def forward(self, x):
+    def forward(self, x, window=None, window_mask=None, gate: float = 1.0):
         b, t, c = x.shape
         h = self.ln1(x)
         q, k, v = self.attn(h).split(c, dim=2)
@@ -263,6 +289,11 @@ class Block(nn.Module):
         x = x + self.proj(a)
         if self.c2 is not None:
             x = x + self.c2(x)          # associative memory residual (no-op at init)
+        self.last_read_mass = None
+        if self.reader is not None and window is not None and gate != 0.0:
+            read, mass = self.reader(x, window, window_mask)
+            x = x + gate * read         # the journal as content, on the router's gate (no-op at init)
+            self.last_read_mass = mass
         x = x + self.mlp_down(F.gelu(self.mlp_up(self.ln2(x))))
         return x
 
@@ -273,8 +304,12 @@ class VanillaGPT(nn.Module):
         self.cfg = cfg
         self.wte = nn.Embedding(cfg.vocab_size, cfg.n_embd)
         self.wpe = nn.Embedding(cfg.block_size, cfg.n_embd)
-        self.blocks = nn.ModuleList([Block(cfg) for _ in range(cfg.n_layer)])
+        self.blocks = nn.ModuleList([Block(cfg, i) for i in range(cfg.n_layer)])
         self.ln_f = nn.LayerNorm(cfg.n_embd)
+        self.cue_encoder = None
+        if cfg.journal == "read":
+            from cortex_c2b.lm_bridge import CueEncoder
+            self.cue_encoder = CueEncoder(cfg.n_embd, cfg.journal_cue_dim)
         self.head = nn.Linear(cfg.n_embd, cfg.vocab_size, bias=False)
         self.head.weight = self.wte.weight  # tied embeddings (vanilla)
         self.apply(self._init)
@@ -287,6 +322,9 @@ class VanillaGPT(nn.Module):
         for blk in self.blocks:
             if getattr(blk, "c2", None) is not None:
                 nn.init.zeros_(blk.c2.out.weight)
+            if getattr(blk, "reader", None) is not None:      # ADR-008: the reader starts as a no-op too
+                nn.init.zeros_(blk.reader.out.weight)
+                nn.init.zeros_(blk.reader.null)
 
     @staticmethod
     def _init(m):
@@ -297,17 +335,60 @@ class VanillaGPT(nn.Module):
         elif isinstance(m, nn.Embedding):
             nn.init.normal_(m.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None):
+    def journal_hidden(self, idx):
+        """The residual stream at the journal block, before the reader: what the
+        cue encoder pools. Without a journal, the stream at the last block."""
         b, t = idx.shape
         pos = torch.arange(t, device=idx.device)
         x = self.wte(idx) + self.wpe(pos)
-        for blk in self.blocks:
+        stop = self.cfg.journal_block if self.cfg.journal == "read" else len(self.blocks)
+        for blk in self.blocks[:stop]:
             x = blk(x)
+        return x
+
+    def read_mass(self):
+        """The reader's attention mass on the retrieved bytes at the last forward (invariant 8)."""
+        for blk in self.blocks:
+            if getattr(blk, "reader", None) is not None and blk.last_read_mass is not None:
+                return float(blk.last_read_mass.detach())
+        return None
+
+    def forward(self, idx, targets=None, window_tokens=None, window_mask=None, gate: float = 1.0,
+                loss_weights=None):
+        """`window_tokens` (b, r): the read window's bytes, embedded with the model's
+        own `wte`; `gate`: the router's path 4 weight; `loss_weights` (b, t): per
+        token weights (the curriculum's answer-only, asymmetric loss)."""
+        b, t = idx.shape
+        pos = torch.arange(t, device=idx.device)
+        x = self.wte(idx) + self.wpe(pos)
+        window = self.wte(window_tokens) if window_tokens is not None else None
+        for blk in self.blocks:
+            x = blk(x, window, window_mask, gate) if blk.reader is not None else blk(x)
         logits = self.head(self.ln_f(x))
         loss = None
         if targets is not None:
-            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.reshape(-1))
+            ce = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.reshape(-1), reduction="none")
+            if loss_weights is None:
+                loss = ce.mean()
+            else:
+                w = loss_weights.reshape(-1).to(ce.dtype)
+                loss = (ce * w).sum() / w.sum().clamp(min=1.0)
         return logits, loss
+
+
+def load_parent(model: "VanillaGPT", ckpt_path: str | Path, device) -> tuple[str, list[str]]:
+    """A fine tune starts from a parent checkpoint: every parent weight loads
+    unchanged (strict on the parent's keys); only the journal's own modules may
+    be new. Returns (parent run id, the keys that were initialised fresh)."""
+    ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    result = model.load_state_dict(ck["model"], strict=False)
+    if result.unexpected_keys:
+        raise SystemExit(f"parent checkpoint has keys this model lacks: {result.unexpected_keys[:5]}")
+    allowed = ("cue_encoder.", ".reader.")
+    bad = [k for k in result.missing_keys if not any(a in k for a in allowed)]
+    if bad:
+        raise SystemExit(f"parent checkpoint lacks non-journal weights: {bad[:5]}")
+    return ck.get("run_id", "unknown"), list(result.missing_keys)
 
 
 # ----------------------------------------------------------------------------- ledger (ADR-001)
@@ -343,12 +424,14 @@ def build_record(cfg: Config, chash: str, run_id: str, started_iso: str, params:
         "run": {"kind": cfg.kind, "component_under_test": cfg.component_under_test,
                 "status": status, "anomalies": anomalies, "notes": cfg.notes},
         "model": {"params_total": params,
-                  "architecture_id": (f"vanilla-{max(1, round(params / 1e6))}m-byte" if cfg.c2_variant == "none" else f"c2{cfg.c2_variant}-{max(1, round(params / 1e6))}m-byte"),
+                  "architecture_id": (("journal-" if cfg.journal == "read" else "")
+                                      + (f"vanilla-{max(1, round(params / 1e6))}m-byte" if cfg.c2_variant == "none"
+                                         else f"c2{cfg.c2_variant}-{max(1, round(params / 1e6))}m-byte")),
                   "tokenizer_id": f"byte-v0+{cfg.reserved_oracle_tokens}oracle"},
         "training": {"tokens_seen": tokens_seen, "dataset_id": cfg.dataset_id,
                      "data_slice": cfg.data_slice, "seed": cfg.seed, "steps": steps,
                      "batch_size": cfg.batch_size, "lr_schedule": lr_schedule,
-                     "precision": precision},
+                     "precision": precision, "parent_run_id": cfg.parent_run_id},
         "compute": {"provider": cfg.provider, "hardware": hardware, "gpu_hours": gpu_hours},
         "results": {"final_train_loss": final_loss, "val_perplexity": val_ppl,
                     "benchmarks": {"routing_specialization_mi": None, "mqar_accuracy": None,
@@ -443,6 +526,31 @@ def main() -> None:
     train_arr, val_arr = load_data(cfg)
     model = VanillaGPT(cfg).to(device)
     params = sum(p.numel() for p in model.parameters())
+    # ---- ADR-008: a fine tune starts from a parent checkpoint (strict on the parent's keys)
+    if cfg.parent_ckpt:
+        parent_id, fresh = load_parent(model, REPO_ROOT / cfg.parent_ckpt, device)
+        if cfg.parent_run_id and cfg.parent_run_id != parent_id:
+            raise SystemExit(f"parent_run_id {cfg.parent_run_id} does not match the checkpoint's {parent_id}")
+        cfg.parent_run_id = parent_id
+        print(f"[parent] {parent_id}: parent weights loaded unchanged; {len(fresh)} journal tensors fresh (zero output)")
+    # ---- ADR-008: the journal in the decode loop (default off)
+    journal_ctx = None
+    if cfg.journal == "read":
+        from cortex_c2b import Journal, POLICY_STOP
+        from cortex_c2b.crypto import key_from_env
+        from cortex_c2b.lm_bridge import JournalBridge, contrastive_loss, journal_gate
+        from cortex_c2b.organ_use import training_facts, plant_pool, make_batch, batch_stats, collate
+        facts, negatives, rep_facts = training_facts(cfg.journal_pool_facts, cfg.journal_train_seed)
+        print(f"[journal] curriculum facts {rep_facts['n_facts']} negatives {rep_facts['n_negatives']} "
+              f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}")
+        def run_journal():
+            """The run's own scope: sealed on disk (key from the environment), policy stop --
+            a measurement run never continues in memory unnoticed (ADR-007 D9)."""
+            if cfg.journal_path:
+                return Journal(REPO_ROOT / cfg.journal_path, key=key_from_env(), policy=POLICY_STOP)
+            return Journal()
+        journal_ctx = {"facts": facts, "negatives": negatives, "rng": np.random.default_rng(cfg.seed + 17),
+                       "bridge": None, "planted_at": -1, "run_journal": run_journal}
     if cfg.optimizer != "adamw":
         raise SystemExit("only adamw in the control scaffold — F1 (NorMuon-class) arrives via its own ablation")
     decay = [p for n, p in model.named_parameters() if p.dim() >= 2]
@@ -527,9 +635,34 @@ def main() -> None:
             cur_step = step
             for g in opt.param_groups:
                 g["lr"] = lr_at(step, total_steps, cfg)
-            x, y = get_batch(train_arr, cfg, gen, device)
-            with torch.autocast(device.type, dtype=amp_dtype, enabled=device.type == "cuda"):
-                _, loss = model(x, y)
+            curriculum_step = (journal_ctx is not None
+                               and journal_ctx["rng"].random() < cfg.journal_curriculum_ratio)
+            if curriculum_step:
+                # ADR-008 invariant 6: organ use is taught; the pool is replanted under the
+                # current encoder every `journal_pool_refresh` steps (a memory scope)
+                if journal_ctx["bridge"] is None or step - journal_ctx["planted_at"] >= cfg.journal_pool_refresh:
+                    jb = JournalBridge(model, Journal(), k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes,
+                                       seed=cfg.seed, shuffle_seed=cfg.seed + step, device=device)
+                    model.eval(); plant_pool(jb, journal_ctx["facts"], now=float(step)); model.train()
+                    journal_ctx["bridge"], journal_ctx["planted_at"] = jb, step
+                jb = journal_ctx["bridge"]
+                progress = step / max(1, total_steps)
+                forced = cfg.journal_forced_frac * max(0.0, 1.0 - progress)      # the bootstrap decays to zero
+                model.eval()
+                examples = make_batch(jb, journal_ctx["facts"], journal_ctx["negatives"], cfg.batch_size,
+                                      journal_ctx["rng"], forced_frac=forced)
+                model.train()
+                x, y, w, wt, wm, qseq, sseq = collate(jb, examples, cfg.journal_asym_weight, cfg.journal_read_bytes)
+                gate = journal_gate(cfg.journal_route) if cfg.journal_route != "router" else 1.0   # a learned router is measured apart (D9 held)
+                with torch.autocast(device.type, dtype=amp_dtype, enabled=device.type == "cuda"):
+                    _, loss_ce = model(x, y, window_tokens=wt, window_mask=wm, gate=gate, loss_weights=w)
+                    loss_c = contrastive_loss(jb.cue_tensor(qseq), jb.cue_tensor(sseq))
+                    loss = loss_ce + cfg.journal_contrastive_weight * loss_c
+                journal_ctx["last_stats"] = {**batch_stats(examples), "loss_ce": float(loss_ce), "loss_contrastive": float(loss_c)}
+            else:
+                x, y = get_batch(train_arr, cfg, gen, device)
+                with torch.autocast(device.type, dtype=amp_dtype, enabled=device.type == "cuda"):
+                    _, loss = model(x, y)
             opt.zero_grad(set_to_none=True)
             scaler.scale(loss).backward()
             scaler.unscale_(opt)
@@ -553,6 +686,10 @@ def main() -> None:
             if step % cfg.log_every == 0 or step == total_steps - 1:
                 tps = tokens_seen / max(1e-9, time.time() - t0)
                 print(f"step {step}/{total_steps} loss {loss_val:.4f} lr {opt.param_groups[0]['lr']:.2e} tok/s {tps:,.0f}")
+                if journal_ctx is not None and journal_ctx.get("last_stats"):
+                    st = journal_ctx["last_stats"]
+                    print(f"  journal: hit {st['retrieval_hit']:.2f} abstain-target {st['abstain_target_rate']:.2f} "
+                          f"forced {st['n_forced']} neg {st['n_negative']} ce {st['loss_ce']:.3f} contrastive {st['loss_contrastive']:.3f}")
             if step and step % cfg.eval_every == 0:
                 val_loss = evaluate()
                 print(f"  eval: val_loss {val_loss:.4f} ppl {math.exp(val_loss):.3f}")
@@ -602,6 +739,21 @@ def main() -> None:
                           total_steps if status == "completed" else start_step,
                           wall, round(loss_val, 4) if loss_val is not None else None,
                           val_ppl, status, anomalies, device)
+    if journal_ctx is not None and cfg.journal_hm_arm and status == "completed":
+        # ADR-008 invariant 9: the frozen protocol's LM arm, its result in the record and as a file
+        from cortex_c2b.hm_lm import run_hm_lm
+        vb = [get_batch(val_arr, cfg, gen, device) for _ in range(cfg.eval_batches)]
+        hm = run_hm_lm(model, journal_ctx["run_journal"], n_facts=cfg.journal_hm_facts, n_negctrl=cfg.journal_hm_negctrl,
+                       k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
+                       val_batches=vb, on_disk=bool(cfg.journal_path))
+        (out_dir / "hm-lm.json").write_text(json.dumps(hm, indent=2) + "\n", encoding="utf-8")
+        suite = {k: (float(v) if isinstance(v, bool) else v) for k, v in hm.items()
+                 if k.startswith("hm_") and isinstance(v, (int, float)) and v is not None}
+        suite["hm_persistent"] = float(hm["persistent"]); suite["hm_claimable"] = float(hm["claimable"])
+        record["results"]["benchmarks"]["standard_suite"] = suite
+        print(f"[hm-lm] {hm['verdict']} | recall on {hm['hm_recall_on']:.3f} off {hm['hm_recall_off']:.3f} "
+              f"skill delta {hm['hm_skill_delta']:.4f} invalid citation {hm['hm_invalid_citation_on']:.3f} "
+              f"| retained: {out_dir / 'hm-lm.json'}")
     validate_record(record)
     append_record(record)
     regen_latest()

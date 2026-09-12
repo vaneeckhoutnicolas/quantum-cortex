@@ -75,6 +75,22 @@ The journal engine is written from scratch (our filon), as `cortex_data` and `co
 
 **Reserves:** the in memory plaintext cache of the payload store is unbounded (a bounded cache is a later refinement); the persistent memory rebuild replays every consolidated pattern at open, linear in the journal's history; both are recorded, neither is a claim.
 
+## Cost declaration per operation (2026-09-12)
+
+Like the lifecycle, the cost of each operation is declared, not assumed; the two lines that grow with history are reserves already recorded.
+
+| Operation | Shape | Note |
+|---|---|---|
+| read by cue (`retrieve`) | O(candidates in the bucket) | never O(n): the read law, tested |
+| write, transition, salience | O(1) plus one log line | durable first |
+| grouping for demotion | O(consolidated x neighbourhood) | through the index; an O(n^2) avoided in Slice E |
+| the sentinel probe per phase | O(sentinels x one read) | bounded by the configuration |
+| one phase (plan, verdicts) | O(n log n) | a phase is a sleep, not a read |
+| the log replayed at open | O(history) | grows with the tombstones: log retention is a recorded reserve |
+| the persistent memory stand in | O(N x d) per reconstruction, N growing | a declared stand in; the C2 layer has a state of fixed size |
+| the spill buffer flush | O(events) | a deque since 2026-09-12; a `list.pop(0)` there was O(n) per event |
+| the delta rule in the model | O(t) sequential per layer | why the hybrid and L4 units of the ladder cost more than the pure rungs |
+
 ## Decision 9 -- Durable first, and a storage policy per scope (founder, 2026-09-12)
 
 Raised by the founder after Decision 8: what happens when the disk cannot be written (no permission, no space), and how to stop gracefully before the wall. A silent fallback to memory would contradict Decision 8, since the journal would stop surviving a restart without anyone knowing. The founder validated eight invariants, one addition, and the defaults.

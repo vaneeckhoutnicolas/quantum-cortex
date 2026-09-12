@@ -160,6 +160,13 @@
             "null"
           ],
           "description": "cortex_data mix DAG hash (ADR-005). Two runs are comparable iff equal. Null for non-mix data modes."
+        },
+        "parent_run_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ADR-008 (2026-09-12): the run_id of the checkpoint this run started from (a fine tune is a new run); null for a run from scratch."
         }
       }
     },
@@ -233,28 +240,28 @@
                 "number",
                 "null"
               ],
-              "description": "C1 \u2014 mutual information expert/domain."
+              "description": "C1 — mutual information expert/domain."
             },
             "mqar_accuracy": {
               "type": [
                 "number",
                 "null"
               ],
-              "description": "C2 \u2014 multi-query associative recall accuracy."
+              "description": "C2 — multi-query associative recall accuracy."
             },
             "oracle_shift_recovery": {
               "type": [
                 "number",
                 "null"
               ],
-              "description": "C3 \u2014 recovery quality after mid-sequence context shift."
+              "description": "C3 — recovery quality after mid-sequence context shift."
             },
             "invariant_compliance_rate": {
               "type": [
                 "number",
                 "null"
               ],
-              "description": "C4 \u2014 share of typed outputs respecting their contract."
+              "description": "C4 — share of typed outputs respecting their contract."
             },
             "standard_suite": {
               "type": [

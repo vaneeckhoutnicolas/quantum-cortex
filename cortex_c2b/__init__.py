@@ -47,6 +47,7 @@ import errno
 import json
 import shutil
 import time
+from collections import deque
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
@@ -269,7 +270,7 @@ class Journal:
         # ---- storage state (Decision 9) ----
         self.mode = MODE_DURABLE if self._path is None else MODE_DURABLE
         self.degraded_reason: str | None = None
-        self.spill: list[str] = []                   # encoded lines not yet on disk (memory mode)
+        self.spill: deque[str] = deque()             # encoded lines not yet on disk (memory mode); a deque: O(1) at both ends
         self.refused_writes = 0                      # read_only mode: mutations refused since the failure
         self.gap_since: float | None = None          # logical time of the first failure of the current gap
         self._last_now: float | None = None
@@ -604,7 +605,7 @@ class Journal:
         self._check_disk_floor()
         self.payloads.flush_pending()
         while self.spill:
-            self._write_line(self.spill[0]); self.spill.pop(0)
+            self._write_line(self.spill[0]); self.spill.popleft()   # O(1); a list.pop(0) here was O(n) per event
         self._restored(MODE_MEMORY)
 
     def _restored(self, from_mode: str) -> None:
