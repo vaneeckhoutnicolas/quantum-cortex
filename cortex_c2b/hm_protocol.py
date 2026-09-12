@@ -264,12 +264,25 @@ def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: in
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) > 1 and sys.argv[1] == "--persistent":
+    import argparse
+    from pathlib import Path
+    ap = argparse.ArgumentParser(description="the H.M. dissociation protocol against the C2b organ")
+    ap.add_argument("--persistent", action="store_true",
+                    help="sealed journal on disk, session B reopened from the disk alone (claimable)")
+    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--out", default=None,
+                    help="retain the full result as a file (e.g. metrics/mqar/hm-protocol-persistent-<date>.json); "
+                         "a number read from a console is not a source")
+    args = ap.parse_args()
+    if args.persistent:
         import tempfile
         from cortex_c2b.crypto import generate_key
         with tempfile.TemporaryDirectory() as d:          # sealed on disk, session B reopened from the disk alone
-            r = run_hm_protocol(journal_path=f"{d}/hm-journal.jsonl", key=generate_key())
+            r = run_hm_protocol(seed=args.seed, journal_path=f"{d}/hm-journal.jsonl", key=generate_key())
     else:
-        r = run_hm_protocol()
+        r = run_hm_protocol(seed=args.seed)
+    if args.out:
+        out = Path(args.out); out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+        print(f"retained: {out}")
     print(json.dumps({k: v for k, v in r.items() if k != "generator"}, indent=2))
