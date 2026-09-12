@@ -1,0 +1,53 @@
+{
+  "benchmark": "hm_protocol_lm",
+  "spec": "docs/benchmarks/hm-protocol.md (frozen thresholds; LM arm amendment 2026-09-12)",
+  "thresholds": {
+    "delta": 0.5,
+    "epsilon_s": 0.01,
+    "floor": 0.175,
+    "chance": 0.125,
+    "negctrl_invalid": 0.1,
+    "invalid_citation_max": 0.01
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0,
+    "admitted": 200
+  },
+  "hm_recall_on": 0.025,
+  "hm_recall_off": 0.0,
+  "hm_gap": 0.025,
+  "hm_skill_delta": 5.553444445920583e-05,
+  "ppl_on": 2.599687241972056,
+  "ppl_off": 2.5995428778024894,
+  "hm_negctrl_rate": 0.36,
+  "hm_negctrl_on": 0.02,
+  "hm_negctrl_abstain_on": 0.64,
+  "hm_negctrl_abstain_off": 0.98,
+  "hm_false_abstention_on": 0.7,
+  "hm_invalid_citation_on": 0.27,
+  "hm_valid_citation_on": 0.03,
+  "hm_attr_exact_given_valid": 0.8333333333333334,
+  "hm_retrieval_hit": 0.925,
+  "hm_attention_mass": 0.9836624005436897,
+  "hm_guess_rate_off": 0.045,
+  "hm_attr_hit_off_by_chance": 0.01,
+  "run_valid": false,
+  "hm_dissociation_pass": 0,
+  "persistent": true,
+  "claimable": 0,
+  "storage": {
+    "on_disk": true,
+    "mode": "durable",
+    "policy": "stop",
+    "plaintext_scope": false
+  },
+  "attribution": {
+    "encoder": 0.925,
+    "reader": 0.9836624005436897,
+    "answer": 0.8333333333333334
+  },
+  "verdict": "INVALID -- LM arm, cite-or-abstain contract"
+}

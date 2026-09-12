@@ -1,0 +1,43 @@
+{
+  "benchmark": "hm_protocol_lm_session_b_new_process",
+  "training_pool_probe": {
+    "seed": 100000,
+    "n": 200,
+    "recall_strict": 0.02,
+    "valid_citation": 0.04,
+    "invalid_citation": 0.275,
+    "abstain_rate": 0.685,
+    "retrieval_hit": 0.87
+  },
+  "checkpoint": {
+    "path": "runs/journal-n1-v2/ckpt.pt",
+    "run_id": "5f0a6d3ff4e8",
+    "config_hash": "b9e10b3e0a9e5938",
+    "step": 2440
+  },
+  "journal": {
+    "path": "runs/journal-n1-v2/journal.jsonl",
+    "entries": 200,
+    "mode": "durable",
+    "policy": "stop",
+    "planted_found": 200
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0
+  },
+  "hm_recall_on": 0.025,
+  "hm_recall_off": 0.0,
+  "hm_false_abstention_on": 0.7,
+  "hm_invalid_citation_on": 0.27,
+  "hm_valid_citation_on": 0.03,
+  "hm_attr_exact_given_valid": 0.8333333333333334,
+  "hm_retrieval_hit": 0.925,
+  "hm_attention_mass": 0.9836623960733414,
+  "hm_negctrl_rate": 0.36,
+  "hm_negctrl_abstain_on": 0.64,
+  "persistent": true,
+  "process": "new (nothing of session A but the disk)"
+}
