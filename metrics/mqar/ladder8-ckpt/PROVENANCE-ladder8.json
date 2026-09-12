@@ -1,0 +1,17 @@
+{
+  "purpose": "provenance of the 128 unit files of the 8-seed run (5 pure rungs + control + 2 hybrids x 8 seeds x 2 tiers, 1500 steps). Read before citing.",
+  "date": "2026-09-13",
+  "run": {
+    "notebook": "nicolasvaneeckhout/notebookd2e7b3c154",
+    "execution_1": "2026-09-11/12, 11h45 on T4: 126/128 units, stopped cleanly by --time-budget-min 700; wrote PROGRESS-ladder8.json. Log retained as a file (download__8_.txt).",
+    "execution_2": "2026-09-12, ~28 min: resumed from execution_1's Output mounted as Input (126 found, 2 to run), wrote the last 2 units (ARCH-delta seed 2026) and LATEST-ladder8.json. Log retained as a file (download__9_.txt)."
+  },
+  "files": {
+    "unit-ARCH-delta__s2026__kv16_seq128.json, unit-ARCH-delta__s2026__kv8_seq128.json": "REAL — written by the runner in execution_2, retrieved via kaggle kernels output.",
+    "LATEST-ladder8.json": "REAL — the aggregate computed by the runner over all 128 units (126 read from the Input, 2 written), retrieved via kaggle kernels output.",
+    "the other 126 unit-*.json": "RECONSTRUCTED 2026-09-13 from execution_1's retained log: each [unit] line carries unit_id, accuracy (4 decimals) and wall time; files were rebuilt in the runner's format with written_utc = RECONSTRUCTED. The originals exist in execution_1's Output on Kaggle, which the CLI could not address (all /N version suffixes returned the latest Output)."
+  },
+  "verification": "the 126 reconstructed + 2 real units reproduce LATEST-ladder8.json exactly: all 8 per-path means and 95% CIs to the 4th decimal, all 6 paired tests (diff, t) to the 3rd decimal. 128 values constrained by 14 independent statistics; any single wrong value would break a match.",
+  "engineering_lesson": "the runner must copy every unit read from resume_from into its own ckpt_dir at COMPLETE, so the latest version's Output is self-contained. To add to resumable_ladder.py.",
+  "status": "the unit files are the record; the reconstructed ones are verified, not assumed."
+}

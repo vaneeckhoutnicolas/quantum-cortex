@@ -1,0 +1,244 @@
+{
+  "benchmark": "recurrent_ladder_8seed_resumable",
+  "timestamp_utc": "2026-09-12T18:13:04.332402+00:00",
+  "regime": {
+    "seeds": [
+      1337,
+      2024,
+      7,
+      42,
+      99,
+      3,
+      11,
+      2026
+    ],
+    "n_seeds": 8,
+    "steps": 1500,
+    "tiers": [
+      [
+        16,
+        128
+      ],
+      [
+        8,
+        128
+      ]
+    ]
+  },
+  "units_done": 128,
+  "units_total": 128,
+  "complete": true,
+  "stopped_early": false,
+  "per_rung_per_seed": {
+    "L0-canonical-gla": [
+      0.0068359375,
+      0.01025390625,
+      0.0048828125,
+      0.00830078125,
+      0.0048828125,
+      0.0068359375,
+      0.01123046875,
+      0.0107421875
+    ],
+    "L1-+selective-gate": [
+      0.01123046875,
+      0.01220703125,
+      0.00927734375,
+      0.00439453125,
+      0.00439453125,
+      0.00927734375,
+      0.00830078125,
+      0.00732421875
+    ],
+    "L2-+channel-decay": [
+      0.00830078125,
+      0.0068359375,
+      0.0029296875,
+      0.00634765625,
+      0.00390625,
+      0.01416015625,
+      0.01123046875,
+      0.00830078125
+    ],
+    "L3-+local-conv": [
+      0.2412109375,
+      0.03125,
+      0.03369140625,
+      0.0263671875,
+      0.26708984375,
+      0.32421875,
+      0.33740234375,
+      0.2724609375
+    ],
+    "L4-+delta-rule": [
+      0.04052734375,
+      0.0439453125,
+      0.0400390625,
+      0.02587890625,
+      0.041015625,
+      0.03857421875,
+      0.05224609375,
+      0.02880859375
+    ]
+  },
+  "per_arch_per_seed": {
+    "none": [
+      0.06982421875,
+      0.0908203125,
+      0.07470703125,
+      0.0703125,
+      0.09765625,
+      0.0791015625,
+      0.109375,
+      0.09228515625
+    ],
+    "hopfield": [
+      0.09912109375,
+      0.09423828125,
+      0.064453125,
+      0.10107421875,
+      0.09765625,
+      0.080078125,
+      0.095703125,
+      0.103515625
+    ],
+    "delta": [
+      0.1142578125,
+      0.099609375,
+      0.0771484375,
+      0.10986328125,
+      0.0859375,
+      0.0751953125,
+      0.06982421875,
+      0.0947265625
+    ]
+  },
+  "stats": {
+    "L0-canonical-gla": {
+      "mean": 0.008,
+      "sd": 0.0025,
+      "ci95": [
+        0.0059,
+        0.0101
+      ],
+      "n": 8
+    },
+    "L1-+selective-gate": {
+      "mean": 0.0083,
+      "sd": 0.0029,
+      "ci95": [
+        0.0059,
+        0.0107
+      ],
+      "n": 8
+    },
+    "L2-+channel-decay": {
+      "mean": 0.0078,
+      "sd": 0.0037,
+      "ci95": [
+        0.0047,
+        0.0108
+      ],
+      "n": 8
+    },
+    "L3-+local-conv": {
+      "mean": 0.1917,
+      "sd": 0.1371,
+      "ci95": [
+        0.0771,
+        0.3063
+      ],
+      "n": 8
+    },
+    "L4-+delta-rule": {
+      "mean": 0.0389,
+      "sd": 0.0083,
+      "ci95": [
+        0.0319,
+        0.0458
+      ],
+      "n": 8
+    },
+    "ARCH-none": {
+      "mean": 0.0855,
+      "sd": 0.0143,
+      "ci95": [
+        0.0736,
+        0.0974
+      ],
+      "n": 8
+    },
+    "ARCH-hopfield": {
+      "mean": 0.092,
+      "sd": 0.0132,
+      "ci95": [
+        0.081,
+        0.103
+      ],
+      "n": 8
+    },
+    "ARCH-delta": {
+      "mean": 0.0908,
+      "sd": 0.0165,
+      "ci95": [
+        0.077,
+        0.1046
+      ],
+      "n": 8
+    }
+  },
+  "best_pure_rung": "L3-+local-conv",
+  "paired_tests": {
+    "hopfield_hybrid_vs_best_pure": {
+      "mean_diff": -0.0997,
+      "t": -2.099,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "delta_hybrid_vs_best_pure": {
+      "mean_diff": -0.1009,
+      "t": -1.974,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "control_vs_best_pure": {
+      "mean_diff": -0.1062,
+      "t": -2.298,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "hopfield_vs_control": {
+      "mean_diff": 0.0065,
+      "t": 1.111,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "delta_vs_control": {
+      "mean_diff": 0.0053,
+      "t": 0.555,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "L4_vs_L3": {
+      "mean_diff": -0.1528,
+      "t": -3.209,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    }
+  },
+  "gate_readout": {
+    "hopfield_hybrid_vs_best_pure": false,
+    "delta_hybrid_vs_best_pure": false,
+    "control_vs_best_pure": false,
+    "hopfield_vs_control": false,
+    "delta_vs_control": false,
+    "L4_vs_L3": true
+  },
+  "note": "every test is paired on seed at identical steps/tiers; gated = significant at 95% with >= 3 seeds."
+}

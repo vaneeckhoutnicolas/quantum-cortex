@@ -1,0 +1,1 @@
+{"unit_id": "ARCH-delta__s2026__kv8_seq128", "rung": "ARCH-delta", "seed": 2026, "kv_pairs": 8, "seq_len": 128, "steps": 1500, "accuracy": 0.119140625, "status": "done", "wall_s": 831.2, "written_utc": "2026-09-12T18:13:04.331797+00:00"}
