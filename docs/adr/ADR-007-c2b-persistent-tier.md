@@ -106,6 +106,40 @@ Raised by the founder after Decision 8: what happens when the disk cannot be wri
 
 **Lesson graved, second occurrence:** a Python object with `__len__` is falsy when empty. An empty memory was once silently replaced (Slice E); an empty journal made the declaration read `plaintext_scope` false. Tests caught both; the rule is now `is not None`, never truthiness, for any object of this family.
 
+## Decision 10 -- Sequenced asynchrony (founder, 2026-09-12; decided, not built)
+
+Raised by the trade-off review: today every write is durable first and synchronous, and a phase of sleep blocks the training step or the generation for its whole duration. An asynchronous sleep is a product need, not a need of the language model arm (REPRISE step 4), and the founder set its condition: **asynchrony is acceptable only as the lazy execution of actions decided at a sequence point, never as a decision taken outside one.** The pattern is the incremental garbage collector: mark at a safe point, sweep lazily, a write barrier for what changed in between.
+
+1. **A sequence point decides.** The plan of a phase is computed synchronously at the rhythm, deterministic and hashed as today, and recorded in the log as a `phase_planned` event with its action list: the log shows what was predicted before anything is applied.
+2. **Execution is lazy and ordered.** Actions apply later, in the plan's order, durable first as today, at a declared and deterministic amortisation rate (K actions per admitted write), never "when the processor is idle": a wall clock would break reproducibility. A measurement run keeps the deterministic rate; a clock driven variant is a product policy, declared as such.
+3. **Every action re checks its precondition when it applies** (still live to consolidate; still under the floor and not contracted to evict; sources still consolidated to demote; the summary still present for a cascade). An action whose precondition no longer holds is dropped and recorded, never adapted on the fly: no new decision outside a sequence point. This is the write barrier.
+4. **One plan in flight.** No new plan while the previous one has pending actions: the rhythm waits, or drains first. Two concurrent plans would be two decisions on one state.
+5. **Reads never wait and never see a half state.** A read falls before or after an action, never inside one (durable first guarantees it); the executor holds the state for one action at a time.
+6. **Replay stays exact.** The plan and every action applied or dropped are events, so a replayed journal rebuilds the same state, and two identical runs write the same log because the amortisation rate is in the configuration, not in time.
+
+**Gained:** a phase no longer blocks a generation or a training step beyond K actions. **Kept:** Decisions 8 and 9 and invariant 7 of Slice E. **Declared limit:** the plan is computed on a state that may move before its execution ends; the barrier guarantees safety, not the optimality of the plan, and a plan with many dropped actions is a telemetry signal, not an error.
+
+## Trade-off declaration (2026-09-12)
+
+Fifteen classic system trade-offs, read against the repository: eleven are decided and dated, two are open and parked until the public switch, one is a recorded reserve.
+
+| Trade-off | Where the journal stands | Decided by |
+|---|---|---|
+| consistency vs availability | `stop` chooses consistency (measurement runs); `read_only` keeps the state durable and reads available; `memory` chooses availability and declares itself not durable; per scope, in the hash | Decision 9 |
+| latency vs throughput | reads bounded (never a scan); throughput in the sleep (phases batch the consolidation) | Slice A, Slice E |
+| fixed vs flexible schema | a fixed envelope (the size law, the typed entry) and free content (addressed by hash) | ADR-003 row 8, Slice A |
+| vertical vs horizontal scaling; replication vs partitioning | partition by scope, one journal per scope, never sharded inside a scope; **no replication at all** | hub decision 009; open (below) |
+| monolith vs services | the cortex is one process in the weights; Meridian is an orchestration; the same concepts on two planes, by choice | hub decision 019 |
+| strong vs eventual consistency | strong in durable mode; eventual in `memory` mode with the gap recorded on restoration | Decision 9 |
+| normalised vs denormalised | normalised at rest (content never duplicated); denormalised at read (the window copies the bytes in front of the model) | Slice A, ADR-008 |
+| read vs write optimisation | read optimised (index, aliases); a write is an append; the cost moved into the sleep | Slices A, C, E |
+| caching vs freshness | freshness is not a subject (content immutable); the payload plaintext cache is not bounded | reserve, ADR-007 D8 |
+| push vs pull | the model pulls by cue; surprise pushes at admission | Slices B and C, ADR-008 |
+| sync vs async | synchronous today; asynchronous only as sequenced lazy execution | **Decision 10, decided, not built** |
+| batch vs stream | writes stream, consolidation batches | Slice E |
+| stateful vs stateless | the model is stateless between sessions except through the organ and its checkpoint: the thesis itself | ADR-007, D8 |
+| redundancy vs cost | redundancy chosen for safety (sentinels, the shadow probe, durable first); none for durability: one sealed copy; a lost key or a lost disk is a lost memory; replicating a sealed journal is safe, replicating its key is the problem | **open, parked** |
+
 ## Implementation order (measure-first, slices; each tested before the next)
 
 1. **Slice A — the store — IMPLEMENTED & GREEN 2026-09-08:** `cortex_c2b/` — `Entry` (cue, pointer, salience, schema_id, timestamps, RES-17 state), `PayloadStore` (content-addressed by hash — same bytes stored once), `Journal` (append-only JSONL log replayable to the same state; keyed cue index so reads never scan; legal-only lifecycle transitions live→consolidated→demoted→evicted; inspectable snapshot). **Nine invariants green, including `test_read_never_scans`** (2000 entries; a read by cue must touch < N/10 — a scan fails the test), the size law (≤1 KB, pointer never content) and no-duplication (two entries, one payload).
