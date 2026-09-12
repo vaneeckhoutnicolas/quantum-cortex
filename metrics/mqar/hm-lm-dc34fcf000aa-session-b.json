@@ -1,0 +1,34 @@
+{
+  "benchmark": "hm_protocol_lm_session_b_new_process",
+  "checkpoint": {
+    "path": "runs/journal-n1/ckpt.pt",
+    "run_id": "dc34fcf000aa",
+    "config_hash": "6785ba1f8e213dce",
+    "step": 2440
+  },
+  "journal": {
+    "path": "runs/journal-n1/journal.jsonl",
+    "entries": 200,
+    "mode": "durable",
+    "policy": "stop",
+    "planted_found": 200
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0
+  },
+  "hm_recall_on": 0.04,
+  "hm_recall_off": 0.0,
+  "hm_false_abstention_on": 0.06,
+  "hm_invalid_citation_on": 0.865,
+  "hm_valid_citation_on": 0.075,
+  "hm_attr_exact_given_valid": 0.5333333333333333,
+  "hm_retrieval_hit": 0.935,
+  "hm_attention_mass": 0.9845023342967033,
+  "hm_negctrl_rate": 0.88,
+  "hm_negctrl_abstain_on": 0.12,
+  "persistent": true,
+  "process": "new (nothing of session A but the disk)"
+}

@@ -206,7 +206,8 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
 # the sealed disk, nothing else (ADR-007 D8, the named boundary on the model)    #
 # ---------------------------------------------------------------------------- #
 def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
-                        seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256) -> dict:
+                        seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256,
+                        train_pool_seed: int | None = None, train_pool_n: int = 200) -> dict:
     """Reopen everything from the disk alone and probe. The planted facts are found
     by content addressing (a statement's pointer is the hash of its bytes), so no
     state of session A is needed beyond the journal file and the checkpoint."""
@@ -227,7 +228,20 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     off = _probe(model, bridge, facts, False, window_len, pointer_of)
     neg_on = _probe(model, bridge, neg, True, window_len, {})
     storage = lifecycle_declaration(journal)["storage"]
-    return {"benchmark": "hm_protocol_lm_session_b_new_process",
+    # the memorisation probe (run dc34fcf000aa): the same contract on entities the model SAW during training
+    # (the first training pool), planted into a memory scope; a model that reads its window scores alike on
+    # seen and unseen entities, a model that memorised entity -> attribute scores far higher on the seen ones
+    train_probe = None
+    if train_pool_seed is not None:
+        from cortex_c2b.organ_use import training_facts, plant_pool
+        tf, _, _ = training_facts(train_pool_n, seed=train_pool_seed)
+        jb2 = JournalBridge(model, Journal(), k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 2, device=device)
+        plant_pool(jb2, tf)
+        tp = _probe(model, jb2, tf, True, window_len, dict(jb2.pointer_of))
+        train_probe = {"seed": train_pool_seed, "n": len(tf), "recall_strict": tp["recall_strict"],
+                       "valid_citation": tp["valid_citation_rate"], "invalid_citation": tp["invalid_citation_rate"],
+                       "abstain_rate": tp["abstain_rate"], "retrieval_hit": tp["retrieval_hit"]}
+    return {"benchmark": "hm_protocol_lm_session_b_new_process", "training_pool_probe": train_probe,
             "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
                            "step": ck.get("step")},
             "journal": {"path": str(journal_path), "entries": len(journal), "mode": storage["mode"],
@@ -251,10 +265,14 @@ def _cli():
     ap.add_argument("--config", required=True, help="the run's config json (the model's shape)")
     ap.add_argument("--out", default=None); ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--n-facts", type=int, default=N_FACTS); ap.add_argument("--n-negctrl", type=int, default=N_NEGCTRL)
+    ap.add_argument("--probe-training-pool", action="store_true",
+                    help="also probe the contract on the run's FIRST training pool (entities seen in training): memorisation evidence")
     args = ap.parse_args()
     cfg = train.load_config(args.config)
     r = session_b_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl,
-                            seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
+                            seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
+                            train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),
+                            train_pool_n=cfg.journal_pool_facts)
     out = Path(args.out) if args.out else Path("metrics/mqar") / f"hm-lm-{r['checkpoint']['run_id']}-session-b.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")

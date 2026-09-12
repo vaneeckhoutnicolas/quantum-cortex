@@ -91,6 +91,10 @@ class Config:
     journal_pool_facts: int = 200        # planted facts per curriculum epoch
     journal_pool_refresh: int = 100      # steps between two replantings under the current encoder
     journal_train_seed: int = 100_000    # the training facts' generator seed (disjoint from the frozen protocol's 0 and 10_000)
+    journal_fresh_pool: bool = False     # v2 lever (run dc34fcf000aa, INVALID): a NEW set of facts at every replant, so the only way
+                                         # down the loss is to read the window -- a fixed pool let the model memorise entity -> attribute
+    journal_lm_window: bool = False      # v2 lever: language modelling steps also carry a retrieved window (gate on), so the model
+                                         # learns to ignore an irrelevant read on ordinary text (the skill arm measures exactly that)
     journal_path: str | None = None      # the sealed on-disk journal of the run (key from QUANTUM_CORTEX_JOURNAL_KEY); None = a memory scope
     journal_hm_arm: bool = True          # run the frozen protocol's LM arm at the end of the run
     journal_hm_facts: int = 200          # the protocol's sizes (200 / 50 are the frozen defaults; smaller only for a CPU smoke)
@@ -128,8 +132,15 @@ def load_config(path: str) -> Config:
     return cfg
 
 
+# Levers added after runs were recorded: absent from the hash while OFF, so a configuration
+# written before the lever existed keeps its hash (run dc34fcf000aa stays 6785ba1f8e213dce);
+# ON, the lever enters the hash like any other field.
+HASH_TRANSPARENT_WHEN_OFF = {"journal_fresh_pool", "journal_lm_window"}
+
+
 def config_hash(cfg: Config) -> str:
-    d = {k: v for k, v in dataclasses.asdict(cfg).items() if k not in CONFIG_HASH_EXCLUDE}
+    d = {k: v for k, v in dataclasses.asdict(cfg).items()
+         if k not in CONFIG_HASH_EXCLUDE and not (k in HASH_TRANSPARENT_WHEN_OFF and v is False)}
     return hashlib.sha256(json.dumps(d, sort_keys=True).encode()).hexdigest()[:16]
 
 
@@ -545,7 +556,8 @@ def main() -> None:
                              "journal is sealed by default (ADR-007 D8); set the key before training, not after")
         facts, negatives, rep_facts = training_facts(cfg.journal_pool_facts, cfg.journal_train_seed)
         print(f"[journal] curriculum facts {rep_facts['n_facts']} negatives {rep_facts['n_negatives']} "
-              f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}")
+              f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}"
+              f" | fresh pool per replant: {cfg.journal_fresh_pool} | window on LM steps: {cfg.journal_lm_window}")
         def run_journal():
             """The run's own scope: sealed on disk (key from the environment), policy stop --
             a measurement run never continues in memory unnoticed (ADR-007 D9)."""
@@ -553,7 +565,7 @@ def main() -> None:
                 return Journal(REPO_ROOT / cfg.journal_path, key=key_from_env(), policy=POLICY_STOP)
             return Journal()
         journal_ctx = {"facts": facts, "negatives": negatives, "rng": np.random.default_rng(cfg.seed + 17),
-                       "bridge": None, "planted_at": -1, "run_journal": run_journal}
+                       "bridge": None, "planted_at": -1, "run_journal": run_journal, "refresh": 0}
     if cfg.optimizer != "adamw":
         raise SystemExit("only adamw in the control scaffold — F1 (NorMuon-class) arrives via its own ablation")
     decay = [p for n, p in model.named_parameters() if p.dim() >= 2]
@@ -644,6 +656,11 @@ def main() -> None:
                 # ADR-008 invariant 6: organ use is taught; the pool is replanted under the
                 # current encoder every `journal_pool_refresh` steps (a memory scope)
                 if journal_ctx["bridge"] is None or step - journal_ctx["planted_at"] >= cfg.journal_pool_refresh:
+                    if cfg.journal_fresh_pool and journal_ctx["refresh"] > 0:
+                        # v2: never the same facts twice -- a new seed per replant, decontaminated like the first
+                        journal_ctx["facts"], journal_ctx["negatives"], _ = training_facts(
+                            cfg.journal_pool_facts, cfg.journal_train_seed + 2 * journal_ctx["refresh"])
+                    journal_ctx["refresh"] += 1
                     jb = JournalBridge(model, Journal(), k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes,
                                        seed=cfg.seed, shuffle_seed=cfg.seed + step, device=device)
                     model.eval(); plant_pool(jb, journal_ctx["facts"], now=float(step)); model.train()
@@ -661,11 +678,21 @@ def main() -> None:
                     _, loss_ce = model(x, y, window_tokens=wt, window_mask=wm, gate=gate, loss_weights=w)
                     loss_c = contrastive_loss(jb.cue_tensor(qseq), jb.cue_tensor(sseq))
                     loss = loss_ce + cfg.journal_contrastive_weight * loss_c
-                journal_ctx["last_stats"] = {**batch_stats(examples), "loss_ce": float(loss_ce), "loss_contrastive": float(loss_c)}
+                journal_ctx["last_stats"] = {**batch_stats(examples), "loss_ce": float(loss_ce.detach()), "loss_contrastive": float(loss_c.detach())}
             else:
                 x, y = get_batch(train_arr, cfg, gen, device)
+                wt = wm = None
+                if journal_ctx is not None and cfg.journal_lm_window and journal_ctx["bridge"] is not None:
+                    # v2: the reader stays on during language modelling, fed with whatever the journal returns
+                    # for each span, so an irrelevant read costs nothing after training (the e_S arm)
+                    jb = journal_ctx["bridge"]
+                    model.eval()
+                    cues = jb.cues([row.tolist() for row in x])
+                    windows = [jb.read(c).window for c in cues]
+                    model.train()
+                    wt, wm = jb.window_tensors(windows, cfg.journal_read_bytes)
                 with torch.autocast(device.type, dtype=amp_dtype, enabled=device.type == "cuda"):
-                    _, loss = model(x, y)
+                    _, loss = model(x, y, window_tokens=wt, window_mask=wm, gate=1.0)
             opt.zero_grad(set_to_none=True)
             scaler.scale(loss).backward()
             scaler.unscale_(opt)

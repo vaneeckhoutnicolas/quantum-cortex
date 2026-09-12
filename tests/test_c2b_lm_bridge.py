@@ -228,13 +228,14 @@ def test_the_model_and_its_journal_survive_a_full_process_restart(tmp_path):
 
 # ------------------------------------------------------------------ invariant 9: the trainer, end to end (CI runs the slow ones)
 @pytest.mark.slow
-def test_cpu_smoke_trains_the_journal_and_records_the_lm_arm():
+@pytest.mark.parametrize("config", ["configs/smoke_journal_cpu.json", "configs/smoke_journal_v2_cpu.json"])
+def test_cpu_smoke_trains_the_journal_and_records_the_lm_arm(config):
     ledger, latest = ROOT / "metrics" / "runs.jsonl", ROOT / "metrics" / "LATEST.md"
     lb = ledger.read_text() if ledger.exists() else None
     la = latest.read_text() if latest.exists() else None
     before = len(lb.splitlines()) if lb else 0
     try:
-        proc = subprocess.run([sys.executable, "train.py", "--config", "configs/smoke_journal_cpu.json"],
+        proc = subprocess.run([sys.executable, "train.py", "--config", config],
                               cwd=ROOT, capture_output=True, text=True, timeout=1500)
         assert proc.returncode == 0, f"trainer failed:\n{proc.stdout[-3000:]}\n{proc.stderr[-3000:]}"
         lines = ledger.read_text().splitlines()
@@ -245,7 +246,10 @@ def test_cpu_smoke_trains_the_journal_and_records_the_lm_arm():
         assert rec["model"]["architecture_id"].startswith("journal-")
         suite = rec["results"]["benchmarks"]["standard_suite"]
         assert {"hm_recall_on", "hm_recall_off", "hm_skill_delta", "hm_invalid_citation_on", "hm_persistent", "hm_claimable"} <= set(suite)
-        assert (ROOT / "runs" / "smoke-journal" / "hm-lm.json").exists()
+        out_dir = json.loads((ROOT / config).read_text())["out_dir"]
+        assert (ROOT / out_dir / "hm-lm.json").exists()
+        for f in (ROOT / "metrics" / "mqar").glob(f"hm-lm-{rec['run_id']}*.json"):
+            f.unlink()                                             # a smoke leaves no artefact behind
     finally:
         if lb is not None:
             ledger.write_text(lb)
@@ -278,3 +282,31 @@ def test_session_b_in_a_new_process_reproduces_the_in_process_probe(tmp_path):
     for k in ("hm_recall_on", "hm_recall_off", "hm_false_abstention_on", "hm_invalid_citation_on", "hm_retrieval_hit"):
         assert r_b[k] == r_a[k], (k, r_b[k], r_a[k])
     assert r_b["persistent"] is True
+
+
+def test_fresh_pools_never_repeat_and_stay_decontaminated():
+    a, na, _ = training_facts(40, seed=100_000)
+    b, nb, _ = training_facts(40, seed=100_002)                     # the second replant's seed (train_seed + 2 x refresh)
+    eval_entities = {f.entity for s in EVAL_SEEDS for f in generate_facts(N_FACTS if s == 0 else N_NEGCTRL, s)[0]}
+    assert not ({f.entity for f in a} & {f.entity for f in b})          # a new set every replant
+    assert not (({f.entity for f in a} | {f.entity for f in b}) & eval_entities)
+    assert train.config_hash(train.Config(journal_fresh_pool=True)) != train.config_hash(train.Config())
+    assert train.config_hash(train.Config(journal_fresh_pool=False)) == train.config_hash(train.Config())   # off: transparent
+
+
+def test_session_b_probe_on_the_training_pool_reports_memorisation_evidence(tmp_path):
+    from cortex_c2b.crypto import generate_key
+    from cortex_c2b import POLICY_STOP
+    from cortex_c2b.hm_lm import session_b_from_disk
+    cfg, m = tiny(seed=10); m.eval()
+    key = generate_key(); jpath = tmp_path / "journal.jsonl"
+    run_hm_lm(m, lambda: Journal(jpath, key=key, policy=POLICY_STOP), n_facts=8, n_negctrl=4, k=3, budget=96, window_len=96, on_disk=True)
+    ck = tmp_path / "ckpt.pt"; torch.save({"model": m.state_dict(), "run_id": "tiny"}, ck)
+    os.environ["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()
+    try:
+        r = session_b_from_disk(ck, jpath, cfg, n_facts=8, n_negctrl=4, k=3, budget=96, window_len=96,
+                                train_pool_seed=100_000, train_pool_n=10)
+    finally:
+        del os.environ["QUANTUM_CORTEX_JOURNAL_KEY"]
+    tp = r["training_pool_probe"]
+    assert tp["seed"] == 100_000 and tp["n"] == 10 and {"recall_strict", "valid_citation", "invalid_citation", "abstain_rate", "retrieval_hit"} <= set(tp)
