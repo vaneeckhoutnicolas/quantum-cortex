@@ -80,12 +80,23 @@ def load_done(dirs: list[Path]) -> dict[str, dict]:
 def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
                          ckpt_dir: str | Path = "metrics/mqar/ladder8-ckpt",
                          resume_from: list[str | Path] | None = None,
-                         time_budget_min: float | None = None, **kw) -> dict:
+                         time_budget_min: float | None = None, paths: list[str] | None = None, **kw) -> dict:
+    """`paths` (optional): restrict the run to these path names (e.g. the sigma run of
+    the convergence, L3 alone at 3000 steps on the seeds that stayed at the floor).
+    A subset writes its units and a SUBSET aggregate (per path stats, no paired
+    tests against absent paths); the full readout needs all eight paths."""
     tiers = tiers or DEFAULT_TIERS
     ckpt = Path(ckpt_dir); ckpt.mkdir(parents=True, exist_ok=True)
     dirs = [Path(p) for p in (resume_from or [])] + [ckpt]
     done = load_done(dirs)
-    units = [(r, s, t) for r in (list(LADDER) + list(ARCH)) for s in seeds for t in tiers]
+    all_paths = list(LADDER) + list(ARCH)
+    if paths:
+        names = {(r.name if isinstance(r, Rung) else f"ARCH-{r}"): r for r in all_paths}
+        unknown = [n for n in paths if n not in names]
+        if unknown:
+            raise SystemExit(f"unknown paths {unknown}; known: {sorted(names)}")
+        all_paths = [names[n] for n in paths]
+    units = [(r, s, t) for r in all_paths for s in seeds for t in tiers]
     todo = [u for u in units if unit_id(*u) not in done]
     print(f"[resumable] {len(units)} units total, {len(done)} already done, {len(todo)} to run")
     t0 = time.time()
@@ -112,7 +123,18 @@ def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
                          "tiers": [(t.kv_pairs, t.seq_len) for t in tiers]},
               "units_done": len(done), "units_total": len(units), "complete": complete,
               "stopped_early": stopped_early}
-    if complete:
+    if complete and paths:
+        result["subset"] = list(paths)
+        result["stats"] = {}
+        for r in all_paths:
+            name = r.name if isinstance(r, Rung) else f"ARCH-{r}"
+            vals = [float(np.mean([done[unit_id(r, s, t)]["accuracy"] for t in tiers])) for s in seeds]
+            per_tier = {f"kv{t.kv_pairs}": [done[unit_id(r, s, t)]["accuracy"] for s in seeds] for t in tiers}
+            result["stats"][name] = {**_mean_ci(vals), "per_seed": vals, "per_tier": per_tier}
+        tag = "-".join(paths).replace("+", "").replace("/", "")[:40]
+        (ckpt / f"SUBSET-{tag}-{steps}steps.json").write_text(json.dumps(result, indent=2) + "\n")
+        print(f"[resumable] COMPLETE (subset {paths}) — per path stats written; no paired tests on a subset")
+    elif complete:
         result.update(aggregate(done, seeds, tiers))
         (ckpt / "LATEST-ladder8.json").write_text(json.dumps(result, indent=2) + "\n")
         print("[resumable] COMPLETE — aggregate written")
@@ -164,14 +186,16 @@ def _cli():
     ap.add_argument("--resume-from", nargs="*", default=[],
                     help="previous checkpoint dirs (e.g. Kaggle Inputs) whose finished units are reused")
     ap.add_argument("--time-budget-min", type=float, default=None)
+    ap.add_argument("--paths", nargs="*", default=None,
+                    help="restrict to these path names (e.g. L3-+local-conv for the sigma run)")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
     if args.quick:
         run_resumable_ladder(seeds=(1, 2), tiers=[MQARTier(kv_pairs=4, seq_len=32)], steps=40,
-                             ckpt_dir=args.ckpt_dir, resume_from=args.resume_from, d_model=32)
+                             ckpt_dir=args.ckpt_dir, resume_from=args.resume_from, d_model=32, paths=args.paths)
     else:
         run_resumable_ladder(seeds=tuple(args.seeds), steps=args.steps, ckpt_dir=args.ckpt_dir,
-                             resume_from=args.resume_from, time_budget_min=args.time_budget_min)
+                             resume_from=args.resume_from, time_budget_min=args.time_budget_min, paths=args.paths)
 
 
 if __name__ == "__main__":
