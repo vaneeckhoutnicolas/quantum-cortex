@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+*.egg-info/          # produced by `pip install -e .` (2026-09-12); never a source
 
 # Training artefacts are never committed - the ledger record is the only trace of a run (ADR-001).
 # metrics/runs.jsonl and metrics/LATEST.md ARE committed (one commit per run).
