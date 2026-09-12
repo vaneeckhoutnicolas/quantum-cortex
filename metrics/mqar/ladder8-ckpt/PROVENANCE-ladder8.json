@@ -13,5 +13,29 @@
   },
   "verification": "the 126 reconstructed + 2 real units reproduce LATEST-ladder8.json exactly: all 8 per-path means and 95% CIs to the 4th decimal, all 6 paired tests (diff, t) to the 3rd decimal. 128 values constrained by 14 independent statistics; any single wrong value would break a match.",
   "engineering_lesson": "the runner must copy every unit read from resume_from into its own ckpt_dir at COMPLETE, so the latest version's Output is self-contained. To add to resumable_ladder.py.",
-  "status": "the unit files are the record; the reconstructed ones are verified, not assumed."
+  "status": "the unit files are the record; the reconstructed ones are verified, not assumed.",
+  "logs_retained_in_repo": {
+    "execution_1": {
+      "path": "metrics/mqar/logs/ladder8-execution-1.log",
+      "sha256_16": "1ed9d3cd7a05b731",
+      "lines": 199
+    },
+    "execution_2": {
+      "path": "metrics/mqar/logs/ladder8-execution-2.log",
+      "sha256_16": "1d5c46426ee9e99a",
+      "lines": 60
+    }
+  },
+  "verification_by_successor_2026-09-12": {
+    "who": "the successor instance, cold, from the two logs as files and the committed directory",
+    "checks": [
+      "128 unit files; 126 reconstructed, 2 real (ARCH-delta seed 2026); every accuracy (4 decimals) and every wall time equals its [unit] line in the logs; 0 mismatches",
+      "exact recovery: accuracy = k / (64 x kv_pairs) with a unique k per printed value; 0 ambiguous; the 126 files now carry the exact value and keep the printed one as accuracy_printed",
+      "LATEST-ladder8.json per_rung_per_seed (full precision, computed by the runner over the real files) equals the recovered per seed means on all 40 (path, seed) pairs; 0 mismatches",
+      "the aggregate recomputed from the committed units with cortex_eval.resumable_ladder.aggregate equals LATEST-ladder8.json: all six paired t identical, the gate readout identical",
+      "execution 2 log: resume detected at the three level Input path, 126 found, 2 to run, exactly two units executed, none recomputed, COMPLETE",
+      "regime from the logs: fresh start, 8 seeds, 2 tiers, 8 paths, 1500 steps (per the notebook command and every unit file); 42405 s then 1719 s; no NaN"
+    ],
+    "status": "the record is consistent: the reconstruction is exact in value, and it stays labelled reconstructed until the next replay writes the runner's own files"
+  }
 }
