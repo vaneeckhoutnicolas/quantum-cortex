@@ -1,0 +1,47 @@
+{
+  "benchmark": "hm_protocol",
+  "spec": "docs/benchmarks/hm-protocol.md (frozen thresholds)",
+  "timestamp_utc": "2026-09-13T21:31:12.120453+00:00",
+  "generator": {
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 1,
+    "config_hash": "82bd2ff094d9b030",
+    "schemas": [
+      "person",
+      "place",
+      "event",
+      "object",
+      "decision"
+    ],
+    "admitted": 200
+  },
+  "thresholds": {
+    "delta": 0.5,
+    "epsilon_s": 0.01,
+    "floor": 0.175,
+    "chance": 0.125,
+    "negctrl_invalid": 0.1
+  },
+  "hm_recall_on": 1.0,
+  "hm_recall_off": 0.15,
+  "hm_gap": 0.85,
+  "hm_negctrl_rate": 0.02,
+  "hm_negctrl_on": 0.02,
+  "hm_negctrl_off_raw": 0.12,
+  "hm_negctrl_off_above_chance": 0.0,
+  "hm_skill_delta": 0.0,
+  "run_valid": true,
+  "hm_dissociation_pass": 1,
+  "persistent": true,
+  "claimable": 1,
+  "storage": {
+    "on_disk": true,
+    "mode": "durable",
+    "policy": "stop",
+    "sealed": true,
+    "plaintext_scope": false
+  },
+  "verdict": "PASS \u2014 the dissociation holds: episodes live in the journal, skills are journal-independent",
+  "reserve": "Slice D runs the protocol against the C2b organ with a hash-seeded cue encoder and a reference skill probe; the language-model arm (real skills suites, learned cue encoder) lands when the LM is wired to the journal. Recall here is a retrieval test \u2014 the journal's job."
+}
