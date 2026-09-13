@@ -7,7 +7,7 @@
 
 ## Context
 
-Until this decision the H.M. dissociation was measured on the organ with two stand ins: a hash seeded cue encoder and a reference skill probe (RESULTS rows 13 and 13b). The model had never read its journal in generation. REPRISE step 3 asked for the wiring; the founder set the method: invariants first, then code.
+Until this decision the Molaison dissociation (the H.M. protocol: named after Henry Molaison, the patient whose hippocampus was removed in 1953 and who formed no new episodic memory from that day while keeping every skill he had; the protocol asks the model the same question: with its journal cut, do the episodes vanish while the skills stay?) was measured on the organ with two stand ins: a hash seeded cue encoder and a reference skill probe (RESULTS rows 13 and 13b). The model had never read its journal in generation. REPRISE step 3 asked for the wiring; the founder set the method: invariants first, then code.
 
 ## The nine invariants (validated 2026-09-12)
 

@@ -36,7 +36,7 @@ Place-cell sequences *are* trajectories; sharp-wave ripples re-traverse them:
 
 ## 5. Two memory stores — and a falsifiable prediction
 
-Patient H.M.: hippocampus removed → no *new* episodic memories, **skills intact**. The two-store model (episodic: hippocampus-dependent; semantic/procedural: cortical after consolidation) maps exactly onto our split — **weights = semantic and procedural; journal = episodic; RES-9 rhythms = the transfer between them**. This yields an honest, falsifiable architecture prediction, cheap to run: **the H.M. ablation** — cut the journal at inference and the model must retain skills while losing episode recall; if it doesn't, our memory story is wrong. [candidate → a standing diagnostic in the eval suite from N2 onward.]
+Patient Molaison (H.M., after the patient Henry Molaison; defined in docs/benchmarks/hm-protocol.md): hippocampus removed → no *new* episodic memories, **skills intact**. The two-store model (episodic: hippocampus-dependent; semantic/procedural: cortical after consolidation) maps exactly onto our split — **weights = semantic and procedural; journal = episodic; RES-9 rhythms = the transfer between them**. This yields an honest, falsifiable architecture prediction, cheap to run: **the Molaison ablation** — cut the journal at inference and the model must retain skills while losing episode recall; if it doesn't, our memory story is wrong. [candidate → a standing diagnostic in the eval suite from N2 onward.]
 
 ## 6. Adult neurogenesis (DG)
 
@@ -56,6 +56,6 @@ New neurons appear precisely where separation happens — capacity grows at the 
 | **Reverse replay credit assignment** | **candidate — RES-11 headline** | journal salience/trust updates |
 | Preplay planning | candidate (parked) | RES-6/RES-9 |
 | Theta compression, neurogenesis | noted | engineering notes |
-| H.M. ablation | candidate — standing diagnostic | eval suite (N2+) |
+| Molaison ablation | candidate — standing diagnostic | eval suite (N2+) |
 
 Promotion rule unchanged: ledger runs decide, anatomy only inspires.

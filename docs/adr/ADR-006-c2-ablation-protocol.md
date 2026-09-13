@@ -23,7 +23,7 @@ Every ablation run is identical to the control **except** the feature under test
 - **MQAR (multi-query associative recall)** via the **zoology** dependency (F5–F6): the canonical probe for associative memory — the capability H and D are supposed to add. Reported as `mqar_accuracy`.
 - **Serial-position curve** (Rev7.b): primacy/recency profile measured like an experimental-psychology protocol — cheap, original, and directly probes memory behaviour. The curve is the deliverable, plus a scalar summary.
 - **Perplexity** stays the guard (≤2% degradation vs control, hub-019), never the axis.
-- **Continuity triad (D15)** is *not yet* fully measurable (H.M. needs C2b, W2) — N2 measures the associative-capability axes; the triad arrives with the persistent tier.
+- **Continuity triad (D15)** is *not yet* fully measurable (Molaison (H.M., after the patient Henry Molaison; defined in docs/benchmarks/hm-protocol.md) needs C2b, W2) — N2 measures the associative-capability axes; the triad arrives with the persistent tier.
 
 ## Decision 4 — The advancement rule, applied
 

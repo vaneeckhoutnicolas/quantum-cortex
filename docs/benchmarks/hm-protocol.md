@@ -1,4 +1,6 @@
-# The H.M. Protocol — episodic/semantic dissociation diagnostic — spec v1 — 2026-08-08
+# The Molaison Protocol (H.M.) — episodic/semantic dissociation diagnostic — spec v1 — 2026-08-08
+
+**The name (added 2026-09-13; the specification below is unchanged).** H.M. is Henry Molaison (1926 to 2008), the patient whose hippocampus was removed in 1953 to treat his epilepsy. From that day he formed no new episodic memory, yet he kept every skill he had and still learned new motor tasks without remembering the lessons: episodes gone, know how intact. The protocol asks the model the same question: with its journal cut, do the episodes vanish while the skills stay? Arm E is the episodes that must collapse without the journal; arm S is the skills that must survive. The code identifiers (`hm_*` fields, `hm-lm-<run>.json`, `hm_lm.py`) keep the short name; they are in the graved records.
 
 **Status:** specification (written before any implementation, per measure-first). Implementation lands with **W2** (C2b); the spec is an open deliverable (NOW-6). First document of `docs/benchmarks/`.
 

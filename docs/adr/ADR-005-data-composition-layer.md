@@ -37,7 +37,7 @@ A one-variable run = a DAG with one source + decontaminate. An n-variable run = 
 
 ## Decision 4 — Decontamination as a first-class operator, with a Bloom-filter algebra
 
-Decontamination generalises the H.M. protocol's leakage controls (the `Vorel-3f2a` anti-leak entities + negative control) to *all* evaluation sets (MQAR, H.M., future benchmarks): eval-set n-grams must not appear in training data; a **quantified contamination report** is produced and archived, and a mix that fails decontamination is not comparable.
+Decontamination generalises the Molaison (H.M., after the patient Henry Molaison; defined in docs/benchmarks/hm-protocol.md) protocol's leakage controls (the `Vorel-3f2a` anti-leak entities + negative control) to *all* evaluation sets (MQAR, Molaison, future benchmarks): eval-set n-grams must not appear in training data; a **quantified contamination report** is produced and archived, and a mix that fails decontamination is not comparable.
 
 Mechanism, honestly scoped — the founder's bit-vector insight is **literal**, not metaphor, at the set-signature level. Represent each source's n-gram set as a **Bloom filter** (a bit vector); then set operations *are* bitwise operations:
 - **OR** (`|`) = union of sources (the mix)

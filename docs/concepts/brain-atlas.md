@@ -23,7 +23,7 @@
 
 ## 3. Limbic system
 
-*The hippocampus is expanded in its own deep dive: `concepts/hippocampus.md` (trisynaptic pipeline, index theory, grid scaffold, replay in three directions, the H.M. ablation).*
+*The hippocampus is expanded in its own deep dive: `concepts/hippocampus.md` (trisynaptic pipeline, index theory, grid scaffold, replay in three directions, the Molaison (H.M., after the patient Henry Molaison; defined in docs/benchmarks/hm-protocol.md) ablation).*
 
 - **Hippocampus — CA3 recurrent collaterals** — autoassociative pattern **completion**: the textbook biological Hopfield network. [mapped → C2/RES-1. The anatomy endorses the architecture: our associative memory has a literal biological incumbent.]
 - **Hippocampus — dentate gyrus** — pattern **separation**: near-duplicates are made distinct before storage to avoid interference. [candidate → C2b: **decorrelate near-duplicate entries before journal writes** — a concrete anti-interference mechanism for the persistent tier. Promoted at N2+.]

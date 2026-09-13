@@ -1,0 +1,58 @@
+{
+  "benchmark": "recurrent_ladder_8seed_resumable",
+  "timestamp_utc": "2026-09-13T20:19:28.505792+00:00",
+  "regime": {
+    "seeds": [
+      7,
+      42,
+      2024
+    ],
+    "n_seeds": 3,
+    "steps": 3000,
+    "tiers": [
+      [
+        16,
+        128
+      ],
+      [
+        8,
+        128
+      ]
+    ]
+  },
+  "units_done": 6,
+  "units_total": 6,
+  "complete": true,
+  "stopped_early": false,
+  "subset": [
+    "L3-+local-conv"
+  ],
+  "stats": {
+    "L3-+local-conv": {
+      "mean": 0.299,
+      "sd": 0.2139,
+      "ci95": [
+        -0.2323,
+        0.8303
+      ],
+      "n": 3,
+      "per_seed": [
+        0.05322265625,
+        0.40087890625,
+        0.44287109375
+      ],
+      "per_tier": {
+        "kv16": [
+          0.0107421875,
+          0.0068359375,
+          0.0029296875
+        ],
+        "kv8": [
+          0.095703125,
+          0.794921875,
+          0.8828125
+        ]
+      }
+    }
+  }
+}
