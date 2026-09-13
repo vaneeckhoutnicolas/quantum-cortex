@@ -228,7 +228,7 @@ def test_the_model_and_its_journal_survive_a_full_process_restart(tmp_path):
 
 # ------------------------------------------------------------------ invariant 9: the trainer, end to end (CI runs the slow ones)
 @pytest.mark.slow
-@pytest.mark.parametrize("config", ["configs/smoke_journal_cpu.json", "configs/smoke_journal_v2_cpu.json"])
+@pytest.mark.parametrize("config", ["configs/smoke_journal_cpu.json", "configs/smoke_journal_v2_cpu.json", "configs/smoke_journal_v6_cpu.json"])
 def test_cpu_smoke_trains_the_journal_and_records_the_lm_arm(config):
     ledger, latest = ROOT / "metrics" / "runs.jsonl", ROOT / "metrics" / "LATEST.md"
     lb = ledger.read_text() if ledger.exists() else None
@@ -354,3 +354,60 @@ def test_paired_negatives_withhold_the_own_episode_and_target_abstention():
     assert all(e.entity in {f.entity for f in facts} for e in negatives)   # paired negatives are planted entities
     assert train.config_hash(train.Config(journal_paired_negatives=True)) != train.config_hash(train.Config())
     assert train.config_hash(train.Config(journal_paired_negatives=False)) == train.config_hash(train.Config())
+
+
+def test_paired_negative_v5_shape_cue_and_v6_shape_kept():
+    """v5 as run (db028e6a4262): the withheld window has k - 1 labels whenever the episode had
+    been retrieved, a shape cue the frozen protocol never shows (its windows have k lines).
+    v6: k + 1 retrieved, the own dropped, k labels, so the negative and its positive twin have
+    the same shape and differ only by the episode's presence."""
+    from cortex_c2b.organ_use import training_facts, plant_pool, make_paired_negative, make_example
+    cfg, m = tiny(seed=5); m.eval()
+    facts, negs, _ = training_facts(30, seed=100_000)
+    jb = JournalBridge(m, Journal(), k=3, budget_bytes=160, seed=0, shuffle_seed=1)
+    plant_pool(jb, facts)
+    rng = np.random.default_rng(0)
+    admitted = [f for f in facts if f.entity in jb.pointer_of]
+    assert len(admitted) >= 20
+    with_own = without_own = 0
+    for f in admitted:
+        own = jb.pointer_of[f.entity]
+        retrieved = own in jb.read(jb.cues([encode_query(f.query)])[0]).pointers
+        v5 = make_paired_negative(jb, f, rng)                                  # as run
+        v6 = make_paired_negative(jb, f, rng, keep_shape=True)                 # the corrected pair
+        pos = make_example(jb, f, False, 1.0, rng)                             # the positive twin
+        shown = len(jb.read(jb.cues([encode_query(f.query)])[0]).pointers)    # the index may return fewer than k
+        assert len(v5.labels) == (shown - 1 if retrieved else shown)           # the cue, exactly as the run had it
+        assert len(v6.labels) == shown                                         # v6: the read's shape, by construction
+        assert (not retrieved) or (pos.kind == "answer" and len(pos.labels) == shown)   # the twin, when the read holds the episode
+        assert own not in v6.labels.values() and f.statement.encode("utf-8") not in v6.window
+        assert own in pos.labels.values()
+        assert v6.target == v5.target == encode_target(None, None)
+        with_own += retrieved; without_own += (not retrieved)
+    assert with_own >= 1                                                       # the cue was exercised at least once
+    ex = make_batch(jb, facts, negs, 200, rng, negatives_frac=0.5, forced_frac=0.0, paired=True, keep_shape=True)
+    negatives = [e for e in ex if e.kind == "negative"]
+    assert negatives and all(e.entity in {f.entity for f in facts} for e in negatives)
+    assert train.config_hash(train.Config(journal_paired_keep_shape=True)) != train.config_hash(train.Config())
+    assert train.config_hash(train.Config(journal_paired_keep_shape=False)) == train.config_hash(train.Config())
+
+
+def test_shape_probe_builds_the_four_windows_it_declares():
+    """The diagnostic of run db028e6a4262: the same planted fact with its episode withheld at
+    k - 1 and at k lines, the never planted entities at k and at k - 1; the probe reports a
+    claim rate per arm and the mean number of lines it actually showed."""
+    from cortex_c2b.organ_use import training_facts, plant_pool
+    from cortex_c2b.hm_lm import shape_probe
+    cfg, m = tiny(seed=5); m.eval()
+    facts, negs, _ = training_facts(30, seed=100_000)
+    jb = JournalBridge(m, Journal(), k=3, budget_bytes=160, seed=0, shuffle_seed=1)
+    plant_pool(jb, facts)
+    r = shape_probe(m, jb, facts, negs[:8], cfg.journal_read_bytes, dict(jb.pointer_of))
+    assert r["k"] == 3 and r["pairs_with_own_retrieved"] >= 1
+    for name in ("planted_withheld_short", "planted_withheld_kept", "absent_k_lines", "absent_short"):
+        arm = r[name]
+        assert arm["n"] >= 1 and 0.0 <= arm["claim_rate"] <= 1.0 and 0.0 <= arm["lines_mean"] <= 3.0
+    assert r["planted_withheld_kept"]["lines_mean"] == r["planted_withheld_short"]["lines_mean"] + 1   # the kept shape restores the line
+    assert r["absent_k_lines"]["lines_mean"] == r["absent_short"]["lines_mean"] + 1
+    assert r["planted_withheld_short"]["n"] == r["planted_withheld_kept"]["n"] == r["pairs_with_own_retrieved"]
+    assert r["absent_k_lines"]["n"] == r["absent_short"]["n"] == 8

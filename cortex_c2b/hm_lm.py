@@ -39,7 +39,7 @@ import torch
 from cortex_c2b import Journal, MODE_DURABLE, POLICY_STOP, lifecycle_declaration
 from cortex_c2b.hm_protocol import (Fact, generate_facts, SCHEMAS, _ATTRS, DELTA, EPSILON_S,
                                     FLOOR_MARGIN, NEGCTRL_INVALID, N_FACTS, N_NEGCTRL)
-from cortex_c2b.lm_bridge import (JournalBridge, encode_query, parse_contract, NEWLINE, TOK_EPI)
+from cortex_c2b.lm_bridge import (JournalBridge, encode_query, parse_contract, build_read_window, NEWLINE, TOK_EPI)
 from cortex_c2b.write_path import WritePath
 from cortex_c2b.read_path import JournalPath
 
@@ -205,6 +205,88 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
 # Session B in a NEW process: the model from its checkpoint, the journal from    #
 # the sealed disk, nothing else (ADR-007 D8, the named boundary on the model)    #
 # ---------------------------------------------------------------------------- #
+@torch.no_grad()
+def shape_probe(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact], window_len: int,
+                pointer_of: dict[str, str], seed: int = 0) -> dict:
+    """A diagnostic outside the frozen protocol (like the memorisation probe): does the
+    cite or abstain decision follow the NUMBER OF LINES in the window? Run v5
+    (`db028e6a4262`) trained on paired negatives whose withheld window had k - 1 lines,
+    while every protocol window has k. Four claim rates, greedy decoding, gate on:
+      planted_withheld_short : the planted fact, its own episode withheld, k - 1 lines (the v5 negative as trained)
+      planted_withheld_kept  : the same, k lines (the k + 1 th match fills the slot: the v6 negative)
+      absent_k_lines         : a never planted entity, k lines (the protocol's negative control)
+      absent_short           : the same, the best match dropped, k - 1 lines
+    A decision that reads the window claims alike at k - 1 and k lines; a decision that
+    counts lines claims at k and abstains at k - 1."""
+    rng = np.random.default_rng(seed + 3)
+    model.eval()
+
+    def claims(items, query):
+        window, labels = build_read_window(items, bridge.budget, rng)
+        wt, wm = bridge.window_tensors([window], window_len)
+        toks, _ = generate(model, query, wt, wm, gate=1.0)
+        kind, _, _ = parse_contract(toks)
+        return int(kind != "unknown"), len(labels)
+
+    from cortex_c2b.organ_use import withheld_items
+    out = {"planted_withheld_short": [0, 0], "planted_withheld_kept": [0, 0],
+           "absent_k_lines": [0, 0], "absent_short": [0, 0]}
+    lines = {k: [] for k in out}
+    own_retrieved = 0
+    bridge.pointer_of.update(pointer_of)                                # the fill of the kept shape draws among the planted
+    for f in facts:
+        own = pointer_of.get(f.entity)
+        if own is None:
+            continue
+        query = encode_query(f.query)
+        cue = bridge.cues([query])[0]
+        if own not in bridge.read(cue).pointers:
+            continue                                                   # only the pairs whose halves differ in shape
+        own_retrieved += 1
+        short = withheld_items(bridge, cue, own, rng, keep_shape=False)  # as v5 built it
+        kept = withheld_items(bridge, cue, own, rng, keep_shape=True)    # as v6 builds it
+        for name, items in (("planted_withheld_short", short), ("planted_withheld_kept", kept)):
+            c, n_lines = claims(items, query)
+            out[name][0] += c; out[name][1] += 1; lines[name].append(n_lines)
+    for f in neg:
+        query = encode_query(f.query)
+        cue = bridge.cues([query])[0]
+        hits = bridge.jp.retrieve(cue, k=bridge.k)
+        top = [(e.pointer, payload) for e, payload, _ in hits]
+        for name, items in (("absent_k_lines", top), ("absent_short", top[1:])):
+            c, n_lines = claims(items, query)
+            out[name][0] += c; out[name][1] += 1; lines[name].append(n_lines)
+    return {"probe": "shape (lines in the window) -- a diagnostic, not a protocol measure",
+            "k": bridge.k, "pairs_with_own_retrieved": own_retrieved,
+            **{name: {"claim_rate": (c / n if n else None), "n": n,
+                      "lines_mean": (float(np.mean(lines[name])) if lines[name] else None)}
+               for name, (c, n) in out.items()}}
+
+
+def shape_probe_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
+                          seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256) -> dict:
+    """The shape probe from the disk alone (checkpoint, sealed journal, key in the environment)."""
+    import train
+    from cortex_c2b import content_hash
+    from cortex_c2b.crypto import key_from_env
+    device = torch.device("cpu")
+    model = train.VanillaGPT(cfg).to(device)
+    ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    model.load_state_dict(ck["model"]); model.eval()
+    journal = Journal(journal_path, key=key_from_env(), policy=POLICY_STOP)
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device)
+    facts, gen_hash = generate_facts(n_facts, seed)
+    neg, _ = generate_facts(n_negctrl, seed + 10_000)
+    pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
+                  if content_hash(f.statement.encode("utf-8")) in journal.payloads}
+    r = shape_probe(model, bridge, facts, neg, window_len, pointer_of, seed=seed)
+    r["checkpoint"] = {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
+                       "step": ck.get("step")}
+    r["generator"] = {"config_hash": gen_hash, "n_facts": n_facts, "n_negctrl": n_negctrl, "seed": seed}
+    r["journal"] = {"path": str(journal_path), "entries": len(journal), "planted_found": len(pointer_of)}
+    return r
+
+
 def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
                         seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256,
                         train_pool_seed: int | None = None, train_pool_n: int = 200) -> dict:
@@ -260,7 +342,9 @@ def _cli():
     from pathlib import Path
     import train
     ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
-    ap.add_argument("--session-b", action="store_true", required=True)
+    ap.add_argument("--session-b", action="store_true")
+    ap.add_argument("--shape-probe", action="store_true",
+                    help="the shape probe alone (claims at k - 1 against k lines), a diagnostic: metrics/mqar/shape-probe-<run_id>.json")
     ap.add_argument("--ckpt", required=True); ap.add_argument("--journal", required=True)
     ap.add_argument("--config", required=True, help="the run's config json (the model's shape)")
     ap.add_argument("--out", default=None); ap.add_argument("--seed", type=int, default=0)
@@ -268,7 +352,18 @@ def _cli():
     ap.add_argument("--probe-training-pool", action="store_true",
                     help="also probe the contract on the run's FIRST training pool (entities seen in training): memorisation evidence")
     args = ap.parse_args()
+    if not (args.session_b or args.shape_probe):
+        ap.error("one of --session-b / --shape-probe is required")
     cfg = train.load_config(args.config)
+    if args.shape_probe:
+        r = shape_probe_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl, seed=args.seed,
+                                  k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
+        out = Path(args.out) if args.out else Path("metrics/mqar") / f"shape-probe-{r['checkpoint']['run_id']}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+        print(f"retained: {out}")
+        print(json.dumps(r, indent=2))
+        return
     r = session_b_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl,
                             seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
                             train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),

@@ -142,34 +142,66 @@ def make_example(bridge: JournalBridge, fact: Fact, negative: bool, forced_frac:
 
 
 def make_paired_negative(bridge: JournalBridge, fact: Fact, rng: np.random.Generator,
-                         paraphrase: bool = False) -> Example:
+                         paraphrase: bool = False, keep_shape: bool = False) -> Example:
     """The minimal pair (v5 lever, run 6f10e8cbfebf): the SAME planted fact, its own episode
-    WITHHELD from the window, everything else as read; target abstain. Four runs showed the
-    decision to cite or abstain following the share of negatives seen in training (a class
-    prior) far more than the window's content; with pairs the prior earns nothing, and the
-    only way down the loss is to check whether the queried entity is in the read."""
+    WITHHELD from the window; target abstain. Four runs showed the decision to cite or abstain
+    following the share of negatives seen in training (a class prior) far more than the
+    window's content; with pairs the prior earns nothing, and the only way down the loss is
+    to check whether the queried entity is in the read.
+
+    `keep_shape=False` is the pair AS RUN in v5 (`db028e6a4262`, INVALID): the own pointer
+    removed from the k retrieved, the window built from what is left, so it has k - 1 lines
+    whenever the episode had been retrieved (over 90 % of the time late in the run). That is
+    a shape cue, cheaper than a comparison, and absent from the frozen protocol's windows,
+    which always have k lines. The pair was not minimal; kept as written so the v5 run stays
+    reproducible under its hash. `keep_shape=True` is the v6 lever: k + 1 retrieved, the own
+    dropped, k lines kept, so the pair's two halves have the same shape and differ only by the
+    episode's presence."""
     question = fact.paraphrase if paraphrase else fact.query
     query = encode_query(question)
     cue = bridge.cues([query])[0]
-    read = bridge.read(cue)
     own = bridge.pointer_of.get(fact.entity)
-    items = [(p, bridge.j.payloads.get(p)) for p in read.pointers if p != own]
+    items = withheld_items(bridge, cue, own, rng, keep_shape=keep_shape)
     window, labels = build_read_window(items, bridge.budget, rng)
     return Example("negative", query, encode_target(None, None), window, labels, False,
                    fact.entity, fact.attr, list(fact.statement.encode("utf-8")))
 
 
+def withheld_items(bridge: JournalBridge, cue: np.ndarray, own: str | None, rng: np.random.Generator,
+                   keep_shape: bool) -> list[tuple[str, bytes]]:
+    """The window items of a paired negative. `keep_shape=False`: the read's items minus the own
+    pointer, one line fewer than the read whenever the own was retrieved (v5 as run). `keep_shape=True`:
+    the same number of lines as the read would have shown: the k + 1 th candidate fills the slot when the
+    index returns one, else another planted episode drawn at random (the index is a locality sensitive
+    hash and may return fewer than k candidates, so the fill is by construction, not by luck)."""
+    if not keep_shape:
+        read = bridge.read(cue)
+        return [(p, bridge.j.payloads.get(p)) for p in read.pointers if p != own]
+    hits = bridge.jp.retrieve(cue, k=bridge.k + 1)
+    top = [(e.pointer, payload) for e, payload, _ in hits]
+    shown = min(len(top), bridge.k)                                     # what a plain read shows
+    items = [(p, pl) for p, pl in top if p != own][: bridge.k]
+    if len(items) < shown:                                              # the own was shown and no k + 1 th candidate exists
+        seen = {p for p, _ in top}
+        others = sorted(p for p in bridge.pointer_of.values() if p != own and p not in seen)
+        if others:
+            p = others[int(rng.integers(len(others)))]
+            items.append((p, bridge.j.payloads.get(p)))
+    return items
+
+
 def make_batch(bridge: JournalBridge, facts: list[Fact], negatives: list[Fact], n: int,
                rng: np.random.Generator, negatives_frac: float = 0.25, forced_frac: float = 0.5,
-               paraphrase_frac: float = 0.5, paired: bool = False) -> list[Example]:
+               paraphrase_frac: float = 0.5, paired: bool = False, keep_shape: bool = False) -> list[Example]:
     """`paired`: negatives are minimal pairs of the planted facts (the episode withheld)
-    instead of separate never planted entities."""
+    instead of separate never planted entities; `keep_shape`: the pair keeps k lines (v6)."""
     out = []
     for _ in range(n):
         if rng.random() < negatives_frac and (paired or negatives):
             if paired:
                 f = facts[int(rng.integers(len(facts)))]
-                out.append(make_paired_negative(bridge, f, rng, paraphrase=rng.random() < paraphrase_frac))
+                out.append(make_paired_negative(bridge, f, rng, paraphrase=rng.random() < paraphrase_frac,
+                                                keep_shape=keep_shape))
             else:
                 f = negatives[int(rng.integers(len(negatives)))]
                 out.append(make_example(bridge, f, True, 0.0, rng, paraphrase=rng.random() < paraphrase_frac))
