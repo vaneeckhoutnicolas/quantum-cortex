@@ -188,14 +188,27 @@ def _cli():
     ap.add_argument("--time-budget-min", type=float, default=None)
     ap.add_argument("--paths", nargs="*", default=None,
                     help="restrict to these path names (e.g. L3-+local-conv for the sigma run)")
+    ap.add_argument("--tiers", nargs="*", default=None, help="restrict to these tiers as KVxSEQ (e.g. 8x128 for the tier where L3 takes off); a subset aggregate, never a paired claim across tiers")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
+    tiers = parse_tiers(args.tiers)
     if args.quick:
-        run_resumable_ladder(seeds=(1, 2), tiers=[MQARTier(kv_pairs=4, seq_len=32)], steps=40,
+        run_resumable_ladder(seeds=(1, 2), tiers=tiers or [MQARTier(kv_pairs=4, seq_len=32)], steps=40,
                              ckpt_dir=args.ckpt_dir, resume_from=args.resume_from, d_model=32, paths=args.paths)
     else:
-        run_resumable_ladder(seeds=tuple(args.seeds), steps=args.steps, ckpt_dir=args.ckpt_dir,
+        run_resumable_ladder(seeds=tuple(args.seeds), tiers=tiers, steps=args.steps, ckpt_dir=args.ckpt_dir,
                              resume_from=args.resume_from, time_budget_min=args.time_budget_min, paths=args.paths)
+
+
+def parse_tiers(spec):
+    """'8x128 16x128' -> [MQARTier(8, 128), MQARTier(16, 128)]; None -> None (the default tiers)."""
+    if not spec:
+        return None
+    out = []
+    for s in spec:
+        kv, seq = s.lower().split("x")
+        out.append(MQARTier(kv_pairs=int(kv), seq_len=int(seq)))
+    return out
 
 
 if __name__ == "__main__":

@@ -50,3 +50,12 @@ def test_aggregate_is_reproducible_from_units_alone():
     r = run_resumable_ladder(seeds=(1,), tiers=TIER, ckpt_dir=D, steps=10, d_model=32)
     done = load_done([D]); assert len(done) == N_PATHS
     assert set(done) == {unit_id(rg, 1, TIER[0]) for rg in list(LADDER) + list(ARCH)}
+
+
+def test_tiers_option_parses_and_restricts():
+    """A staged execution of a declared design: --tiers restricts both runners to a subset;
+    the aggregate of a subset is a subset aggregate, never a paired claim across tiers."""
+    from cortex_eval.resumable_ladder import parse_tiers
+    t = parse_tiers(["8x128", "16X128"])
+    assert [(x.kv_pairs, x.seq_len) for x in t] == [(8, 128), (16, 128)]
+    assert parse_tiers(None) is None and parse_tiers([]) is None

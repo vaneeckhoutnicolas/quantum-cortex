@@ -137,13 +137,16 @@ def _cli():
     ap.add_argument("--reference-from", nargs="*", default=["metrics/mqar/ladder8-ckpt"],
                     help="dirs holding the ladder8 units (L3 pure and the control at the same seeds/tiers/steps)")
     ap.add_argument("--time-budget-min", type=float, default=None)
+    ap.add_argument("--tiers", nargs="*", default=None, help="restrict to these tiers as KVxSEQ (e.g. 8x128 for the tier where L3 takes off); a subset aggregate, never a paired claim across tiers")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
+    from cortex_eval.resumable_ladder import parse_tiers
+    tiers = parse_tiers(args.tiers)
     if args.quick:
-        run_resumable_rb(seeds=(1, 2), tiers=[MQARTier(kv_pairs=4, seq_len=32)], steps=40, ckpt_dir=args.ckpt_dir,
+        run_resumable_rb(seeds=(1, 2), tiers=tiers or [MQARTier(kv_pairs=4, seq_len=32)], steps=40, ckpt_dir=args.ckpt_dir,
                          resume_from=args.resume_from, reference_from=args.reference_from, arms=args.arms, d_model=32)
     else:
-        run_resumable_rb(seeds=tuple(args.seeds), steps=args.steps, ckpt_dir=args.ckpt_dir, resume_from=args.resume_from,
+        run_resumable_rb(seeds=tuple(args.seeds), tiers=tiers, steps=args.steps, ckpt_dir=args.ckpt_dir, resume_from=args.resume_from,
                          reference_from=args.reference_from, time_budget_min=args.time_budget_min, arms=args.arms)
 
 

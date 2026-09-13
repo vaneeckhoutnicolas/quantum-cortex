@@ -1,0 +1,102 @@
+{
+  "demonstration": "the organ as a component: use case 1, the long running project companion",
+  "timestamp_utc": "2026-09-13T21:41:00+00:00",
+  "code_path": "gated write path, sealed on disk journal, cue index; session B in a new process from the disk alone",
+  "cue_convention": "organ level, the Molaison protocol's: the entity is the address (hash seeded cue); paraphrase addressing is the model arm's job",
+  "cite_min": 0.5,
+  "session_a": {
+    "records_written": 12,
+    "storage": {
+      "mode": "durable",
+      "policy": "stop",
+      "degraded_reason": null,
+      "unpersisted_events": 0,
+      "plaintext_scope": false
+    }
+  },
+  "session_b": {
+    "process": "new (nothing of session A but the disk)",
+    "entries_reopened": 12,
+    "storage": {
+      "mode": "durable",
+      "policy": "stop",
+      "degraded_reason": null,
+      "unpersisted_events": 0,
+      "plaintext_scope": false
+    },
+    "transcript": [
+      {
+        "question": "what was decided about the originality argument, and on what ground?",
+        "address": "argument:originality",
+        "answer": "cite",
+        "pointer": "e76765c23f0b5248",
+        "record": "12 Jan: the originality argument is set aside on the strength of ruling 2024/AR/512 (Brussels Court of Appeal, 8 Nov 2023), which denies originality to template based layouts",
+        "score": 1.0
+      },
+      {
+        "question": "what is the scope of the 4 May hearing?",
+        "address": "hearing:4-May",
+        "answer": "cite",
+        "pointer": "a440242eb72dff49",
+        "record": "8 Apr: hearing of 4 May: pleadings limited to the database right and the authorship of exhibit 12; the originality argument stays out",
+        "score": 1.0
+      },
+      {
+        "question": "what happened to the first settlement offer?",
+        "address": "settlement:offer-1",
+        "answer": "cite",
+        "pointer": "46d63c08690ca559",
+        "record": "21 Mar: the first settlement offer (licence at 40 percent) is declined; the client wants recognition of authorship before any licence",
+        "score": 1.0
+      },
+      {
+        "question": "what is our primary proof of authorship?",
+        "address": "exhibit:git-history",
+        "answer": "cite",
+        "pointer": "e3a4b91f3f58c0d0",
+        "record": "3 Mar: exhibit 12, the git history 2008 to 2009, is retained as the primary proof of authorship; certified copy ordered",
+        "score": 1.0
+      },
+      {
+        "question": "what is our line on the court expert?",
+        "address": "expert:Barbieux",
+        "answer": "cite",
+        "pointer": "23eb789fda14c7af",
+        "record": "2 Feb: the court expert Barbieux is to be challenged on method: his report compares source trees without dating the commits",
+        "score": 1.0
+      },
+      {
+        "question": "what did witness Dupont say?",
+        "address": "witness:Dupont",
+        "answer": "abstain",
+        "pointer": null,
+        "record": null,
+        "score": 0.328
+      },
+      {
+        "question": "was invoice 2019-042 paid?",
+        "address": "invoice:2019-042",
+        "answer": "abstain",
+        "pointer": null,
+        "record": null,
+        "score": 0.0
+      },
+      {
+        "question": "what does ruling 2022/AR/77 hold?",
+        "address": "ruling:2022/AR/77",
+        "answer": "abstain",
+        "pointer": null,
+        "record": null,
+        "score": 0.0
+      }
+    ]
+  },
+  "summary": {
+    "planted_questions": 5,
+    "cited_with_the_right_pointer": 5,
+    "never_written_questions": 3,
+    "abstained": 3,
+    "max_score_on_never_written": 0.328,
+    "min_score_on_planted": 1.0
+  }
+}
