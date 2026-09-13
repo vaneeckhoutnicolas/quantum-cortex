@@ -76,3 +76,19 @@ The v5 pair (`db028e6a4262`, RESULTS row 25) removed the own pointer from the k 
 **Invariants and their tests (tests/test_c2b_lm_bridge.py):** silent at step zero and fires at the decision position only; the label comes from the read, not the ground truth; the head's loss falls under its supervision on a tiny batch; the fields are hash transparent and a parent without the head loads strictly with the head fresh; the probe reports the judgment in process and from the disk; the trainer's CPU smoke on the v7 configuration.
 
 **Readings declared before the run.** Claims on absent entities fall toward the line with the grounding held: seeds 2 and 3. The head judges well (accuracy high on both arms) and the claims stay: the coupling, one variable. The head judges at chance: the comparison is not in these two vectors at this size, and the next question is the reader's representation, not the decision. No prediction.
+
+## Amendment 2026-09-14 (second) — the decode policies: the closing test of step 4, declared before any measurement
+
+**Why.** Three organs measure well: the encoder retrieves (0.98), the reader reads (0.98 of its attention on the retrieved bytes) and, from v7 on, a head judges whether the queried entity is in the window. What fails is the byte by byte generation of the decision and of the citation, trained through the language modelling loss. The founder asked (2026-09-13) that step 4 be closed one way or the other. The closing test gives the decision and the citation to the organs that work, and measures the maximal use of what the model holds: if that does not pass, nothing softer will, and the limit is written at this size.
+
+**The policies (`cortex_c2b/hm_lm.py`, `generate(policy=...)`), evaluated in session B, a new process, on the same checkpoint and sealed journal, without retraining:**
+- `plain` — every token from the model's argmax, the head at most a bias on the decision logits: v7 as trained.
+- `head` — the matching head decides: m ≤ 0 emits the abstention; m > 0 forces `<CITE>` and the model generates the label and the attribute.
+- `head+pointer` — the head decides, and the label is read off the reader's attention: the window line with the most attention from the decision position (heads averaged, the null slot excluded); the model generates only the attribute.
+Without a window, or without a head, every policy is the plain one, so the OFF arm and the skill arm are untouched.
+
+**What is measured and what is not.** Session B evaluates the four gate conditions a new process can evaluate (gap ≥ 0.50, recall off the window ≤ the floor, invalid citations ≤ 0.01, claims on never planted entities < 0.10) and reports them with the policy's name; the skill delta is a property of the model on ordinary text and does not depend on the decode policy: the in process value stands. The thresholds are the frozen ones. A policy file is named `hm-lm-<run_id>-session-b-<policy>.json`; the plain session B keeps its name.
+
+**Readings declared before the measurement.** A policy passes the four conditions on this seed: seeds 2 and 3 of v7 under that policy, and the pass is gated or held. `head` passes the absent entity line and not the invalid citation line: the citation is the remaining fault, and `head+pointer` is its measure. `head+pointer` passes neither: the comparison is not in the head's two vectors or the citation is not in the reader's attention at this size, and the limit is written as measured at the maximal mechanism. No prediction.
+
+**Tests (tests/test_c2b_lm_bridge.py):** the head's sign decides and the pointer cites the attended line; the pointer follows the attention mass and returns nothing on a window without labels; session B reports the policy and the four conditions for each of the three.

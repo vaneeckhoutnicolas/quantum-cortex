@@ -525,3 +525,71 @@ def test_probe_reports_the_head_judgment_and_session_b_carries_it(tmp_path):
     b = session_b_from_disk(ck, jpath, cfg, n_facts=12, n_negctrl=6, seed=0, k=cfg.journal_k,
                             budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
     assert b["hm_match_acc_on"] == r["hm_match_acc_on"] and b["hm_recall_on"] == r["hm_recall_on"]
+
+
+# ------------------------------------------------------------------ the decode policies (ADR-008 amendment 2026-09-14)
+def test_decode_policies_head_decides_and_pointer_cites_the_attended_line():
+    """`head`: the head's sign decides (abstention when m <= 0, a forced <CITE> when m > 0);
+    `head+pointer`: the label is the line with the most reader attention; `plain` is the
+    model's argmax; without a window every policy is the plain one."""
+    from cortex_c2b.hm_lm import generate, pointer_label, POLICIES
+    cfg, m, jb, facts, negs = _planted_bridge()
+    f = next(f for f in facts if f.entity in jb.pointer_of)
+    q = encode_query(f.query); cue = jb.cues([q])[0]; read = jb.read(cue)
+    wt, wm = jb.window_tensors([read.window], cfg.journal_read_bytes)
+    with torch.no_grad():
+        m.match_head.out.bias.fill_(-4.0)                                       # "absent"
+    for policy in ("head", "head+pointer"):
+        toks, _ = generate(m, q, wt, wm, gate=1.0, policy=policy, window_bytes=read.window)
+        assert parse_contract(toks)[0] == "unknown"
+    with torch.no_grad():
+        m.match_head.out.bias.fill_(4.0)                                        # "present"
+    toks, _ = generate(m, q, wt, wm, gate=1.0, policy="head", window_bytes=read.window)
+    assert toks[0] == TOK_CITE
+    toks, _ = generate(m, q, wt, wm, gate=1.0, policy="head+pointer", window_bytes=read.window)
+    kind, label, attr = parse_contract(toks)
+    assert kind in ("cite", "malformed") and toks[0] == TOK_CITE and toks[1] in LABELS and toks[2] == TOK_ANS
+    assert toks[1] == pointer_label(m, read.window) and toks[1] in read.labels
+    plain, _ = generate(m, q, wt, wm, gate=1.0, policy="plain", window_bytes=read.window)
+    off_a, _ = generate(m, q, None, None, gate=0.0, policy="head+pointer")
+    off_b, _ = generate(m, q, None, None, gate=0.0, policy="plain")
+    assert off_a == off_b                                                       # no window: the plain policy
+    assert set(POLICIES) == {"plain", "head", "head+pointer"}
+    with pytest.raises(ValueError):
+        generate(m, q, wt, wm, policy="oracle")
+
+
+def test_pointer_label_follows_the_attention_mass():
+    """The pointer reads the reader's attention map: the label of the line that holds the
+    most mass, null slot excluded; None when the window has no labelled line."""
+    from cortex_c2b.hm_lm import pointer_label
+    cfg, m = tiny(seed=1, journal_match_head=True); m.eval()
+    window = b"A:one line\nB:another line\nC:third\n"
+    blk = m.blocks[cfg.journal_block]
+    r = len(window)
+    attn = torch.zeros(1, cfg.journal_heads, 1, r + 1)
+    start_b = window.index(b"B:"); end_b = window.index(b"\n", start_b)
+    attn[0, :, 0, 1 + start_b: 2 + end_b] = 1.0                                   # all the mass on line B
+    blk.reader.last_attn = attn
+    assert pointer_label(m, window) == ord("B")
+    attn.zero_(); attn[0, :, 0, 1 + window.index(b"C:"):] = 1.0
+    assert pointer_label(m, window) == ord("C")
+    assert pointer_label(m, b"no labels here\n") is None
+
+
+def test_session_b_reports_a_policy_and_the_four_conditions(tmp_path):
+    from cortex_c2b.hm_lm import run_hm_lm, session_b_from_disk
+    from cortex_c2b.crypto import generate_key
+    cfg, m = tiny(seed=6, journal_match_head=True); m.eval()
+    key = generate_key(); jpath = tmp_path / "journal.jsonl"
+    run_hm_lm(m, lambda: Journal(jpath, key=key, policy=POLICY_STOP), n_facts=12, n_negctrl=6, seed=0,
+              k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes, on_disk=True)
+    ck = tmp_path / "ckpt.pt"
+    torch.save({"model": m.state_dict(), "run_id": "t", "config_hash": train.config_hash(cfg), "step": 0}, ck)
+    os.environ["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()
+    for policy in ("plain", "head", "head+pointer"):
+        b = session_b_from_disk(ck, jpath, cfg, n_facts=12, n_negctrl=6, seed=0, k=cfg.journal_k,
+                                budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes, policy=policy)
+        assert b["policy"] == policy and b["gate_conditions_without_skill_arm"] in (0, 1)
+        assert b["verdict_without_skill_arm"].split(" -- ")[0] in ("PASS", "FAIL", "INVALID")
+        assert "hm_gap" in b and "run_valid" in b

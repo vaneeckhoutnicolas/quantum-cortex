@@ -126,6 +126,7 @@ class JournalReader(nn.Module):
         read = (p @ v).transpose(1, 2).contiguous().view(b, t, c)
         mass = p[..., 1:].sum(dim=-1).mean()                   # attention on real bytes, null slot excluded
         self.last_attended = read                              # RES-21: what was read, before the zero init projection
+        self.last_attn = p.detach()                            # (b, h, t, r + 1): the pointer policy reads it at decode
         return self.out(read), mass
 
 

@@ -39,42 +39,99 @@ import torch
 from cortex_c2b import Journal, MODE_DURABLE, POLICY_STOP, lifecycle_declaration
 from cortex_c2b.hm_protocol import (Fact, generate_facts, SCHEMAS, _ATTRS, DELTA, EPSILON_S,
                                     FLOOR_MARGIN, NEGCTRL_INVALID, N_FACTS, N_NEGCTRL)
-from cortex_c2b.lm_bridge import (JournalBridge, encode_query, parse_contract, build_read_window, NEWLINE, TOK_EPI)
+from cortex_c2b.lm_bridge import (JournalBridge, encode_query, parse_contract, build_read_window, NEWLINE, TOK_EPI,
+                                  TOK_CITE, TOK_ANS, TOK_UNKNOWN, LABELS)
 from cortex_c2b.write_path import WritePath
 from cortex_c2b.read_path import JournalPath
 
 INVALID_CITATION_MAX = 0.01      # declared 2026-09-12, before any run on the model
 
 
+POLICIES = ("plain", "head", "head+pointer")
+
+
+def pointer_label(model, window_bytes: bytes) -> int | None:
+    """The pointer policy's citation: the label of the window line that received the
+    most of the reader's attention from the decision position (heads averaged, the
+    null slot excluded), read from the reader's last attention map. None when the
+    window has no labelled line."""
+    attn = None
+    for blk in model.blocks:
+        r = getattr(blk, "reader", None)
+        if r is not None and getattr(r, "last_attn", None) is not None:
+            attn = r.last_attn[0, :, -1, 1:].mean(dim=0)         # (r,): the decision position, real bytes only
+    if attn is None:
+        return None
+    best, best_mass = None, -1.0
+    start = 0
+    n = len(window_bytes)
+    while start < n:
+        end = window_bytes.find(bytes([NEWLINE]), start)
+        end = n if end < 0 else end
+        label = window_bytes[start] if end > start else None
+        if label in LABELS:
+            stop = min(end + 1, attn.numel())
+            m = float(attn[start:stop].sum()) if stop > start else -1.0
+            if m > best_mass:
+                best, best_mass = label, m
+        start = end + 1
+    return best
+
+
 @torch.no_grad()
 def generate(model, prefix: list[int], window_tokens=None, window_mask=None, gate: float = 1.0,
-             max_new: int = 48) -> tuple[list[int], float | None]:
+             max_new: int = 48, policy: str = "plain", window_bytes: bytes | None = None) -> tuple[list[int], float | None]:
     """Greedy byte-level decoding until a newline. Returns (new tokens, the
-    reader's attention mass at the first decoding step)."""
+    reader's attention mass at the first decoding step).
+
+    `policy` (ADR-008 amendment of 2026-09-14, declared before any measurement):
+      plain        -- every token from the model's argmax, the head at most a bias (v7 as trained);
+      head         -- the matching head decides: m <= 0 emits the abstention, m > 0 forces <CITE>
+                      and the model generates the label and the attribute;
+      head+pointer -- the head decides, and the label is read off the reader's attention
+                      (the line with the most attention from the decision position); the
+                      model generates only the attribute.
+    Without a window, or without a head, every policy is the plain one."""
+    if policy not in POLICIES:
+        raise ValueError(f"unknown policy {policy!r}; one of {POLICIES}")
     device = next(model.parameters()).device
     idx = torch.tensor([prefix], dtype=torch.long, device=device)
-    out, mass = [], None
+    out, mass, match = [], None, None
+    has_head = getattr(model, "match_head", None) is not None
+    forced: list[int] = []
     for step in range(max_new):
         # RES-21: the matching head fires at the decision position only, i.e. on the first step
         dpos = (torch.tensor([idx.size(1) - 1], device=device)
-                if (step == 0 and getattr(model, "match_head", None) is not None and window_tokens is not None) else None)
+                if (step == 0 and has_head and window_tokens is not None) else None)
         logits, _ = model(idx[:, -model.cfg.block_size:], window_tokens=window_tokens,
                           window_mask=window_mask, gate=gate, decision_pos=dpos)
         if step == 0:
             mass = model.read_mass()
             match = getattr(model, "last_match_logit", None)   # the head's judgment at the decision step
-        nxt = int(logits[0, -1].argmax())
+            if policy != "plain" and has_head and window_tokens is not None and match is not None:
+                if float(match[0]) <= 0.0:
+                    out = [TOK_UNKNOWN, NEWLINE]
+                    break
+                forced = [TOK_CITE]
+                if policy == "head+pointer":
+                    label = pointer_label(model, window_bytes or b"")
+                    if label is not None:
+                        forced += [label, TOK_ANS]
+        if forced:
+            nxt = forced.pop(0)
+        else:
+            nxt = int(logits[0, -1].argmax())
         out.append(nxt)
         if nxt == NEWLINE:
             break
         idx = torch.cat([idx, torch.tensor([[nxt]], device=device)], dim=1)
-    if getattr(model, "match_head", None) is not None:
+    if has_head:
         model.last_match_logit = match                          # later steps reset it; the probe reads the decision step's
     return out, mass
 
 
 def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, window_len: int,
-           pointer_of: dict[str, str]) -> dict:
+           pointer_of: dict[str, str], policy: str = "plain") -> dict:
     """One arm over a fact list. `pointer_of`: entity -> pointer for planted facts
     (empty for the negative control)."""
     n = max(1, len(facts))
@@ -87,7 +144,7 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             cue = bridge.cues([query])[0]
             read = bridge.read(cue)
             wt, wm = bridge.window_tensors([read.window], window_len)
-            toks, mass = generate(model, query, wt, wm, gate=1.0)
+            toks, mass = generate(model, query, wt, wm, gate=1.0, policy=policy, window_bytes=read.window)
             if mass is not None:
                 masses.append(mass)
             present = (pointer_of.get(f.entity) in read.pointers) if pointer_of else False
@@ -300,9 +357,21 @@ def shape_probe_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, 
     return r
 
 
+def _verdict(on: dict, off: dict, neg_on: dict, floor: float) -> dict:
+    """The four gate conditions a new process can evaluate without the skill arm (the skill
+    delta is a property of the model on ordinary text and does not depend on the decode
+    policy; the in process value stands): gap >= delta, off <= floor, invalid citations
+    <= 0.01, claims on never planted entities < 0.10."""
+    gap = on["recall_strict"] - off["recall_strict"]
+    valid = neg_on["guess_rate"] < NEGCTRL_INVALID
+    four = (gap >= DELTA and off["recall_strict"] <= floor and on["invalid_citation_rate"] <= INVALID_CITATION_MAX and valid)
+    return {"hm_gap": gap, "run_valid": valid, "gate_conditions_without_skill_arm": int(four),
+            "verdict_without_skill_arm": ("PASS" if four else ("INVALID" if not valid else "FAIL")) + " -- the skill delta is the in process arm's"}
+
+
 def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
                         seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256,
-                        train_pool_seed: int | None = None, train_pool_n: int = 200) -> dict:
+                        train_pool_seed: int | None = None, train_pool_n: int = 200, policy: str = "plain") -> dict:
     """Reopen everything from the disk alone and probe. The planted facts are found
     by content addressing (a statement's pointer is the hash of its bytes), so no
     state of session A is needed beyond the journal file and the checkpoint."""
@@ -319,9 +388,9 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     neg, _ = generate_facts(n_negctrl, seed + 10_000)
     pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
                   if content_hash(f.statement.encode("utf-8")) in journal.payloads}
-    on = _probe(model, bridge, facts, True, window_len, pointer_of)
-    off = _probe(model, bridge, facts, False, window_len, pointer_of)
-    neg_on = _probe(model, bridge, neg, True, window_len, {})
+    on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy)
+    off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy)
+    neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy)
     storage = lifecycle_declaration(journal)["storage"]
     # the memorisation probe (run dc34fcf000aa): the same contract on entities the model SAW during training
     # (the first training pool), planted into a memory scope; a model that reads its window scores alike on
@@ -332,11 +401,14 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
         tf, _, _ = training_facts(train_pool_n, seed=train_pool_seed)
         jb2 = JournalBridge(model, Journal(), k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 2, device=device)
         plant_pool(jb2, tf)
-        tp = _probe(model, jb2, tf, True, window_len, dict(jb2.pointer_of))
+        tp = _probe(model, jb2, tf, True, window_len, dict(jb2.pointer_of), policy=policy)
         train_probe = {"seed": train_pool_seed, "n": len(tf), "recall_strict": tp["recall_strict"],
                        "valid_citation": tp["valid_citation_rate"], "invalid_citation": tp["invalid_citation_rate"],
                        "abstain_rate": tp["abstain_rate"], "retrieval_hit": tp["retrieval_hit"]}
-    return {"benchmark": "hm_protocol_lm_session_b_new_process", "training_pool_probe": train_probe,
+    chance = float(np.mean([1.0 / len(_ATTRS[s]) for s in SCHEMAS])); floor = chance + FLOOR_MARGIN
+    verdict_fields = _verdict(on, off, neg_on, floor)
+    return {"benchmark": "hm_protocol_lm_session_b_new_process", "policy": policy, **verdict_fields,
+            "training_pool_probe": train_probe,
             "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
                            "step": ck.get("step")},
             "journal": {"path": str(journal_path), "entries": len(journal), "mode": storage["mode"],
@@ -365,6 +437,8 @@ def _cli():
     ap.add_argument("--n-facts", type=int, default=N_FACTS); ap.add_argument("--n-negctrl", type=int, default=N_NEGCTRL)
     ap.add_argument("--probe-training-pool", action="store_true",
                     help="also probe the contract on the run's FIRST training pool (entities seen in training): memorisation evidence")
+    ap.add_argument("--policy", default="plain", choices=list(POLICIES),
+                    help="decode policy (ADR-008 amendment 2026-09-14): plain | head | head+pointer")
     args = ap.parse_args()
     if not (args.session_b or args.shape_probe):
         ap.error("one of --session-b / --shape-probe is required")
@@ -381,8 +455,9 @@ def _cli():
     r = session_b_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl,
                             seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
                             train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),
-                            train_pool_n=cfg.journal_pool_facts)
-    out = Path(args.out) if args.out else Path("metrics/mqar") / f"hm-lm-{r['checkpoint']['run_id']}-session-b.json"
+                            train_pool_n=cfg.journal_pool_facts, policy=args.policy)
+    suffix = "" if args.policy == "plain" else "-" + args.policy.replace("+", "-")
+    out = Path(args.out) if args.out else Path("metrics/mqar") / f"hm-lm-{r['checkpoint']['run_id']}-session-b{suffix}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
     print(f"retained: {out}")
