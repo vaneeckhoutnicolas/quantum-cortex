@@ -141,14 +141,38 @@ def make_example(bridge: JournalBridge, fact: Fact, negative: bool, forced_frac:
                    False, fact.entity, fact.attr, statement)
 
 
+def make_paired_negative(bridge: JournalBridge, fact: Fact, rng: np.random.Generator,
+                         paraphrase: bool = False) -> Example:
+    """The minimal pair (v5 lever, run 6f10e8cbfebf): the SAME planted fact, its own episode
+    WITHHELD from the window, everything else as read; target abstain. Four runs showed the
+    decision to cite or abstain following the share of negatives seen in training (a class
+    prior) far more than the window's content; with pairs the prior earns nothing, and the
+    only way down the loss is to check whether the queried entity is in the read."""
+    question = fact.paraphrase if paraphrase else fact.query
+    query = encode_query(question)
+    cue = bridge.cues([query])[0]
+    read = bridge.read(cue)
+    own = bridge.pointer_of.get(fact.entity)
+    items = [(p, bridge.j.payloads.get(p)) for p in read.pointers if p != own]
+    window, labels = build_read_window(items, bridge.budget, rng)
+    return Example("negative", query, encode_target(None, None), window, labels, False,
+                   fact.entity, fact.attr, list(fact.statement.encode("utf-8")))
+
+
 def make_batch(bridge: JournalBridge, facts: list[Fact], negatives: list[Fact], n: int,
                rng: np.random.Generator, negatives_frac: float = 0.25, forced_frac: float = 0.5,
-               paraphrase_frac: float = 0.5) -> list[Example]:
+               paraphrase_frac: float = 0.5, paired: bool = False) -> list[Example]:
+    """`paired`: negatives are minimal pairs of the planted facts (the episode withheld)
+    instead of separate never planted entities."""
     out = []
     for _ in range(n):
-        if negatives and rng.random() < negatives_frac:
-            f = negatives[int(rng.integers(len(negatives)))]
-            out.append(make_example(bridge, f, True, 0.0, rng, paraphrase=rng.random() < paraphrase_frac))
+        if rng.random() < negatives_frac and (paired or negatives):
+            if paired:
+                f = facts[int(rng.integers(len(facts)))]
+                out.append(make_paired_negative(bridge, f, rng, paraphrase=rng.random() < paraphrase_frac))
+            else:
+                f = negatives[int(rng.integers(len(negatives)))]
+                out.append(make_example(bridge, f, True, 0.0, rng, paraphrase=rng.random() < paraphrase_frac))
         else:
             f = facts[int(rng.integers(len(facts)))]
             out.append(make_example(bridge, f, False, forced_frac, rng, paraphrase=rng.random() < paraphrase_frac))

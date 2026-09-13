@@ -324,3 +324,33 @@ def test_negatives_fraction_is_a_declared_lever():
     ex = make_batch(jb, facts, negs, 400, rng, negatives_frac=0.5, forced_frac=0.0)
     share = sum(1 for e in ex if e.kind == "negative") / len(ex)
     assert 0.4 < share < 0.6
+
+
+def test_paired_negatives_withhold_the_own_episode_and_target_abstention():
+    """The minimal pair: same planted fact, its episode removed from the window, everything
+    else as read, target <UNKNOWN>; the positive twin of the same fact cites it."""
+    from cortex_c2b.organ_use import training_facts, plant_pool, make_paired_negative, make_example, make_batch
+    cfg, m = tiny(seed=5); m.eval()
+    facts, negs, _ = training_facts(30, seed=100_000)
+    jb = JournalBridge(m, Journal(), k=3, budget_bytes=160, seed=0, shuffle_seed=1)
+    plant_pool(jb, facts)
+    rng = np.random.default_rng(0)
+    n_checked = 0
+    admitted = [f for f in facts if f.entity in jb.pointer_of]              # the write path may refuse a few
+    assert len(admitted) >= 20
+    for f in admitted:
+        neg = make_paired_negative(jb, f, rng)
+        own = jb.pointer_of[f.entity]
+        assert own not in neg.labels.values()                              # the own episode is withheld
+        assert f.statement.encode("utf-8") not in neg.window
+        assert neg.kind == "negative" and neg.target == make_example(jb, negs[0], True, 0.0, rng).target
+        pos = make_example(jb, f, False, 1.0, rng)                          # the twin, episode present (forced if not retrieved)
+        assert pos.kind in ("answer", "forced") and own in pos.labels.values()
+        n_checked += 1
+    assert n_checked == len(admitted)
+    ex = make_batch(jb, facts, negs, 300, rng, negatives_frac=0.5, forced_frac=0.0, paired=True)
+    negatives = [e for e in ex if e.kind == "negative"]
+    assert 0.4 < len(negatives) / len(ex) < 0.6
+    assert all(e.entity in {f.entity for f in facts} for e in negatives)   # paired negatives are planted entities
+    assert train.config_hash(train.Config(journal_paired_negatives=True)) != train.config_hash(train.Config())
+    assert train.config_hash(train.Config(journal_paired_negatives=False)) == train.config_hash(train.Config())

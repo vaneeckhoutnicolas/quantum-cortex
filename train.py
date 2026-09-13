@@ -86,6 +86,8 @@ class Config:
     journal_route: str = "pinned_on"     # pinned_on | pinned_off | router  (the H.M. arms pin; the router is measured apart)
     journal_asym_weight: float = 2.0     # loss weight on the decision token of an abstention target (answering instead of abstaining costs more)
     journal_neg_frac: float = 0.25       # share of curriculum examples on never planted entities (target <UNKNOWN>); v4 lever (run ce008745375a)
+    journal_paired_negatives: bool = False   # v5 lever (run 6f10e8cbfebf): negatives are minimal pairs, the same planted fact with its
+                                             # episode withheld from the window, so the decision must depend on the read, not on a class prior
     journal_forced_frac: float = 0.5     # bootstrap: share of missed retrievals where the right episode is forced into the window, decays to 0
     journal_curriculum_ratio: float = 0.5  # share of training steps spent on organ use examples (the rest: ordinary language modelling)
     journal_contrastive_weight: float = 1.0
@@ -137,7 +139,8 @@ def load_config(path: str) -> Config:
 # configuration written before the lever existed keeps its hash (run dc34fcf000aa stays
 # 6785ba1f8e213dce, 5f0a6d3ff4e8 stays b9e10b3e0a9e5938); moved, the lever enters the hash
 # like any other field.
-HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window": False, "journal_neg_frac": 0.25}
+HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window": False, "journal_neg_frac": 0.25,
+                               "journal_paired_negatives": False}
 
 
 def config_hash(cfg: Config) -> str:
@@ -559,7 +562,8 @@ def main() -> None:
         facts, negatives, rep_facts = training_facts(cfg.journal_pool_facts, cfg.journal_train_seed)
         print(f"[journal] curriculum facts {rep_facts['n_facts']} negatives {rep_facts['n_negatives']} "
               f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}"
-              f" | fresh pool per replant: {cfg.journal_fresh_pool} | window on LM steps: {cfg.journal_lm_window}")
+              f" | fresh pool per replant: {cfg.journal_fresh_pool} | window on LM steps: {cfg.journal_lm_window}"
+              f" | negatives {cfg.journal_neg_frac} paired: {cfg.journal_paired_negatives}")
         def run_journal():
             """The run's own scope: sealed on disk (key from the environment), policy stop --
             a measurement run never continues in memory unnoticed (ADR-007 D9)."""
@@ -672,7 +676,8 @@ def main() -> None:
                 forced = cfg.journal_forced_frac * max(0.0, 1.0 - progress)      # the bootstrap decays to zero
                 model.eval()
                 examples = make_batch(jb, journal_ctx["facts"], journal_ctx["negatives"], cfg.batch_size,
-                                      journal_ctx["rng"], negatives_frac=cfg.journal_neg_frac, forced_frac=forced)
+                                      journal_ctx["rng"], negatives_frac=cfg.journal_neg_frac, forced_frac=forced,
+                                      paired=cfg.journal_paired_negatives)
                 model.train()
                 x, y, w, wt, wm, qseq, sseq = collate(jb, examples, cfg.journal_asym_weight, cfg.journal_read_bytes)
                 gate = journal_gate(cfg.journal_route) if cfg.journal_route != "router" else 1.0   # a learned router is measured apart (D9 held)
