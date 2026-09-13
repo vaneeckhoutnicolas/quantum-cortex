@@ -8,6 +8,8 @@ Built by one researcher with a language model as design, implementation and revi
 
 ---
 
+**Status board:** [`docs/STATUS-2026-09-13.md`](docs/STATUS-2026-09-13.md) — the sequence of steps, what each validated, what is tried next, in plain words, and what carries to a larger model.
+
 ## What exists today (verify each line)
 
 | | Result | Evidence |
