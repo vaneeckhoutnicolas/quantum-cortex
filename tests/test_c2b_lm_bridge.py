@@ -310,3 +310,17 @@ def test_session_b_probe_on_the_training_pool_reports_memorisation_evidence(tmp_
         del os.environ["QUANTUM_CORTEX_JOURNAL_KEY"]
     tp = r["training_pool_probe"]
     assert tp["seed"] == 100_000 and tp["n"] == 10 and {"recall_strict", "valid_citation", "invalid_citation", "abstain_rate", "retrieval_hit"} <= set(tp)
+
+
+def test_negatives_fraction_is_a_declared_lever():
+    assert train.config_hash(train.Config(journal_neg_frac=0.25)) == train.config_hash(train.Config())     # default: transparent
+    assert train.config_hash(train.Config(journal_neg_frac=0.5)) != train.config_hash(train.Config())
+    cfg, m = tiny(seed=3); m.eval()
+    from cortex_c2b.organ_use import training_facts, plant_pool, make_batch
+    facts, negs, _ = training_facts(30, seed=100_000)
+    jb = JournalBridge(m, Journal(), k=3, budget_bytes=96, seed=0, shuffle_seed=1)
+    plant_pool(jb, facts)
+    rng = np.random.default_rng(0)
+    ex = make_batch(jb, facts, negs, 400, rng, negatives_frac=0.5, forced_frac=0.0)
+    share = sum(1 for e in ex if e.kind == "negative") / len(ex)
+    assert 0.4 < share < 0.6

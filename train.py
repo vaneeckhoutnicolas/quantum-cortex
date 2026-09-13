@@ -85,6 +85,7 @@ class Config:
     journal_heads: int = 4               # heads of the reader's cross attention
     journal_route: str = "pinned_on"     # pinned_on | pinned_off | router  (the H.M. arms pin; the router is measured apart)
     journal_asym_weight: float = 2.0     # loss weight on the decision token of an abstention target (answering instead of abstaining costs more)
+    journal_neg_frac: float = 0.25       # share of curriculum examples on never planted entities (target <UNKNOWN>); v4 lever (run ce008745375a)
     journal_forced_frac: float = 0.5     # bootstrap: share of missed retrievals where the right episode is forced into the window, decays to 0
     journal_curriculum_ratio: float = 0.5  # share of training steps spent on organ use examples (the rest: ordinary language modelling)
     journal_contrastive_weight: float = 1.0
@@ -132,15 +133,16 @@ def load_config(path: str) -> Config:
     return cfg
 
 
-# Levers added after runs were recorded: absent from the hash while OFF, so a configuration
-# written before the lever existed keeps its hash (run dc34fcf000aa stays 6785ba1f8e213dce);
-# ON, the lever enters the hash like any other field.
-HASH_TRANSPARENT_WHEN_OFF = {"journal_fresh_pool", "journal_lm_window"}
+# Levers added after runs were recorded: absent from the hash while at their default, so a
+# configuration written before the lever existed keeps its hash (run dc34fcf000aa stays
+# 6785ba1f8e213dce, 5f0a6d3ff4e8 stays b9e10b3e0a9e5938); moved, the lever enters the hash
+# like any other field.
+HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window": False, "journal_neg_frac": 0.25}
 
 
 def config_hash(cfg: Config) -> str:
     d = {k: v for k, v in dataclasses.asdict(cfg).items()
-         if k not in CONFIG_HASH_EXCLUDE and not (k in HASH_TRANSPARENT_WHEN_OFF and v is False)}
+         if k not in CONFIG_HASH_EXCLUDE and not (k in HASH_TRANSPARENT_AT_DEFAULT and v == HASH_TRANSPARENT_AT_DEFAULT[k])}
     return hashlib.sha256(json.dumps(d, sort_keys=True).encode()).hexdigest()[:16]
 
 
@@ -670,7 +672,7 @@ def main() -> None:
                 forced = cfg.journal_forced_frac * max(0.0, 1.0 - progress)      # the bootstrap decays to zero
                 model.eval()
                 examples = make_batch(jb, journal_ctx["facts"], journal_ctx["negatives"], cfg.batch_size,
-                                      journal_ctx["rng"], forced_frac=forced)
+                                      journal_ctx["rng"], negatives_frac=cfg.journal_neg_frac, forced_frac=forced)
                 model.train()
                 x, y, w, wt, wm, qseq, sseq = collate(jb, examples, cfg.journal_asym_weight, cfg.journal_read_bytes)
                 gate = journal_gate(cfg.journal_route) if cfg.journal_route != "router" else 1.0   # a learned router is measured apart (D9 held)
