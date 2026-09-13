@@ -228,7 +228,7 @@ def test_the_model_and_its_journal_survive_a_full_process_restart(tmp_path):
 
 # ------------------------------------------------------------------ invariant 9: the trainer, end to end (CI runs the slow ones)
 @pytest.mark.slow
-@pytest.mark.parametrize("config", ["configs/smoke_journal_cpu.json", "configs/smoke_journal_v2_cpu.json", "configs/smoke_journal_v6_cpu.json"])
+@pytest.mark.parametrize("config", ["configs/smoke_journal_cpu.json", "configs/smoke_journal_v2_cpu.json", "configs/smoke_journal_v6_cpu.json", "configs/smoke_journal_v7_cpu.json"])
 def test_cpu_smoke_trains_the_journal_and_records_the_lm_arm(config):
     ledger, latest = ROOT / "metrics" / "runs.jsonl", ROOT / "metrics" / "LATEST.md"
     lb = ledger.read_text() if ledger.exists() else None
@@ -411,3 +411,117 @@ def test_shape_probe_builds_the_four_windows_it_declares():
     assert r["absent_k_lines"]["lines_mean"] == r["absent_short"]["lines_mean"] + 1
     assert r["planted_withheld_short"]["n"] == r["planted_withheld_kept"]["n"] == r["pairs_with_own_retrieved"]
     assert r["absent_k_lines"]["n"] == r["absent_short"]["n"] == 8
+
+
+# ------------------------------------------------------------------ RES-21: the matching head (ADR-008, amendment 2026-09-14)
+def _planted_bridge(seed=5, k=3, n=30):
+    from cortex_c2b.organ_use import training_facts, plant_pool
+    cfg, m = tiny(seed=seed, journal_match_head=True); m.eval()
+    facts, negs, _ = training_facts(n, seed=100_000)
+    jb = JournalBridge(m, Journal(), k=k, budget_bytes=160, seed=0, shuffle_seed=1)
+    plant_pool(jb, facts)
+    return cfg, m, jb, facts, negs
+
+
+def test_match_head_is_silent_at_step_zero_and_fires_at_the_decision_position_only():
+    """Invariant: the head starts at zero (no bias, the parent intact); when it has learned
+    something, it changes the decision token's logits at the decision position and nothing
+    else; without a window it does not fire at all."""
+    from cortex_c2b.organ_use import make_batch, match_tensors
+    cfg, m, jb, facts, negs = _planted_bridge()
+    rng = np.random.default_rng(0)
+    ex = make_batch(jb, facts, negs, 6, rng, negatives_frac=0.5, forced_frac=0.0, paired=True, keep_shape=True)
+    x, y, w, wt, wm, _, _ = collate(jb, ex, 2.0, cfg.journal_read_bytes)
+    mt, dpos = match_tensors(ex, x.device)
+    base, _ = m(x, window_tokens=wt, window_mask=wm, gate=1.0)
+    biased, _ = m(x, window_tokens=wt, window_mask=wm, gate=1.0, decision_pos=dpos)
+    assert torch.allclose(base, biased)                                      # zero init: no bias at step 0
+    assert m.last_match_logit is not None and torch.all(m.last_match_logit == 0)
+    with torch.no_grad():                                                     # give the head an opinion
+        m.match_head.out.bias.fill_(3.0)
+    fired, _ = m(x, window_tokens=wt, window_mask=wm, gate=1.0, decision_pos=dpos)
+    diff = (fired - base).abs()
+    ar = torch.arange(x.size(0))
+    assert torch.all(diff[ar, dpos, TOK_CITE] > 0) and torch.all(diff[ar, dpos, TOK_UNKNOWN] > 0)
+    diff[ar, dpos, TOK_CITE] = 0; diff[ar, dpos, TOK_UNKNOWN] = 0
+    assert torch.all(diff == 0)                                               # nothing else moved
+    off, _ = m(x, gate=0.0, decision_pos=dpos)                                # no window: the head does not fire
+    assert m.last_match_logit is None
+    off2, _ = m(x, window_tokens=wt, window_mask=wm, gate=0.0, decision_pos=dpos)
+    assert m.last_match_logit is None and torch.allclose(off, off2)
+
+
+def test_match_label_comes_from_the_read_not_the_ground_truth():
+    """The label is 1 iff the own episode is among the window's labels: a paired negative is 0,
+    an answer or a forced positive is 1, and a positive whose episode was not retrieved is 0."""
+    from cortex_c2b.organ_use import make_example, make_paired_negative, own_in_window
+    cfg, m, jb, facts, negs = _planted_bridge()
+    rng = np.random.default_rng(1)
+    admitted = [f for f in facts if f.entity in jb.pointer_of]
+    seen = set()
+    for f in admitted:
+        neg = make_paired_negative(jb, f, rng, keep_shape=True)
+        assert own_in_window(neg) is False
+        forced = make_example(jb, f, False, 1.0, rng)
+        assert own_in_window(forced) is (forced.kind in ("answer", "forced"))
+        plain = make_example(jb, f, False, 0.0, rng)
+        assert own_in_window(plain) is (plain.kind == "answer")
+        seen.add(plain.kind)
+    assert "answer" in seen
+
+
+def test_match_head_learns_the_comparison_on_a_tiny_batch():
+    """The head's own loss falls under its supervision (the mechanism trains); the parent's
+    non journal weights are not needed for that, the read is."""
+    from cortex_c2b.organ_use import make_batch, match_tensors
+    cfg, m, jb, facts, negs = _planted_bridge()
+    rng = np.random.default_rng(2)
+    ex = make_batch(jb, facts, negs, 24, rng, negatives_frac=0.5, forced_frac=1.0, paired=True, keep_shape=True)
+    x, y, w, wt, wm, _, _ = collate(jb, ex, 2.0, cfg.journal_read_bytes)
+    mt, dpos = match_tensors(ex, x.device)
+    assert 0 < float(mt.mean()) < 1                                           # both classes present
+    m.train()
+    opt = torch.optim.Adam(m.match_head.parameters(), lr=3e-3)
+    first = None
+    for _ in range(60):
+        _, loss = m(x, y, window_tokens=wt, window_mask=wm, gate=1.0, loss_weights=w, decision_pos=dpos, match_targets=mt)
+        bce = m.last_match_loss
+        first = float(bce.detach()) if first is None else first
+        opt.zero_grad(); bce.backward(); opt.step()
+    assert float(m.last_match_loss.detach()) < first * 0.7
+    assert float(m.last_match_acc) >= 0.75
+
+
+def test_match_head_hash_transparent_and_loads_fresh_over_a_parent(tmp_path):
+    """The three new fields are transparent to the hash at their defaults; a parent without the
+    head loads strictly, the head's tensors are the only fresh ones besides the journal's."""
+    assert train.config_hash(train.Config()) == train.config_hash(train.Config(journal_match_head=False, journal_match_loss_weight=1.0, journal_match_coupling=2.0))
+    assert train.config_hash(train.Config(journal_match_head=True)) != train.config_hash(train.Config())
+    cfg0, parent = tiny(seed=3)
+    ck = tmp_path / "parent.pt"
+    torch.save({"model": parent.state_dict(), "run_id": "parent-test"}, ck)
+    cfg1, child = tiny(seed=4, journal_match_head=True)
+    rid, fresh = train.load_parent(child, ck, torch.device("cpu"))
+    assert rid == "parent-test" and fresh and all(k.startswith("match_head.") for k in fresh)
+    idx = torch.randint(0, 256, (2, 20))
+    a, _ = parent(idx); b, _ = child(idx)
+    assert torch.allclose(a, b)                                               # the parent intact
+
+
+def test_probe_reports_the_head_judgment_and_session_b_carries_it(tmp_path):
+    """The LM arm reports the head's accuracy against the read (a diagnostic, not a gate
+    condition), in process and in a new process from the disk."""
+    from cortex_c2b.hm_lm import run_hm_lm, session_b_from_disk
+    from cortex_c2b.crypto import generate_key
+    cfg, m = tiny(seed=6, journal_match_head=True); m.eval()
+    key = generate_key(); jpath = tmp_path / "journal.jsonl"
+    r = run_hm_lm(m, lambda: Journal(jpath, key=key, policy=POLICY_STOP), n_facts=12, n_negctrl=6, seed=0,
+                  k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes, on_disk=True)
+    assert r["hm_match_acc_on"] is not None and 0.0 <= r["hm_match_acc_on"] <= 1.0
+    assert r["hm_match_acc_negctrl"] is not None and 0.0 <= r["hm_match_acc_negctrl"] <= 1.0
+    ck = tmp_path / "ckpt.pt"
+    torch.save({"model": m.state_dict(), "run_id": "t", "config_hash": train.config_hash(cfg), "step": 0}, ck)
+    os.environ["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()
+    b = session_b_from_disk(ck, jpath, cfg, n_facts=12, n_negctrl=6, seed=0, k=cfg.journal_k,
+                            budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
+    assert b["hm_match_acc_on"] == r["hm_match_acc_on"] and b["hm_recall_on"] == r["hm_recall_on"]

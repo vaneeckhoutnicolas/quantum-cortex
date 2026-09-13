@@ -125,7 +125,32 @@ class JournalReader(nn.Module):
         p = torch.softmax(att, dim=-1)
         read = (p @ v).transpose(1, 2).contiguous().view(b, t, c)
         mass = p[..., 1:].sum(dim=-1).mean()                   # attention on real bytes, null slot excluded
+        self.last_attended = read                              # RES-21: what was read, before the zero init projection
         return self.out(read), mass
+
+
+class MatchHead(nn.Module):
+    """RES-21 (ADR-008, amendment of 2026-09-14): a small head that answers ONE question at
+    the decision position, "is the queried entity's episode in the window?", from what
+    the model had before reading (the residual stream at the journal block) and what it
+    read (the reader's attended values, before the zero init projection). Trained
+    directly on that label, which the harness knows exactly for every curriculum example
+    (the own pointer among the window's labels, never the ground truth alone), and
+    coupled to the decision token's logits: + coupling * m on <CITE>, - coupling * m on
+    <UNKNOWN>. The last layer starts at zero, so the model begins as its parent (m = 0,
+    no bias) and learns the comparison from there."""
+
+    def __init__(self, n_embd: int):
+        super().__init__()
+        self.ln_pre = nn.LayerNorm(n_embd)
+        self.ln_read = nn.LayerNorm(n_embd)
+        self.up = nn.Linear(2 * n_embd, n_embd)
+        self.out = nn.Linear(n_embd, 1)
+        nn.init.zeros_(self.out.weight); nn.init.zeros_(self.out.bias)   # the no-op law
+
+    def forward(self, pre: torch.Tensor, attended: torch.Tensor) -> torch.Tensor:
+        z = torch.cat([self.ln_pre(pre), self.ln_read(attended)], dim=-1)
+        return self.out(torch.nn.functional.gelu(self.up(z))).squeeze(-1)  # (b,) a logit: present > 0
 
 
 # ---------------------------------------------------------------------------- #

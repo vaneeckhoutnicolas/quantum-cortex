@@ -90,6 +90,10 @@ class Config:
                                              # episode withheld from the window, so the decision must depend on the read, not on a class prior
     journal_paired_keep_shape: bool = False  # v6 lever (run db028e6a4262, INVALID): the pair keeps k lines (k + 1 retrieved, the own
                                              # dropped); as run in v5 the withheld window had k - 1 lines, a shape cue the protocol never shows
+    journal_match_head: bool = False         # v7 lever, RES-21 (run 81cb13a684aa, INVALID: six data recipes left the discrimination at 20 to 25
+                                             # points): a head supervised on "the queried entity is in the window", coupled to the decision token
+    journal_match_loss_weight: float = 1.0   # weight of the head's own loss (binary cross entropy) in the curriculum steps
+    journal_match_coupling: float = 2.0      # logit bias on the decision token: + c * m on <CITE>, - c * m on <UNKNOWN>
     journal_forced_frac: float = 0.5     # bootstrap: share of missed retrievals where the right episode is forced into the window, decays to 0
     journal_curriculum_ratio: float = 0.5  # share of training steps spent on organ use examples (the rest: ordinary language modelling)
     journal_contrastive_weight: float = 1.0
@@ -142,7 +146,8 @@ def load_config(path: str) -> Config:
 # 6785ba1f8e213dce, 5f0a6d3ff4e8 stays b9e10b3e0a9e5938); moved, the lever enters the hash
 # like any other field.
 HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window": False, "journal_neg_frac": 0.25,
-                               "journal_paired_negatives": False, "journal_paired_keep_shape": False}
+                               "journal_paired_negatives": False, "journal_paired_keep_shape": False,
+                               "journal_match_head": False, "journal_match_loss_weight": 1.0, "journal_match_coupling": 2.0}
 
 
 def config_hash(cfg: Config) -> str:
@@ -308,8 +313,10 @@ class Block(nn.Module):
         if self.c2 is not None:
             x = x + self.c2(x)          # associative memory residual (no-op at init)
         self.last_read_mass = None
+        self.last_pre = self.last_attended = None
         if self.reader is not None and window is not None and gate != 0.0:
             read, mass = self.reader(x, window, window_mask)
+            self.last_pre, self.last_attended = x, self.reader.last_attended   # RES-21: what the head compares
             x = x + gate * read         # the journal as content, on the router's gate (no-op at init)
             self.last_read_mass = mass
         x = x + self.mlp_down(F.gelu(self.mlp_up(self.ln2(x))))
@@ -328,6 +335,10 @@ class VanillaGPT(nn.Module):
         if cfg.journal == "read":
             from cortex_c2b.lm_bridge import CueEncoder
             self.cue_encoder = CueEncoder(cfg.n_embd, cfg.journal_cue_dim)
+        self.match_head = None
+        if cfg.journal == "read" and cfg.journal_match_head:
+            from cortex_c2b.lm_bridge import MatchHead
+            self.match_head = MatchHead(cfg.n_embd)
         self.head = nn.Linear(cfg.n_embd, cfg.vocab_size, bias=False)
         self.head.weight = self.wte.weight  # tied embeddings (vanilla)
         self.apply(self._init)
@@ -343,6 +354,8 @@ class VanillaGPT(nn.Module):
             if getattr(blk, "reader", None) is not None:      # ADR-008: the reader starts as a no-op too
                 nn.init.zeros_(blk.reader.out.weight)
                 nn.init.zeros_(blk.reader.null)
+        if self.match_head is not None:                        # RES-21: the head starts silent (m = 0, no bias)
+            nn.init.zeros_(self.match_head.out.weight); nn.init.zeros_(self.match_head.out.bias)
 
     @staticmethod
     def _init(m):
@@ -372,10 +385,13 @@ class VanillaGPT(nn.Module):
         return None
 
     def forward(self, idx, targets=None, window_tokens=None, window_mask=None, gate: float = 1.0,
-                loss_weights=None):
+                loss_weights=None, decision_pos=None, match_targets=None):
         """`window_tokens` (b, r): the read window's bytes, embedded with the model's
         own `wte`; `gate`: the router's path 4 weight; `loss_weights` (b, t): per
-        token weights (the curriculum's answer-only, asymmetric loss)."""
+        token weights (the curriculum's answer-only, asymmetric loss). RES-21:
+        `decision_pos` (b,) the position predicting the decision token; the matching
+        head fires there only, biases the decision logits, and `match_targets` (b,)
+        adds its own loss."""
         b, t = idx.shape
         pos = torch.arange(t, device=idx.device)
         x = self.wte(idx) + self.wpe(pos)
@@ -383,6 +399,22 @@ class VanillaGPT(nn.Module):
         for blk in self.blocks:
             x = blk(x, window, window_mask, gate) if blk.reader is not None else blk(x)
         logits = self.head(self.ln_f(x))
+        self.last_match_logit = self.last_match_loss = self.last_match_acc = None
+        if self.match_head is not None and decision_pos is not None and window is not None:
+            blk = self.blocks[self.cfg.journal_block]
+            if blk.last_attended is not None:
+                from cortex_c2b.lm_bridge import TOK_CITE, TOK_UNKNOWN
+                ar = torch.arange(b, device=idx.device)
+                m = self.match_head(blk.last_pre[ar, decision_pos], blk.last_attended[ar, decision_pos])
+                self.last_match_logit = m.detach()
+                if self.cfg.journal_match_coupling:
+                    add = torch.zeros_like(logits)
+                    add[ar, decision_pos, TOK_CITE] = self.cfg.journal_match_coupling * m.to(logits.dtype)
+                    add[ar, decision_pos, TOK_UNKNOWN] = -self.cfg.journal_match_coupling * m.to(logits.dtype)
+                    logits = logits + add
+                if match_targets is not None:
+                    self.last_match_loss = F.binary_cross_entropy_with_logits(m.float(), match_targets.float())
+                    self.last_match_acc = ((m > 0).float() == match_targets.float()).float().mean().detach()
         loss = None
         if targets is not None:
             ce = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.reshape(-1), reduction="none")
@@ -391,6 +423,8 @@ class VanillaGPT(nn.Module):
             else:
                 w = loss_weights.reshape(-1).to(ce.dtype)
                 loss = (ce * w).sum() / w.sum().clamp(min=1.0)
+            if self.last_match_loss is not None:
+                loss = loss + self.cfg.journal_match_loss_weight * self.last_match_loss
         return logits, loss
 
 
@@ -402,7 +436,7 @@ def load_parent(model: "VanillaGPT", ckpt_path: str | Path, device) -> tuple[str
     result = model.load_state_dict(ck["model"], strict=False)
     if result.unexpected_keys:
         raise SystemExit(f"parent checkpoint has keys this model lacks: {result.unexpected_keys[:5]}")
-    allowed = ("cue_encoder.", ".reader.")
+    allowed = ("cue_encoder.", ".reader.", "match_head.")
     bad = [k for k in result.missing_keys if not any(a in k for a in allowed)]
     if bad:
         raise SystemExit(f"parent checkpoint lacks non-journal weights: {bad[:5]}")
@@ -557,7 +591,7 @@ def main() -> None:
         from cortex_c2b import Journal, POLICY_STOP
         from cortex_c2b.crypto import key_from_env
         from cortex_c2b.lm_bridge import JournalBridge, contrastive_loss, journal_gate
-        from cortex_c2b.organ_use import training_facts, plant_pool, make_batch, batch_stats, collate
+        from cortex_c2b.organ_use import training_facts, plant_pool, make_batch, batch_stats, collate, match_tensors
         if cfg.journal_path and key_from_env() is None:
             raise SystemExit("journal_path is set but QUANTUM_CORTEX_JOURNAL_KEY is not in the environment: the run's "
                              "journal is sealed by default (ADR-007 D8); set the key before training, not after")
@@ -566,7 +600,9 @@ def main() -> None:
               f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}"
               f" | fresh pool per replant: {cfg.journal_fresh_pool} | window on LM steps: {cfg.journal_lm_window}"
               f" | negatives {cfg.journal_neg_frac} paired: {cfg.journal_paired_negatives}"
-              f" shape kept: {cfg.journal_paired_keep_shape}")
+              f" shape kept: {cfg.journal_paired_keep_shape}"
+              f" | match head: {cfg.journal_match_head}"
+              + (f" (loss weight {cfg.journal_match_loss_weight}, coupling {cfg.journal_match_coupling})" if cfg.journal_match_head else ""))
         def run_journal():
             """The run's own scope: sealed on disk (key from the environment), policy stop --
             a measurement run never continues in memory unnoticed (ADR-007 D9)."""
@@ -683,12 +719,16 @@ def main() -> None:
                                       paired=cfg.journal_paired_negatives, keep_shape=cfg.journal_paired_keep_shape)
                 model.train()
                 x, y, w, wt, wm, qseq, sseq = collate(jb, examples, cfg.journal_asym_weight, cfg.journal_read_bytes)
+                mt, dpos = match_tensors(examples, x.device) if cfg.journal_match_head else (None, None)
                 gate = journal_gate(cfg.journal_route) if cfg.journal_route != "router" else 1.0   # a learned router is measured apart (D9 held)
                 with torch.autocast(device.type, dtype=amp_dtype, enabled=device.type == "cuda"):
-                    _, loss_ce = model(x, y, window_tokens=wt, window_mask=wm, gate=gate, loss_weights=w)
+                    _, loss_ce = model(x, y, window_tokens=wt, window_mask=wm, gate=gate, loss_weights=w,
+                                       decision_pos=dpos, match_targets=mt)
                     loss_c = contrastive_loss(jb.cue_tensor(qseq), jb.cue_tensor(sseq))
                     loss = loss_ce + cfg.journal_contrastive_weight * loss_c
-                journal_ctx["last_stats"] = {**batch_stats(examples), "loss_ce": float(loss_ce.detach()), "loss_contrastive": float(loss_c.detach())}
+                journal_ctx["last_stats"] = {**batch_stats(examples), "loss_ce": float(loss_ce.detach()), "loss_contrastive": float(loss_c.detach()),
+                                             "match_bce": (float(model.last_match_loss.detach()) if model.last_match_loss is not None else None),
+                                             "match_acc": (float(model.last_match_acc) if model.last_match_acc is not None else None)}
             else:
                 x, y = get_batch(train_arr, cfg, gen, device)
                 wt = wm = None
@@ -729,7 +769,8 @@ def main() -> None:
                 if journal_ctx is not None and journal_ctx.get("last_stats"):
                     st = journal_ctx["last_stats"]
                     print(f"  journal: hit {st['retrieval_hit']:.2f} abstain-target {st['abstain_target_rate']:.2f} "
-                          f"forced {st['n_forced']} neg {st['n_negative']} ce {st['loss_ce']:.3f} contrastive {st['loss_contrastive']:.3f}")
+                          f"forced {st['n_forced']} neg {st['n_negative']} ce {st['loss_ce']:.3f} contrastive {st['loss_contrastive']:.3f}"
+                          + (f" match bce {st['match_bce']:.3f} acc {st['match_acc']:.2f}" if st.get("match_bce") is not None else ""))
             if step and step % cfg.eval_every == 0:
                 val_loss = evaluate()
                 print(f"  eval: val_loss {val_loss:.4f} ppl {math.exp(val_loss):.3f}")

@@ -211,6 +211,23 @@ def make_batch(bridge: JournalBridge, facts: list[Fact], negatives: list[Fact], 
     return out
 
 
+def own_in_window(e: Example) -> bool:
+    """RES-21's label: the queried entity's own episode is among the window's labels. Computed
+    from what the journal returned (the pointer is the content hash of the statement's bytes),
+    never from the ground truth alone: a positive whose episode was not retrieved is a 0."""
+    from cortex_c2b import content_hash
+    return content_hash(bytes(e.statement)) in set(e.labels.values())
+
+
+def match_tensors(examples: list[Example], device):
+    """(targets (b,) float 0/1, decision positions (b,) long): the position at which the
+    decision token is predicted is the last token of the query."""
+    import torch
+    t = torch.tensor([1.0 if own_in_window(e) else 0.0 for e in examples], device=device)
+    d = torch.tensor([len(e.query) - 1 for e in examples], dtype=torch.long, device=device)
+    return t, d
+
+
 def batch_stats(examples: list[Example]) -> dict:
     n = max(1, len(examples))
     kinds = {k: sum(e.kind == k for e in examples) for k in ("answer", "abstain", "negative", "forced")}

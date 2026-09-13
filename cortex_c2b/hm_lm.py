@@ -55,15 +55,21 @@ def generate(model, prefix: list[int], window_tokens=None, window_mask=None, gat
     idx = torch.tensor([prefix], dtype=torch.long, device=device)
     out, mass = [], None
     for step in range(max_new):
+        # RES-21: the matching head fires at the decision position only, i.e. on the first step
+        dpos = (torch.tensor([idx.size(1) - 1], device=device)
+                if (step == 0 and getattr(model, "match_head", None) is not None and window_tokens is not None) else None)
         logits, _ = model(idx[:, -model.cfg.block_size:], window_tokens=window_tokens,
-                          window_mask=window_mask, gate=gate)
+                          window_mask=window_mask, gate=gate, decision_pos=dpos)
         if step == 0:
             mass = model.read_mass()
+            match = getattr(model, "last_match_logit", None)   # the head's judgment at the decision step
         nxt = int(logits[0, -1].argmax())
         out.append(nxt)
         if nxt == NEWLINE:
             break
         idx = torch.cat([idx, torch.tensor([[nxt]], device=device)], dim=1)
+    if getattr(model, "match_head", None) is not None:
+        model.last_match_logit = match                          # later steps reset it; the probe reads the decision step's
     return out, mass
 
 
@@ -74,6 +80,7 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
     n = max(1, len(facts))
     strict = abstain = invalid = valid = attr_ok = guess = attr_by_chance = hit = 0
     masses = []
+    match_right = match_n = 0                                   # RES-21: the head's own judgment, against the read
     for f in facts:
         query = encode_query(f.query)
         if journal_on:
@@ -83,7 +90,11 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             toks, mass = generate(model, query, wt, wm, gate=1.0)
             if mass is not None:
                 masses.append(mass)
-            hit += int(pointer_of.get(f.entity) in read.pointers) if pointer_of else 0
+            present = (pointer_of.get(f.entity) in read.pointers) if pointer_of else False
+            hit += int(present) if pointer_of else 0
+            m = getattr(model, "last_match_logit", None)
+            if m is not None:
+                match_right += int((float(m[0]) > 0) == present); match_n += 1
             labels = read.labels
         else:
             toks, _ = generate(model, query, None, None, gate=0.0)
@@ -111,7 +122,8 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             "attr_exact_given_valid": (attr_ok / valid) if valid else None,
             "attr_hit_any": attr_by_chance / n,
             "retrieval_hit": (hit / n) if (journal_on and pointer_of) else None,
-            "attention_mass": (float(np.mean(masses)) if masses else None)}
+            "attention_mass": (float(np.mean(masses)) if masses else None),
+            "match_acc": (match_right / match_n) if match_n else None}
 
 
 @torch.no_grad()
@@ -189,6 +201,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
         "hm_valid_citation_on": on["valid_citation_rate"], "hm_attr_exact_given_valid": on["attr_exact_given_valid"],
         "hm_retrieval_hit": on["retrieval_hit"], "hm_attention_mass": on["attention_mass"],
         "hm_guess_rate_off": off["guess_rate"], "hm_attr_hit_off_by_chance": off["attr_hit_any"],
+        "hm_match_acc_on": on["match_acc"], "hm_match_acc_negctrl": neg_on["match_acc"],   # RES-21 diagnostics (None without the head)
         "run_valid": valid, "hm_dissociation_pass": int(dissociation),
         "persistent": persistent, "claimable": int(dissociation and persistent),
         "storage": {"on_disk": on_disk, "mode": storage["mode"], "policy": storage["policy"],
@@ -334,6 +347,7 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
             "hm_valid_citation_on": on["valid_citation_rate"], "hm_attr_exact_given_valid": on["attr_exact_given_valid"],
             "hm_retrieval_hit": on["retrieval_hit"], "hm_attention_mass": on["attention_mass"],
             "hm_negctrl_rate": neg_on["guess_rate"], "hm_negctrl_abstain_on": neg_on["abstain_rate"],
+            "hm_match_acc_on": on["match_acc"], "hm_match_acc_negctrl": neg_on["match_acc"],
             "persistent": storage["mode"] == MODE_DURABLE, "process": "new (nothing of session A but the disk)"}
 
 
