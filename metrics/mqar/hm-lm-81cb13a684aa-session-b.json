@@ -1,0 +1,43 @@
+{
+  "benchmark": "hm_protocol_lm_session_b_new_process",
+  "training_pool_probe": {
+    "seed": 100000,
+    "n": 200,
+    "recall_strict": 0.265,
+    "valid_citation": 0.545,
+    "invalid_citation": 0.25,
+    "abstain_rate": 0.205,
+    "retrieval_hit": 0.96
+  },
+  "checkpoint": {
+    "path": "runs/journal-n1-v6/ckpt.pt",
+    "run_id": "81cb13a684aa",
+    "config_hash": "ca90d290ad33b472",
+    "step": 7323
+  },
+  "journal": {
+    "path": "runs/journal-n1-v6/journal.jsonl",
+    "entries": 200,
+    "mode": "durable",
+    "policy": "stop",
+    "planted_found": 200
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0
+  },
+  "hm_recall_on": 0.385,
+  "hm_recall_off": 0.0,
+  "hm_false_abstention_on": 0.16,
+  "hm_invalid_citation_on": 0.225,
+  "hm_valid_citation_on": 0.615,
+  "hm_attr_exact_given_valid": 0.6260162601626016,
+  "hm_retrieval_hit": 0.98,
+  "hm_attention_mass": 0.9794166851043701,
+  "hm_negctrl_rate": 0.62,
+  "hm_negctrl_abstain_on": 0.38,
+  "persistent": true,
+  "process": "new (nothing of session A but the disk)"
+}

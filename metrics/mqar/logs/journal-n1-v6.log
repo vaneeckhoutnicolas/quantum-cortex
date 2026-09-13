@@ -1,0 +1,1669 @@
+6.8s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+6.8s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+6.8s 3 0.00s - to python to disable frozen modules.
+6.8s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+7.4s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+7.4s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+7.4s 7 0.00s - to python to disable frozen modules.
+7.4s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+8.7s 9 Cloning into 'quantum-cortex'...
+9.5s 10 remote: Enumerating objects: 1217, done.[K
+9.5s 11 remote: Counting objects:   0% (1/768)[Kremote: Counting objects:   1% (8/768)[Kremote: Counting objects:   2% (16/768)[Kremote: Counting objects:   3% (24/768)[Kremote: Counting objects:   4% (31/768)[Kremote: Counting objects:   5% (39/768)[Kremote: Counting objects:   6% (47/768)[Kremote: Counting objects:   7% (54/768)[Kremote: Counting objects:   8% (62/768)[Kremote: Counting objects:   9% (70/768)[Kremote: Counting objects:  10% (77/768)[Kremote: Counting objects:  11% (85/768)[Kremote: Counting objects:  12% (93/768)[Kremote: Counting objects:  13% (100/768)[Kremote: Counting objects:  14% (108/768)[Kremote: Counting objects:  15% (116/768)[Kremote: Counting objects:  16% (123/768)[Kremote: Counting objects:  17% (131/768)[Kremote: Counting objects:  18% (139/768)[Kremote: Counting objects:  19% (146/768)[Kremote: Counting objects:  20% (154/768)[Kremote: Counting objects:  21% (162/768)[Kremote: Counting objects:  22% (169/768)[Kremote: Counting objects:  23% (177/768)[Kremote: Counting objects:  24% (185/768)[Kremote: Counting objects:  25% (192/768)[Kremote: Counting objects:  26% (200/768)[Kremote: Counting objects:  27% (208/768)[Kremote: Counting objects:  28% (216/768)[Kremote: Counting objects:  29% (223/768)[Kremote: Counting objects:  30% (231/768)[Kremote: Counting objects:  31% (239/768)[Kremote: Counting objects:  32% (246/768)[Kremote: Counting objects:  33% (254/768)[Kremote: Counting objects:  34% (262/768)[Kremote: Counting objects:  35% (269/768)[Kremote: Counting objects:  36% (277/768)[Kremote: Counting objects:  37% (285/768)[Kremote: Counting objects:  38% (292/768)[Kremote: Counting objects:  39% (300/768)[Kremote: Counting objects:  40% (308/768)[Kremote: Counting objects:  41% (315/768)[Kremote: Counting objects:  42% (323/768)[Kremote: Counting objects:  43% (331/768)[Kremote: Counting objects:  44% (338/768)[Kremote: Counting objects:  45% (346/768)[Kremote: Counting objects:  46% (354/768)[Kremote: Counting objects:  47% (361/768)[Kremote: Counting objects:  48% (369/768)[Kremote: Counting objects:  49% (377/768)[Kremote: Counting objects:  50% (384/768)[Kremote: Counting objects:  51% (392/768)[Kremote: Counting objects:  52% (400/768)[Kremote: Counting objects:  53% (408/768)[Kremote: Counting objects:  54% (415/768)[Kremote: Counting objects:  55% (423/768)[Kremote: Counting objects:  56% (431/768)[Kremote: Counting objects:  57% (438/768)[Kremote: Counting objects:  58% (446/768)[Kremote: Counting objects:  59% (454/768)[Kremote: Counting objects:  60% (461/768)[Kremote: Counting objects:  61% (469/768)[Kremote: Counting objects:  62% (477/768)[Kremote: Counting objects:  63% (484/768)[Kremote: Counting objects:  64% (492/768)[Kremote: Counting objects:  65% (500/768)[Kremote: Counting objects:  66% (507/768)[Kremote: Counting objects:  67% (515/768)[Kremote: Counting objects:  68% (523/768)[Kremote: Counting objects:  69% (530/768)[Kremote: Counting objects:  70% (538/768)[Kremote: Counting objects:  71% (546/768)[Kremote: Counting objects:  72% (553/768)[Kremote: Counting objects:  73% (561/768)[Kremote: Counting objects:  74% (569/768)[Kremote: Counting objects:  75% (576/768)[Kremote: Counting objects:  76% (584/768)[Kremote: Counting objects:  77% (592/768)[Kremote: Counting objects:  78% (600/768)[Kremote: Counting objects:  79% (607/768)[Kremote: Counting objects:  80% (615/768)[Kremote: Counting objects:  81% (623/768)[Kremote: Counting objects:  82% (630/768)[Kremote: Counting objects:  83% (638/768)[Kremote: Counting objects:  84% (646/768)[Kremote: Counting objects:  85% (653/768)[Kremote: Counting objects:  86% (661/768)[Kremote: Counting objects:  87% (669/768)[Kremote: Counting objects:  88% (676/768)[Kremote: Counting objects:  89% (684/768)[Kremote: Counting objects:  90% (692/768)[Kremote: Counting objects:  91% (699/768)[Kremote: Counting objects:  92% (707/768)[Kremote: Counting objects:  93% (715/768)[Kremote: Counting objects:  94% (722/768)[Kremote: Counting objects:  95% (730/768)[Kremote: Counting objects:  96% (738/768)[Kremote: Counting objects:  97% (745/768)[Kremote: Counting objects:  98% (753/768)[Kremote: Counting objects:  99% (761/768)[Kremote: Counting objects: 100% (768/768)[Kremote: Counting objects: 100% (768/768), done.[K
+9.5s 12 remote: Compressing objects:   0% (1/374)[Kremote: Compressing objects:   1% (4/374)[Kremote: Compressing objects:   2% (8/374)[Kremote: Compressing objects:   3% (12/374)[Kremote: Compressing objects:   4% (15/374)[Kremote: Compressing objects:   5% (19/374)[Kremote: Compressing objects:   6% (23/374)[Kremote: Compressing objects:   7% (27/374)[Kremote: Compressing objects:   8% (30/374)[Kremote: Compressing objects:   9% (34/374)[Kremote: Compressing objects:  10% (38/374)[Kremote: Compressing objects:  11% (42/374)[Kremote: Compressing objects:  12% (45/374)[Kremote: Compressing objects:  13% (49/374)[Kremote: Compressing objects:  14% (53/374)[Kremote: Compressing objects:  15% (57/374)[Kremote: Compressing objects:  16% (60/374)[Kremote: Compressing objects:  17% (64/374)[Kremote: Compressing objects:  18% (68/374)[Kremote: Compressing objects:  19% (72/374)[Kremote: Compressing objects:  20% (75/374)[Kremote: Compressing objects:  21% (79/374)[Kremote: Compressing objects:  22% (83/374)[Kremote: Compressing objects:  23% (87/374)[Kremote: Compressing objects:  24% (90/374)[Kremote: Compressing objects:  25% (94/374)[Kremote: Compressing objects:  26% (98/374)[Kremote: Compressing objects:  27% (101/374)[Kremote: Compressing objects:  28% (105/374)[Kremote: Compressing objects:  29% (109/374)[Kremote: Compressing objects:  30% (113/374)[Kremote: Compressing objects:  31% (116/374)[Kremote: Compressing objects:  32% (120/374)[Kremote: Compressing objects:  33% (124/374)[Kremote: Compressing objects:  34% (128/374)[Kremote: Compressing objects:  35% (131/374)[Kremote: Compressing objects:  36% (135/374)[Kremote: Compressing objects:  37% (139/374)[Kremote: Compressing objects:  38% (143/374)[Kremote: Compressing objects:  39% (146/374)[Kremote: Compressing objects:  40% (150/374)[Kremote: Compressing objects:  41% (154/374)[Kremote: Compressing objects:  42% (158/374)[Kremote: Compressing objects:  43% (161/374)[Kremote: Compressing objects:  44% (165/374)[Kremote: Compressing objects:  45% (169/374)[Kremote: Compressing objects:  46% (173/374)[Kremote: Compressing objects:  47% (176/374)[Kremote: Compressing objects:  48% (180/374)[Kremote: Compressing objects:  49% (184/374)[Kremote: Compressing objects:  50% (187/374)[Kremote: Compressing objects:  51% (191/374)[Kremote: Compressing objects:  52% (195/374)[Kremote: Compressing objects:  53% (199/374)[Kremote: Compressing objects:  54% (202/374)[Kremote: Compressing objects:  55% (206/374)[Kremote: Compressing objects:  56% (210/374)[Kremote: Compressing objects:  57% (214/374)[Kremote: Compressing objects:  58% (217/374)[Kremote: Compressing objects:  59% (221/374)[Kremote: Compressing objects:  60% (225/374)[Kremote: Compressing objects:  61% (229/374)[Kremote: Compressing objects:  62% (232/374)[Kremote: Compressing objects:  63% (236/374)[Kremote: Compressing objects:  64% (240/374)[Kremote: Compressing objects:  65% (244/374)[Kremote: Compressing objects:  66% (247/374)[Kremote: Compressing objects:  67% (251/374)[Kremote: Compressing objects:  68% (255/374)[Kremote: Compressing objects:  69% (259/374)[Kremote: Compressing objects:  70% (262/374)[Kremote: Compressing objects:  71% (266/374)[Kremote: Compressing objects:  72% (270/374)[Kremote: Compressing objects:  73% (274/374)[Kremote: Compressing objects:  74% (277/374)[Kremote: Compressing objects:  75% (281/374)[Kremote: Compressing objects:  76% (285/374)[Kremote: Compressing objects:  77% (288/374)[Kremote: Compressing objects:  78% (292/374)[Kremote: Compressing objects:  79% (296/374)[Kremote: Compressing objects:  80% (300/374)[Kremote: Compressing objects:  81% (303/374)[Kremote: Compressing objects:  82% (307/374)[Kremote: Compressing objects:  83% (311/374)[Kremote: Compressing objects:  84% (315/374)[Kremote: Compressing objects:  85% (318/374)[Kremote: Compressing objects:  86% (322/374)[Kremote: Compressing objects:  87% (326/374)[Kremote: Compressing objects:  88% (330/374)[Kremote: Compressing objects:  89% (333/374)[Kremote: Compressing objects:  90% (337/374)[Kremote: Compressing objects:  91% (341/374)[Kremote: Compressing objects:  92% (345/374)[Kremote: Compressing objects:  93% (348/374)[Kremote: Compressing objects:  94% (352/374)[Kremote: Compressing objects:  95% (356/374)[Kremote: Compressing objects:  96% (360/374)[Kremote: Compressing objects:  97% (363/374)[Kremote: Compressing objects:  98% (367/374)[Kremote: Compressing objects:  99% (371/374)[Kremote: Compressing objects: 100% (374/374)[Kremote: Compressing objects: 100% (374/374), done.[K
+9.8s 13 Receiving objects:   0% (1/1217)Receiving objects:   1% (13/1217)Receiving objects:   2% (25/1217)Receiving objects:   3% (37/1217)Receiving objects:   4% (49/1217)Receiving objects:   5% (61/1217)Receiving objects:   6% (74/1217)Receiving objects:   7% (86/1217)Receiving objects:   8% (98/1217)Receiving objects:   9% (110/1217)Receiving objects:  10% (122/1217)Receiving objects:  11% (134/1217)Receiving objects:  12% (147/1217)Receiving objects:  13% (159/1217)Receiving objects:  14% (171/1217)Receiving objects:  15% (183/1217)Receiving objects:  16% (195/1217)Receiving objects:  17% (207/1217)Receiving objects:  18% (220/1217)Receiving objects:  19% (232/1217)Receiving objects:  20% (244/1217)Receiving objects:  21% (256/1217)Receiving objects:  22% (268/1217)Receiving objects:  23% (280/1217)Receiving objects:  24% (293/1217)Receiving objects:  25% (305/1217)Receiving objects:  26% (317/1217)Receiving objects:  27% (329/1217)Receiving objects:  28% (341/1217)Receiving objects:  29% (353/1217)Receiving objects:  30% (366/1217)Receiving objects:  31% (378/1217)Receiving objects:  32% (390/1217)Receiving objects:  33% (402/1217)Receiving objects:  34% (414/1217)Receiving objects:  35% (426/1217)Receiving objects:  36% (439/1217)Receiving objects:  37% (451/1217)Receiving objects:  38% (463/1217)Receiving objects:  39% (475/1217)Receiving objects:  40% (487/1217)Receiving objects:  41% (499/1217)Receiving objects:  42% (512/1217)Receiving objects:  43% (524/1217)Receiving objects:  44% (536/1217)Receiving objects:  45% (548/1217)Receiving objects:  46% (560/1217)Receiving objects:  47% (572/1217)Receiving objects:  48% (585/1217)Receiving objects:  49% (597/1217)Receiving objects:  50% (609/1217)Receiving objects:  51% (621/1217)Receiving objects:  52% (633/1217)Receiving objects:  53% (646/1217)Receiving objects:  54% (658/1217)Receiving objects:  55% (670/1217)Receiving objects:  56% (682/1217)Receiving objects:  57% (694/1217)Receiving objects:  58% (706/1217)Receiving objects:  59% (719/1217)Receiving objects:  60% (731/1217)Receiving objects:  61% (743/1217)Receiving objects:  62% (755/1217)Receiving objects:  63% (767/1217)Receiving objects:  64% (779/1217)Receiving objects:  65% (792/1217)Receiving objects:  66% (804/1217)Receiving objects:  67% (816/1217)Receiving objects:  68% (828/1217)Receiving objects:  69% (840/1217)Receiving objects:  70% (852/1217)Receiving objects:  71% (865/1217)Receiving objects:  72% (877/1217)Receiving objects:  73% (889/1217)Receiving objects:  74% (901/1217)Receiving objects:  75% (913/1217)Receiving objects:  76% (925/1217)Receiving objects:  77% (938/1217)Receiving objects:  78% (950/1217)Receiving objects:  79% (962/1217)Receiving objects:  80% (974/1217)Receiving objects:  81% (986/1217)Receiving objects:  82% (998/1217)Receiving objects:  83% (1011/1217)Receiving objects:  84% (1023/1217)Receiving objects:  85% (1035/1217)Receiving objects:  86% (1047/1217)Receiving objects:  87% (1059/1217)Receiving objects:  88% (1071/1217)remote: Total 1217 (delta 616), reused 529 (delta 388), pack-reused 449 (from 1)[K
+9.8s 14 Receiving objects:  89% (1084/1217)Receiving objects:  90% (1096/1217)Receiving objects:  91% (1108/1217)Receiving objects:  92% (1120/1217)Receiving objects:  93% (1132/1217)Receiving objects:  94% (1144/1217)Receiving objects:  95% (1157/1217)Receiving objects:  96% (1169/1217)Receiving objects:  97% (1181/1217)Receiving objects:  98% (1193/1217)Receiving objects:  99% (1205/1217)Receiving objects: 100% (1217/1217)Receiving objects: 100% (1217/1217), 834.38 KiB | 5.53 MiB/s, done.
+9.8s 15 Resolving deltas:   0% (0/886)Resolving deltas:   1% (9/886)Resolving deltas:   2% (18/886)Resolving deltas:   3% (27/886)Resolving deltas:   4% (36/886)Resolving deltas:   5% (45/886)Resolving deltas:   6% (54/886)Resolving deltas:   7% (63/886)Resolving deltas:   8% (71/886)Resolving deltas:   9% (80/886)Resolving deltas:  10% (89/886)Resolving deltas:  11% (98/886)Resolving deltas:  12% (107/886)Resolving deltas:  13% (116/886)Resolving deltas:  14% (125/886)Resolving deltas:  15% (133/886)Resolving deltas:  16% (142/886)Resolving deltas:  17% (151/886)Resolving deltas:  18% (160/886)Resolving deltas:  19% (169/886)Resolving deltas:  20% (178/886)Resolving deltas:  21% (187/886)Resolving deltas:  22% (195/886)Resolving deltas:  23% (204/886)Resolving deltas:  24% (213/886)Resolving deltas:  25% (222/886)Resolving deltas:  26% (231/886)Resolving deltas:  27% (240/886)Resolving deltas:  28% (249/886)Resolving deltas:  29% (257/886)Resolving deltas:  30% (266/886)Resolving deltas:  31% (275/886)Resolving deltas:  32% (284/886)Resolving deltas:  33% (293/886)Resolving deltas:  34% (302/886)Resolving deltas:  35% (311/886)Resolving deltas:  36% (319/886)Resolving deltas:  37% (328/886)Resolving deltas:  38% (337/886)Resolving deltas:  39% (346/886)Resolving deltas:  40% (355/886)Resolving deltas:  41% (364/886)Resolving deltas:  42% (373/886)Resolving deltas:  43% (381/886)Resolving deltas:  44% (390/886)Resolving deltas:  45% (399/886)Resolving deltas:  46% (408/886)Resolving deltas:  47% (417/886)Resolving deltas:  48% (426/886)Resolving deltas:  49% (435/886)Resolving deltas:  50% (443/886)Resolving deltas:  51% (452/886)Resolving deltas:  52% (461/886)Resolving deltas:  53% (470/886)Resolving deltas:  54% (479/886)Resolving deltas:  55% (488/886)Resolving deltas:  56% (497/886)Resolving deltas:  57% (506/886)Resolving deltas:  58% (514/886)Resolving deltas:  59% (523/886)Resolving deltas:  60% (532/886)Resolving deltas:  61% (541/886)Resolving deltas:  62% (550/886)Resolving deltas:  63% (559/886)Resolving deltas:  64% (568/886)Resolving deltas:  65% (576/886)Resolving deltas:  66% (585/886)Resolving deltas:  67% (594/886)Resolving deltas:  68% (603/886)Resolving deltas:  69% (612/886)Resolving deltas:  70% (621/886)Resolving deltas:  71% (630/886)Resolving deltas:  72% (638/886)Resolving deltas:  73% (647/886)Resolving deltas:  74% (656/886)Resolving deltas:  75% (665/886)Resolving deltas:  76% (674/886)Resolving deltas:  77% (683/886)Resolving deltas:  78% (692/886)Resolving deltas:  79% (700/886)Resolving deltas:  80% (709/886)Resolving deltas:  81% (718/886)Resolving deltas:  82% (727/886)Resolving deltas:  83% (736/886)Resolving deltas:  84% (745/886)Resolving deltas:  85% (754/886)Resolving deltas:  86% (762/886)Resolving deltas:  87% (771/886)Resolving deltas:  88% (780/886)Resolving deltas:  89% (789/886)Resolving deltas:  90% (798/886)Resolving deltas:  91% (807/886)Resolving deltas:  92% (816/886)Resolving deltas:  93% (824/886)Resolving deltas:  94% (833/886)Resolving deltas:  95% (842/886)Resolving deltas:  96% (851/886)Resolving deltas:  97% (860/886)Resolving deltas:  98% (869/886)Resolving deltas:  99% (878/886)Resolving deltas: 100% (886/886)Resolving deltas: 100% (886/886), done.
+9.9s 16 /kaggle/working/quantum-cortex
+9.9s 17 runs -> /kaggle/working/runs-keep | kept from a previous session: []
+14.4s 18 journal key: present (not printed)
+14.4s 19 config configs/kaggle_t4_journal_v6.json -> out_dir runs/journal-n1-v6
+22.3s 20 candidate /kaggle/input/notebooks/nicolasvaneeckhout/notebook6a34480784/quantum-cortex/runs/kaggle_t4/ckpt.pt run_id be1fa8139f59
+22.3s 21 parent checkpoint: /kaggle/input/notebooks/nicolasvaneeckhout/notebook6a34480784/quantum-cortex/runs/kaggle_t4/ckpt.pt run_id be1fa8139f59
+39.4s 22 data slice reused: /kaggle/input/notebooks/nicolasvaneeckhout/notebook6a34480784/quantum-cortex/data/fineweb_edu_bytes.bin
+39.4s 23 shape probe skipped: no Input holds journal-n1-v5/ckpt.pt next to its journal.jsonl (mount the v5 version to run it)
+42.7s 24 [parent] be1fa8139f59: parent weights loaded unchanged; 10 journal tensors fresh (zero output)
+42.8s 25 [journal] curriculum facts 200 negatives 50 generator 438e093d9fe711a0 collisions removed 0 | fresh pool per replant: True | window on LM steps: True | negatives 0.25 paired: True shape kept: True
+47.8s 26 [run 81cb13a684aa] device=cuda params=27,094,528 steps=7324 tokens/step=16,384 config_hash=ca90d290ad33b472
+49.6s 27 step 0/7324 loss 12.3220 lr 2.00e-06 tok/s 9,097
+49.6s 28 journal: hit 0.07 abstain-target 0.88 forced 1 neg 1 ce 9.602 contrastive 2.720
+58.2s 29 step 10/7324 loss 7.1807 lr 2.20e-05 tok/s 17,228
+58.2s 30 journal: hit 0.00 abstain-target 0.94 forced 1 neg 4 ce 4.523 contrastive 2.658
+68.4s 31 step 20/7324 loss 0.9349 lr 4.20e-05 tok/s 16,680
+68.4s 32 journal: hit 0.09 abstain-target 0.88 forced 1 neg 5 ce 3.544 contrastive 2.601
+77.3s 33 step 30/7324 loss 1.0213 lr 6.20e-05 tok/s 17,235
+77.3s 34 journal: hit 0.15 abstain-target 0.69 forced 3 neg 3 ce 3.153 contrastive 2.478
+86.2s 35 step 40/7324 loss 0.9624 lr 8.20e-05 tok/s 17,483
+86.2s 36 journal: hit 0.00 abstain-target 0.81 forced 3 neg 2 ce 2.861 contrastive 2.164
+92.2s 37 step 50/7324 loss 0.8975 lr 1.02e-04 tok/s 18,816
+92.2s 38 journal: hit 0.00 abstain-target 0.81 forced 3 neg 4 ce 2.397 contrastive 0.660
+102.1s 39 step 60/7324 loss 2.6833 lr 1.22e-04 tok/s 18,405
+102.1s 40 journal: hit 0.17 abstain-target 0.44 forced 7 neg 4 ce 2.433 contrastive 0.250
+114.4s 41 step 70/7324 loss 0.9474 lr 1.42e-04 tok/s 17,461
+114.4s 42 journal: hit 0.00 abstain-target 0.75 forced 4 neg 8 ce 1.886 contrastive 0.304
+122.2s 43 step 80/7324 loss 1.7181 lr 1.62e-04 tok/s 17,833
+122.2s 44 journal: hit 0.08 abstain-target 0.75 forced 3 neg 3 ce 1.491 contrastive 0.227
+130.1s 45 step 90/7324 loss 1.2001 lr 1.82e-04 tok/s 18,122
+130.1s 46 journal: hit 0.09 abstain-target 0.56 forced 6 neg 5 ce 1.104 contrastive 0.096
+144.4s 47 step 100/7324 loss 0.8568 lr 2.00e-04 tok/s 17,128
+144.4s 48 journal: hit 0.09 abstain-target 0.75 forced 3 neg 5 ce 0.927 contrastive 0.128
+153.3s 49 step 110/7324 loss 1.0969 lr 2.00e-04 tok/s 17,236
+153.3s 50 journal: hit 0.10 abstain-target 0.75 forced 3 neg 6 ce 1.048 contrastive 0.049
+164.8s 51 step 120/7324 loss 1.0249 lr 2.00e-04 tok/s 16,940
+164.8s 52 journal: hit 0.21 abstain-target 0.38 forced 7 neg 2 ce 0.903 contrastive 0.033
+171.4s 53 step 130/7324 loss 0.9605 lr 2.00e-04 tok/s 17,360
+171.4s 54 journal: hit 0.25 abstain-target 0.44 forced 6 neg 4 ce 0.548 contrastive 0.038
+183.1s 55 step 140/7324 loss 0.9680 lr 2.00e-04 tok/s 17,076
+183.1s 56 journal: hit 0.36 abstain-target 0.31 forced 6 neg 2 ce 0.534 contrastive 0.055
+191.2s 57 step 150/7324 loss 0.6434 lr 2.00e-04 tok/s 17,247
+191.2s 58 journal: hit 0.38 abstain-target 0.38 forced 5 neg 3 ce 0.602 contrastive 0.042
+203.4s 59 step 160/7324 loss 0.6193 lr 2.00e-04 tok/s 16,957
+203.4s 60 journal: hit 0.67 abstain-target 0.44 forced 1 neg 4 ce 0.514 contrastive 0.105
+214.6s 61 step 170/7324 loss 0.9942 lr 2.00e-04 tok/s 16,795
+214.6s 62 journal: hit 0.38 abstain-target 0.56 forced 2 neg 3 ce 0.546 contrastive 0.027
+227.4s 63 step 180/7324 loss 0.9173 lr 2.00e-04 tok/s 16,508
+227.4s 64 journal: hit 0.42 abstain-target 0.44 forced 4 neg 4 ce 0.529 contrastive 0.090
+240.4s 65 step 190/7324 loss 0.9839 lr 2.00e-04 tok/s 16,247
+240.4s 66 journal: hit 0.58 abstain-target 0.44 forced 2 neg 4 ce 0.460 contrastive 0.119
+251.9s 67 step 200/7324 loss 0.9085 lr 2.00e-04 tok/s 16,138
+251.9s 68 journal: hit 0.67 abstain-target 0.12 forced 4 neg 1 ce 0.512 contrastive 0.014
+260.8s 69 step 210/7324 loss 0.4734 lr 2.00e-04 tok/s 16,232
+260.8s 70 journal: hit 0.67 abstain-target 0.31 forced 3 neg 4 ce 0.459 contrastive 0.014
+265.6s 71 step 220/7324 loss 0.5048 lr 2.00e-04 tok/s 16,624
+265.6s 72 journal: hit 0.36 abstain-target 0.62 forced 2 neg 5 ce 0.484 contrastive 0.021
+280.3s 73 step 230/7324 loss 1.0325 lr 2.00e-04 tok/s 16,281
+280.3s 74 journal: hit 0.50 abstain-target 0.56 forced 2 neg 6 ce 0.446 contrastive 0.109
+290.0s 75 step 240/7324 loss 0.5689 lr 2.00e-04 tok/s 16,304
+290.0s 76 journal: hit 0.40 abstain-target 0.44 forced 3 neg 1 ce 0.546 contrastive 0.023
+303.0s 77 step 250/7324 loss 0.6063 lr 2.00e-04 tok/s 16,117
+303.0s 78 journal: hit 0.73 abstain-target 0.44 forced 1 neg 5 ce 0.425 contrastive 0.181
+312.5s 79 eval: val_loss 0.9679 ppl 2.632
+326.2s 80 step 260/7324 loss 0.9751 lr 2.00e-04 tok/s 15,361
+326.2s 81 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.470 contrastive 0.028
+332.7s 82 step 270/7324 loss 0.4857 lr 2.00e-04 tok/s 15,586
+332.7s 83 journal: hit 0.18 abstain-target 0.56 forced 5 neg 5 ce 0.463 contrastive 0.023
+339.2s 84 step 280/7324 loss 0.9438 lr 2.00e-04 tok/s 15,801
+339.2s 85 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.378 contrastive 0.025
+345.7s 86 step 290/7324 loss 0.4287 lr 2.00e-04 tok/s 16,005
+345.7s 87 journal: hit 0.60 abstain-target 0.44 forced 3 neg 6 ce 0.332 contrastive 0.097
+360.4s 88 step 300/7324 loss 0.9860 lr 2.00e-04 tok/s 15,777
+360.4s 89 journal: hit 0.17 abstain-target 0.50 forced 6 neg 4 ce 0.319 contrastive 0.047
+369.3s 90 step 310/7324 loss 0.6285 lr 2.00e-04 tok/s 15,849
+369.3s 91 journal: hit 0.79 abstain-target 0.19 forced 2 neg 2 ce 0.395 contrastive 0.233
+377.5s 92 step 320/7324 loss 0.5148 lr 2.00e-04 tok/s 15,954
+377.5s 93 journal: hit 0.73 abstain-target 0.38 forced 2 neg 5 ce 0.414 contrastive 0.101
+390.5s 94 step 330/7324 loss 0.9591 lr 2.00e-04 tok/s 15,825
+390.5s 95 journal: hit 0.69 abstain-target 0.31 forced 2 neg 3 ce 0.515 contrastive 0.016
+398.6s 96 step 340/7324 loss 0.8973 lr 2.00e-04 tok/s 15,925
+398.6s 97 journal: hit 0.50 abstain-target 0.62 forced 0 neg 4 ce 0.409 contrastive 0.031
+410.0s 98 step 350/7324 loss 0.9600 lr 1.99e-04 tok/s 15,877
+410.0s 99 journal: hit 0.55 abstain-target 0.56 forced 1 neg 5 ce 0.373 contrastive 0.195
+417.3s 100 step 360/7324 loss 0.9374 lr 1.99e-04 tok/s 16,009
+417.3s 101 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.478 contrastive 0.013
+430.2s 102 step 370/7324 loss 0.9649 lr 1.99e-04 tok/s 15,894
+430.2s 103 journal: hit 0.33 abstain-target 0.44 forced 5 neg 4 ce 0.399 contrastive 0.024
+438.3s 104 step 380/7324 loss 0.9770 lr 1.99e-04 tok/s 15,985
+438.3s 105 journal: hit 0.54 abstain-target 0.31 forced 4 neg 3 ce 0.372 contrastive 0.101
+448.1s 106 step 390/7324 loss 0.9684 lr 1.99e-04 tok/s 16,005
+448.1s 107 journal: hit 0.33 abstain-target 0.44 forced 5 neg 4 ce 0.406 contrastive 0.020
+461.0s 108 step 400/7324 loss 0.9955 lr 1.99e-04 tok/s 15,900
+461.0s 109 journal: hit 0.50 abstain-target 0.31 forced 4 neg 2 ce 0.356 contrastive 0.010
+471.5s 110 step 410/7324 loss 0.4694 lr 1.99e-04 tok/s 15,892
+471.5s 111 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.459 contrastive 0.011
+476.4s 112 step 420/7324 loss 0.5019 lr 1.99e-04 tok/s 16,094
+476.4s 113 journal: hit 0.50 abstain-target 0.44 forced 3 neg 4 ce 0.397 contrastive 0.105
+486.1s 114 step 430/7324 loss 0.4680 lr 1.99e-04 tok/s 16,110
+486.1s 115 journal: hit 0.36 abstain-target 0.50 forced 3 neg 2 ce 0.373 contrastive 0.095
+494.2s 116 step 440/7324 loss 0.5561 lr 1.99e-04 tok/s 16,185
+494.2s 117 journal: hit 0.25 abstain-target 0.56 forced 4 neg 4 ce 0.373 contrastive 0.183
+503.9s 118 step 450/7324 loss 0.4568 lr 1.99e-04 tok/s 16,199
+503.9s 119 journal: hit 0.62 abstain-target 0.38 forced 2 neg 3 ce 0.446 contrastive 0.010
+514.4s 120 step 460/7324 loss 0.3865 lr 1.99e-04 tok/s 16,185
+514.4s 121 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.371 contrastive 0.016
+525.8s 122 step 470/7324 loss 0.5081 lr 1.99e-04 tok/s 16,143
+525.8s 123 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.406 contrastive 0.102
+535.6s 124 step 480/7324 loss 0.4974 lr 1.99e-04 tok/s 16,157
+535.6s 125 journal: hit 0.38 abstain-target 0.62 forced 1 neg 3 ce 0.401 contrastive 0.097
+547.0s 126 step 490/7324 loss 0.4711 lr 1.99e-04 tok/s 16,117
+547.0s 127 journal: hit 0.58 abstain-target 0.50 forced 1 neg 4 ce 0.368 contrastive 0.103
+553.5s 128 step 500/7324 loss 0.3947 lr 1.99e-04 tok/s 16,233
+553.5s 129 journal: hit 0.60 abstain-target 0.56 forced 1 neg 6 ce 0.368 contrastive 0.026
+563.0s 130 eval: val_loss 0.9919 ppl 2.696
+575.6s 131 step 510/7324 loss 0.5637 lr 1.99e-04 tok/s 15,862
+575.6s 132 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.452 contrastive 0.112
+583.8s 133 step 520/7324 loss 1.0118 lr 1.99e-04 tok/s 15,927
+583.8s 134 journal: hit 0.33 abstain-target 0.31 forced 7 neg 4 ce 0.292 contrastive 0.105
+590.2s 135 step 530/7324 loss 1.0207 lr 1.98e-04 tok/s 16,038
+590.2s 136 journal: hit 0.33 abstain-target 0.38 forced 6 neg 4 ce 0.362 contrastive 0.012
+603.3s 137 step 540/7324 loss 0.9627 lr 1.98e-04 tok/s 15,957
+603.3s 138 journal: hit 0.42 abstain-target 0.50 forced 3 neg 4 ce 0.338 contrastive 0.019
+613.1s 139 step 550/7324 loss 0.9903 lr 1.98e-04 tok/s 15,969
+613.1s 140 journal: hit 0.50 abstain-target 0.50 forced 2 neg 4 ce 0.288 contrastive 0.009
+621.2s 141 step 560/7324 loss 0.9989 lr 1.98e-04 tok/s 16,028
+621.2s 142 journal: hit 0.08 abstain-target 0.69 forced 4 neg 4 ce 0.369 contrastive 0.094
+631.8s 143 step 570/7324 loss 0.3612 lr 1.98e-04 tok/s 16,019
+631.8s 144 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.338 contrastive 0.023
+639.9s 145 step 580/7324 loss 0.3899 lr 1.98e-04 tok/s 16,076
+639.9s 146 journal: hit 0.45 abstain-target 0.44 forced 4 neg 5 ce 0.292 contrastive 0.098
+652.9s 147 step 590/7324 loss 0.9083 lr 1.98e-04 tok/s 16,001
+652.9s 148 journal: hit 0.71 abstain-target 0.25 forced 2 neg 2 ce 0.409 contrastive 0.101
+667.6s 149 step 600/7324 loss 0.9685 lr 1.98e-04 tok/s 15,887
+667.6s 150 journal: hit 0.53 abstain-target 0.31 forced 3 neg 1 ce 0.368 contrastive 0.121
+675.7s 151 step 610/7324 loss 0.9405 lr 1.98e-04 tok/s 15,942
+675.7s 152 journal: hit 0.50 abstain-target 0.38 forced 4 neg 4 ce 0.345 contrastive 0.028
+686.2s 153 step 620/7324 loss 0.9703 lr 1.98e-04 tok/s 15,936
+686.2s 154 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.468 contrastive 0.098
+699.2s 155 step 630/7324 loss 0.9799 lr 1.98e-04 tok/s 15,870
+699.2s 156 journal: hit 0.57 abstain-target 0.44 forced 1 neg 2 ce 0.379 contrastive 0.009
+709.0s 157 step 640/7324 loss 0.9954 lr 1.98e-04 tok/s 15,884
+709.0s 158 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.378 contrastive 0.183
+720.3s 159 step 650/7324 loss 0.4228 lr 1.97e-04 tok/s 15,859
+720.3s 160 journal: hit 0.55 abstain-target 0.44 forced 3 neg 5 ce 0.416 contrastive 0.007
+733.3s 161 step 660/7324 loss 1.0261 lr 1.97e-04 tok/s 15,797
+733.3s 162 journal: hit 0.38 abstain-target 0.25 forced 7 neg 3 ce 0.398 contrastive 0.035
+745.5s 163 step 670/7324 loss 0.4174 lr 1.97e-04 tok/s 15,758
+745.5s 164 journal: hit 0.70 abstain-target 0.38 forced 3 neg 6 ce 0.389 contrastive 0.029
+751.9s 165 step 680/7324 loss 0.3662 lr 1.97e-04 tok/s 15,846
+751.9s 166 journal: hit 0.50 abstain-target 0.38 forced 4 neg 4 ce 0.356 contrastive 0.010
+760.0s 167 step 690/7324 loss 0.9219 lr 1.97e-04 tok/s 15,896
+760.0s 168 journal: hit 0.45 abstain-target 0.50 forced 3 neg 5 ce 0.343 contrastive 0.092
+773.0s 169 step 700/7324 loss 0.9595 lr 1.97e-04 tok/s 15,837
+773.0s 170 journal: hit 0.25 abstain-target 0.62 forced 3 neg 4 ce 0.349 contrastive 0.013
+785.9s 171 step 710/7324 loss 0.3967 lr 1.97e-04 tok/s 15,781
+785.9s 172 journal: hit 0.60 abstain-target 0.38 forced 1 neg 1 ce 0.381 contrastive 0.015
+794.8s 173 step 720/7324 loss 0.4290 lr 1.97e-04 tok/s 15,813
+794.8s 174 journal: hit 0.77 abstain-target 0.38 forced 0 neg 3 ce 0.410 contrastive 0.019
+807.8s 175 step 730/7324 loss 0.5860 lr 1.97e-04 tok/s 15,759
+807.8s 176 journal: hit 0.22 abstain-target 0.69 forced 3 neg 7 ce 0.401 contrastive 0.185
+815.9s 177 step 740/7324 loss 0.4264 lr 1.97e-04 tok/s 15,806
+815.9s 178 journal: hit 0.83 abstain-target 0.62 forced 1 neg 10 ce 0.410 contrastive 0.016
+827.3s 179 step 750/7324 loss 0.9221 lr 1.96e-04 tok/s 15,785
+827.3s 180 journal: hit 0.50 abstain-target 0.44 forced 3 neg 4 ce 0.363 contrastive 0.014
+836.8s 181 eval: val_loss 0.9752 ppl 2.652
+848.2s 182 step 760/7324 loss 0.4401 lr 1.96e-04 tok/s 15,578
+848.2s 183 journal: hit 0.62 abstain-target 0.31 forced 3 neg 3 ce 0.350 contrastive 0.090
+860.3s 184 step 770/7324 loss 0.9862 lr 1.96e-04 tok/s 15,547
+860.3s 185 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.418 contrastive 0.007
+865.2s 186 step 780/7324 loss 0.3623 lr 1.96e-04 tok/s 15,654
+865.2s 187 journal: hit 0.80 abstain-target 0.06 forced 3 neg 1 ce 0.353 contrastive 0.009
+874.9s 188 step 790/7324 loss 0.9611 lr 1.96e-04 tok/s 15,668
+874.9s 189 journal: hit 0.50 abstain-target 0.50 forced 3 neg 6 ce 0.387 contrastive 0.015
+883.1s 190 step 800/7324 loss 0.8271 lr 1.96e-04 tok/s 15,712
+883.1s 191 journal: hit 0.73 abstain-target 0.19 forced 2 neg 1 ce 0.442 contrastive 0.385
+894.5s 192 step 810/7324 loss 0.3638 lr 1.96e-04 tok/s 15,694
+894.5s 193 journal: hit 0.67 abstain-target 0.44 forced 1 neg 4 ce 0.353 contrastive 0.011
+900.0s 194 step 820/7324 loss 0.3471 lr 1.96e-04 tok/s 15,783
+900.0s 195 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.340 contrastive 0.007
+911.5s 196 step 830/7324 loss 0.9849 lr 1.96e-04 tok/s 15,765
+911.5s 197 journal: hit 0.40 abstain-target 0.50 forced 4 neg 6 ce 0.401 contrastive 0.007
+917.9s 198 step 840/7324 loss 0.9735 lr 1.95e-04 tok/s 15,835
+917.9s 199 journal: hit 0.50 abstain-target 0.44 forced 3 neg 4 ce 0.438 contrastive 0.094
+924.5s 200 step 850/7324 loss 0.3064 lr 1.95e-04 tok/s 15,904
+924.5s 201 journal: hit 0.42 abstain-target 0.69 forced 0 neg 4 ce 0.277 contrastive 0.029
+935.8s 202 step 860/7324 loss 0.3508 lr 1.95e-04 tok/s 15,885
+935.8s 203 journal: hit 0.30 abstain-target 0.56 forced 4 neg 6 ce 0.347 contrastive 0.004
+944.7s 204 step 870/7324 loss 1.0247 lr 1.95e-04 tok/s 15,911
+944.7s 205 journal: hit 0.86 abstain-target 0.12 forced 2 neg 2 ce 0.345 contrastive 0.006
+954.5s 206 step 880/7324 loss 0.3724 lr 1.95e-04 tok/s 15,921
+954.5s 207 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.281 contrastive 0.092
+967.5s 208 step 890/7324 loss 0.9772 lr 1.95e-04 tok/s 15,873
+967.5s 209 journal: hit 0.50 abstain-target 0.38 forced 4 neg 4 ce 0.395 contrastive 0.109
+975.6s 210 step 900/7324 loss 0.3210 lr 1.95e-04 tok/s 15,911
+975.6s 211 journal: hit 0.33 abstain-target 0.50 forced 4 neg 4 ce 0.314 contrastive 0.007
+985.4s 212 step 910/7324 loss 0.2910 lr 1.94e-04 tok/s 15,920
+985.4s 213 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.282 contrastive 0.009
+1000.7s 214 step 920/7324 loss 0.9572 lr 1.94e-04 tok/s 15,836
+1000.7s 215 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.414 contrastive 0.005
+1010.4s 216 step 930/7324 loss 0.4844 lr 1.94e-04 tok/s 15,845
+1010.4s 217 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.394 contrastive 0.090
+1015.3s 218 step 940/7324 loss 0.4503 lr 1.94e-04 tok/s 15,935
+1015.3s 219 journal: hit 0.62 abstain-target 0.38 forced 2 neg 3 ce 0.347 contrastive 0.103
+1023.4s 220 step 950/7324 loss 0.9769 lr 1.94e-04 tok/s 15,971
+1023.4s 221 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.388 contrastive 0.005
+1033.1s 222 step 960/7324 loss 0.3790 lr 1.94e-04 tok/s 15,979
+1033.1s 223 journal: hit 0.55 abstain-target 0.50 forced 2 neg 5 ce 0.364 contrastive 0.015
+1042.0s 224 step 970/7324 loss 0.3805 lr 1.94e-04 tok/s 16,002
+1042.0s 225 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.373 contrastive 0.007
+1045.2s 226 step 980/7324 loss 0.4887 lr 1.93e-04 tok/s 16,114
+1045.2s 227 journal: hit 0.50 abstain-target 0.25 forced 5 neg 2 ce 0.395 contrastive 0.094
+1053.3s 228 step 990/7324 loss 0.9755 lr 1.93e-04 tok/s 16,147
+1053.3s 229 journal: hit 0.50 abstain-target 0.62 forced 1 neg 6 ce 0.418 contrastive 0.101
+1059.8s 230 step 1000/7324 loss 0.4499 lr 1.93e-04 tok/s 16,206
+1059.8s 231 journal: hit 0.58 abstain-target 0.50 forced 1 neg 4 ce 0.353 contrastive 0.097
+1069.3s 232 eval: val_loss 0.9841 ppl 2.676
+1079.8s 233 step 1010/7324 loss 1.0097 lr 1.93e-04 tok/s 16,051
+1079.8s 234 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.277 contrastive 0.095
+1088.7s 235 step 1020/7324 loss 0.4547 lr 1.93e-04 tok/s 16,071
+1088.7s 236 journal: hit 0.82 abstain-target 0.31 forced 2 neg 5 ce 0.354 contrastive 0.100
+1100.1s 237 step 1030/7324 loss 0.5051 lr 1.93e-04 tok/s 16,053
+1100.1s 238 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.405 contrastive 0.100
+1106.5s 239 step 1040/7324 loss 0.4834 lr 1.93e-04 tok/s 16,110
+1106.5s 240 journal: hit 0.55 abstain-target 0.44 forced 3 neg 5 ce 0.376 contrastive 0.108
+1113.0s 241 step 1050/7324 loss 0.9446 lr 1.92e-04 tok/s 16,165
+1113.0s 242 journal: hit 0.36 abstain-target 0.62 forced 2 neg 5 ce 0.339 contrastive 0.012
+1119.5s 243 step 1060/7324 loss 0.4297 lr 1.92e-04 tok/s 16,221
+1119.5s 244 journal: hit 0.85 abstain-target 0.25 forced 1 neg 3 ce 0.331 contrastive 0.099
+1130.0s 245 step 1070/7324 loss 0.4162 lr 1.92e-04 tok/s 16,215
+1130.0s 246 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.406 contrastive 0.011
+1138.1s 247 step 1080/7324 loss 0.9499 lr 1.92e-04 tok/s 16,245
+1138.1s 248 journal: hit 0.58 abstain-target 0.44 forced 2 neg 4 ce 0.465 contrastive 0.094
+1151.1s 249 step 1090/7324 loss 0.9843 lr 1.92e-04 tok/s 16,202
+1151.1s 250 journal: hit 0.50 abstain-target 0.69 forced 0 neg 6 ce 0.368 contrastive 0.099
+1165.7s 251 step 1100/7324 loss 0.9795 lr 1.92e-04 tok/s 16,137
+1165.7s 252 journal: hit 0.33 abstain-target 0.69 forced 1 neg 4 ce 0.335 contrastive 0.096
+1178.7s 253 step 1110/7324 loss 0.9911 lr 1.91e-04 tok/s 16,096
+1178.7s 254 journal: hit 0.43 abstain-target 0.38 forced 4 neg 2 ce 0.399 contrastive 0.092
+1193.3s 255 step 1120/7324 loss 0.9760 lr 1.91e-04 tok/s 16,033
+1193.3s 256 journal: hit 0.33 abstain-target 0.56 forced 3 neg 4 ce 0.386 contrastive 0.095
+1202.2s 257 step 1130/7324 loss 0.5371 lr 1.91e-04 tok/s 16,052
+1202.2s 258 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.439 contrastive 0.098
+1213.6s 259 step 1140/7324 loss 0.9550 lr 1.91e-04 tok/s 16,035
+1213.6s 260 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.319 contrastive 0.008
+1223.4s 261 step 1150/7324 loss 0.9981 lr 1.91e-04 tok/s 16,041
+1223.4s 262 journal: hit 0.69 abstain-target 0.31 forced 2 neg 3 ce 0.408 contrastive 0.091
+1233.1s 263 step 1160/7324 loss 1.0041 lr 1.91e-04 tok/s 16,048
+1233.1s 264 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.346 contrastive 0.007
+1244.5s 265 step 1170/7324 loss 0.9431 lr 1.90e-04 tok/s 16,033
+1244.5s 266 journal: hit 0.45 abstain-target 0.38 forced 5 neg 5 ce 0.391 contrastive 0.092
+1258.2s 267 step 1180/7324 loss 0.4291 lr 1.90e-04 tok/s 15,986
+1258.2s 268 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.416 contrastive 0.013
+1269.6s 269 step 1190/7324 loss 0.9809 lr 1.90e-04 tok/s 15,971
+1269.6s 270 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.402 contrastive 0.009
+1279.4s 271 step 1200/7324 loss 0.9361 lr 1.90e-04 tok/s 15,978
+1279.4s 272 journal: hit 0.56 abstain-target 0.25 forced 3 neg 0 ce 0.344 contrastive 0.012
+1290.8s 273 step 1210/7324 loss 0.9642 lr 1.90e-04 tok/s 15,963
+1290.8s 274 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.293 contrastive 0.091
+1298.9s 275 step 1220/7324 loss 0.3665 lr 1.90e-04 tok/s 15,990
+1298.9s 276 journal: hit 0.83 abstain-target 0.25 forced 2 neg 4 ce 0.363 contrastive 0.004
+1306.2s 277 step 1230/7324 loss 0.4392 lr 1.89e-04 tok/s 16,028
+1306.2s 278 journal: hit 0.89 abstain-target 0.44 forced 1 neg 7 ce 0.344 contrastive 0.096
+1312.6s 279 step 1240/7324 loss 0.3336 lr 1.89e-04 tok/s 16,075
+1312.6s 280 journal: hit 0.42 abstain-target 0.50 forced 3 neg 4 ce 0.325 contrastive 0.008
+1324.0s 281 step 1250/7324 loss 0.4587 lr 1.89e-04 tok/s 16,060
+1324.0s 282 journal: hit 0.55 abstain-target 0.31 forced 5 neg 5 ce 0.364 contrastive 0.095
+1333.6s 283 eval: val_loss 0.9976 ppl 2.712
+1346.6s 284 step 1260/7324 loss 1.0372 lr 1.89e-04 tok/s 15,907
+1346.6s 285 journal: hit 0.44 abstain-target 0.50 forced 4 neg 7 ce 0.321 contrastive 0.209
+1354.7s 286 step 1270/7324 loss 0.4214 lr 1.89e-04 tok/s 15,934
+1354.7s 287 journal: hit 0.30 abstain-target 0.69 forced 2 neg 6 ce 0.230 contrastive 0.191
+1366.8s 288 step 1280/7324 loss 0.9460 lr 1.88e-04 tok/s 15,911
+1366.8s 289 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.441 contrastive 0.098
+1376.6s 290 step 1290/7324 loss 0.9403 lr 1.88e-04 tok/s 15,918
+1376.6s 291 journal: hit 0.75 abstain-target 0.38 forced 1 neg 4 ce 0.379 contrastive 0.007
+1383.1s 292 step 1300/7324 loss 0.5768 lr 1.88e-04 tok/s 15,963
+1383.1s 293 journal: hit 0.45 abstain-target 0.69 forced 0 neg 5 ce 0.396 contrastive 0.181
+1396.1s 294 step 1310/7324 loss 0.9651 lr 1.88e-04 tok/s 15,931
+1396.1s 295 journal: hit 0.33 abstain-target 0.50 forced 4 neg 4 ce 0.354 contrastive 0.092
+1404.2s 296 step 1320/7324 loss 0.9981 lr 1.88e-04 tok/s 15,956
+1404.2s 297 journal: hit 0.27 abstain-target 0.56 forced 4 neg 5 ce 0.327 contrastive 0.094
+1413.1s 298 step 1330/7324 loss 0.4330 lr 1.87e-04 tok/s 15,972
+1413.1s 299 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.337 contrastive 0.096
+1426.1s 300 step 1340/7324 loss 0.4110 lr 1.87e-04 tok/s 15,941
+1426.1s 301 journal: hit 0.67 abstain-target 0.25 forced 4 neg 4 ce 0.404 contrastive 0.007
+1439.1s 302 step 1350/7324 loss 0.9752 lr 1.87e-04 tok/s 15,909
+1439.1s 303 journal: hit 0.73 abstain-target 0.25 forced 1 neg 1 ce 0.297 contrastive 0.095
+1452.1s 304 step 1360/7324 loss 0.3616 lr 1.87e-04 tok/s 15,878
+1452.1s 305 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.351 contrastive 0.010
+1457.0s 306 step 1370/7324 loss 0.3769 lr 1.87e-04 tok/s 15,940
+1457.0s 307 journal: hit 0.78 abstain-target 0.50 forced 1 neg 7 ce 0.286 contrastive 0.091
+1467.5s 308 step 1380/7324 loss 0.5620 lr 1.86e-04 tok/s 15,937
+1467.5s 309 journal: hit 0.93 abstain-target 0.06 forced 1 neg 1 ce 0.446 contrastive 0.116
+1478.8s 310 step 1390/7324 loss 0.9736 lr 1.86e-04 tok/s 15,925
+1478.8s 311 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.311 contrastive 0.206
+1488.6s 312 step 1400/7324 loss 1.0315 lr 1.86e-04 tok/s 15,931
+1488.6s 313 journal: hit 0.78 abstain-target 0.56 forced 0 neg 7 ce 0.356 contrastive 0.026
+1495.2s 314 step 1410/7324 loss 0.9518 lr 1.86e-04 tok/s 15,973
+1495.2s 315 journal: hit 0.46 abstain-target 0.50 forced 2 neg 3 ce 0.292 contrastive 0.092
+1508.1s 316 step 1420/7324 loss 0.3751 lr 1.86e-04 tok/s 15,943
+1508.1s 317 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.368 contrastive 0.007
+1518.6s 318 step 1430/7324 loss 0.9974 lr 1.85e-04 tok/s 15,940
+1518.6s 319 journal: hit 0.80 abstain-target 0.38 forced 2 neg 6 ce 0.339 contrastive 0.012
+1530.0s 320 step 1440/7324 loss 0.3588 lr 1.85e-04 tok/s 15,929
+1530.0s 321 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.354 contrastive 0.005
+1539.7s 322 step 1450/7324 loss 0.3773 lr 1.85e-04 tok/s 15,935
+1539.7s 323 journal: hit 0.60 abstain-target 0.56 forced 1 neg 6 ce 0.365 contrastive 0.012
+1549.5s 324 step 1460/7324 loss 0.9233 lr 1.85e-04 tok/s 15,941
+1549.5s 325 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.391 contrastive 0.092
+1560.8s 326 step 1470/7324 loss 1.0199 lr 1.84e-04 tok/s 15,929
+1560.8s 327 journal: hit 0.64 abstain-target 0.38 forced 1 neg 2 ce 0.310 contrastive 0.010
+1568.1s 328 step 1480/7324 loss 0.3331 lr 1.84e-04 tok/s 15,961
+1568.1s 329 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.329 contrastive 0.004
+1576.2s 330 step 1490/7324 loss 0.9379 lr 1.84e-04 tok/s 15,983
+1576.2s 331 journal: hit 0.73 abstain-target 0.06 forced 4 neg 1 ce 0.315 contrastive 0.008
+1587.6s 332 step 1500/7324 loss 0.3516 lr 1.84e-04 tok/s 15,971
+1587.6s 333 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.347 contrastive 0.004
+1597.1s 334 eval: val_loss 0.9802 ppl 2.665
+1607.6s 335 step 1510/7324 loss 0.9490 lr 1.84e-04 tok/s 15,872
+1607.6s 336 journal: hit 0.73 abstain-target 0.31 forced 3 neg 5 ce 0.237 contrastive 0.007
+1619.0s 337 step 1520/7324 loss 0.5170 lr 1.83e-04 tok/s 15,861
+1619.0s 338 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.304 contrastive 0.212
+1627.8s 339 step 1530/7324 loss 0.4930 lr 1.83e-04 tok/s 15,876
+1627.8s 340 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.402 contrastive 0.091
+1631.0s 341 step 1540/7324 loss 0.3877 lr 1.83e-04 tok/s 15,947
+1631.0s 342 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.381 contrastive 0.007
+1635.9s 343 step 1550/7324 loss 0.3416 lr 1.83e-04 tok/s 16,001
+1635.9s 344 journal: hit 0.78 abstain-target 0.50 forced 1 neg 7 ce 0.337 contrastive 0.004
+1647.2s 345 step 1560/7324 loss 0.9818 lr 1.82e-04 tok/s 15,990
+1647.2s 346 journal: hit 0.50 abstain-target 0.44 forced 3 neg 4 ce 0.280 contrastive 0.005
+1655.3s 347 step 1570/7324 loss 0.4897 lr 1.82e-04 tok/s 16,012
+1655.3s 348 journal: hit 0.47 abstain-target 0.12 forced 7 neg 1 ce 0.313 contrastive 0.177
+1669.9s 349 step 1580/7324 loss 0.9649 lr 1.82e-04 tok/s 15,968
+1669.9s 350 journal: hit 0.53 abstain-target 0.44 forced 1 neg 1 ce 0.277 contrastive 0.092
+1677.2s 351 step 1590/7324 loss 0.9289 lr 1.82e-04 tok/s 15,998
+1677.2s 352 journal: hit 0.92 abstain-target 0.25 forced 1 neg 4 ce 0.360 contrastive 0.100
+1688.5s 353 step 1600/7324 loss 0.9687 lr 1.82e-04 tok/s 15,987
+1688.5s 354 journal: hit 0.50 abstain-target 0.38 forced 4 neg 4 ce 0.354 contrastive 0.097
+1698.3s 355 step 1610/7324 loss 0.9258 lr 1.81e-04 tok/s 15,993
+1698.3s 356 journal: hit 0.46 abstain-target 0.31 forced 5 neg 3 ce 0.384 contrastive 0.008
+1704.7s 357 step 1620/7324 loss 0.4525 lr 1.81e-04 tok/s 16,029
+1704.7s 358 journal: hit 0.38 abstain-target 0.44 forced 4 neg 3 ce 0.361 contrastive 0.092
+1716.0s 359 step 1630/7324 loss 0.9652 lr 1.81e-04 tok/s 16,018
+1716.0s 360 journal: hit 0.45 abstain-target 0.50 forced 3 neg 5 ce 0.331 contrastive 0.006
+1723.3s 361 step 1640/7324 loss 0.2956 lr 1.81e-04 tok/s 16,047
+1723.3s 362 journal: hit 0.60 abstain-target 0.25 forced 3 neg 1 ce 0.291 contrastive 0.005
+1729.8s 363 step 1650/7324 loss 0.4025 lr 1.80e-04 tok/s 16,082
+1729.8s 364 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.305 contrastive 0.097
+1736.3s 365 step 1660/7324 loss 0.4007 lr 1.80e-04 tok/s 16,117
+1736.3s 366 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.394 contrastive 0.006
+1747.6s 367 step 1670/7324 loss 0.9923 lr 1.80e-04 tok/s 16,106
+1747.6s 368 journal: hit 0.50 abstain-target 0.38 forced 4 neg 4 ce 0.383 contrastive 0.005
+1757.4s 369 step 1680/7324 loss 0.9571 lr 1.80e-04 tok/s 16,110
+1757.4s 370 journal: hit 0.62 abstain-target 0.31 forced 3 neg 3 ce 0.307 contrastive 0.267
+1764.6s 371 step 1690/7324 loss 0.9587 lr 1.79e-04 tok/s 16,138
+1764.6s 372 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.300 contrastive 0.093
+1772.8s 373 step 1700/7324 loss 0.9280 lr 1.79e-04 tok/s 16,157
+1772.8s 374 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.237 contrastive 0.093
+1789.0s 375 step 1710/7324 loss 0.9620 lr 1.79e-04 tok/s 16,100
+1789.0s 376 journal: hit 0.50 abstain-target 0.38 forced 4 neg 4 ce 0.347 contrastive 0.091
+1797.1s 377 step 1720/7324 loss 0.4508 lr 1.79e-04 tok/s 16,119
+1797.1s 378 journal: hit 0.38 abstain-target 0.44 forced 4 neg 3 ce 0.350 contrastive 0.100
+1803.6s 379 step 1730/7324 loss 0.3778 lr 1.78e-04 tok/s 16,152
+1803.6s 380 journal: hit 0.38 abstain-target 0.56 forced 4 neg 8 ce 0.267 contrastive 0.110
+1817.3s 381 step 1740/7324 loss 0.3335 lr 1.78e-04 tok/s 16,120
+1817.3s 382 journal: hit 0.87 abstain-target 0.12 forced 1 neg 1 ce 0.321 contrastive 0.013
+1820.6s 383 step 1750/7324 loss 0.4692 lr 1.78e-04 tok/s 16,183
+1820.6s 384 journal: hit 0.69 abstain-target 0.31 forced 2 neg 3 ce 0.289 contrastive 0.181
+1830.1s 385 eval: val_loss 1.0058 ppl 2.734
+1841.5s 386 step 1760/7324 loss 0.3205 lr 1.78e-04 tok/s 16,086
+1841.5s 387 journal: hit 0.33 abstain-target 0.75 forced 1 neg 7 ce 0.301 contrastive 0.020
+1848.0s 388 step 1770/7324 loss 0.4759 lr 1.77e-04 tok/s 16,118
+1848.0s 389 journal: hit 0.60 abstain-target 0.25 forced 3 neg 1 ce 0.298 contrastive 0.177
+1856.1s 390 step 1780/7324 loss 1.0514 lr 1.77e-04 tok/s 16,137
+1856.1s 391 journal: hit 0.62 abstain-target 0.25 forced 4 neg 3 ce 0.295 contrastive 0.005
+1863.4s 392 step 1790/7324 loss 1.0097 lr 1.77e-04 tok/s 16,162
+1863.4s 393 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.242 contrastive 0.112
+1869.9s 394 step 1800/7324 loss 0.3382 lr 1.77e-04 tok/s 16,195
+1869.9s 395 journal: hit 0.62 abstain-target 0.38 forced 2 neg 3 ce 0.332 contrastive 0.006
+1881.2s 396 step 1810/7324 loss 1.0073 lr 1.76e-04 tok/s 16,184
+1881.2s 397 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.269 contrastive 0.094
+1892.6s 398 step 1820/7324 loss 0.9630 lr 1.76e-04 tok/s 16,173
+1892.6s 399 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.310 contrastive 0.178
+1902.4s 400 step 1830/7324 loss 0.3640 lr 1.76e-04 tok/s 16,176
+1902.4s 401 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.271 contrastive 0.093
+1914.5s 402 step 1840/7324 loss 1.0352 lr 1.75e-04 tok/s 16,159
+1914.5s 403 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.389 contrastive 0.006
+1930.8s 404 step 1850/7324 loss 1.0575 lr 1.75e-04 tok/s 16,106
+1930.8s 405 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.384 contrastive 0.011
+1940.6s 406 step 1860/7324 loss 0.2971 lr 1.75e-04 tok/s 16,109
+1940.6s 407 journal: hit 0.67 abstain-target 0.38 forced 2 neg 4 ce 0.279 contrastive 0.018
+1952.0s 408 step 1870/7324 loss 0.3250 lr 1.75e-04 tok/s 16,099
+1952.0s 409 journal: hit 0.64 abstain-target 0.31 forced 2 neg 2 ce 0.317 contrastive 0.008
+1961.7s 410 step 1880/7324 loss 0.9971 lr 1.74e-04 tok/s 16,102
+1961.7s 411 journal: hit 0.79 abstain-target 0.25 forced 1 neg 2 ce 0.360 contrastive 0.004
+1972.3s 412 step 1890/7324 loss 0.4139 lr 1.74e-04 tok/s 16,099
+1972.3s 413 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.320 contrastive 0.094
+1982.0s 414 step 1900/7324 loss 1.0061 lr 1.74e-04 tok/s 16,102
+1982.0s 415 journal: hit 0.75 abstain-target 0.38 forced 1 neg 4 ce 0.249 contrastive 0.008
+1988.5s 416 step 1910/7324 loss 0.3169 lr 1.74e-04 tok/s 16,133
+1988.5s 417 journal: hit 0.46 abstain-target 0.50 forced 2 neg 3 ce 0.225 contrastive 0.092
+2003.2s 418 step 1920/7324 loss 0.9530 lr 1.73e-04 tok/s 16,096
+2003.2s 419 journal: hit 0.54 abstain-target 0.50 forced 1 neg 3 ce 0.277 contrastive 0.007
+2016.2s 420 step 1930/7324 loss 0.3398 lr 1.73e-04 tok/s 16,073
+2016.2s 421 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.334 contrastive 0.006
+2024.2s 422 step 1940/7324 loss 0.9308 lr 1.73e-04 tok/s 16,090
+2024.2s 423 journal: hit 0.58 abstain-target 0.50 forced 1 neg 4 ce 0.421 contrastive 0.178
+2036.4s 424 step 1950/7324 loss 0.3492 lr 1.72e-04 tok/s 16,074
+2036.4s 425 journal: hit 0.79 abstain-target 0.19 forced 2 neg 2 ce 0.343 contrastive 0.006
+2047.7s 426 step 1960/7324 loss 0.4597 lr 1.72e-04 tok/s 16,065
+2047.7s 427 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.367 contrastive 0.093
+2059.1s 428 step 1970/7324 loss 1.0310 lr 1.72e-04 tok/s 16,056
+2059.1s 429 journal: hit 0.36 abstain-target 0.44 forced 5 neg 5 ce 0.263 contrastive 0.092
+2072.1s 430 step 1980/7324 loss 0.9294 lr 1.72e-04 tok/s 16,034
+2072.1s 431 journal: hit 0.50 abstain-target 0.69 forced 0 neg 6 ce 0.385 contrastive 0.091
+2085.1s 432 step 1990/7324 loss 1.0455 lr 1.71e-04 tok/s 16,012
+2085.1s 433 journal: hit 0.60 abstain-target 0.56 forced 1 neg 6 ce 0.261 contrastive 0.187
+2097.1s 434 step 2000/7324 loss 0.3898 lr 1.71e-04 tok/s 15,997
+2097.1s 435 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.383 contrastive 0.007
+2106.7s 436 eval: val_loss 0.9860 ppl 2.680
+2112.3s 437 step 2010/7324 loss 0.2343 lr 1.71e-04 tok/s 15,959
+2112.3s 438 journal: hit 0.64 abstain-target 0.56 forced 0 neg 5 ce 0.228 contrastive 0.007
+2122.0s 439 step 2020/7324 loss 0.4828 lr 1.70e-04 tok/s 15,964
+2122.0s 440 journal: hit 0.58 abstain-target 0.44 forced 2 neg 4 ce 0.391 contrastive 0.092
+2133.4s 441 step 2030/7324 loss 0.4340 lr 1.70e-04 tok/s 15,955
+2133.4s 442 journal: hit 0.69 abstain-target 0.12 forced 3 neg 0 ce 0.345 contrastive 0.089
+2148.1s 443 step 2040/7324 loss 1.0362 lr 1.70e-04 tok/s 15,921
+2148.1s 444 journal: hit 0.62 abstain-target 0.31 forced 3 neg 3 ce 0.309 contrastive 0.094
+2158.6s 445 step 2050/7324 loss 0.3700 lr 1.70e-04 tok/s 15,920
+2158.6s 446 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.366 contrastive 0.004
+2166.7s 447 step 2060/7324 loss 0.3744 lr 1.69e-04 tok/s 15,936
+2166.7s 448 journal: hit 0.90 abstain-target 0.38 forced 1 neg 6 ce 0.368 contrastive 0.007
+2173.2s 449 step 2070/7324 loss 0.3787 lr 1.69e-04 tok/s 15,964
+2173.2s 450 journal: hit 0.58 abstain-target 0.44 forced 2 neg 4 ce 0.370 contrastive 0.009
+2183.0s 451 step 2080/7324 loss 0.9402 lr 1.69e-04 tok/s 15,968
+2183.0s 452 journal: hit 0.42 abstain-target 0.44 forced 4 neg 4 ce 0.284 contrastive 0.003
+2191.1s 453 step 2090/7324 loss 0.9653 lr 1.68e-04 tok/s 15,984
+2191.1s 454 journal: hit 0.79 abstain-target 0.25 forced 1 neg 2 ce 0.242 contrastive 0.089
+2204.9s 455 step 2100/7324 loss 0.5458 lr 1.68e-04 tok/s 15,958
+2204.9s 456 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.355 contrastive 0.191
+2213.0s 457 step 2110/7324 loss 0.4207 lr 1.68e-04 tok/s 15,974
+2213.0s 458 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.329 contrastive 0.092
+2222.7s 459 step 2120/7324 loss 1.0199 lr 1.67e-04 tok/s 15,978
+2222.7s 460 journal: hit 0.45 abstain-target 0.69 forced 0 neg 5 ce 0.270 contrastive 0.097
+2232.5s 461 step 2130/7324 loss 0.2602 lr 1.67e-04 tok/s 15,981
+2232.5s 462 journal: hit 0.54 abstain-target 0.50 forced 1 neg 3 ce 0.255 contrastive 0.005
+2235.7s 463 step 2140/7324 loss 0.3554 lr 1.67e-04 tok/s 16,033
+2235.7s 464 journal: hit 0.47 abstain-target 0.31 forced 4 neg 1 ce 0.331 contrastive 0.025
+2246.2s 465 step 2150/7324 loss 0.3743 lr 1.67e-04 tok/s 16,031
+2246.2s 466 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.364 contrastive 0.010
+2251.1s 467 step 2160/7324 loss 0.3335 lr 1.66e-04 tok/s 16,070
+2251.1s 468 journal: hit 0.73 abstain-target 0.38 forced 2 neg 5 ce 0.330 contrastive 0.003
+2264.0s 469 step 2170/7324 loss 0.9249 lr 1.66e-04 tok/s 16,050
+2264.0s 470 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.349 contrastive 0.021
+2275.4s 471 step 2180/7324 loss 0.4091 lr 1.66e-04 tok/s 16,041
+2275.4s 472 journal: hit 0.58 abstain-target 0.38 forced 3 neg 4 ce 0.314 contrastive 0.095
+2280.2s 473 step 2190/7324 loss 0.4113 lr 1.65e-04 tok/s 16,080
+2280.2s 474 journal: hit 0.55 abstain-target 0.56 forced 1 neg 5 ce 0.321 contrastive 0.090
+2289.1s 475 step 2200/7324 loss 0.3374 lr 1.65e-04 tok/s 16,090
+2289.1s 476 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.330 contrastive 0.008
+2297.2s 477 step 2210/7324 loss 0.2727 lr 1.65e-04 tok/s 16,104
+2297.2s 478 journal: hit 0.90 abstain-target 0.38 forced 1 neg 6 ce 0.267 contrastive 0.006
+2306.9s 479 step 2220/7324 loss 1.0501 lr 1.64e-04 tok/s 16,108
+2306.9s 480 journal: hit 0.85 abstain-target 0.25 forced 1 neg 3 ce 0.226 contrastive 0.007
+2321.5s 481 step 2230/7324 loss 1.0230 lr 1.64e-04 tok/s 16,076
+2321.5s 482 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.346 contrastive 0.008
+2331.2s 483 step 2240/7324 loss 0.3454 lr 1.64e-04 tok/s 16,080
+2331.2s 484 journal: hit 0.79 abstain-target 0.25 forced 1 neg 2 ce 0.255 contrastive 0.091
+2336.8s 485 step 2250/7324 loss 0.3556 lr 1.63e-04 tok/s 16,112
+2336.8s 486 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.344 contrastive 0.012
+2346.4s 487 eval: val_loss 0.9864 ppl 2.682
+2356.1s 488 step 2260/7324 loss 0.4989 lr 1.63e-04 tok/s 16,048
+2356.1s 489 journal: hit 0.64 abstain-target 0.44 forced 2 neg 5 ce 0.321 contrastive 0.178
+2364.3s 490 step 2270/7324 loss 0.2733 lr 1.63e-04 tok/s 16,063
+2364.3s 491 journal: hit 0.71 abstain-target 0.25 forced 2 neg 2 ce 0.268 contrastive 0.005
+2375.5s 492 step 2280/7324 loss 0.4864 lr 1.62e-04 tok/s 16,055
+2375.5s 493 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.479 contrastive 0.007
+2386.9s 494 step 2290/7324 loss 1.0085 lr 1.62e-04 tok/s 16,047
+2386.9s 495 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.220 contrastive 0.102
+2396.6s 496 step 2300/7324 loss 1.0377 lr 1.62e-04 tok/s 16,050
+2396.6s 497 journal: hit 0.73 abstain-target 0.44 forced 1 neg 5 ce 0.230 contrastive 0.003
+2405.5s 498 step 2310/7324 loss 0.5154 lr 1.62e-04 tok/s 16,060
+2405.5s 499 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.337 contrastive 0.178
+2420.1s 500 step 2320/7324 loss 0.9680 lr 1.61e-04 tok/s 16,030
+2420.1s 501 journal: hit 0.69 abstain-target 0.44 forced 0 neg 3 ce 0.299 contrastive 0.005
+2429.8s 502 step 2330/7324 loss 0.9814 lr 1.61e-04 tok/s 16,033
+2429.8s 503 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.252 contrastive 0.093
+2437.9s 504 step 2340/7324 loss 0.2985 lr 1.61e-04 tok/s 16,047
+2437.9s 505 journal: hit 0.73 abstain-target 0.44 forced 1 neg 5 ce 0.293 contrastive 0.005
+2450.9s 506 step 2350/7324 loss 0.9794 lr 1.60e-04 tok/s 16,029
+2450.9s 507 journal: hit 0.62 abstain-target 0.38 forced 2 neg 3 ce 0.346 contrastive 0.009
+2466.3s 508 step 2360/7324 loss 0.9645 lr 1.60e-04 tok/s 15,995
+2466.3s 509 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.323 contrastive 0.095
+2479.3s 510 step 2370/7324 loss 0.9472 lr 1.60e-04 tok/s 15,976
+2479.3s 511 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.319 contrastive 0.096
+2489.0s 512 step 2380/7324 loss 0.3426 lr 1.59e-04 tok/s 15,980
+2489.0s 513 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.336 contrastive 0.007
+2500.4s 514 step 2390/7324 loss 0.9763 lr 1.59e-04 tok/s 15,972
+2500.4s 515 journal: hit 0.25 abstain-target 0.62 forced 3 neg 4 ce 0.360 contrastive 0.007
+2508.6s 516 step 2400/7324 loss 0.2839 lr 1.59e-04 tok/s 15,986
+2508.6s 517 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.277 contrastive 0.007
+2520.8s 518 step 2410/7324 loss 1.0032 lr 1.58e-04 tok/s 15,974
+2520.8s 519 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.303 contrastive 0.007
+2528.9s 520 step 2420/7324 loss 0.9712 lr 1.58e-04 tok/s 15,987
+2528.9s 521 journal: hit 0.62 abstain-target 0.38 forced 2 neg 3 ce 0.283 contrastive 0.091
+2535.5s 522 step 2430/7324 loss 0.3027 lr 1.58e-04 tok/s 16,011
+2535.5s 523 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.296 contrastive 0.007
+2545.3s 524 step 2440/7324 loss 1.0729 lr 1.57e-04 tok/s 16,014
+2545.3s 525 journal: hit 0.40 abstain-target 0.62 forced 2 neg 6 ce 0.242 contrastive 0.007
+2558.3s 526 step 2450/7324 loss 0.9686 lr 1.57e-04 tok/s 15,996
+2558.3s 527 journal: hit 0.36 abstain-target 0.50 forced 4 neg 5 ce 0.282 contrastive 0.003
+2573.7s 528 step 2460/7324 loss 0.3910 lr 1.57e-04 tok/s 15,963
+2573.7s 529 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.384 contrastive 0.007
+2586.7s 530 step 2470/7324 loss 0.3990 lr 1.56e-04 tok/s 15,946
+2586.7s 531 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.391 contrastive 0.008
+2594.8s 532 step 2480/7324 loss 1.0369 lr 1.56e-04 tok/s 15,959
+2594.8s 533 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.270 contrastive 0.020
+2603.0s 534 step 2490/7324 loss 0.2177 lr 1.56e-04 tok/s 15,973
+2603.0s 535 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.212 contrastive 0.006
+2611.1s 536 step 2500/7324 loss 0.9857 lr 1.55e-04 tok/s 15,986
+2611.1s 537 journal: hit 0.58 abstain-target 0.50 forced 1 neg 4 ce 0.286 contrastive 0.092
+2620.6s 538 eval: val_loss 0.9754 ppl 2.652
+2628.7s 539 step 2510/7324 loss 0.2885 lr 1.55e-04 tok/s 15,940
+2628.7s 540 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.280 contrastive 0.008
+2641.7s 541 step 2520/7324 loss 0.9172 lr 1.55e-04 tok/s 15,924
+2641.7s 542 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.334 contrastive 0.091
+2659.6s 543 step 2530/7324 loss 1.0274 lr 1.54e-04 tok/s 15,877
+2659.6s 544 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.334 contrastive 0.091
+2664.5s 545 step 2540/7324 loss 0.3625 lr 1.54e-04 tok/s 15,910
+2664.5s 546 journal: hit 0.67 abstain-target 0.44 forced 1 neg 4 ce 0.272 contrastive 0.091
+2672.6s 547 step 2550/7324 loss 0.9691 lr 1.54e-04 tok/s 15,923
+2672.6s 548 journal: hit 0.69 abstain-target 0.44 forced 0 neg 3 ce 0.326 contrastive 0.006
+2679.9s 549 step 2560/7324 loss 0.2606 lr 1.53e-04 tok/s 15,941
+2679.9s 550 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.252 contrastive 0.009
+2688.0s 551 step 2570/7324 loss 1.0306 lr 1.53e-04 tok/s 15,955
+2688.0s 552 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.340 contrastive 0.006
+2694.5s 553 step 2580/7324 loss 0.9250 lr 1.53e-04 tok/s 15,977
+2694.5s 554 journal: hit 0.54 abstain-target 0.44 forced 2 neg 3 ce 0.310 contrastive 0.004
+2707.5s 555 step 2590/7324 loss 0.2619 lr 1.52e-04 tok/s 15,961
+2707.5s 556 journal: hit 0.50 abstain-target 0.62 forced 1 neg 6 ce 0.257 contrastive 0.005
+2722.0s 557 step 2600/7324 loss 0.9422 lr 1.52e-04 tok/s 15,935
+2722.0s 558 journal: hit 0.57 abstain-target 0.38 forced 2 neg 2 ce 0.270 contrastive 0.006
+2730.9s 559 step 2610/7324 loss 0.3274 lr 1.51e-04 tok/s 15,944
+2730.9s 560 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.323 contrastive 0.004
+2743.9s 561 step 2620/7324 loss 0.3188 lr 1.51e-04 tok/s 15,928
+2743.9s 562 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.304 contrastive 0.015
+2750.3s 563 step 2630/7324 loss 0.9573 lr 1.51e-04 tok/s 15,950
+2750.3s 564 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.295 contrastive 0.005
+2761.7s 565 step 2640/7324 loss 0.2882 lr 1.50e-04 tok/s 15,944
+2761.7s 566 journal: hit 0.69 abstain-target 0.25 forced 3 neg 3 ce 0.284 contrastive 0.005
+2774.7s 567 step 2650/7324 loss 0.2359 lr 1.50e-04 tok/s 15,928
+2774.7s 568 journal: hit 0.38 abstain-target 0.38 forced 5 neg 3 ce 0.232 contrastive 0.004
+2790.0s 569 step 2660/7324 loss 0.2620 lr 1.50e-04 tok/s 15,899
+2790.0s 570 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.258 contrastive 0.004
+2801.3s 571 step 2670/7324 loss 0.9996 lr 1.49e-04 tok/s 15,893
+2801.3s 572 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.357 contrastive 0.092
+2811.1s 573 step 2680/7324 loss 0.3095 lr 1.49e-04 tok/s 15,896
+2811.1s 574 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.298 contrastive 0.011
+2822.4s 575 step 2690/7324 loss 0.9574 lr 1.49e-04 tok/s 15,890
+2822.4s 576 journal: hit 0.58 abstain-target 0.50 forced 1 neg 4 ce 0.290 contrastive 0.004
+2827.3s 577 step 2700/7324 loss 0.3451 lr 1.48e-04 tok/s 15,921
+2827.3s 578 journal: hit 0.80 abstain-target 0.38 forced 2 neg 6 ce 0.342 contrastive 0.003
+2838.6s 579 step 2710/7324 loss 0.9565 lr 1.48e-04 tok/s 15,915
+2838.6s 580 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.398 contrastive 0.090
+2849.1s 581 step 2720/7324 loss 0.3445 lr 1.48e-04 tok/s 15,914
+2849.1s 582 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.252 contrastive 0.092
+2860.5s 583 step 2730/7324 loss 1.0250 lr 1.47e-04 tok/s 15,908
+2860.5s 584 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.289 contrastive 0.011
+2871.9s 585 step 2740/7324 loss 1.0043 lr 1.47e-04 tok/s 15,902
+2871.9s 586 journal: hit 0.55 abstain-target 0.44 forced 3 neg 5 ce 0.325 contrastive 0.003
+2880.0s 587 step 2750/7324 loss 0.3487 lr 1.47e-04 tok/s 15,914
+2880.0s 588 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.344 contrastive 0.005
+2889.6s 589 eval: val_loss 0.9823 ppl 2.671
+2897.7s 590 step 2760/7324 loss 0.2379 lr 1.46e-04 tok/s 15,873
+2897.7s 591 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.234 contrastive 0.004
+2909.7s 592 step 2770/7324 loss 0.4412 lr 1.46e-04 tok/s 15,863
+2909.7s 593 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.351 contrastive 0.091
+2916.2s 594 step 2780/7324 loss 0.3598 lr 1.45e-04 tok/s 15,885
+2916.2s 595 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.356 contrastive 0.004
+2922.7s 596 step 2790/7324 loss 0.9085 lr 1.45e-04 tok/s 15,906
+2922.7s 597 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.299 contrastive 0.005
+2932.4s 598 step 2800/7324 loss 1.0097 lr 1.45e-04 tok/s 15,909
+2932.4s 599 journal: hit 0.67 abstain-target 0.38 forced 2 neg 4 ce 0.295 contrastive 0.009
+2940.5s 600 step 2810/7324 loss 0.3069 lr 1.44e-04 tok/s 15,921
+2940.5s 601 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.218 contrastive 0.089
+2944.5s 602 step 2820/7324 loss 0.3377 lr 1.44e-04 tok/s 15,956
+2944.5s 603 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.248 contrastive 0.089
+2951.0s 604 step 2830/7324 loss 0.9821 lr 1.44e-04 tok/s 15,977
+2951.0s 605 journal: hit 0.93 abstain-target 0.06 forced 1 neg 1 ce 0.239 contrastive 0.090
+2963.9s 606 step 2840/7324 loss 1.0091 lr 1.43e-04 tok/s 15,962
+2963.9s 607 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.245 contrastive 0.005
+2976.9s 608 step 2850/7324 loss 0.9887 lr 1.43e-04 tok/s 15,947
+2976.9s 609 journal: hit 0.79 abstain-target 0.19 forced 2 neg 2 ce 0.256 contrastive 0.093
+2983.4s 610 step 2860/7324 loss 0.3737 lr 1.43e-04 tok/s 15,967
+2983.4s 611 journal: hit 0.67 abstain-target 0.44 forced 1 neg 4 ce 0.283 contrastive 0.090
+2993.9s 612 step 2870/7324 loss 0.9754 lr 1.42e-04 tok/s 15,966
+2993.9s 613 journal: hit 0.70 abstain-target 0.56 forced 0 neg 6 ce 0.314 contrastive 0.091
+3002.0s 614 step 2880/7324 loss 0.3009 lr 1.42e-04 tok/s 15,978
+3002.0s 615 journal: hit 0.92 abstain-target 0.25 forced 1 neg 4 ce 0.296 contrastive 0.005
+3008.5s 616 step 2890/7324 loss 0.9685 lr 1.41e-04 tok/s 15,998
+3008.5s 617 journal: hit 0.80 abstain-target 0.44 forced 1 neg 6 ce 0.331 contrastive 0.093
+3018.3s 618 step 2900/7324 loss 0.9946 lr 1.41e-04 tok/s 16,001
+3018.3s 619 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.175 contrastive 0.004
+3028.1s 620 step 2910/7324 loss 0.3665 lr 1.41e-04 tok/s 16,003
+3028.1s 621 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.276 contrastive 0.090
+3035.4s 622 step 2920/7324 loss 0.9977 lr 1.40e-04 tok/s 16,019
+3035.4s 623 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.224 contrastive 0.095
+3040.2s 624 step 2930/7324 loss 0.3400 lr 1.40e-04 tok/s 16,048
+3040.2s 625 journal: hit 0.94 abstain-target 0.06 forced 0 neg 0 ce 0.248 contrastive 0.092
+3051.5s 626 step 2940/7324 loss 0.9304 lr 1.40e-04 tok/s 16,042
+3051.5s 627 journal: hit 0.45 abstain-target 0.50 forced 3 neg 5 ce 0.336 contrastive 0.177
+3059.6s 628 step 2950/7324 loss 0.4055 lr 1.39e-04 tok/s 16,053
+3059.6s 629 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.313 contrastive 0.092
+3069.4s 630 step 2960/7324 loss 1.0173 lr 1.39e-04 tok/s 16,056
+3069.4s 631 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.289 contrastive 0.090
+3076.6s 632 step 2970/7324 loss 0.2736 lr 1.39e-04 tok/s 16,071
+3076.6s 633 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.270 contrastive 0.003
+3089.6s 634 step 2980/7324 loss 0.9462 lr 1.38e-04 tok/s 16,057
+3089.6s 635 journal: hit 0.54 abstain-target 0.44 forced 2 neg 3 ce 0.310 contrastive 0.002
+3094.4s 636 step 2990/7324 loss 0.9969 lr 1.38e-04 tok/s 16,085
+3094.4s 637 journal: hit 0.69 abstain-target 0.44 forced 0 neg 3 ce 0.275 contrastive 0.091
+3100.9s 638 step 3000/7324 loss 0.9140 lr 1.37e-04 tok/s 16,104
+3100.9s 639 journal: hit 0.57 abstain-target 0.31 forced 3 neg 2 ce 0.229 contrastive 0.091
+3110.4s 640 eval: val_loss 0.9770 ppl 2.656
+3121.0s 641 step 3010/7324 loss 1.0163 lr 1.37e-04 tok/s 16,053
+3121.0s 642 journal: hit 0.73 abstain-target 0.44 forced 1 neg 5 ce 0.308 contrastive 0.004
+3128.2s 643 step 3020/7324 loss 0.2696 lr 1.37e-04 tok/s 16,068
+3128.2s 644 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.266 contrastive 0.003
+3137.9s 645 step 3030/7324 loss 0.2726 lr 1.36e-04 tok/s 16,070
+3137.9s 646 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.270 contrastive 0.003
+3152.6s 647 step 3040/7324 loss 0.9268 lr 1.36e-04 tok/s 16,048
+3152.6s 648 journal: hit 0.77 abstain-target 0.38 forced 0 neg 3 ce 0.274 contrastive 0.004
+3159.1s 649 step 3050/7324 loss 0.9931 lr 1.36e-04 tok/s 16,067
+3159.1s 650 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.254 contrastive 0.005
+3167.2s 651 step 3060/7324 loss 0.2452 lr 1.35e-04 tok/s 16,077
+3167.2s 652 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.242 contrastive 0.004
+3174.5s 653 step 3070/7324 loss 0.2868 lr 1.35e-04 tok/s 16,092
+3174.5s 654 journal: hit 0.80 abstain-target 0.38 forced 2 neg 6 ce 0.280 contrastive 0.006
+3182.6s 655 step 3080/7324 loss 0.2604 lr 1.34e-04 tok/s 16,103
+3182.6s 656 journal: hit 0.67 abstain-target 0.31 forced 1 neg 1 ce 0.251 contrastive 0.009
+3189.1s 657 step 3090/7324 loss 0.2731 lr 1.34e-04 tok/s 16,122
+3189.1s 658 journal: hit 0.60 abstain-target 0.62 forced 0 neg 6 ce 0.267 contrastive 0.006
+3202.1s 659 step 3100/7324 loss 0.9662 lr 1.34e-04 tok/s 16,107
+3202.1s 660 journal: hit 0.67 abstain-target 0.50 forced 2 neg 7 ce 0.317 contrastive 0.007
+3211.8s 661 step 3110/7324 loss 0.3578 lr 1.33e-04 tok/s 16,109
+3211.8s 662 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.267 contrastive 0.091
+3224.0s 663 step 3120/7324 loss 0.9775 lr 1.33e-04 tok/s 16,099
+3224.0s 664 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.292 contrastive 0.091
+3232.1s 665 step 3130/7324 loss 0.3106 lr 1.33e-04 tok/s 16,110
+3232.1s 666 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.219 contrastive 0.092
+3238.6s 667 step 3140/7324 loss 0.2574 lr 1.32e-04 tok/s 16,128
+3238.6s 668 journal: hit 0.89 abstain-target 0.44 forced 1 neg 7 ce 0.252 contrastive 0.005
+3246.7s 669 step 3150/7324 loss 0.3213 lr 1.32e-04 tok/s 16,139
+3246.7s 670 journal: hit 0.75 abstain-target 0.31 forced 2 neg 4 ce 0.231 contrastive 0.091
+3258.0s 671 step 3160/7324 loss 0.2436 lr 1.31e-04 tok/s 16,133
+3258.0s 672 journal: hit 0.80 abstain-target 0.44 forced 1 neg 6 ce 0.236 contrastive 0.008
+3268.5s 673 step 3170/7324 loss 0.9677 lr 1.31e-04 tok/s 16,131
+3268.5s 674 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.284 contrastive 0.090
+3281.5s 675 step 3180/7324 loss 0.9714 lr 1.31e-04 tok/s 16,117
+3281.5s 676 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.250 contrastive 0.094
+3296.2s 677 step 3190/7324 loss 0.9865 lr 1.30e-04 tok/s 16,094
+3296.2s 678 journal: hit 0.64 abstain-target 0.44 forced 2 neg 5 ce 0.268 contrastive 0.096
+3309.3s 679 step 3200/7324 loss 0.9931 lr 1.30e-04 tok/s 16,080
+3309.3s 680 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.254 contrastive 0.005
+3315.7s 681 step 3210/7324 loss 0.2096 lr 1.29e-04 tok/s 16,098
+3315.7s 682 journal: hit 0.62 abstain-target 0.44 forced 1 neg 3 ce 0.205 contrastive 0.004
+3327.2s 683 step 3220/7324 loss 0.9549 lr 1.29e-04 tok/s 16,092
+3327.2s 684 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.239 contrastive 0.096
+3334.4s 685 step 3230/7324 loss 0.3734 lr 1.29e-04 tok/s 16,107
+3334.4s 686 journal: hit 0.85 abstain-target 0.25 forced 1 neg 3 ce 0.283 contrastive 0.090
+3345.8s 687 step 3240/7324 loss 0.4044 lr 1.28e-04 tok/s 16,101
+3345.8s 688 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.310 contrastive 0.095
+3352.3s 689 step 3250/7324 loss 0.3494 lr 1.28e-04 tok/s 16,119
+3352.3s 690 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.252 contrastive 0.097
+3361.9s 691 eval: val_loss 0.9812 ppl 2.668
+3374.8s 692 step 3260/7324 loss 0.2663 lr 1.28e-04 tok/s 16,059
+3374.8s 693 journal: hit 0.64 abstain-target 0.50 forced 1 neg 5 ce 0.261 contrastive 0.005
+3384.5s 694 step 3270/7324 loss 0.9772 lr 1.27e-04 tok/s 16,061
+3384.5s 695 journal: hit 0.75 abstain-target 0.44 forced 0 neg 4 ce 0.219 contrastive 0.090
+3390.2s 696 step 3280/7324 loss 0.3236 lr 1.27e-04 tok/s 16,083
+3390.2s 697 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.234 contrastive 0.089
+3398.3s 698 step 3290/7324 loss 0.9227 lr 1.26e-04 tok/s 16,093
+3398.3s 699 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.353 contrastive 0.004
+3412.9s 700 step 3300/7324 loss 0.9614 lr 1.26e-04 tok/s 16,072
+3412.9s 701 journal: hit 0.78 abstain-target 0.56 forced 0 neg 7 ce 0.332 contrastive 0.003
+3419.4s 702 step 3310/7324 loss 0.3487 lr 1.26e-04 tok/s 16,089
+3419.4s 703 journal: hit 0.67 abstain-target 0.38 forced 2 neg 4 ce 0.344 contrastive 0.005
+3425.9s 704 step 3320/7324 loss 0.9283 lr 1.25e-04 tok/s 16,107
+3425.9s 705 journal: hit 0.79 abstain-target 0.19 forced 2 neg 2 ce 0.304 contrastive 0.089
+3431.6s 706 step 3330/7324 loss 0.3677 lr 1.25e-04 tok/s 16,128
+3431.6s 707 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.271 contrastive 0.097
+3441.3s 708 step 3340/7324 loss 0.9796 lr 1.24e-04 tok/s 16,130
+3441.3s 709 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.209 contrastive 0.094
+3449.5s 710 step 3350/7324 loss 0.3107 lr 1.24e-04 tok/s 16,140
+3449.5s 711 journal: hit 0.71 abstain-target 0.38 forced 0 neg 2 ce 0.307 contrastive 0.004
+3460.9s 712 step 3360/7324 loss 0.9835 lr 1.24e-04 tok/s 16,134
+3460.9s 713 journal: hit 0.67 abstain-target 0.50 forced 0 neg 4 ce 0.242 contrastive 0.178
+3469.1s 714 step 3370/7324 loss 0.2778 lr 1.23e-04 tok/s 16,143
+3469.1s 715 journal: hit 0.67 abstain-target 0.44 forced 1 neg 4 ce 0.274 contrastive 0.004
+3482.9s 716 step 3380/7324 loss 0.2442 lr 1.23e-04 tok/s 16,126
+3482.9s 717 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.229 contrastive 0.015
+3492.6s 718 step 3390/7324 loss 1.0383 lr 1.23e-04 tok/s 16,128
+3492.6s 719 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.241 contrastive 0.005
+3502.4s 720 step 3400/7324 loss 0.9517 lr 1.22e-04 tok/s 16,130
+3502.4s 721 journal: hit 0.75 abstain-target 0.38 forced 1 neg 4 ce 0.303 contrastive 0.091
+3513.7s 722 step 3410/7324 loss 0.4713 lr 1.22e-04 tok/s 16,124
+3513.7s 723 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.294 contrastive 0.177
+3523.5s 724 step 3420/7324 loss 0.9479 lr 1.21e-04 tok/s 16,126
+3523.5s 725 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.269 contrastive 0.176
+3537.3s 726 step 3430/7324 loss 0.3222 lr 1.21e-04 tok/s 16,109
+3537.3s 727 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.231 contrastive 0.091
+3543.7s 728 step 3440/7324 loss 0.9403 lr 1.21e-04 tok/s 16,127
+3543.7s 729 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.280 contrastive 0.089
+3551.8s 730 step 3450/7324 loss 0.4408 lr 1.20e-04 tok/s 16,136
+3551.8s 731 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.349 contrastive 0.092
+3563.2s 732 step 3460/7324 loss 0.4337 lr 1.20e-04 tok/s 16,130
+3563.2s 733 journal: hit 0.73 abstain-target 0.19 forced 2 neg 1 ce 0.258 contrastive 0.176
+3574.6s 734 step 3470/7324 loss 0.9447 lr 1.19e-04 tok/s 16,125
+3574.6s 735 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.229 contrastive 0.175
+3585.0s 736 step 3480/7324 loss 0.9893 lr 1.19e-04 tok/s 16,124
+3585.0s 737 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.291 contrastive 0.092
+3596.4s 738 step 3490/7324 loss 0.9693 lr 1.19e-04 tok/s 16,118
+3596.4s 739 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.299 contrastive 0.007
+3602.8s 740 step 3500/7324 loss 0.2641 lr 1.18e-04 tok/s 16,135
+3602.8s 741 journal: hit 0.78 abstain-target 0.50 forced 1 neg 7 ce 0.260 contrastive 0.004
+3612.4s 742 eval: val_loss 0.9804 ppl 2.666
+3627.6s 743 step 3510/7324 loss 0.9524 lr 1.18e-04 tok/s 16,069
+3627.6s 744 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.245 contrastive 0.004
+3635.7s 745 step 3520/7324 loss 0.2751 lr 1.18e-04 tok/s 16,078
+3635.7s 746 journal: hit 0.85 abstain-target 0.25 forced 1 neg 3 ce 0.271 contrastive 0.004
+3643.0s 747 step 3530/7324 loss 0.9472 lr 1.17e-04 tok/s 16,091
+3643.0s 748 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.237 contrastive 0.176
+3654.3s 749 step 3540/7324 loss 0.2679 lr 1.17e-04 tok/s 16,086
+3654.3s 750 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.178 contrastive 0.090
+3660.8s 751 step 3550/7324 loss 0.3574 lr 1.16e-04 tok/s 16,103
+3660.8s 752 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.354 contrastive 0.004
+3667.4s 753 step 3560/7324 loss 0.9471 lr 1.16e-04 tok/s 16,119
+3667.4s 754 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.279 contrastive 0.003
+3682.0s 755 step 3570/7324 loss 1.0250 lr 1.16e-04 tok/s 16,099
+3682.0s 756 journal: hit 0.79 abstain-target 0.25 forced 1 neg 2 ce 0.254 contrastive 0.002
+3690.9s 757 step 3580/7324 loss 0.3391 lr 1.15e-04 tok/s 16,105
+3690.9s 758 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.248 contrastive 0.091
+3699.0s 759 step 3590/7324 loss 0.5601 lr 1.15e-04 tok/s 16,114
+3699.0s 760 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.384 contrastive 0.177
+3705.5s 761 step 3600/7324 loss 0.2361 lr 1.14e-04 tok/s 16,130
+3705.5s 762 journal: hit 0.54 abstain-target 0.44 forced 2 neg 3 ce 0.233 contrastive 0.004
+3715.2s 763 step 3610/7324 loss 0.9988 lr 1.14e-04 tok/s 16,132
+3715.2s 764 journal: hit 0.71 abstain-target 0.25 forced 2 neg 2 ce 0.245 contrastive 0.178
+3724.9s 765 step 3620/7324 loss 0.9367 lr 1.14e-04 tok/s 16,134
+3724.9s 766 journal: hit 0.88 abstain-target 0.56 forced 0 neg 8 ce 0.260 contrastive 0.003
+3735.4s 767 step 3630/7324 loss 0.2007 lr 1.13e-04 tok/s 16,132
+3735.4s 768 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.197 contrastive 0.003
+3745.1s 769 step 3640/7324 loss 0.9640 lr 1.13e-04 tok/s 16,134
+3745.1s 770 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.347 contrastive 0.090
+3754.9s 771 step 3650/7324 loss 0.9238 lr 1.12e-04 tok/s 16,136
+3754.9s 772 journal: hit 0.83 abstain-target 0.25 forced 2 neg 4 ce 0.204 contrastive 0.092
+3764.7s 773 step 3660/7324 loss 0.2582 lr 1.12e-04 tok/s 16,138
+3764.7s 774 journal: hit 0.86 abstain-target 0.19 forced 1 neg 2 ce 0.255 contrastive 0.003
+3776.1s 775 step 3670/7324 loss 0.9553 lr 1.12e-04 tok/s 16,132
+3776.1s 776 journal: hit 0.67 abstain-target 0.38 forced 2 neg 4 ce 0.283 contrastive 0.003
+3783.4s 777 step 3680/7324 loss 0.2861 lr 1.11e-04 tok/s 16,144
+3783.4s 778 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.283 contrastive 0.003
+3790.0s 779 step 3690/7324 loss 0.2885 lr 1.11e-04 tok/s 16,160
+3790.0s 780 journal: hit 0.73 abstain-target 0.44 forced 1 neg 5 ce 0.283 contrastive 0.006
+3798.0s 781 step 3700/7324 loss 0.9560 lr 1.10e-04 tok/s 16,169
+3798.0s 782 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.242 contrastive 0.005
+3806.2s 783 step 3710/7324 loss 0.9930 lr 1.10e-04 tok/s 16,178
+3806.2s 784 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.250 contrastive 0.089
+3815.9s 785 step 3720/7324 loss 0.8922 lr 1.10e-04 tok/s 16,179
+3815.9s 786 journal: hit 0.77 abstain-target 0.25 forced 2 neg 3 ce 0.160 contrastive 0.209
+3828.0s 787 step 3730/7324 loss 0.2000 lr 1.09e-04 tok/s 16,171
+3828.0s 788 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.195 contrastive 0.005
+3839.3s 789 step 3740/7324 loss 0.3556 lr 1.09e-04 tok/s 16,166
+3839.3s 790 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.265 contrastive 0.090
+3850.7s 791 step 3750/7324 loss 0.2450 lr 1.09e-04 tok/s 16,160
+3850.7s 792 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.242 contrastive 0.003
+3860.3s 793 eval: val_loss 0.9705 ppl 2.639
+3868.4s 794 step 3760/7324 loss 0.2547 lr 1.08e-04 tok/s 16,128
+3868.4s 795 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.246 contrastive 0.008
+3881.5s 796 step 3770/7324 loss 0.9779 lr 1.08e-04 tok/s 16,116
+3881.5s 797 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.232 contrastive 0.090
+3892.9s 798 step 3780/7324 loss 0.9723 lr 1.07e-04 tok/s 16,111
+3892.9s 799 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.300 contrastive 0.004
+3905.1s 800 step 3790/7324 loss 0.2165 lr 1.07e-04 tok/s 16,102
+3905.1s 801 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.213 contrastive 0.004
+3914.9s 802 step 3800/7324 loss 0.4156 lr 1.07e-04 tok/s 16,104
+3914.9s 803 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.326 contrastive 0.090
+3919.8s 804 step 3810/7324 loss 0.3677 lr 1.06e-04 tok/s 16,126
+3919.8s 805 journal: hit 0.46 abstain-target 0.56 forced 1 neg 3 ce 0.276 contrastive 0.092
+3931.1s 806 step 3820/7324 loss 0.8976 lr 1.06e-04 tok/s 16,121
+3931.1s 807 journal: hit 0.67 abstain-target 0.44 forced 1 neg 4 ce 0.192 contrastive 0.006
+3937.6s 808 step 3830/7324 loss 0.3301 lr 1.05e-04 tok/s 16,136
+3937.6s 809 journal: hit 0.60 abstain-target 0.31 forced 2 neg 1 ce 0.241 contrastive 0.089
+3948.1s 810 step 3840/7324 loss 0.9608 lr 1.05e-04 tok/s 16,135
+3948.1s 811 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.238 contrastive 0.005
+3954.6s 812 step 3850/7324 loss 0.4192 lr 1.05e-04 tok/s 16,150
+3954.6s 813 journal: hit 0.92 abstain-target 0.25 forced 1 neg 4 ce 0.329 contrastive 0.090
+3964.3s 814 step 3860/7324 loss 0.2718 lr 1.04e-04 tok/s 16,152
+3964.3s 815 journal: hit 0.50 abstain-target 0.56 forced 0 neg 2 ce 0.267 contrastive 0.004
+3974.0s 816 step 3870/7324 loss 0.9705 lr 1.04e-04 tok/s 16,154
+3974.0s 817 journal: hit 0.62 abstain-target 0.31 forced 1 neg 0 ce 0.252 contrastive 0.090
+3983.7s 818 step 3880/7324 loss 0.9393 lr 1.03e-04 tok/s 16,155
+3983.7s 819 journal: hit 0.62 abstain-target 0.69 forced 0 neg 8 ce 0.281 contrastive 0.003
+3997.5s 820 step 3890/7324 loss 0.2496 lr 1.03e-04 tok/s 16,141
+3997.5s 821 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.246 contrastive 0.003
+4003.9s 822 step 3900/7324 loss 0.9679 lr 1.03e-04 tok/s 16,156
+4003.9s 823 journal: hit 0.94 abstain-target 0.06 forced 0 neg 0 ce 0.228 contrastive 0.002
+4012.0s 824 step 3910/7324 loss 0.9277 lr 1.02e-04 tok/s 16,164
+4012.0s 825 journal: hit 0.91 abstain-target 0.31 forced 1 neg 5 ce 0.280 contrastive 0.096
+4020.2s 826 step 3920/7324 loss 0.5904 lr 1.02e-04 tok/s 16,172
+4020.2s 827 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.209 contrastive 0.381
+4029.9s 828 step 3930/7324 loss 0.4096 lr 1.01e-04 tok/s 16,174
+4029.9s 829 journal: hit 0.67 abstain-target 0.50 forced 2 neg 7 ce 0.319 contrastive 0.091
+4043.7s 830 step 3940/7324 loss 0.3524 lr 1.01e-04 tok/s 16,159
+4043.7s 831 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.263 contrastive 0.089
+4051.9s 832 step 3950/7324 loss 1.0127 lr 1.01e-04 tok/s 16,167
+4051.9s 833 journal: hit 0.91 abstain-target 0.31 forced 1 neg 5 ce 0.244 contrastive 0.177
+4058.4s 834 step 3960/7324 loss 1.0183 lr 1.00e-04 tok/s 16,181
+4058.4s 835 journal: hit 0.64 abstain-target 0.56 forced 0 neg 5 ce 0.265 contrastive 0.089
+4071.5s 836 step 3970/7324 loss 0.9666 lr 9.99e-05 tok/s 16,170
+4071.5s 837 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.234 contrastive 0.005
+4081.2s 838 step 3980/7324 loss 0.2791 lr 9.95e-05 tok/s 16,171
+4081.2s 839 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.270 contrastive 0.009
+4091.7s 840 step 3990/7324 loss 0.4066 lr 9.91e-05 tok/s 16,170
+4091.7s 841 journal: hit 0.80 abstain-target 0.44 forced 1 neg 6 ce 0.312 contrastive 0.095
+4099.9s 842 step 4000/7324 loss 0.3165 lr 9.88e-05 tok/s 16,178
+4099.9s 843 journal: hit 0.87 abstain-target 0.19 forced 0 neg 1 ce 0.227 contrastive 0.089
+4109.4s 844 eval: val_loss 0.9794 ppl 2.663
+4118.3s 845 step 4010/7324 loss 0.2856 lr 9.84e-05 tok/s 16,145
+4118.3s 846 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.281 contrastive 0.005
+4128.0s 847 step 4020/7324 loss 0.9618 lr 9.80e-05 tok/s 16,146
+4128.0s 848 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.178 contrastive 0.003
+4139.4s 849 step 4030/7324 loss 0.2196 lr 9.76e-05 tok/s 16,141
+4139.4s 850 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.214 contrastive 0.005
+4145.1s 851 step 4040/7324 loss 0.3090 lr 9.72e-05 tok/s 16,159
+4145.1s 852 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.304 contrastive 0.005
+4159.7s 853 step 4050/7324 loss 0.9645 lr 9.68e-05 tok/s 16,141
+4159.7s 854 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.294 contrastive 0.177
+4169.4s 855 step 4060/7324 loss 0.9994 lr 9.64e-05 tok/s 16,143
+4169.4s 856 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.260 contrastive 0.003
+4184.0s 857 step 4070/7324 loss 0.2879 lr 9.60e-05 tok/s 16,126
+4184.0s 858 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.199 contrastive 0.089
+4193.8s 859 step 4080/7324 loss 0.3466 lr 9.57e-05 tok/s 16,127
+4193.8s 860 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.256 contrastive 0.090
+4207.6s 861 step 4090/7324 loss 0.9772 lr 9.53e-05 tok/s 16,113
+4207.6s 862 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.236 contrastive 0.011
+4217.4s 863 step 4100/7324 loss 0.2304 lr 9.49e-05 tok/s 16,115
+4217.4s 864 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.227 contrastive 0.003
+4228.8s 865 step 4110/7324 loss 1.0043 lr 9.45e-05 tok/s 16,110
+4228.8s 866 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.225 contrastive 0.005
+4238.5s 867 step 4120/7324 loss 0.9256 lr 9.41e-05 tok/s 16,111
+4238.5s 868 journal: hit 0.54 abstain-target 0.50 forced 1 neg 3 ce 0.237 contrastive 0.003
+4253.3s 869 step 4130/7324 loss 0.2901 lr 9.37e-05 tok/s 16,094
+4253.3s 870 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.287 contrastive 0.003
+4260.5s 871 step 4140/7324 loss 0.4934 lr 9.33e-05 tok/s 16,105
+4260.5s 872 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.318 contrastive 0.176
+4267.0s 873 step 4150/7324 loss 0.9628 lr 9.30e-05 tok/s 16,119
+4267.0s 874 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.245 contrastive 0.089
+4276.8s 875 step 4160/7324 loss 0.9866 lr 9.26e-05 tok/s 16,120
+4276.8s 876 journal: hit 0.91 abstain-target 0.31 forced 1 neg 5 ce 0.234 contrastive 0.090
+4286.5s 877 step 4170/7324 loss 0.2419 lr 9.22e-05 tok/s 16,122
+4286.5s 878 journal: hit 0.69 abstain-target 0.38 forced 1 neg 3 ce 0.238 contrastive 0.004
+4294.7s 879 step 4180/7324 loss 0.2456 lr 9.18e-05 tok/s 16,130
+4294.7s 880 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.243 contrastive 0.002
+4303.6s 881 step 4190/7324 loss 0.2474 lr 9.14e-05 tok/s 16,135
+4303.6s 882 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.245 contrastive 0.003
+4313.3s 883 step 4200/7324 loss 0.9657 lr 9.10e-05 tok/s 16,136
+4313.3s 884 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.219 contrastive 0.003
+4326.3s 885 step 4210/7324 loss 0.2473 lr 9.07e-05 tok/s 16,125
+4326.3s 886 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.244 contrastive 0.003
+4341.0s 887 step 4220/7324 loss 0.9805 lr 9.03e-05 tok/s 16,109
+4341.0s 888 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.227 contrastive 0.003
+4349.1s 889 step 4230/7324 loss 1.0224 lr 8.99e-05 tok/s 16,116
+4349.1s 890 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.239 contrastive 0.089
+4354.7s 891 step 4240/7324 loss 0.1833 lr 8.95e-05 tok/s 16,133
+4354.7s 892 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.181 contrastive 0.002
+4364.5s 893 step 4250/7324 loss 0.9084 lr 8.91e-05 tok/s 16,135
+4364.5s 894 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.220 contrastive 0.089
+4374.1s 895 eval: val_loss 0.9766 ppl 2.655
+4382.2s 896 step 4260/7324 loss 0.9452 lr 8.88e-05 tok/s 16,107
+4382.2s 897 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.192 contrastive 0.009
+4393.5s 898 step 4270/7324 loss 0.9521 lr 8.84e-05 tok/s 16,102
+4393.5s 899 journal: hit 0.87 abstain-target 0.12 forced 1 neg 1 ce 0.217 contrastive 0.003
+4403.3s 900 step 4280/7324 loss 0.2499 lr 8.80e-05 tok/s 16,104
+4403.3s 901 journal: hit 0.69 abstain-target 0.44 forced 0 neg 3 ce 0.247 contrastive 0.003
+4415.5s 902 step 4290/7324 loss 0.9404 lr 8.76e-05 tok/s 16,096
+4415.5s 903 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.182 contrastive 0.090
+4425.2s 904 step 4300/7324 loss 0.9604 lr 8.72e-05 tok/s 16,098
+4425.2s 905 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.287 contrastive 0.089
+4436.6s 906 step 4310/7324 loss 0.3450 lr 8.69e-05 tok/s 16,094
+4436.6s 907 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.255 contrastive 0.090
+4444.7s 908 step 4320/7324 loss 0.3568 lr 8.65e-05 tok/s 16,101
+4444.7s 909 journal: hit 0.75 abstain-target 0.62 forced 0 neg 8 ce 0.267 contrastive 0.090
+4454.4s 910 step 4330/7324 loss 0.9554 lr 8.61e-05 tok/s 16,103
+4454.4s 911 journal: hit 0.60 abstain-target 0.62 forced 0 neg 6 ce 0.269 contrastive 0.175
+4467.4s 912 step 4340/7324 loss 1.0065 lr 8.57e-05 tok/s 16,092
+4467.4s 913 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.193 contrastive 0.004
+4481.2s 914 step 4350/7324 loss 0.3301 lr 8.53e-05 tok/s 16,079
+4481.2s 915 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.239 contrastive 0.091
+4492.6s 916 step 4360/7324 loss 0.9292 lr 8.50e-05 tok/s 16,075
+4492.6s 917 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.219 contrastive 0.004
+4504.0s 918 step 4370/7324 loss 0.9349 lr 8.46e-05 tok/s 16,071
+4504.0s 919 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.274 contrastive 0.004
+4515.4s 920 step 4380/7324 loss 0.9509 lr 8.42e-05 tok/s 16,066
+4515.4s 921 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.236 contrastive 0.089
+4526.8s 922 step 4390/7324 loss 0.9502 lr 8.38e-05 tok/s 16,062
+4526.8s 923 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.238 contrastive 0.093
+4540.6s 924 step 4400/7324 loss 1.0030 lr 8.35e-05 tok/s 16,049
+4540.6s 925 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.257 contrastive 0.090
+4553.6s 926 step 4410/7324 loss 1.0062 lr 8.31e-05 tok/s 16,039
+4553.6s 927 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.183 contrastive 0.092
+4565.0s 928 step 4420/7324 loss 0.9614 lr 8.27e-05 tok/s 16,035
+4565.0s 929 journal: hit 0.75 abstain-target 0.25 forced 3 neg 4 ce 0.255 contrastive 0.175
+4574.8s 930 step 4430/7324 loss 0.9341 lr 8.24e-05 tok/s 16,037
+4574.8s 931 journal: hit 0.81 abstain-target 0.12 forced 1 neg 0 ce 0.224 contrastive 0.009
+4584.5s 932 step 4440/7324 loss 0.9168 lr 8.20e-05 tok/s 16,038
+4584.5s 933 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.245 contrastive 0.004
+4596.7s 934 step 4450/7324 loss 0.9954 lr 8.16e-05 tok/s 16,031
+4596.7s 935 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.262 contrastive 0.003
+4608.1s 936 step 4460/7324 loss 0.9984 lr 8.12e-05 tok/s 16,027
+4608.1s 937 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.215 contrastive 0.003
+4622.8s 938 step 4470/7324 loss 0.9908 lr 8.09e-05 tok/s 16,012
+4622.8s 939 journal: hit 0.78 abstain-target 0.50 forced 1 neg 7 ce 0.271 contrastive 0.090
+4634.2s 940 step 4480/7324 loss 0.2996 lr 8.05e-05 tok/s 16,008
+4634.2s 941 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.207 contrastive 0.093
+4647.3s 942 step 4490/7324 loss 0.3002 lr 8.01e-05 tok/s 15,998
+4647.3s 943 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.211 contrastive 0.089
+4652.9s 944 step 4500/7324 loss 0.2172 lr 7.98e-05 tok/s 16,014
+4652.9s 945 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.211 contrastive 0.006
+4662.5s 946 eval: val_loss 0.9781 ppl 2.659
+4671.2s 947 step 4510/7324 loss 0.2752 lr 7.94e-05 tok/s 15,986
+4671.2s 948 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.272 contrastive 0.003
+4682.6s 949 step 4520/7324 loss 0.3451 lr 7.90e-05 tok/s 15,982
+4682.6s 950 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.251 contrastive 0.094
+4692.4s 951 step 4530/7324 loss 0.9790 lr 7.87e-05 tok/s 15,983
+4692.4s 952 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.222 contrastive 0.090
+4702.1s 953 step 4540/7324 loss 0.9085 lr 7.83e-05 tok/s 15,985
+4702.1s 954 journal: hit 0.73 abstain-target 0.44 forced 1 neg 5 ce 0.239 contrastive 0.089
+4711.0s 955 step 4550/7324 loss 0.3223 lr 7.79e-05 tok/s 15,990
+4711.0s 956 journal: hit 0.85 abstain-target 0.25 forced 1 neg 3 ce 0.231 contrastive 0.091
+4720.8s 957 step 4560/7324 loss 0.3036 lr 7.76e-05 tok/s 15,991
+4720.8s 958 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.205 contrastive 0.099
+4737.0s 959 step 4570/7324 loss 0.8503 lr 7.72e-05 tok/s 15,971
+4737.0s 960 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.215 contrastive 0.006
+4746.8s 961 step 4580/7324 loss 0.2591 lr 7.68e-05 tok/s 15,973
+4746.8s 962 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.169 contrastive 0.090
+4758.2s 963 step 4590/7324 loss 0.2328 lr 7.65e-05 tok/s 15,969
+4758.2s 964 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.226 contrastive 0.007
+4771.9s 965 step 4600/7324 loss 0.2161 lr 7.61e-05 tok/s 15,957
+4771.9s 966 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.213 contrastive 0.003
+4778.4s 967 step 4610/7324 loss 0.2062 lr 7.57e-05 tok/s 15,970
+4778.4s 968 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.203 contrastive 0.003
+4784.9s 969 step 4620/7324 loss 0.9043 lr 7.54e-05 tok/s 15,982
+4784.9s 970 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.231 contrastive 0.089
+4793.0s 971 step 4630/7324 loss 0.3055 lr 7.50e-05 tok/s 15,990
+4793.0s 972 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.215 contrastive 0.091
+4802.8s 973 step 4640/7324 loss 0.8714 lr 7.47e-05 tok/s 15,991
+4802.8s 974 journal: hit 0.75 abstain-target 0.44 forced 0 neg 4 ce 0.268 contrastive 0.091
+4812.5s 975 step 4650/7324 loss 0.9686 lr 7.43e-05 tok/s 15,993
+4812.5s 976 journal: hit 0.58 abstain-target 0.50 forced 1 neg 4 ce 0.226 contrastive 0.088
+4819.8s 977 step 4660/7324 loss 0.2341 lr 7.39e-05 tok/s 16,003
+4819.8s 978 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.232 contrastive 0.002
+4832.8s 979 step 4670/7324 loss 0.9428 lr 7.36e-05 tok/s 15,994
+4832.8s 980 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.287 contrastive 0.090
+4842.6s 981 step 4680/7324 loss 0.9090 lr 7.32e-05 tok/s 15,995
+4842.6s 982 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.235 contrastive 0.004
+4849.0s 983 step 4690/7324 loss 0.9272 lr 7.29e-05 tok/s 16,008
+4849.0s 984 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.214 contrastive 0.003
+4855.6s 985 step 4700/7324 loss 1.0143 lr 7.25e-05 tok/s 16,020
+4855.6s 986 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.238 contrastive 0.002
+4867.7s 987 step 4710/7324 loss 0.2732 lr 7.22e-05 tok/s 16,014
+4867.7s 988 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.183 contrastive 0.090
+4879.1s 989 step 4720/7324 loss 0.9459 lr 7.18e-05 tok/s 16,010
+4879.1s 990 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.297 contrastive 0.005
+4890.5s 991 step 4730/7324 loss 1.0188 lr 7.14e-05 tok/s 16,006
+4890.5s 992 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.195 contrastive 0.089
+4905.1s 993 step 4740/7324 loss 0.8983 lr 7.11e-05 tok/s 15,992
+4905.1s 994 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.172 contrastive 0.004
+4913.3s 995 step 4750/7324 loss 0.9279 lr 7.07e-05 tok/s 15,999
+4913.3s 996 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.228 contrastive 0.004
+4922.8s 997 eval: val_loss 0.9672 ppl 2.631
+4935.0s 998 step 4760/7324 loss 0.4307 lr 7.04e-05 tok/s 15,961
+4935.0s 999 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.255 contrastive 0.176
+4944.7s 1000 step 4770/7324 loss 0.3699 lr 7.00e-05 tok/s 15,963
+4944.7s 1001 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.194 contrastive 0.176
+4952.8s 1002 step 4780/7324 loss 0.2053 lr 6.97e-05 tok/s 15,970
+4952.8s 1003 journal: hit 0.93 abstain-target 0.12 forced 0 neg 1 ce 0.201 contrastive 0.005
+4965.8s 1004 step 4790/7324 loss 0.8919 lr 6.93e-05 tok/s 15,961
+4965.8s 1005 journal: hit 0.70 abstain-target 0.56 forced 0 neg 6 ce 0.337 contrastive 0.002
+4974.0s 1006 step 4800/7324 loss 0.2298 lr 6.90e-05 tok/s 15,968
+4974.0s 1007 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.227 contrastive 0.002
+4982.9s 1008 step 4810/7324 loss 0.9635 lr 6.86e-05 tok/s 15,972
+4982.9s 1009 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.246 contrastive 0.090
+4992.7s 1010 step 4820/7324 loss 0.3303 lr 6.83e-05 tok/s 15,974
+4992.7s 1011 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.240 contrastive 0.090
+5000.9s 1012 step 4830/7324 loss 0.9452 lr 6.79e-05 tok/s 15,980
+5000.9s 1013 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.211 contrastive 0.003
+5012.3s 1014 step 4840/7324 loss 0.9517 lr 6.76e-05 tok/s 15,976
+5012.3s 1015 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.168 contrastive 0.263
+5020.4s 1016 step 4850/7324 loss 0.9220 lr 6.73e-05 tok/s 15,983
+5020.4s 1017 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.251 contrastive 0.089
+5029.3s 1018 step 4860/7324 loss 0.3789 lr 6.69e-05 tok/s 15,988
+5029.3s 1019 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.203 contrastive 0.176
+5042.3s 1020 step 4870/7324 loss 0.9409 lr 6.66e-05 tok/s 15,979
+5042.3s 1021 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.232 contrastive 0.002
+5052.0s 1022 step 4880/7324 loss 0.9522 lr 6.62e-05 tok/s 15,981
+5052.0s 1023 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.210 contrastive 0.090
+5061.8s 1024 step 4890/7324 loss 1.0131 lr 6.59e-05 tok/s 15,982
+5061.8s 1025 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.181 contrastive 0.003
+5073.2s 1026 step 4900/7324 loss 0.9192 lr 6.55e-05 tok/s 15,978
+5073.2s 1027 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.186 contrastive 0.003
+5080.5s 1028 step 4910/7324 loss 0.2979 lr 6.52e-05 tok/s 15,988
+5080.5s 1029 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.209 contrastive 0.089
+5088.6s 1030 step 4920/7324 loss 0.9719 lr 6.49e-05 tok/s 15,995
+5088.6s 1031 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.184 contrastive 0.003
+5100.0s 1032 step 4930/7324 loss 0.3496 lr 6.45e-05 tok/s 15,991
+5100.0s 1033 journal: hit 0.82 abstain-target 0.38 forced 1 neg 5 ce 0.261 contrastive 0.089
+5109.7s 1034 step 4940/7324 loss 0.3359 lr 6.42e-05 tok/s 15,993
+5109.7s 1035 journal: hit 0.79 abstain-target 0.31 forced 0 neg 2 ce 0.247 contrastive 0.089
+5116.2s 1036 step 4950/7324 loss 0.2870 lr 6.39e-05 tok/s 16,005
+5116.2s 1037 journal: hit 1.00 abstain-target 0.56 forced 0 neg 9 ce 0.196 contrastive 0.091
+5125.0s 1038 step 4960/7324 loss 0.2331 lr 6.35e-05 tok/s 16,009
+5125.0s 1039 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.231 contrastive 0.002
+5134.8s 1040 step 4970/7324 loss 0.2048 lr 6.32e-05 tok/s 16,010
+5134.8s 1041 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.201 contrastive 0.003
+5142.9s 1042 step 4980/7324 loss 0.9135 lr 6.28e-05 tok/s 16,017
+5142.9s 1043 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.190 contrastive 0.177
+5154.3s 1044 step 4990/7324 loss 0.9646 lr 6.25e-05 tok/s 16,013
+5154.3s 1045 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.191 contrastive 0.090
+5162.5s 1046 step 5000/7324 loss 0.9242 lr 6.22e-05 tok/s 16,020
+5162.5s 1047 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.160 contrastive 0.004
+5172.0s 1048 eval: val_loss 0.9737 ppl 2.648
+5178.5s 1049 step 5010/7324 loss 0.9085 lr 6.19e-05 tok/s 16,002
+5178.5s 1050 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.183 contrastive 0.089
+5186.7s 1051 step 5020/7324 loss 0.9524 lr 6.15e-05 tok/s 16,008
+5186.7s 1052 journal: hit 0.88 abstain-target 0.12 forced 0 neg 0 ce 0.206 contrastive 0.002
+5193.2s 1053 step 5030/7324 loss 0.2129 lr 6.12e-05 tok/s 16,020
+5193.2s 1054 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.210 contrastive 0.003
+5201.4s 1055 step 5040/7324 loss 0.2482 lr 6.09e-05 tok/s 16,026
+5201.4s 1056 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.245 contrastive 0.003
+5211.2s 1057 step 5050/7324 loss 0.2036 lr 6.05e-05 tok/s 16,027
+5211.2s 1058 journal: hit 0.71 abstain-target 0.31 forced 1 neg 2 ce 0.200 contrastive 0.004
+5216.8s 1059 step 5060/7324 loss 0.2595 lr 6.02e-05 tok/s 16,042
+5216.8s 1060 journal: hit 0.88 abstain-target 0.56 forced 0 neg 8 ce 0.256 contrastive 0.004
+5231.5s 1061 step 5070/7324 loss 0.4199 lr 5.99e-05 tok/s 16,028
+5231.5s 1062 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.243 contrastive 0.177
+5242.9s 1063 step 5080/7324 loss 0.9074 lr 5.96e-05 tok/s 16,024
+5242.9s 1064 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.242 contrastive 0.006
+5252.7s 1065 step 5090/7324 loss 0.9791 lr 5.92e-05 tok/s 16,026
+5252.7s 1066 journal: hit 1.00 abstain-target 0.56 forced 0 neg 9 ce 0.194 contrastive 0.006
+5257.5s 1067 step 5100/7324 loss 0.9080 lr 5.89e-05 tok/s 16,042
+5257.5s 1068 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.234 contrastive 0.004
+5268.1s 1069 step 5110/7324 loss 0.2154 lr 5.86e-05 tok/s 16,041
+5268.1s 1070 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.211 contrastive 0.004
+5276.2s 1071 step 5120/7324 loss 0.2380 lr 5.83e-05 tok/s 16,048
+5276.2s 1072 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.233 contrastive 0.005
+5287.5s 1073 step 5130/7324 loss 0.9447 lr 5.80e-05 tok/s 16,044
+5287.5s 1074 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.196 contrastive 0.006
+5297.3s 1075 step 5140/7324 loss 0.2087 lr 5.76e-05 tok/s 16,045
+5297.3s 1076 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.205 contrastive 0.003
+5308.6s 1077 step 5150/7324 loss 0.9535 lr 5.73e-05 tok/s 16,042
+5308.6s 1078 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.162 contrastive 0.002
+5319.1s 1079 step 5160/7324 loss 0.1882 lr 5.70e-05 tok/s 16,041
+5319.1s 1080 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.186 contrastive 0.002
+5328.8s 1081 step 5170/7324 loss 0.9762 lr 5.67e-05 tok/s 16,043
+5328.8s 1082 journal: hit 0.87 abstain-target 0.19 forced 0 neg 1 ce 0.195 contrastive 0.002
+5341.8s 1083 step 5180/7324 loss 0.9544 lr 5.64e-05 tok/s 16,034
+5341.8s 1084 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.272 contrastive 0.004
+5356.4s 1085 step 5190/7324 loss 0.3443 lr 5.61e-05 tok/s 16,021
+5356.4s 1086 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.255 contrastive 0.090
+5369.3s 1087 step 5200/7324 loss 0.9171 lr 5.57e-05 tok/s 16,013
+5369.3s 1088 journal: hit 0.77 abstain-target 0.31 forced 1 neg 3 ce 0.224 contrastive 0.089
+5379.9s 1089 step 5210/7324 loss 0.9213 lr 5.54e-05 tok/s 16,012
+5379.9s 1090 journal: hit 0.78 abstain-target 0.56 forced 0 neg 7 ce 0.256 contrastive 0.004
+5388.0s 1091 step 5220/7324 loss 0.3180 lr 5.51e-05 tok/s 16,018
+5388.0s 1092 journal: hit 0.91 abstain-target 0.31 forced 1 neg 5 ce 0.227 contrastive 0.091
+5402.6s 1093 step 5230/7324 loss 0.9226 lr 5.48e-05 tok/s 16,005
+5402.6s 1094 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.216 contrastive 0.008
+5412.4s 1095 step 5240/7324 loss 0.9594 lr 5.45e-05 tok/s 16,006
+5412.4s 1096 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.170 contrastive 0.096
+5418.9s 1097 step 5250/7324 loss 0.2395 lr 5.42e-05 tok/s 16,018
+5418.9s 1098 journal: hit 0.70 abstain-target 0.50 forced 1 neg 6 ce 0.237 contrastive 0.003
+5428.5s 1099 eval: val_loss 0.9701 ppl 2.638
+5440.7s 1100 step 5260/7324 loss 0.4151 lr 5.39e-05 tok/s 15,983
+5440.7s 1101 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.235 contrastive 0.180
+5447.2s 1102 step 5270/7324 loss 0.2230 lr 5.36e-05 tok/s 15,994
+5447.2s 1103 journal: hit 0.77 abstain-target 0.38 forced 0 neg 3 ce 0.221 contrastive 0.002
+5458.5s 1104 step 5280/7324 loss 0.9665 lr 5.33e-05 tok/s 15,991
+5458.5s 1105 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.209 contrastive 0.089
+5468.4s 1106 step 5290/7324 loss 0.2627 lr 5.30e-05 tok/s 15,992
+5468.4s 1107 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.256 contrastive 0.006
+5476.5s 1108 step 5300/7324 loss 0.2356 lr 5.27e-05 tok/s 15,999
+5476.5s 1109 journal: hit 0.62 abstain-target 0.44 forced 1 neg 3 ce 0.233 contrastive 0.003
+5485.4s 1110 step 5310/7324 loss 0.4042 lr 5.24e-05 tok/s 16,003
+5485.4s 1111 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.227 contrastive 0.177
+5495.2s 1112 step 5320/7324 loss 0.3143 lr 5.21e-05 tok/s 16,004
+5495.2s 1113 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.222 contrastive 0.092
+5504.9s 1114 step 5330/7324 loss 0.2830 lr 5.18e-05 tok/s 16,005
+5504.9s 1115 journal: hit 0.79 abstain-target 0.31 forced 0 neg 2 ce 0.193 contrastive 0.090
+5518.0s 1116 step 5340/7324 loss 0.2467 lr 5.15e-05 tok/s 15,997
+5518.0s 1117 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.243 contrastive 0.004
+5522.8s 1118 step 5350/7324 loss 0.2818 lr 5.12e-05 tok/s 16,013
+5522.8s 1119 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.193 contrastive 0.089
+5535.0s 1120 step 5360/7324 loss 0.9265 lr 5.09e-05 tok/s 16,007
+5535.0s 1121 journal: hit 0.93 abstain-target 0.12 forced 1 neg 2 ce 0.149 contrastive 0.004
+5549.7s 1122 step 5370/7324 loss 0.9862 lr 5.06e-05 tok/s 15,994
+5549.7s 1123 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.197 contrastive 0.091
+5559.4s 1124 step 5380/7324 loss 0.2984 lr 5.03e-05 tok/s 15,996
+5559.4s 1125 journal: hit 0.64 abstain-target 0.56 forced 0 neg 5 ce 0.295 contrastive 0.004
+5567.5s 1126 step 5390/7324 loss 0.9775 lr 5.00e-05 tok/s 16,002
+5567.5s 1127 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.230 contrastive 0.002
+5580.5s 1128 step 5400/7324 loss 0.9575 lr 4.97e-05 tok/s 15,994
+5580.5s 1129 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.173 contrastive 0.007
+5591.8s 1130 step 5410/7324 loss 0.9402 lr 4.94e-05 tok/s 15,991
+5591.8s 1131 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.191 contrastive 0.089
+5600.7s 1132 step 5420/7324 loss 0.4055 lr 4.91e-05 tok/s 15,995
+5600.7s 1133 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.229 contrastive 0.176
+5607.2s 1134 step 5430/7324 loss 0.9270 lr 4.88e-05 tok/s 16,006
+5607.2s 1135 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.185 contrastive 0.002
+5618.6s 1136 step 5440/7324 loss 0.2333 lr 4.86e-05 tok/s 16,002
+5618.6s 1137 journal: hit 0.73 abstain-target 0.50 forced 0 neg 5 ce 0.231 contrastive 0.003
+5630.0s 1138 step 5450/7324 loss 0.2083 lr 4.83e-05 tok/s 15,999
+5630.0s 1139 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.206 contrastive 0.002
+5638.1s 1140 step 5460/7324 loss 0.9114 lr 4.80e-05 tok/s 16,005
+5638.1s 1141 journal: hit 0.80 abstain-target 0.44 forced 1 neg 6 ce 0.185 contrastive 0.089
+5647.0s 1142 step 5470/7324 loss 0.2095 lr 4.77e-05 tok/s 16,009
+5647.0s 1143 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.207 contrastive 0.003
+5656.7s 1144 step 5480/7324 loss 0.9471 lr 4.74e-05 tok/s 16,010
+5656.7s 1145 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.198 contrastive 0.090
+5664.9s 1146 step 5490/7324 loss 0.9151 lr 4.71e-05 tok/s 16,016
+5664.9s 1147 journal: hit 0.82 abstain-target 0.44 forced 0 neg 5 ce 0.189 contrastive 0.002
+5674.7s 1148 step 5500/7324 loss 0.2595 lr 4.69e-05 tok/s 16,018
+5674.7s 1149 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.170 contrastive 0.089
+5684.2s 1150 eval: val_loss 0.9576 ppl 2.605
+5694.7s 1151 step 5510/7324 loss 0.9213 lr 4.66e-05 tok/s 15,990
+5694.7s 1152 journal: hit 0.92 abstain-target 0.19 forced 1 neg 3 ce 0.209 contrastive 0.090
+5708.5s 1153 step 5520/7324 loss 0.9201 lr 4.63e-05 tok/s 15,980
+5708.5s 1154 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.162 contrastive 0.006
+5721.6s 1155 step 5530/7324 loss 0.9700 lr 4.60e-05 tok/s 15,972
+5721.6s 1156 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.190 contrastive 0.002
+5731.4s 1157 step 5540/7324 loss 0.9727 lr 4.58e-05 tok/s 15,973
+5731.4s 1158 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.269 contrastive 0.004
+5739.5s 1159 step 5550/7324 loss 0.9551 lr 4.55e-05 tok/s 15,979
+5739.5s 1160 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.191 contrastive 0.090
+5746.0s 1161 step 5560/7324 loss 0.1943 lr 4.52e-05 tok/s 15,990
+5746.0s 1162 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.192 contrastive 0.003
+5759.7s 1163 step 5570/7324 loss 0.3244 lr 4.49e-05 tok/s 15,980
+5759.7s 1164 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.229 contrastive 0.095
+5766.3s 1165 step 5580/7324 loss 0.2336 lr 4.47e-05 tok/s 15,990
+5766.3s 1166 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.226 contrastive 0.008
+5776.0s 1167 step 5590/7324 loss 0.2490 lr 4.44e-05 tok/s 15,992
+5776.0s 1168 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.155 contrastive 0.094
+5787.3s 1169 step 5600/7324 loss 0.3861 lr 4.41e-05 tok/s 15,989
+5787.3s 1170 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.297 contrastive 0.089
+5793.8s 1171 step 5610/7324 loss 0.9352 lr 4.39e-05 tok/s 15,999
+5793.8s 1172 journal: hit 0.93 abstain-target 0.06 forced 1 neg 1 ce 0.162 contrastive 0.002
+5805.2s 1173 step 5620/7324 loss 0.9421 lr 4.36e-05 tok/s 15,996
+5805.2s 1174 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.190 contrastive 0.090
+5810.8s 1175 step 5630/7324 loss 0.9930 lr 4.33e-05 tok/s 16,009
+5810.8s 1176 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.160 contrastive 0.004
+5822.1s 1177 step 5640/7324 loss 0.9694 lr 4.31e-05 tok/s 16,006
+5822.1s 1178 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.259 contrastive 0.090
+5833.5s 1179 step 5650/7324 loss 0.9047 lr 4.28e-05 tok/s 16,003
+5833.5s 1180 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.244 contrastive 0.005
+5840.0s 1181 step 5660/7324 loss 0.9036 lr 4.26e-05 tok/s 16,013
+5840.0s 1182 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.216 contrastive 0.003
+5846.5s 1183 step 5670/7324 loss 0.9051 lr 4.23e-05 tok/s 16,023
+5846.5s 1184 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.179 contrastive 0.089
+5857.0s 1185 step 5680/7324 loss 0.2702 lr 4.20e-05 tok/s 16,023
+5857.0s 1186 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.181 contrastive 0.089
+5870.0s 1187 step 5690/7324 loss 0.9337 lr 4.18e-05 tok/s 16,015
+5870.0s 1188 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.159 contrastive 0.003
+5879.8s 1189 step 5700/7324 loss 0.9038 lr 4.15e-05 tok/s 16,016
+5879.8s 1190 journal: hit 0.93 abstain-target 0.06 forced 1 neg 1 ce 0.145 contrastive 0.003
+5889.5s 1191 step 5710/7324 loss 0.2917 lr 4.13e-05 tok/s 16,017
+5889.5s 1192 journal: hit 0.71 abstain-target 0.38 forced 0 neg 2 ce 0.203 contrastive 0.089
+5900.8s 1193 step 5720/7324 loss 0.9389 lr 4.10e-05 tok/s 16,014
+5900.8s 1194 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.207 contrastive 0.089
+5909.7s 1195 step 5730/7324 loss 0.2834 lr 4.08e-05 tok/s 16,018
+5909.7s 1196 journal: hit 0.93 abstain-target 0.12 forced 0 neg 1 ce 0.194 contrastive 0.090
+5917.8s 1197 step 5740/7324 loss 0.9553 lr 4.05e-05 tok/s 16,024
+5917.8s 1198 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.157 contrastive 0.089
+5929.2s 1199 step 5750/7324 loss 0.2144 lr 4.03e-05 tok/s 16,021
+5929.2s 1200 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.212 contrastive 0.002
+5938.8s 1201 eval: val_loss 0.9670 ppl 2.630
+5948.5s 1202 step 5760/7324 loss 0.9415 lr 4.00e-05 tok/s 15,996
+5948.5s 1203 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.216 contrastive 0.003
+5963.1s 1204 step 5770/7324 loss 1.0038 lr 3.98e-05 tok/s 15,984
+5963.1s 1205 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.178 contrastive 0.003
+5972.0s 1206 step 5780/7324 loss 0.2662 lr 3.95e-05 tok/s 15,988
+5972.0s 1207 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.258 contrastive 0.008
+5978.4s 1208 step 5790/7324 loss 0.9842 lr 3.93e-05 tok/s 15,998
+5978.4s 1209 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.161 contrastive 0.002
+5989.8s 1210 step 5800/7324 loss 0.9114 lr 3.91e-05 tok/s 15,995
+5989.8s 1211 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.189 contrastive 0.090
+6002.9s 1212 step 5810/7324 loss 0.1944 lr 3.88e-05 tok/s 15,988
+6002.9s 1213 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.190 contrastive 0.004
+6014.2s 1214 step 5820/7324 loss 0.9462 lr 3.86e-05 tok/s 15,985
+6014.2s 1215 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.169 contrastive 0.178
+6028.1s 1216 step 5830/7324 loss 0.2033 lr 3.83e-05 tok/s 15,975
+6028.1s 1217 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.197 contrastive 0.006
+6041.1s 1218 step 5840/7324 loss 0.9101 lr 3.81e-05 tok/s 15,968
+6041.1s 1219 journal: hit 1.00 abstain-target 0.00 forced 0 neg 0 ce 0.170 contrastive 0.005
+6057.3s 1220 step 5850/7324 loss 0.9111 lr 3.79e-05 tok/s 15,952
+6057.3s 1221 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.215 contrastive 0.006
+6065.5s 1222 step 5860/7324 loss 0.2798 lr 3.76e-05 tok/s 15,957
+6065.5s 1223 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.190 contrastive 0.089
+6076.9s 1224 step 5870/7324 loss 0.1916 lr 3.74e-05 tok/s 15,954
+6076.9s 1225 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.189 contrastive 0.002
+6089.1s 1226 step 5880/7324 loss 0.9480 lr 3.72e-05 tok/s 15,949
+6089.1s 1227 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.207 contrastive 0.005
+6097.3s 1228 step 5890/7324 loss 0.9437 lr 3.69e-05 tok/s 15,955
+6097.3s 1229 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.202 contrastive 0.003
+6103.7s 1230 step 5900/7324 loss 0.3282 lr 3.67e-05 tok/s 15,965
+6103.7s 1231 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.239 contrastive 0.089
+6113.5s 1232 step 5910/7324 loss 0.2914 lr 3.65e-05 tok/s 15,966
+6113.5s 1233 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.203 contrastive 0.089
+6121.7s 1234 step 5920/7324 loss 0.9687 lr 3.63e-05 tok/s 15,972
+6121.7s 1235 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.178 contrastive 0.002
+6130.6s 1236 step 5930/7324 loss 0.2367 lr 3.60e-05 tok/s 15,975
+6130.6s 1237 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.225 contrastive 0.011
+6140.3s 1238 step 5940/7324 loss 0.3510 lr 3.58e-05 tok/s 15,977
+6140.3s 1239 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.175 contrastive 0.176
+6156.6s 1240 step 5950/7324 loss 0.9712 lr 3.56e-05 tok/s 15,961
+6156.6s 1241 journal: hit 0.83 abstain-target 0.31 forced 1 neg 4 ce 0.174 contrastive 0.090
+6166.4s 1242 step 5960/7324 loss 0.9264 lr 3.54e-05 tok/s 15,962
+6166.4s 1243 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.175 contrastive 0.004
+6172.9s 1244 step 5970/7324 loss 0.9095 lr 3.52e-05 tok/s 15,972
+6172.9s 1245 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.190 contrastive 0.009
+6185.0s 1246 step 5980/7324 loss 0.9720 lr 3.49e-05 tok/s 15,967
+6185.0s 1247 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.166 contrastive 0.093
+6196.4s 1248 step 5990/7324 loss 0.9497 lr 3.47e-05 tok/s 15,964
+6196.4s 1249 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.211 contrastive 0.090
+6204.5s 1250 step 6000/7324 loss 0.9260 lr 3.45e-05 tok/s 15,970
+6204.5s 1251 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.171 contrastive 0.089
+6214.1s 1252 eval: val_loss 0.9625 ppl 2.618
+6222.8s 1253 step 6010/7324 loss 0.2504 lr 3.43e-05 tok/s 15,949
+6222.8s 1254 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.161 contrastive 0.089
+6239.1s 1255 step 6020/7324 loss 0.9242 lr 3.41e-05 tok/s 15,934
+6239.1s 1256 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.171 contrastive 0.003
+6246.2s 1257 step 6030/7324 loss 0.9391 lr 3.39e-05 tok/s 15,941
+6246.2s 1258 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.188 contrastive 0.090
+6254.4s 1259 step 6040/7324 loss 0.2136 lr 3.37e-05 tok/s 15,947
+6254.4s 1260 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.208 contrastive 0.006
+6270.7s 1261 step 6050/7324 loss 0.8998 lr 3.35e-05 tok/s 15,931
+6270.7s 1262 journal: hit 0.87 abstain-target 0.19 forced 0 neg 1 ce 0.138 contrastive 0.176
+6278.8s 1263 step 6060/7324 loss 0.2015 lr 3.33e-05 tok/s 15,937
+6278.8s 1264 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.199 contrastive 0.002
+6290.2s 1265 step 6070/7324 loss 0.9234 lr 3.31e-05 tok/s 15,934
+6290.2s 1266 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.169 contrastive 0.003
+6304.0s 1267 step 6080/7324 loss 0.2269 lr 3.29e-05 tok/s 15,925
+6304.0s 1268 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.224 contrastive 0.003
+6310.5s 1269 step 6090/7324 loss 0.1758 lr 3.27e-05 tok/s 15,935
+6310.5s 1270 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.172 contrastive 0.003
+6323.4s 1271 step 6100/7324 loss 0.3587 lr 3.25e-05 tok/s 15,928
+6323.4s 1272 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.183 contrastive 0.175
+6331.5s 1273 step 6110/7324 loss 0.3874 lr 3.23e-05 tok/s 15,934
+6331.5s 1274 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.211 contrastive 0.177
+6346.1s 1275 step 6120/7324 loss 0.8946 lr 3.21e-05 tok/s 15,923
+6346.1s 1276 journal: hit 0.86 abstain-target 0.25 forced 0 neg 2 ce 0.210 contrastive 0.002
+6359.8s 1277 step 6130/7324 loss 0.2004 lr 3.19e-05 tok/s 15,914
+6359.8s 1278 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.199 contrastive 0.002
+6367.9s 1279 step 6140/7324 loss 0.9276 lr 3.17e-05 tok/s 15,920
+6367.9s 1280 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.205 contrastive 0.089
+6374.3s 1281 step 6150/7324 loss 0.3105 lr 3.15e-05 tok/s 15,929
+6374.3s 1282 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.220 contrastive 0.090
+6385.7s 1283 step 6160/7324 loss 0.9133 lr 3.13e-05 tok/s 15,927
+6385.7s 1284 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.202 contrastive 0.002
+6398.7s 1285 step 6170/7324 loss 0.9387 lr 3.11e-05 tok/s 15,920
+6398.7s 1286 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.175 contrastive 0.003
+6405.2s 1287 step 6180/7324 loss 0.9279 lr 3.09e-05 tok/s 15,929
+6405.2s 1288 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.187 contrastive 0.209
+6419.0s 1289 step 6190/7324 loss 0.1641 lr 3.07e-05 tok/s 15,921
+6419.0s 1290 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.161 contrastive 0.003
+6430.3s 1291 step 6200/7324 loss 0.2331 lr 3.05e-05 tok/s 15,918
+6430.3s 1292 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.231 contrastive 0.002
+6440.1s 1293 step 6210/7324 loss 0.1748 lr 3.04e-05 tok/s 15,919
+6440.1s 1294 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.173 contrastive 0.002
+6448.3s 1295 step 6220/7324 loss 0.3286 lr 3.02e-05 tok/s 15,925
+6448.3s 1296 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.153 contrastive 0.176
+6454.8s 1297 step 6230/7324 loss 0.1799 lr 3.00e-05 tok/s 15,934
+6454.8s 1298 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.177 contrastive 0.003
+6470.2s 1299 step 6240/7324 loss 0.1431 lr 2.98e-05 tok/s 15,921
+6470.2s 1300 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.136 contrastive 0.007
+6476.6s 1301 step 6250/7324 loss 0.1899 lr 2.96e-05 tok/s 15,931
+6476.6s 1302 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.187 contrastive 0.003
+6486.3s 1303 eval: val_loss 0.9428 ppl 2.567
+6492.7s 1304 step 6260/7324 loss 0.2808 lr 2.95e-05 tok/s 15,916
+6492.7s 1305 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.192 contrastive 0.089
+6504.1s 1306 step 6270/7324 loss 0.2058 lr 2.93e-05 tok/s 15,914
+6504.1s 1307 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.201 contrastive 0.004
+6512.2s 1308 step 6280/7324 loss 0.9421 lr 2.91e-05 tok/s 15,919
+6512.2s 1309 journal: hit 0.90 abstain-target 0.44 forced 0 neg 6 ce 0.232 contrastive 0.002
+6517.8s 1310 step 6290/7324 loss 0.2218 lr 2.89e-05 tok/s 15,931
+6517.8s 1311 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.219 contrastive 0.003
+6530.8s 1312 step 6300/7324 loss 0.9727 lr 2.88e-05 tok/s 15,924
+6530.8s 1313 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.184 contrastive 0.092
+6539.0s 1314 step 6310/7324 loss 0.9361 lr 2.86e-05 tok/s 15,929
+6539.0s 1315 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.175 contrastive 0.089
+6550.4s 1316 step 6320/7324 loss 0.9790 lr 2.84e-05 tok/s 15,927
+6550.4s 1317 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.195 contrastive 0.002
+6568.2s 1318 step 6330/7324 loss 0.8931 lr 2.83e-05 tok/s 15,908
+6568.2s 1319 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.195 contrastive 0.002
+6580.2s 1320 step 6340/7324 loss 0.9101 lr 2.81e-05 tok/s 15,904
+6580.2s 1321 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.219 contrastive 0.205
+6588.4s 1322 step 6350/7324 loss 0.2747 lr 2.80e-05 tok/s 15,909
+6588.4s 1323 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.185 contrastive 0.090
+6604.6s 1324 step 6360/7324 loss 0.9113 lr 2.78e-05 tok/s 15,895
+6604.6s 1325 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.198 contrastive 0.089
+6616.0s 1326 step 6370/7324 loss 0.2587 lr 2.76e-05 tok/s 15,892
+6616.0s 1327 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.169 contrastive 0.089
+6627.4s 1328 step 6380/7324 loss 0.2675 lr 2.75e-05 tok/s 15,890
+6627.4s 1329 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.178 contrastive 0.089
+6641.0s 1330 step 6390/7324 loss 0.9428 lr 2.73e-05 tok/s 15,881
+6641.0s 1331 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.228 contrastive 0.002
+6649.2s 1332 step 6400/7324 loss 0.8872 lr 2.72e-05 tok/s 15,887
+6649.2s 1333 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.153 contrastive 0.003
+6662.2s 1334 step 6410/7324 loss 0.9596 lr 2.70e-05 tok/s 15,880
+6662.2s 1335 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.169 contrastive 0.090
+6670.2s 1336 step 6420/7324 loss 0.9294 lr 2.69e-05 tok/s 15,886
+6670.2s 1337 journal: hit 1.00 abstain-target 0.62 forced 0 neg 10 ce 0.259 contrastive 0.011
+6680.0s 1338 step 6430/7324 loss 0.8682 lr 2.67e-05 tok/s 15,887
+6680.0s 1339 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.246 contrastive 0.090
+6693.1s 1340 step 6440/7324 loss 0.9733 lr 2.66e-05 tok/s 15,880
+6693.1s 1341 journal: hit 0.87 abstain-target 0.12 forced 1 neg 1 ce 0.147 contrastive 0.003
+6708.4s 1342 step 6450/7324 loss 0.9220 lr 2.64e-05 tok/s 15,868
+6708.4s 1343 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.239 contrastive 0.089
+6715.0s 1344 step 6460/7324 loss 0.2888 lr 2.63e-05 tok/s 15,877
+6715.0s 1345 journal: hit 0.91 abstain-target 0.31 forced 1 neg 5 ce 0.200 contrastive 0.089
+6726.4s 1346 step 6470/7324 loss 0.1487 lr 2.61e-05 tok/s 15,875
+6726.4s 1347 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.145 contrastive 0.004
+6732.8s 1348 step 6480/7324 loss 0.1862 lr 2.60e-05 tok/s 15,884
+6732.8s 1349 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.183 contrastive 0.003
+6744.2s 1350 step 6490/7324 loss 0.8874 lr 2.59e-05 tok/s 15,881
+6744.2s 1351 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.170 contrastive 0.003
+6754.7s 1352 step 6500/7324 loss 0.8991 lr 2.57e-05 tok/s 15,881
+6754.7s 1353 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.252 contrastive 0.089
+6764.3s 1354 eval: val_loss 0.9686 ppl 2.634
+6779.7s 1355 step 6510/7324 loss 0.9259 lr 2.56e-05 tok/s 15,846
+6779.7s 1356 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.196 contrastive 0.004
+6789.4s 1357 step 6520/7324 loss 0.8886 lr 2.54e-05 tok/s 15,848
+6789.4s 1358 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.187 contrastive 0.003
+6797.6s 1359 step 6530/7324 loss 0.1942 lr 2.53e-05 tok/s 15,853
+6797.6s 1360 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.190 contrastive 0.004
+6805.7s 1361 step 6540/7324 loss 0.9818 lr 2.52e-05 tok/s 15,858
+6805.7s 1362 journal: hit 0.86 abstain-target 0.19 forced 1 neg 2 ce 0.181 contrastive 0.089
+6814.6s 1363 step 6550/7324 loss 0.2201 lr 2.51e-05 tok/s 15,862
+6814.6s 1364 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.132 contrastive 0.088
+6821.0s 1365 step 6560/7324 loss 0.1896 lr 2.49e-05 tok/s 15,871
+6821.0s 1366 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.187 contrastive 0.003
+6829.2s 1367 step 6570/7324 loss 0.3020 lr 2.48e-05 tok/s 15,876
+6829.2s 1368 journal: hit 1.00 abstain-target 0.44 forced 0 neg 7 ce 0.212 contrastive 0.090
+6838.9s 1369 step 6580/7324 loss 0.1749 lr 2.47e-05 tok/s 15,877
+6838.9s 1370 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.172 contrastive 0.003
+6848.6s 1371 step 6590/7324 loss 0.1464 lr 2.45e-05 tok/s 15,878
+6848.6s 1372 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.142 contrastive 0.004
+6860.8s 1373 step 6600/7324 loss 0.9166 lr 2.44e-05 tok/s 15,874
+6860.8s 1374 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.214 contrastive 0.090
+6872.1s 1375 step 6610/7324 loss 0.9813 lr 2.43e-05 tok/s 15,872
+6872.1s 1376 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.128 contrastive 0.003
+6880.3s 1377 step 6620/7324 loss 0.8956 lr 2.42e-05 tok/s 15,877
+6880.3s 1378 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.187 contrastive 0.002
+6890.0s 1379 step 6630/7324 loss 0.9928 lr 2.41e-05 tok/s 15,878
+6890.0s 1380 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.245 contrastive 0.089
+6901.4s 1381 step 6640/7324 loss 0.9224 lr 2.40e-05 tok/s 15,876
+6901.4s 1382 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.211 contrastive 0.090
+6910.2s 1383 step 6650/7324 loss 0.9616 lr 2.38e-05 tok/s 15,879
+6910.2s 1384 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.179 contrastive 0.263
+6920.0s 1385 step 6660/7324 loss 1.0170 lr 2.37e-05 tok/s 15,881
+6920.0s 1386 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.150 contrastive 0.002
+6929.6s 1387 step 6670/7324 loss 0.2981 lr 2.36e-05 tok/s 15,882
+6929.6s 1388 journal: hit 1.00 abstain-target 0.62 forced 0 neg 10 ce 0.209 contrastive 0.089
+6942.7s 1389 step 6680/7324 loss 0.9612 lr 2.35e-05 tok/s 15,876
+6942.7s 1390 journal: hit 0.93 abstain-target 0.12 forced 0 neg 1 ce 0.203 contrastive 0.089
+6957.2s 1391 step 6690/7324 loss 0.9233 lr 2.34e-05 tok/s 15,866
+6957.2s 1392 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.235 contrastive 0.295
+6967.7s 1393 step 6700/7324 loss 0.1814 lr 2.33e-05 tok/s 15,866
+6967.7s 1394 journal: hit 1.00 abstain-target 0.00 forced 0 neg 0 ce 0.180 contrastive 0.002
+6975.8s 1395 step 6710/7324 loss 0.1243 lr 2.32e-05 tok/s 15,871
+6975.8s 1396 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.121 contrastive 0.003
+6988.8s 1397 step 6720/7324 loss 1.0021 lr 2.31e-05 tok/s 15,865
+6988.8s 1398 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.155 contrastive 0.175
+7000.2s 1399 step 6730/7324 loss 0.1980 lr 2.30e-05 tok/s 15,862
+7000.2s 1400 journal: hit 0.83 abstain-target 0.38 forced 0 neg 4 ce 0.195 contrastive 0.003
+7013.2s 1401 step 6740/7324 loss 0.8877 lr 2.29e-05 tok/s 15,856
+7013.2s 1402 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.147 contrastive 0.089
+7025.3s 1403 step 6750/7324 loss 0.2842 lr 2.28e-05 tok/s 15,852
+7025.3s 1404 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.193 contrastive 0.091
+7034.9s 1405 eval: val_loss 0.9660 ppl 2.627
+7043.0s 1406 step 6760/7324 loss 0.9628 lr 2.27e-05 tok/s 15,835
+7043.0s 1407 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.193 contrastive 0.002
+7057.7s 1408 step 6770/7324 loss 1.0296 lr 2.26e-05 tok/s 15,826
+7057.7s 1409 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.197 contrastive 0.002
+7069.0s 1410 step 6780/7324 loss 0.9323 lr 2.25e-05 tok/s 15,824
+7069.0s 1411 journal: hit 0.89 abstain-target 0.50 forced 0 neg 7 ce 0.278 contrastive 0.002
+7077.1s 1412 step 6790/7324 loss 0.2538 lr 2.24e-05 tok/s 15,829
+7077.1s 1413 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.165 contrastive 0.089
+7084.3s 1414 step 6800/7324 loss 0.2244 lr 2.23e-05 tok/s 15,836
+7084.3s 1415 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.221 contrastive 0.003
+7092.4s 1416 step 6810/7324 loss 0.2544 lr 2.22e-05 tok/s 15,841
+7092.4s 1417 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.165 contrastive 0.089
+7102.1s 1418 step 6820/7324 loss 0.2960 lr 2.22e-05 tok/s 15,842
+7102.1s 1419 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.206 contrastive 0.090
+7110.2s 1420 step 6830/7324 loss 0.9435 lr 2.21e-05 tok/s 15,847
+7110.2s 1421 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.203 contrastive 0.089
+7123.3s 1422 step 6840/7324 loss 0.9098 lr 2.20e-05 tok/s 15,841
+7123.3s 1423 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.158 contrastive 0.002
+7133.7s 1424 step 6850/7324 loss 0.9688 lr 2.19e-05 tok/s 15,841
+7133.7s 1425 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.195 contrastive 0.089
+7150.0s 1426 step 6860/7324 loss 0.8841 lr 2.18e-05 tok/s 15,828
+7150.0s 1427 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.159 contrastive 0.094
+7154.9s 1428 step 6870/7324 loss 0.2664 lr 2.17e-05 tok/s 15,840
+7154.9s 1429 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.178 contrastive 0.089
+7164.6s 1430 step 6880/7324 loss 0.1642 lr 2.17e-05 tok/s 15,841
+7164.6s 1431 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.162 contrastive 0.002
+7175.9s 1432 step 6890/7324 loss 0.9224 lr 2.16e-05 tok/s 15,839
+7175.9s 1433 journal: hit 0.87 abstain-target 0.12 forced 1 neg 1 ce 0.171 contrastive 0.003
+7185.7s 1434 step 6900/7324 loss 0.9385 lr 2.15e-05 tok/s 15,840
+7185.7s 1435 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.203 contrastive 0.187
+7191.2s 1436 step 6910/7324 loss 0.4906 lr 2.15e-05 tok/s 15,851
+7191.2s 1437 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.225 contrastive 0.265
+7199.3s 1438 step 6920/7324 loss 0.1545 lr 2.14e-05 tok/s 15,856
+7199.3s 1439 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.152 contrastive 0.002
+7207.4s 1440 step 6930/7324 loss 0.2267 lr 2.13e-05 tok/s 15,861
+7207.4s 1441 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.224 contrastive 0.003
+7215.5s 1442 step 6940/7324 loss 0.9506 lr 2.13e-05 tok/s 15,866
+7215.5s 1443 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.181 contrastive 0.002
+7223.6s 1444 step 6950/7324 loss 0.2221 lr 2.12e-05 tok/s 15,871
+7223.6s 1445 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.220 contrastive 0.002
+7234.1s 1446 step 6960/7324 loss 0.9507 lr 2.11e-05 tok/s 15,870
+7234.1s 1447 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.160 contrastive 0.005
+7243.8s 1448 step 6970/7324 loss 0.9207 lr 2.11e-05 tok/s 15,872
+7243.8s 1449 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.235 contrastive 0.003
+7256.9s 1450 step 6980/7324 loss 0.1928 lr 2.10e-05 tok/s 15,866
+7256.9s 1451 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.188 contrastive 0.005
+7273.1s 1452 step 6990/7324 loss 0.9823 lr 2.09e-05 tok/s 15,853
+7273.1s 1453 journal: hit 0.85 abstain-target 0.31 forced 0 neg 3 ce 0.231 contrastive 0.089
+7281.2s 1454 step 7000/7324 loss 0.9644 lr 2.09e-05 tok/s 15,858
+7281.2s 1455 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.164 contrastive 0.002
+7290.8s 1456 eval: val_loss 0.9538 ppl 2.596
+7303.5s 1457 step 7010/7324 loss 0.2721 lr 2.08e-05 tok/s 15,831
+7303.5s 1458 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.183 contrastive 0.089
+7313.2s 1459 step 7020/7324 loss 0.1637 lr 2.08e-05 tok/s 15,833
+7313.2s 1460 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.162 contrastive 0.002
+7319.7s 1461 step 7030/7324 loss 0.3664 lr 2.07e-05 tok/s 15,841
+7319.7s 1462 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.191 contrastive 0.175
+7326.2s 1463 step 7040/7324 loss 0.8694 lr 2.07e-05 tok/s 15,850
+7326.2s 1464 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.279 contrastive 0.002
+7335.9s 1465 step 7050/7324 loss 0.8977 lr 2.06e-05 tok/s 15,851
+7335.9s 1466 journal: hit 0.80 abstain-target 0.50 forced 0 neg 6 ce 0.214 contrastive 0.089
+7350.5s 1467 step 7060/7324 loss 0.9241 lr 2.06e-05 tok/s 15,842
+7350.5s 1468 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.184 contrastive 0.002
+7359.4s 1469 step 7070/7324 loss 0.3394 lr 2.05e-05 tok/s 15,845
+7359.4s 1470 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.164 contrastive 0.175
+7370.8s 1471 step 7080/7324 loss 0.9385 lr 2.05e-05 tok/s 15,843
+7370.8s 1472 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.195 contrastive 0.003
+7382.2s 1473 step 7090/7324 loss 0.8720 lr 2.05e-05 tok/s 15,840
+7382.2s 1474 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.156 contrastive 0.090
+7385.5s 1475 step 7100/7324 loss 0.9047 lr 2.04e-05 tok/s 15,856
+7385.5s 1476 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.170 contrastive 0.088
+7395.3s 1477 step 7110/7324 loss 0.3900 lr 2.04e-05 tok/s 15,857
+7395.3s 1478 journal: hit 0.78 abstain-target 0.56 forced 0 neg 7 ce 0.301 contrastive 0.089
+7407.4s 1479 step 7120/7324 loss 0.1841 lr 2.04e-05 tok/s 15,853
+7407.4s 1480 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.180 contrastive 0.004
+7413.9s 1481 step 7130/7324 loss 0.2839 lr 2.03e-05 tok/s 15,861
+7413.9s 1482 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.193 contrastive 0.091
+7426.9s 1483 step 7140/7324 loss 0.9676 lr 2.03e-05 tok/s 15,855
+7426.9s 1484 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.145 contrastive 0.005
+7436.6s 1485 step 7150/7324 loss 0.3721 lr 2.03e-05 tok/s 15,857
+7436.6s 1486 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.197 contrastive 0.175
+7446.3s 1487 step 7160/7324 loss 0.3070 lr 2.02e-05 tok/s 15,858
+7446.3s 1488 journal: hit 1.00 abstain-target 0.38 forced 0 neg 6 ce 0.218 contrastive 0.089
+7451.8s 1489 step 7170/7324 loss 0.2509 lr 2.02e-05 tok/s 15,868
+7451.8s 1490 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.163 contrastive 0.088
+7458.4s 1491 step 7180/7324 loss 0.1665 lr 2.02e-05 tok/s 15,877
+7458.4s 1492 journal: hit 0.92 abstain-target 0.31 forced 0 neg 4 ce 0.165 contrastive 0.002
+7464.8s 1493 step 7190/7324 loss 0.1642 lr 2.02e-05 tok/s 15,885
+7464.8s 1494 journal: hit 1.00 abstain-target 0.06 forced 0 neg 1 ce 0.159 contrastive 0.005
+7474.6s 1495 step 7200/7324 loss 0.9752 lr 2.01e-05 tok/s 15,886
+7474.6s 1496 journal: hit 0.78 abstain-target 0.56 forced 0 neg 7 ce 0.187 contrastive 0.088
+7485.9s 1497 step 7210/7324 loss 0.9331 lr 2.01e-05 tok/s 15,884
+7485.9s 1498 journal: hit 0.92 abstain-target 0.25 forced 0 neg 3 ce 0.167 contrastive 0.090
+7498.1s 1499 step 7220/7324 loss 0.1778 lr 2.01e-05 tok/s 15,880
+7498.1s 1500 journal: hit 1.00 abstain-target 0.19 forced 0 neg 3 ce 0.175 contrastive 0.003
+7507.8s 1501 step 7230/7324 loss 0.1800 lr 2.01e-05 tok/s 15,881
+7507.8s 1502 journal: hit 1.00 abstain-target 0.50 forced 0 neg 8 ce 0.177 contrastive 0.003
+7522.4s 1503 step 7240/7324 loss 0.2551 lr 2.01e-05 tok/s 15,872
+7522.4s 1504 journal: hit 0.91 abstain-target 0.38 forced 0 neg 5 ce 0.253 contrastive 0.002
+7533.8s 1505 step 7250/7324 loss 0.1416 lr 2.00e-05 tok/s 15,870
+7533.8s 1506 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.138 contrastive 0.003
+7543.3s 1507 eval: val_loss 0.9494 ppl 2.584
+7553.1s 1508 step 7260/7324 loss 0.9196 lr 2.00e-05 tok/s 15,851
+7553.1s 1509 journal: hit 0.88 abstain-target 0.56 forced 0 neg 8 ce 0.254 contrastive 0.005
+7565.2s 1510 step 7270/7324 loss 0.9379 lr 2.00e-05 tok/s 15,847
+7565.2s 1511 journal: hit 1.00 abstain-target 0.12 forced 0 neg 2 ce 0.158 contrastive 0.004
+7576.6s 1512 step 7280/7324 loss 0.9834 lr 2.00e-05 tok/s 15,845
+7576.6s 1513 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.155 contrastive 0.002
+7584.7s 1514 step 7290/7324 loss 0.9960 lr 2.00e-05 tok/s 15,849
+7584.7s 1515 journal: hit 1.00 abstain-target 0.31 forced 0 neg 5 ce 0.196 contrastive 0.002
+7592.8s 1516 step 7300/7324 loss 0.1440 lr 2.00e-05 tok/s 15,854
+7592.8s 1517 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.142 contrastive 0.002
+7604.2s 1518 step 7310/7324 loss 0.2078 lr 2.00e-05 tok/s 15,852
+7604.2s 1519 journal: hit 1.00 abstain-target 0.25 forced 0 neg 4 ce 0.205 contrastive 0.002
+7613.1s 1520 step 7320/7324 loss 0.9540 lr 2.00e-05 tok/s 15,855
+7613.1s 1521 journal: hit 0.93 abstain-target 0.12 forced 0 neg 1 ce 0.152 contrastive 0.009
+7615.2s 1522 step 7323/7324 loss 0.9600 lr 2.00e-05 tok/s 15,857
+7615.2s 1523 journal: hit 0.93 abstain-target 0.19 forced 0 neg 2 ce 0.151 contrastive 0.002
+7656.7s 1524 [hm-lm] INVALID -- LM arm, cite-or-abstain contract | recall on 0.385 off 0.000 skill delta 0.0000 invalid citation 0.225 | retained: /kaggle/working/quantum-cortex/metrics/mqar/hm-lm-81cb13a684aa.json
+7658.0s 1525 [ledger] record valid against run-v1
+7658.0s 1526 [ledger] appended run 81cb13a684aa -> metrics/runs.jsonl
+7658.0s 1527 [ledger] regenerated metrics/LATEST.md
+7658.0s 1528 
+7658.0s 1529 [record — copy this line into metrics/runs.jsonl on the machine that commits]
+7658.0s 1530 {"comparison": null, "compute": {"gpu_hours": 2.1047, "hardware": "Tesla T4", "provider": "kaggle"}, "config_hash": "ca90d290ad33b472", "git_commit": "8eb1c9d690eb8bed00653dd263ddd46c6d8b22c8", "model": {"architecture_id": "journal-vanilla-27m-byte", "params_total": 27094528, "tokenizer_id": "byte-v0+8oracle"}, "results": {"benchmarks": {"invariant_compliance_rate": null, "mqar_accuracy": null, "oracle_shift_recovery": null, "routing_specialization_mi": null, "standard_suite": {"hm_attention_mass": 0.9794166967272758, "hm_attr_exact_given_valid": 0.6260162601626016, "hm_attr_hit_off_by_chance": 0.07, "hm_claimable": 0.0, "hm_dissociation_pass": 0, "hm_false_abstention_on": 0.16, "hm_gap": 0.385, "hm_guess_rate_off": 0.46, "hm_invalid_citation_on": 0.225, "hm_negctrl_abstain_off": 0.58, "hm_negctrl_abstain_on": 0.38, "hm_negctrl_on": 0.16, "hm_negctrl_rate": 0.62, "hm_persistent": 1.0, "hm_recall_off": 0.0, "hm_recall_on": 0.385, "hm_retrieval_hit": 0.98, "hm_skill_delta": 0.0, "hm_valid_citation_on": 0.615}}, "final_train_loss": 0.96, "val_perplexity": 2.5864}, "run": {"anomalies": null, "component_under_test": "C2", "kind": "ablation", "notes": "Step 4 v6 (REPRISE): v5 (db028e6a4262) was INVALID and did not test the minimal pair: its withheld window had k - 1 lines whenever the episode had been retrieved (the protocol's windows always have k), a shape cue cheaper than the comparison, and the claims on never planted entities rose (0.50 -> 0.58 against v3). One variable: the pair keeps its shape, k + 1 retrieved, the own episode dropped, k lines kept, so the two halves differ only by the episode's presence. v3's length and share of negatives (0.25); the asymmetric weight and the thresholds untouched.", "status": "completed"}, "run_id": "81cb13a684aa", "schema_version": "run-v1", "timestamp_utc": "2026-09-13T15:00:47+00:00", "training": {"batch_size": 16, "data_slice": "sample-10BT, first 600,000,000 utf-8 bytes, byte-level", "dataset_id": "fineweb-edu", "lr_schedule": "warmup100+cosine(max=0.0002,min=0.1x)", "parent_run_id": "be1fa8139f59", "precision": "bf16", "seed": 1337, "steps": 7324, "tokens_seen": 119996416}}
+7906.9s 1531 retained: metrics/mqar/hm-lm-81cb13a684aa-session-b.json
+7906.9s 1532 {
+7906.9s 1533 "benchmark": "hm_protocol_lm_session_b_new_process",
+7906.9s 1534 "training_pool_probe": {
+7906.9s 1535 "seed": 100000,
+7906.9s 1536 "n": 200,
+7906.9s 1537 "recall_strict": 0.265,
+7906.9s 1538 "valid_citation": 0.545,
+7906.9s 1539 "invalid_citation": 0.25,
+7906.9s 1540 "abstain_rate": 0.205,
+7906.9s 1541 "retrieval_hit": 0.96
+7906.9s 1542 },
+7906.9s 1543 "checkpoint": {
+7906.9s 1544 "path": "runs/journal-n1-v6/ckpt.pt",
+7906.9s 1545 "run_id": "81cb13a684aa",
+7906.9s 1546 "config_hash": "ca90d290ad33b472",
+7906.9s 1547 "step": 7323
+7906.9s 1548 },
+7906.9s 1549 "journal": {
+7906.9s 1550 "path": "runs/journal-n1-v6/journal.jsonl",
+7906.9s 1551 "entries": 200,
+7906.9s 1552 "mode": "durable",
+7906.9s 1553 "policy": "stop",
+7906.9s 1554 "planted_found": 200
+7906.9s 1555 },
+7906.9s 1556 "generator": {
+7906.9s 1557 "config_hash": "a5e22c70a3275ed4",
+7906.9s 1558 "n_facts": 200,
+7906.9s 1559 "n_negctrl": 50,
+7906.9s 1560 "seed": 0
+7906.9s 1561 },
+7906.9s 1562 "hm_recall_on": 0.385,
+7906.9s 1563 "hm_recall_off": 0.0,
+7906.9s 1564 "hm_false_abstention_on": 0.16,
+7906.9s 1565 "hm_invalid_citation_on": 0.225,
+7906.9s 1566 "hm_valid_citation_on": 0.615,
+7906.9s 1567 "hm_attr_exact_given_valid": 0.6260162601626016,
+7906.9s 1568 "hm_retrieval_hit": 0.98,
+7906.9s 1569 "hm_attention_mass": 0.9794166851043701,
+7906.9s 1570 "hm_negctrl_rate": 0.62,
+7906.9s 1571 "hm_negctrl_abstain_on": 0.38,
+7906.9s 1572 "persistent": true,
+7906.9s 1573 "process": "new (nothing of session A but the disk)"
+7906.9s 1574 }
+7907.3s 1575 in process : INVALID -- LM arm, cite-or-abstain contract
+7907.3s 1576 {'hm_recall_on': 0.385, 'hm_recall_off': 0.0, 'hm_skill_delta': 0.0, 'hm_invalid_citation_on': 0.225, 'hm_false_abstention_on': 0.16, 'hm_negctrl_rate': 0.62, 'persistent': True, 'claimable': 0}
+7907.3s 1577 attribution (encoder, reader, answer): {'encoder': 0.98, 'reader': 0.9794166967272758, 'answer': 0.6260162601626016}
+7907.3s 1578 new process: {'hm_recall_on': 0.385, 'hm_recall_off': 0.0, 'hm_invalid_citation_on': 0.225, 'hm_false_abstention_on': 0.16, 'hm_retrieval_hit': 0.98, 'persistent': True}
+7907.3s 1579 session B reproduces the in process arm: True
+7907.3s 1580 training pool probe (seen entities) : {'seed': 100000, 'n': 200, 'recall_strict': 0.265, 'valid_citation': 0.545, 'invalid_citation': 0.25, 'abstain_rate': 0.205, 'retrieval_hit': 0.96}
+7907.3s 1581 # LATEST — run ledger state (generated by train.py — never hand-edit)
+7907.3s 1582 
+7907.3s 1583 Generated: 2026-09-13T17:07:37+00:00 · records: 7
+7907.3s 1584 
+7907.3s 1585 | run_id | date (UTC) | kind | comp | arch | tokens | steps | val_ppl | status | provider |
+7907.3s 1586 |---|---|---|---|---|---|---|---|---|---|
+7907.3s 1587 | be1fa8139f59 | 2026-09-05 | control | - | vanilla-26m-byte | 499,990,528 | 30517 | 2.601 | completed | kaggle |
+7907.3s 1588 | dc34fcf000aa | 2026-09-12 | ablation | C2 | journal-vanilla-27m-byte | 39,993,344 | 2441 | 2.587 | completed | kaggle |
+7907.3s 1589 | 5f0a6d3ff4e8 | 2026-09-12 | ablation | C2 | journal-vanilla-27m-byte | 39,993,344 | 2441 | 2.578 | completed | kaggle |
+7907.3s 1590 | ce008745375a | 2026-09-12 | ablation | C2 | journal-vanilla-27m-byte | 119,996,416 | 7324 | 2.595 | completed | kaggle |
+7907.3s 1591 | 6f10e8cbfebf | 2026-09-13 | ablation | C2 | journal-vanilla-27m-byte | 119,996,416 | 7324 | 2.625 | completed | kaggle |
+7907.3s 1592 | db028e6a4262 | 2026-09-13 | ablation | C2 | journal-vanilla-27m-byte | 119,996,416 | 7324 | 2.629 | completed | kaggle |
+7907.3s 1593 | 81cb13a684aa | 2026-09-13 | ablation | C2 | journal-vanilla-27m-byte | 119,996,416 | 7324 | 2.586 | completed | kaggle |
+7907.3s 1594 
+7907.3s 1595 Best val_perplexity: **2.578** (run 5f0a6d3ff4e8)
+7907.3s 1596 
+7907.3s 1597 {"comparison": null, "compute": {"gpu_hours": 2.1047, "hardware": "Tesla T4", "provider": "kaggle"}, "config_hash": "ca90d290ad33b472", "git_commit": "8eb1c9d690eb8bed00653dd263ddd46c6d8b22c8", "model": {"architecture_id": "journal-vanilla-27m-byte", "params_total": 27094528, "tokenizer_id": "byte-v0+8oracle"}, "results": {"benchmarks": {"invariant_compliance_rate": null, "mqar_accuracy": null, "oracle_shift_recovery": null, "routing_specialization_mi": null, "standard_suite": {"hm_attention_mass": 0.9794166967272758, "hm_attr_exact_given_valid": 0.6260162601626016, "hm_attr_hit_off_by_chance": 0.07, "hm_claimable": 0.0, "hm_dissociation_pass": 0, "hm_false_abstention_on": 0.16, "hm_gap": 0.385, "hm_guess_rate_off": 0.46, "hm_invalid_citation_on": 0.225, "hm_negctrl_abstain_off": 0.58, "hm_negctrl_abstain_on": 0.38, "hm_negctrl_on": 0.16, "hm_negctrl_rate": 0.62, "hm_persistent": 1.0, "hm_recall_off": 0.0, "hm_recall_on": 0.385, "hm_retrieval_hit": 0.98, "hm_skill_delta": 0.0, "hm_valid_citation_on": 0.615}}, "final_train_loss": 0.96, "val_perplexity": 2.5864}, "run": {"anomalies": null, "component_under_test": "C2", "kind": "ablation", "notes": "Step 4 v6 (REPRISE): v5 (db028e6a4262) was INVALID and did not test the minimal pair: its withheld window had k - 1 lines whenever the episode had been retrieved (the protocol's windows always have k), a shape cue cheaper than the comparison, and the claims on never planted entities rose (0.50 -> 0.58 against v3). One variable: the pair keeps its shape, k + 1 retrieved, the own episode dropped, k lines kept, so the two halves differ only by the episode's presence. v3's length and share of negatives (0.25); the asymmetric weight and the thresholds untouched.", "status": "completed"}, "run_id": "81cb13a684aa", "schema_version": "run-v1", "timestamp_utc": "2026-09-13T15:00:47+00:00", "training": {"batch_size": 16, "data_slice": "sample-10BT, first 600,000,000 utf-8 bytes, byte-level", "dataset_id": "fineweb-edu", "lr_schedule": "warmup100+cosine(max=0.0002,min=0.1x)", "parent_run_id": "be1fa8139f59", "precision": "bf16", "seed": 1337, "steps": 7324, "tokens_seen": 119996416}}
+7907.3s 1598 Commit: metrics/runs.jsonl, metrics/LATEST.md, metrics/mqar/hm-lm-<run_id>.json, metrics/mqar/hm-lm-<run_id>-session-b.json. Read cold first.
+7908.5s 1599 {
+7908.5s 1600 "metrics/mqar/hm-lm-5f0a6d3ff4e8-session-b.json": {
+7908.5s 1601 "bytes": 1097,
+7908.5s 1602 "sha256_16": "0eb4bfe3d27c5169"
+7908.5s 1603 },
+7908.5s 1604 "metrics/mqar/hm-lm-5f0a6d3ff4e8.json": {
+7908.5s 1605 "bytes": 1394,
+7908.5s 1606 "sha256_16": "de0d0b8f817dc52f"
+7908.5s 1607 },
+7908.5s 1608 "metrics/mqar/hm-lm-6f10e8cbfebf-session-b.json": {
+7908.5s 1609 "bytes": 1084,
+7908.5s 1610 "sha256_16": "9c54b6934978b9a2"
+7908.5s 1611 },
+7908.5s 1612 "metrics/mqar/hm-lm-6f10e8cbfebf.json": {
+7908.5s 1613 "bytes": 1365,
+7908.5s 1614 "sha256_16": "1961f37528f03388"
+7908.5s 1615 },
+7908.5s 1616 "metrics/mqar/hm-lm-81cb13a684aa-session-b.json": {
+7908.5s 1617 "bytes": 1100,
+7908.5s 1618 "sha256_16": "3c001db9f7b29991"
+7908.5s 1619 },
+7908.5s 1620 "metrics/mqar/hm-lm-81cb13a684aa.json": {
+7908.5s 1621 "bytes": 1375,
+7908.5s 1622 "sha256_16": "d0a180d790422e18"
+7908.5s 1623 },
+7908.5s 1624 "metrics/mqar/hm-lm-ce008745375a-session-b.json": {
+7908.5s 1625 "bytes": 1094,
+7908.5s 1626 "sha256_16": "7569420b97516ada"
+7908.5s 1627 },
+7908.5s 1628 "metrics/mqar/hm-lm-ce008745375a.json": {
+7908.5s 1629 "bytes": 1368,
+7908.5s 1630 "sha256_16": "ef0adc485cc694a8"
+7908.5s 1631 },
+7908.5s 1632 "metrics/mqar/hm-lm-db028e6a4262-session-b.json": {
+7908.5s 1633 "bytes": 1097,
+7908.5s 1634 "sha256_16": "8cbc342ca6e50dc6"
+7908.5s 1635 },
+7908.5s 1636 "metrics/mqar/hm-lm-db028e6a4262.json": {
+7908.5s 1637 "bytes": 1369,
+7908.5s 1638 "sha256_16": "8dd6247c22048bc0"
+7908.5s 1639 },
+7908.5s 1640 "metrics/mqar/hm-lm-dc34fcf000aa-session-b.json": {
+7908.5s 1641 "bytes": 888,
+7908.5s 1642 "sha256_16": "44103c67a79f5e19"
+7908.5s 1643 },
+7908.5s 1644 "metrics/mqar/hm-lm-dc34fcf000aa.json": {
+7908.5s 1645 "bytes": 1392,
+7908.5s 1646 "sha256_16": "dc09ee54c4d32e14"
+7908.5s 1647 },
+7908.5s 1648 "runs/journal-n1-v6/ckpt.pt": {
+7908.5s 1649 "bytes": 325242261,
+7908.5s 1650 "sha256_16": "bf459c5bbf465786"
+7908.5s 1651 },
+7908.5s 1652 "runs/journal-n1-v6/hm-lm.json": {
+7908.5s 1653 "bytes": 1375,
+7908.5s 1654 "sha256_16": "d0a180d790422e18"
+7908.5s 1655 },
+7908.5s 1656 "runs/journal-n1-v6/journal.jsonl": {
+7908.5s 1657 "bytes": 193868,
+7908.5s 1658 "sha256_16": "fd015a4b29c9703e"
+7908.5s 1659 }
+7908.5s 1660 }
+7908.5s 1661 215 files in the manifest
+7911.5s 1662 /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+7911.5s 1663 cells[i][c] = re.sub('\\\\\|', '|', cell)
+7911.6s 1664 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+7911.6s 1665 text = re.sub(r'_', '\_', text) # Escape underscores in display text
+7912.2s 1666 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+7912.7s 1667 [NbConvertApp] Writing 150291 bytes to __notebook__.ipynb
+7915.0s 1668 [NbConvertApp] Converting notebook __notebook__.ipynb to html
+7915.8s 1669 [NbConvertApp] Writing 428673 bytes to __results__.html
