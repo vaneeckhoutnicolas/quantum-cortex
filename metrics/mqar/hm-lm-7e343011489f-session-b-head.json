@@ -1,0 +1,42 @@
+{
+  "benchmark": "hm_protocol_lm_session_b_new_process",
+  "policy": "head",
+  "hm_gap": 0.275,
+  "run_valid": false,
+  "gate_conditions_without_skill_arm": 0,
+  "verdict_without_skill_arm": "INVALID -- the skill delta is the in process arm's",
+  "training_pool_probe": null,
+  "checkpoint": {
+    "path": "runs\\journal-n1-v7\\ckpt.pt",
+    "run_id": "7e343011489f",
+    "config_hash": "7ffc38a3ef7ce694",
+    "step": 7323
+  },
+  "journal": {
+    "path": "runs\\journal-n1-v7\\journal.jsonl",
+    "entries": 200,
+    "mode": "durable",
+    "policy": "stop",
+    "planted_found": 200
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0
+  },
+  "hm_recall_on": 0.275,
+  "hm_recall_off": 0.0,
+  "hm_false_abstention_on": 0.0,
+  "hm_invalid_citation_on": 0.535,
+  "hm_valid_citation_on": 0.465,
+  "hm_attr_exact_given_valid": 0.5913978494623656,
+  "hm_retrieval_hit": 0.965,
+  "hm_attention_mass": 0.9738861125707626,
+  "hm_negctrl_rate": 0.98,
+  "hm_negctrl_abstain_on": 0.02,
+  "hm_match_acc_on": 0.965,
+  "hm_match_acc_negctrl": 0.02,
+  "persistent": true,
+  "process": "new (nothing of session A but the disk)"
+}

@@ -1,0 +1,21 @@
+{
+  "probe": "representation (linear, post hoc): logistic regression on the head's two vectors over minimal pairs",
+  "n_pairs": 193,
+  "train_pairs": 96,
+  "test_pairs": 97,
+  "train_accuracy": 0.921875,
+  "test_accuracy": 0.5051546391752577,
+  "chance": 0.5,
+  "reading": "the comparison is not linearly extractable from the head's vectors at this size: the reader's representation does not carry it",
+  "checkpoint": {
+    "path": "runs\\journal-n1-v7\\ckpt.pt",
+    "run_id": "7e343011489f",
+    "config_hash": "7ffc38a3ef7ce694",
+    "step": 7323
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "seed": 0
+  }
+}
