@@ -1,0 +1,9 @@
+{
+  "manifest": "data/mixes/fineweb-edu-n1.json",
+  "resolved_on": "2026-09-14",
+  "resolved_from": "the N1 notebook's Kaggle Output (notebook6a34480784), data/fineweb_edu_bytes.bin, 1,200,000,000 bytes, fetched with the Kaggle CLI and hashed on the founder's machine",
+  "content_sha_16": "64d39b710a3d2ac8",
+  "mix_hash_resolved": "c996aac4aac059ac",
+  "mix_hash_as_recorded_in_the_n1_record": "a6c74294956f0a68",
+  "note": "The N1 record (run be1fa8139f59) carries the manifest hash computed with the slice absent from the manifest's path ('unresolved'): its data provenance was declarative. This note resolves it on the content: the same slice, hashed. Both hashes are kept; the record is not rewritten."
+}
