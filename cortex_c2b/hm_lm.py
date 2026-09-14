@@ -333,6 +333,90 @@ def shape_probe(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
                for name, (c, n) in out.items()}}
 
 
+@torch.no_grad()
+def _head_inputs(model, bridge: JournalBridge, window, window_len: int, query: list[int]):
+    """The two vectors the matching head receives at the decision position, for one query
+    and one window: the residual stream before the reader and the reader's attended values."""
+    wt, wm = bridge.window_tensors([window], window_len)
+    idx = torch.tensor([query], dtype=torch.long, device=next(model.parameters()).device)
+    model(idx[:, -model.cfg.block_size:], window_tokens=wt, window_mask=wm, gate=1.0)
+    blk = model.blocks[model.cfg.journal_block]
+    pre, att = blk.last_pre[0, -1], blk.last_attended[0, -1]
+    return torch.cat([pre, att]).float().cpu().numpy()
+
+
+def representation_probe(model, bridge: JournalBridge, facts: list[Fact], window_len: int,
+                         pointer_of: dict[str, str], seed: int = 0, steps: int = 400, lr: float = 0.5) -> dict:
+    """A post hoc linear probe (logistic regression, numpy) on the two vectors the matching
+    head receives, over minimal pairs of the given facts: the plain read (present, when the
+    own episode was retrieved) against the same read with the own episode withheld and the
+    shape kept (absent). Half the pairs train the probe, the other half test it. Reads: a
+    test accuracy well above 0.5 means the comparison is linearly extractable from those
+    vectors and the trained head's constant answer is a fault of the coupled training; an
+    accuracy near 0.5 means the reader's representation does not carry it."""
+    from cortex_c2b.organ_use import withheld_items
+    rng = np.random.default_rng(seed + 5)
+    model.eval()
+    bridge.pointer_of.update(pointer_of)
+    X, y = [], []
+    for f in facts:
+        own = pointer_of.get(f.entity)
+        if own is None:
+            continue
+        query = encode_query(f.query)
+        cue = bridge.cues([query])[0]
+        read = bridge.read(cue)
+        if own not in read.pointers:
+            continue
+        X.append(_head_inputs(model, bridge, read.window, window_len, query)); y.append(1.0)
+        items = withheld_items(bridge, cue, own, rng, keep_shape=True)
+        window, _ = build_read_window(items, bridge.budget, rng)
+        X.append(_head_inputs(model, bridge, window, window_len, query)); y.append(0.0)
+    X = np.asarray(X, dtype=np.float64); y = np.asarray(y, dtype=np.float64)
+    n = len(y)
+    if n < 8:
+        return {"probe": "representation (linear, post hoc)", "n_pairs": n // 2, "note": "too few pairs"}
+    mu, sd = X.mean(0), X.std(0) + 1e-6
+    Xn = (X - mu) / sd
+    order = rng.permutation(n // 2)                                   # split by pair, never by example
+    train_pairs, test_pairs = order[: len(order) // 2], order[len(order) // 2:]
+    tr = np.concatenate([[2 * i, 2 * i + 1] for i in train_pairs]); te = np.concatenate([[2 * i, 2 * i + 1] for i in test_pairs])
+    w = np.zeros(Xn.shape[1]); b = 0.0
+    for _ in range(steps):                                            # plain gradient descent with a small ridge
+        z = Xn[tr] @ w + b; p = 1.0 / (1.0 + np.exp(-z))
+        g = p - y[tr]
+        w -= lr * (Xn[tr].T @ g / len(tr) + 1e-3 * w); b -= lr * g.mean()
+    def acc(ix):
+        return float((((Xn[ix] @ w + b) > 0).astype(float) == y[ix]).mean())
+    return {"probe": "representation (linear, post hoc): logistic regression on the head's two vectors over minimal pairs",
+            "n_pairs": n // 2, "train_pairs": len(train_pairs), "test_pairs": len(test_pairs),
+            "train_accuracy": acc(tr), "test_accuracy": acc(te), "chance": 0.5,
+            "reading": ("the comparison is linearly extractable from the head's vectors: the trained head's constant is a fault of the coupled training"
+                        if acc(te) >= 0.8 else
+                        "the comparison is not linearly extractable from the head's vectors at this size: the reader's representation does not carry it"
+                        if acc(te) <= 0.6 else "partially extractable; neither reading is clean")}
+
+
+def representation_probe_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, seed: int = 0,
+                                   k: int = 4, budget: int = 256, window_len: int = 256) -> dict:
+    import train
+    from cortex_c2b import content_hash
+    from cortex_c2b.crypto import key_from_env
+    device = torch.device("cpu")
+    model = train.VanillaGPT(cfg).to(device)
+    ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    model.load_state_dict(ck["model"]); model.eval()
+    journal = Journal(journal_path, key=key_from_env(), policy=POLICY_STOP)
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device)
+    facts, gen_hash = generate_facts(n_facts, seed)
+    pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
+                  if content_hash(f.statement.encode("utf-8")) in journal.payloads}
+    r = representation_probe(model, bridge, facts, window_len, pointer_of, seed=seed)
+    r["checkpoint"] = {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"), "step": ck.get("step")}
+    r["generator"] = {"config_hash": gen_hash, "n_facts": n_facts, "seed": seed}
+    return r
+
+
 def shape_probe_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
                           seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256) -> dict:
     """The shape probe from the disk alone (checkpoint, sealed journal, key in the environment)."""
@@ -431,6 +515,8 @@ def _cli():
     ap.add_argument("--session-b", action="store_true")
     ap.add_argument("--shape-probe", action="store_true",
                     help="the shape probe alone (claims at k - 1 against k lines), a diagnostic: metrics/mqar/shape-probe-<run_id>.json")
+    ap.add_argument("--representation-probe", action="store_true",
+                    help="a post hoc linear probe on the matching head's two vectors over minimal pairs: metrics/mqar/representation-probe-<run_id>.json")
     ap.add_argument("--ckpt", required=True); ap.add_argument("--journal", required=True)
     ap.add_argument("--config", required=True, help="the run's config json (the model's shape)")
     ap.add_argument("--out", default=None); ap.add_argument("--seed", type=int, default=0)
@@ -440,9 +526,18 @@ def _cli():
     ap.add_argument("--policy", default="plain", choices=list(POLICIES),
                     help="decode policy (ADR-008 amendment 2026-09-14): plain | head | head+pointer")
     args = ap.parse_args()
-    if not (args.session_b or args.shape_probe):
-        ap.error("one of --session-b / --shape-probe is required")
+    if not (args.session_b or args.shape_probe or args.representation_probe):
+        ap.error("one of --session-b / --shape-probe / --representation-probe is required")
     cfg = train.load_config(args.config)
+    if args.representation_probe:
+        r = representation_probe_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, seed=args.seed,
+                                           k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
+        out = Path(args.out) if args.out else Path("metrics/mqar") / f"representation-probe-{r['checkpoint']['run_id']}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+        print(f"retained: {out}")
+        print(json.dumps(r, indent=2))
+        return
     if args.shape_probe:
         r = shape_probe_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl, seed=args.seed,
                                   k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)

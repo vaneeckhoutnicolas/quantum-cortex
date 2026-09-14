@@ -593,3 +593,17 @@ def test_session_b_reports_a_policy_and_the_four_conditions(tmp_path):
         assert b["policy"] == policy and b["gate_conditions_without_skill_arm"] in (0, 1)
         assert b["verdict_without_skill_arm"].split(" -- ")[0] in ("PASS", "FAIL", "INVALID")
         assert "hm_gap" in b and "run_valid" in b
+
+
+def test_representation_probe_runs_on_minimal_pairs_and_splits_by_pair():
+    """The post hoc linear probe of the head's two vectors: built on minimal pairs (present against
+    the same read with the episode withheld, shape kept), split by pair, reports train and test
+    accuracy against chance 0.5 and one of three readings."""
+    from cortex_c2b.hm_lm import representation_probe
+    cfg, m, jb, facts, negs = _planted_bridge(k=3, n=40)
+    r = representation_probe(m, jb, facts, cfg.journal_read_bytes, dict(jb.pointer_of), steps=50)
+    assert r["n_pairs"] >= 1
+    if "test_accuracy" in r:
+        assert 0.0 <= r["train_accuracy"] <= 1.0 and 0.0 <= r["test_accuracy"] <= 1.0
+        assert r["train_pairs"] + r["test_pairs"] == r["n_pairs"] and r["chance"] == 0.5
+        assert r["reading"]
