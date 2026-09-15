@@ -1,0 +1,21 @@
+{
+  "probe": "representation (linear, post hoc): logistic regression on the head's two vectors over minimal pairs",
+  "n_pairs": 190,
+  "train_pairs": 95,
+  "test_pairs": 95,
+  "train_accuracy": 0.6842105263157895,
+  "test_accuracy": 0.6473684210526316,
+  "chance": 0.5,
+  "reading": "partially extractable; neither reading is clean",
+  "checkpoint": {
+    "path": "runs\\journal-n1-v7-seed2\\ckpt.pt",
+    "run_id": "85856d44e0a3",
+    "config_hash": "e19d2a4211c0230a",
+    "step": 7323
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "seed": 0
+  }
+}
