@@ -80,13 +80,20 @@ def load_done(dirs: list[Path]) -> dict[str, dict]:
 def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
                          ckpt_dir: str | Path = "metrics/mqar/ladder8-ckpt",
                          resume_from: list[str | Path] | None = None,
-                         time_budget_min: float | None = None, paths: list[str] | None = None, **kw) -> dict:
+                         time_budget_min: float | None = None, paths: list[str] | None = None,
+                         relay: str | None = None, **kw) -> dict:
     """`paths` (optional): restrict the run to these path names (e.g. the sigma run of
     the convergence, L3 alone at 3000 steps on the seeds that stayed at the floor).
     A subset writes its units and a SUBSET aggregate (per path stats, no paired
     tests against absent paths); the full readout needs all eight paths."""
     tiers = tiers or DEFAULT_TIERS
     ckpt = Path(ckpt_dir); ckpt.mkdir(parents=True, exist_ok=True)
+    if relay:                                            # the checkpoint relay: the last push, before anything else
+        import tempfile
+        from cortex_data import relay as _relay
+        pulled = Path(tempfile.mkdtemp(prefix="relay-")) / ckpt.name
+        if _relay.pull(relay, pulled):
+            resume_from = list(resume_from or []) + [pulled]
     dirs = [Path(p) for p in (resume_from or [])] + [ckpt]
     done = load_done(dirs)
     all_paths = list(LADDER) + list(ARCH)
@@ -115,6 +122,9 @@ def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
                "wall_s": round(time.time() - t1, 1), "written_utc": datetime.now(timezone.utc).isoformat()}
         (ckpt / f"unit-{uid}.json").write_text(json.dumps(rec) + "\n")   # written THE MOMENT it finishes
         done[uid] = rec
+        if relay:
+            from cortex_data import relay as _relay
+            _relay.push(ckpt, relay, uid)                                  # small files: a blocking push, seconds
         print(f"[unit] {uid} -> acc={acc:.4f} ({rec['wall_s']}s)  [{len(done)}/{len(units)}]")
     complete = all(unit_id(*u) in done for u in units)
     result = {"benchmark": "recurrent_ladder_8seed_resumable",
@@ -189,15 +199,16 @@ def _cli():
     ap.add_argument("--paths", nargs="*", default=None,
                     help="restrict to these path names (e.g. L3-+local-conv for the sigma run)")
     ap.add_argument("--tiers", nargs="*", default=None, help="restrict to these tiers as KVxSEQ (e.g. 8x128 for the tier where L3 takes off); a subset aggregate, never a paired claim across tiers")
+    ap.add_argument("--relay", default=None, help="checkpoint relay: a private Kaggle dataset slug pulled before the resume lookup and pushed after every unit")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
     tiers = parse_tiers(args.tiers)
     if args.quick:
         run_resumable_ladder(seeds=(1, 2), tiers=tiers or [MQARTier(kv_pairs=4, seq_len=32)], steps=40,
-                             ckpt_dir=args.ckpt_dir, resume_from=args.resume_from, d_model=32, paths=args.paths)
+                             ckpt_dir=args.ckpt_dir, resume_from=args.resume_from, d_model=32, paths=args.paths, relay=args.relay)
     else:
         run_resumable_ladder(seeds=tuple(args.seeds), tiers=tiers, steps=args.steps, ckpt_dir=args.ckpt_dir,
-                             resume_from=args.resume_from, time_budget_min=args.time_budget_min, paths=args.paths)
+                             resume_from=args.resume_from, time_budget_min=args.time_budget_min, paths=args.paths, relay=args.relay)
 
 
 def parse_tiers(spec):

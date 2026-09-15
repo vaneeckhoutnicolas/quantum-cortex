@@ -43,13 +43,19 @@ def ref_unit_id(name: str, seed: int, tier: MQARTier) -> str:
     return f"{name}__s{seed}__kv{tier.kv_pairs}_seq{tier.seq_len}"
 
 
-def run_resumable_rb(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
+def run_resumable_rb(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500, relay: str | None = None,
                      ckpt_dir: str | Path = "metrics/mqar/rb-ckpt",
                      resume_from: list[str | Path] | None = None,
                      reference_from: list[str | Path] | None = None,
                      time_budget_min: float | None = None, arms: list[str] | None = None, **kw) -> dict:
     tiers = tiers or DEFAULT_TIERS
     ckpt = Path(ckpt_dir); ckpt.mkdir(parents=True, exist_ok=True)
+    if relay:                                            # the checkpoint relay: the last push, before anything else
+        import tempfile
+        from cortex_data import relay as _relay
+        pulled = Path(tempfile.mkdtemp(prefix="relay-")) / ckpt.name
+        if _relay.pull(relay, pulled):
+            resume_from = list(resume_from or []) + [pulled]
     done = load_done([Path(p) for p in (resume_from or [])] + [ckpt])
     refs = load_done([Path(p) for p in (reference_from or [])])
     chosen = [ARM_BY_NAME[a] for a in arms] if arms else list(ARMS)
@@ -71,6 +77,9 @@ def run_resumable_rb(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
                "wall_s": round(time.time() - t1, 1), "written_utc": datetime.now(timezone.utc).isoformat()}
         (ckpt / f"unit-{uid}.json").write_text(json.dumps(rec) + "\n")   # written the moment it finishes
         done[uid] = rec
+        if relay:
+            from cortex_data import relay as _relay
+            _relay.push(ckpt, relay, uid)
         print(f"[unit] {uid} -> acc={r['accuracy']:.4f} trunk={r.get('accuracy_trunk_only', float('nan')):.4f} "
               f"gate={r.get('gate_final')} ({rec['wall_s']}s)  [{len(done)}/{len(units)}]")
     complete = all(rb_unit_id(*u) in done for u in units)
@@ -138,16 +147,17 @@ def _cli():
                     help="dirs holding the ladder8 units (L3 pure and the control at the same seeds/tiers/steps)")
     ap.add_argument("--time-budget-min", type=float, default=None)
     ap.add_argument("--tiers", nargs="*", default=None, help="restrict to these tiers as KVxSEQ (e.g. 8x128 for the tier where L3 takes off); a subset aggregate, never a paired claim across tiers")
+    ap.add_argument("--relay", default=None, help="checkpoint relay: a private Kaggle dataset slug pulled before the resume lookup and pushed after every unit")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
     from cortex_eval.resumable_ladder import parse_tiers
     tiers = parse_tiers(args.tiers)
     if args.quick:
         run_resumable_rb(seeds=(1, 2), tiers=tiers or [MQARTier(kv_pairs=4, seq_len=32)], steps=40, ckpt_dir=args.ckpt_dir,
-                         resume_from=args.resume_from, reference_from=args.reference_from, arms=args.arms, d_model=32)
+                         resume_from=args.resume_from, reference_from=args.reference_from, arms=args.arms, d_model=32, relay=args.relay)
     else:
         run_resumable_rb(seeds=tuple(args.seeds), tiers=tiers, steps=args.steps, ckpt_dir=args.ckpt_dir, resume_from=args.resume_from,
-                         reference_from=args.reference_from, time_budget_min=args.time_budget_min, arms=args.arms)
+                         reference_from=args.reference_from, time_budget_min=args.time_budget_min, arms=args.arms, relay=args.relay)
 
 
 if __name__ == "__main__":

@@ -558,6 +558,9 @@ def main() -> None:
     ap.add_argument("--regen-latest", action="store_true")
     ap.add_argument("--time-budget-min", type=float, default=None,
                     help="stop cleanly after N minutes of training: checkpoint + exit 0, no record; rerun with --resume (session-wall / preemption survival)")
+    ap.add_argument("--relay", default=None,
+                    help="checkpoint relay (cortex_data/relay.py): push out_dir to this private Kaggle dataset slug after every checkpoint; "
+                         "needs KAGGLE_USERNAME and KAGGLE_KEY in the environment, silently off without them")
     args = ap.parse_args()
     if args.regen_latest:
         regen_latest()
@@ -798,10 +801,17 @@ def main() -> None:
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
                             "tokens_seen": tokens_seen, "config_hash": chash,
                             "started_iso": started_iso, "run_id": run_id}, ckpt_path)
+                if args.relay:
+                    from cortex_data import relay
+                    if relay.push_async(out_dir, args.relay, f"step {step}"):
+                        print(f"[relay] pushing {out_dir} -> {args.relay} (step {step})")
             if args.time_budget_min is not None and (time.time() - t0) / 60.0 >= args.time_budget_min:
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
                             "tokens_seen": tokens_seen, "config_hash": chash,
                             "started_iso": started_iso, "run_id": run_id}, ckpt_path)
+                if args.relay:
+                    from cortex_data import relay
+                    relay.push(out_dir, args.relay, f"budget stop at step {step}")
                 print(f"[budget] {args.time_budget_min:.0f} min reached at step {step}/{total_steps} — "
                       f"checkpoint saved, exiting cleanly (no record); rerun with --resume to continue")
                 return
@@ -840,6 +850,11 @@ def main() -> None:
               f"| retained: {kept}")
     validate_record(record)
     append_record(record)
+    if args.relay:
+        from cortex_data import relay
+        relay.wait()
+        if relay.push(out_dir, args.relay, "final"):
+            print(f"[relay] final push of {out_dir} -> {args.relay}")
     regen_latest()
     print("\n[record — copy this line into metrics/runs.jsonl on the machine that commits]")
     print(json.dumps(record, sort_keys=True))
