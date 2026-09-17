@@ -1,0 +1,48 @@
+You are given a notebook of records. Each record is one line that starts with a letter label and a colon.
+Answer the question from the notebook only.
+If one record is about the entity named in the question, answer with exactly one line of this form:
+CITE <label> ANS <attribute>
+where <label> is that record's letter and <attribute> is copied word for word from that record.
+If no record is about that entity, answer with exactly one line:
+UNKNOWN
+Write nothing else. Never guess.
+
+Example 1
+Notebook:
+A:Fali-0f0d works as a archivist
+B:Soka-c051 is a town in Brenmoor
+C:Gumu-9d90 took place in 1931
+D:Bepi-3134 works as a falconer
+Question: what is Fali-0f0d's job?
+Answer: CITE A ANS archivist
+
+Example 2
+Notebook:
+A:Tomo-9369 is a town in Ebbelund
+B:Nigu-ebba took place in 1958
+C:Zuru-f098 is made of basalt
+D:Nuvo-a6ea works as a cartographer
+Question: what is Muku-e082's job?
+Answer: UNKNOWN
+
+Example 3
+Notebook:
+A:Bane-6f10 was decided by the guild council
+B:Gima-d496 works as a tanner
+C:Nevu-b7ed is made of basalt
+D:Gumu-9d90 took place in 1931
+Question: when did Gumu-9d90 happen?
+Answer: CITE D ANS 1931
+
+Example 4
+Notebook:
+A:Lofo-d337 works as a cooper
+B:Muba-0817 was decided by the choir master
+C:Silu-ce18 is a town in Ebbelund
+D:Sora-42d0 is made of vellum
+Question: where is Rile-2b2d?
+Answer: UNKNOWN
+
+Notebook:
+{window}Question: {question}
+Answer:

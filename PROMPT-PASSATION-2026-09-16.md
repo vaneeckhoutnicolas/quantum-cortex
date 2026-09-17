@@ -4,7 +4,7 @@
 
 ---
 
-Tu reprends quantum-cortex avec moi, Nicolas Van Eeckhout. Tout ce qui a été décidé est dans le repo, daté, jamais effacé. Commence par lire, dans cet ordre : `REPRISE-2026-09-16.md` (l'état et ce qui attend), `docs/RESULTS.md` (chaque chiffre et son artefact, lignes 1 à 29), `docs/IDEAS-REGISTER-2026-08-07.md` (les décisions, Rev1 à Rev56), `docs/WHITEPAPER.md` (la v1, édition d'atterrissage, à taguer vendredi 18), `docs/STATUS-2026-09-13.md` et ses addenda. Ne propose rien avant d'avoir lu ces cinq fichiers.
+Tu reprends quantum-cortex avec moi, Nicolas Van Eeckhout. Tout ce qui a été décidé est dans le repo, daté, jamais effacé. Commence par lire, dans cet ordre : `REPRISE-2026-09-16.md` (l'état et ce qui attend), `docs/RESULTS.md` (chaque chiffre et son artefact, lignes 1 à 29), `docs/IDEAS-REGISTER-2026-08-07.md` (les décisions, Rev1 à Rev58), `docs/WHITEPAPER.md` (la v1, édition d'atterrissage, à taguer vendredi 18), `docs/STATUS-2026-09-13.md` et ses addenda. Ne propose rien avant d'avoir lu ces cinq fichiers.
 
 ## Qui je suis dans ce projet, et comment tu me complètes
 
@@ -48,4 +48,4 @@ L'organe passe la dissociation de Molaison (protocole du nom de Henry Molaison, 
 
 Si je t'ai joint le log de l'étape A : suis la recette, lis le en entier comme fichier, dis moi ce qui est vérifié, lis les fichiers d'unités des dossiers `ref3000-ckpt` et `rb3000-ckpt` que je t'enverrai, et grave les lignes 30 et 31 contre la revendication déclarée de Rev38 (un bras bat sa référence au test apparié à 95 %, ou non). Aucune prédiction.
 
-Sinon, l'adaptateur pour les modèles ouverts, dans cet ordre et pas un autre : d'abord l'amendement d'ADR-008 qui déclare le bras externe avant toute mesure, tel que la REPRISE le décrit (protocole inchangé, prompt gelé dont le hash entre au dossier, bras de compétences par perplexité, trois lectures déclarées, trois tailles autour de 1, 3 et 7 milliards) ; tu me le montres, je le valide ; ensuite seulement le code (`cortex_c2b/external_arm.py`, un modèle simulé pour les tests, un notebook Colab), livré en zip avec les commandes git ; puis je lance sur Colab et je t'envoie les logs et les fichiers. Une action à la fois.
+Sinon, le bras externe : il est déclaré, validé et construit (ADR-008, amendement du 16 septembre et addendum du 17 : Qwen3 en 1,7, 4 et 8 milliards, figés par commit ; le cadre gelé `7fda43aced410d65` ; `cortex_c2b/external_arm.py` ; la recette des runs dans la REPRISE, point 3). Je lance le 1,7 milliard chez moi et je t'envoie les deux fichiers JSON et les deux logs ; tu lis à froid, depuis les fichiers, et tu graves la ligne RESULTS contre les six lectures déclarées ; puis le 4 et le 8. Une action à la fois.

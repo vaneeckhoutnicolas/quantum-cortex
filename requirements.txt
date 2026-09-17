@@ -7,3 +7,5 @@ torch>=2.2
 jsonschema>=4.20
 cryptography>=42
 pytest>=8.0
+# the external model arm (cortex_c2b/external_arm.py) needs, at run time only, never for the tests:
+#   pip install transformers accelerate huggingface_hub
