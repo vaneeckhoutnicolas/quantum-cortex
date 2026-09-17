@@ -1,0 +1,47 @@
+{
+ "purpose": "provenance of the control plus a local convolution (register Rev60, declared before the run): eight units of ARCH-none+local-conv at 3000 steps, 8 pairs, the eight seeds, in ref3000-ckpt, and the declared readout against the control, L3 pure and the two arms of RESULTS row 31. Read before citing RESULTS row 32.",
+ "date": "2026-09-17",
+ "run": {
+  "notebook": "nicolasvaneeckhout/notebookbb3f37683a (notebooks/control_conv_kaggle.ipynb)",
+  "code": "the clone at commit 7f514d14a8d66b4acc4e84270c9a08a1e563c6ab (the Output's .git HEAD)",
+  "execution": "one execution, 2026-09-17 13:18 to 13:42 UTC, 24 minutes of T4, no relaunch, no resume; the units written 13:21 to 13:41 UTC, 164 to 214 s each",
+  "counter": "the runner printed [20/8] to [27/8] and units_done 27 of units_total 8: load_done merged the 19 committed references with the eight new units",
+  "relay": "[relay] pull found nothing for quantum-cortex-relay-ref3000, as in the stage A run: the dataset exists (created by stage A) but nothing could be pulled from it; the pull path has not been exercised with success in production, the pushes are silent by design; no effect on the run, the references came from the clone"
+ },
+ "files": {
+  "ref3000-ckpt/unit-ARCH-none+local-conv__*.json (8)": "REAL, written by the runner, retrieved via kaggle kernels output, byte for byte",
+  "ref3000-ckpt/SUBSET-ARCH-nonelocal-conv-3000steps.json": "REAL, the runner's subset aggregate (per path stats, no paired tests on a subset)",
+  "ref3000-ckpt/READOUT-control-conv-3000steps.json": "REAL, the declared readout (resumable_rb --control-conv-readout): the four paired tests and the gate readout",
+  "the 13 stage A units and their SUBSET in the same Output": "identical, byte for byte, to the committed ones (PROVENANCE-stage-a)"
+ },
+ "verification_2026-09-17": {
+  "who": "the instance that graves, cold, from the log as a file and the retrieved directory",
+  "checks": [
+   "the eight [unit] lines of the log identify exact values (k over 512) and equal the eight unit files' accuracies",
+   "the SUBSET stats recomputed from the units with the runner's own functions equal the committed file",
+   "the READOUT (stats, per seed, the four paired tests, the gate readout) recomputed from the 27 references and the 16 arm units with resumable_rb.control_conv_readout equals the committed file",
+   "the four paired tests recomputed independently from the [unit] lines: t 2.398, -1.398, 2.485, 2.466, as the runner printed",
+   "four seeds at exactly 512 of 512, four at 34 to 52 of 512"
+  ]
+ },
+ "logs_retained_in_repo": {
+  "control_conv": {
+   "path": "metrics/mqar/logs/control-conv-3000.log",
+   "sha256_16": "0a621291b8329f23",
+   "bytes": 20052
+  }
+ },
+ "sha256_16": {
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s11__kv8_seq128.json": "c1103e7414281518",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s1337__kv8_seq128.json": "8cb92a0f4086f794",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s2024__kv8_seq128.json": "59cdd85d09684bcf",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s2026__kv8_seq128.json": "da2e6c7212998d4b",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s3__kv8_seq128.json": "74878d7e21aff011",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s42__kv8_seq128.json": "2d14862bc626a522",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s7__kv8_seq128.json": "021d46d12e02a69b",
+  "ref3000-ckpt/unit-ARCH-none+local-conv__s99__kv8_seq128.json": "a56f42e84c7eb222",
+  "ref3000-ckpt/SUBSET-ARCH-nonelocal-conv-3000steps.json": "c2df6e70aef982c2",
+  "ref3000-ckpt/READOUT-control-conv-3000steps.json": "b5ddbf02e87291e0"
+ },
+ "status": "the unit files are the record; nothing here is a claim; RESULTS row 32 reads them"
+}

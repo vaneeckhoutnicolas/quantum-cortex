@@ -1,0 +1,143 @@
+{
+  "benchmark": "control_plus_local_conv_readout",
+  "timestamp_utc": "2026-09-17T13:41:46.770701+00:00",
+  "regime": {
+    "seeds": [
+      1337,
+      2024,
+      7,
+      42,
+      99,
+      3,
+      11,
+      2026
+    ],
+    "n_seeds": 8,
+    "tiers": [
+      [
+        8,
+        128
+      ]
+    ]
+  },
+  "stats": {
+    "ARCH-none+local-conv": {
+      "mean": 0.543,
+      "sd": 0.4887,
+      "ci95": [
+        0.1343,
+        0.9516
+      ],
+      "n": 8
+    },
+    "ARCH-none": {
+      "mean": 0.1318,
+      "sd": 0.025,
+      "ci95": [
+        0.1109,
+        0.1527
+      ],
+      "n": 8
+    },
+    "L3-+local-conv": {
+      "mean": 0.7654,
+      "sd": 0.2726,
+      "ci95": [
+        0.5374,
+        0.9933
+      ],
+      "n": 8
+    }
+  },
+  "per_seed": {
+    "ARCH-none+local-conv": [
+      0.076171875,
+      1.0,
+      0.099609375,
+      0.1015625,
+      1.0,
+      1.0,
+      0.06640625,
+      1.0
+    ],
+    "ARCH-none": [
+      0.119140625,
+      0.1171875,
+      0.142578125,
+      0.083984375,
+      0.146484375,
+      0.150390625,
+      0.1640625,
+      0.130859375
+    ],
+    "L3-+local-conv": [
+      0.892578125,
+      0.8828125,
+      0.095703125,
+      0.794921875,
+      0.896484375,
+      0.87109375,
+      0.841796875,
+      0.84765625
+    ],
+    "arms_full": {
+      "RB-bare": [
+        0.96484375,
+        0.951171875,
+        0.96875,
+        0.96875,
+        0.98828125,
+        0.978515625,
+        0.962890625,
+        0.97265625
+      ],
+      "RB-critical": [
+        0.970703125,
+        0.9453125,
+        0.95703125,
+        0.97265625,
+        0.974609375,
+        0.974609375,
+        0.966796875,
+        0.982421875
+      ]
+    }
+  },
+  "paired_tests": {
+    "control_conv_vs_control": {
+      "mean_diff": 0.4111,
+      "t": 2.398,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    },
+    "control_conv_vs_L3": {
+      "mean_diff": -0.2224,
+      "t": -1.398,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "RB-bare_full_vs_control_conv": {
+      "mean_diff": 0.4265,
+      "t": 2.485,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    },
+    "RB-critical_full_vs_control_conv": {
+      "mean_diff": 0.425,
+      "t": 2.466,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    }
+  },
+  "gate_readout": {
+    "control_conv_vs_control": "gated",
+    "control_conv_vs_L3": "held",
+    "RB-bare_full_vs_control_conv": "gated",
+    "RB-critical_full_vs_control_conv": "gated"
+  },
+  "note": "Rev60: the readings were declared before the run; a subset readout, paired on seed at identical steps and tier"
+}
