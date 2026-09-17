@@ -75,6 +75,11 @@ class Config:
     attn_local_conv: bool = False        # the ladder's L3 convolution (depthwise, kernel 3, causal) on the attention's
                                          # normalised input in every block: the control plus a local convolution, a declared
                                          # reference (register Rev60, 2026-09-17); default off, transparent to the hash
+    attn_local_conv_init: str = "random"  # "random" (the ladder's reference, row 32) | "identity": the centre tap at one,
+                                          # the others and the bias at zero, so a fine tune starts as its parent exactly
+                                          # (v8, the reader with a local convolution); transparent to the hash at its default
+    journal_familiarity_mark: bool = False  # RES-23 (v9): every read window line carries the organ's own similarity for that
+                                            # line, `A(0.97):<payload>`, in training and at evaluation; default off, transparent
     c2_mem_slots: int = 64               # hopfield: number of stored key/value patterns
     c2_heads: int = 4                    # delta: number of recurrent heads
     c2_delta_l2_keys: bool = True        # delta: L2-normalise q,k before the write (KDA-style stability)
@@ -151,7 +156,7 @@ def load_config(path: str) -> Config:
 HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window": False, "journal_neg_frac": 0.25,
                                "journal_paired_negatives": False, "journal_paired_keep_shape": False,
                                "journal_match_head": False, "journal_match_loss_weight": 1.0, "journal_match_coupling": 2.0,
-                               "attn_local_conv": False}
+                               "attn_local_conv": False, "attn_local_conv_init": "random", "journal_familiarity_mark": False}
 
 
 def config_hash(cfg: Config) -> str:
@@ -294,6 +299,10 @@ class Block(nn.Module):
         # the control plus a local convolution (Rev60): L3's depthwise causal conv, kernel 3, on ln1(x), the residual untouched
         self.conv = (nn.Conv1d(cfg.n_embd, cfg.n_embd, kernel_size=3, padding=2, groups=cfg.n_embd)
                      if cfg.attn_local_conv else None)
+        if self.conv is not None and getattr(cfg, "attn_local_conv_init", "random") == "identity":
+            with torch.no_grad():                                        # v8: the model starts as its parent exactly
+                self.conv.weight.zero_(); self.conv.weight[:, 0, 2] = 1.0   # the centre tap (causal crop keeps taps 0..2)
+                self.conv.bias.zero_()
         # C2 associative layer (ADR-006), default off — a third residual sub-block
         if cfg.c2_variant == "hopfield":
             self.c2 = HopfieldMemory(cfg)
@@ -446,6 +455,8 @@ def load_parent(model: "VanillaGPT", ckpt_path: str | Path, device) -> tuple[str
     if result.unexpected_keys:
         raise SystemExit(f"parent checkpoint has keys this model lacks: {result.unexpected_keys[:5]}")
     allowed = ("cue_encoder.", ".reader.", "match_head.")
+    if getattr(model.cfg, "attn_local_conv", False):
+        allowed = allowed + (".conv.",)                          # v8: the convolution is new next to the journal's modules
     bad = [k for k in result.missing_keys if not any(a in k for a in allowed)]
     if bad:
         raise SystemExit(f"parent checkpoint lacks non-journal weights: {bad[:5]}")
@@ -719,7 +730,8 @@ def main() -> None:
                             cfg.journal_pool_facts, cfg.journal_train_seed + 2 * journal_ctx["refresh"])
                     journal_ctx["refresh"] += 1
                     jb = JournalBridge(model, Journal(), k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes,
-                                       seed=cfg.seed, shuffle_seed=cfg.seed + step, device=device)
+                                       seed=cfg.seed, shuffle_seed=cfg.seed + step, device=device,
+                                       mark=cfg.journal_familiarity_mark)
                     model.eval(); plant_pool(jb, journal_ctx["facts"], now=float(step)); model.train()
                     journal_ctx["bridge"], journal_ctx["planted_at"] = jb, step
                 jb = journal_ctx["bridge"]
@@ -845,7 +857,7 @@ def main() -> None:
         vb = [get_batch(val_arr, cfg, gen, device) for _ in range(cfg.eval_batches)]
         hm = run_hm_lm(model, journal_ctx["run_journal"], n_facts=cfg.journal_hm_facts, n_negctrl=cfg.journal_hm_negctrl,
                        k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
-                       val_batches=vb, on_disk=bool(cfg.journal_path))
+                       val_batches=vb, on_disk=bool(cfg.journal_path), mark=cfg.journal_familiarity_mark)
         (out_dir / "hm-lm.json").write_text(json.dumps(hm, indent=2) + "\n", encoding="utf-8")
         kept = REPO_ROOT / "metrics" / "mqar" / f"hm-lm-{run_id}.json"          # runs/ is never committed; this is
         kept.parent.mkdir(parents=True, exist_ok=True)                          # the artefact a RESULTS row cites

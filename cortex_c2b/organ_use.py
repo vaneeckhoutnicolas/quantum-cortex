@@ -134,7 +134,7 @@ def make_example(bridge: JournalBridge, fact: Fact, negative: bool, forced_frac:
         # the bootstrap: the right episode is forced into the window (replacing the last slot)
         items = [(p, bridge.j.payloads.get(p)) for p in read.pointers][: max(0, bridge.k - 1)]
         items.append((pointer, bridge.j.payloads.get(pointer)))
-        window, labels = build_read_window(items, bridge.budget, rng)
+        window, labels = bridge.window_for(cue, items, rng)
         return Example("forced", query, encode_target(_label_of(labels, pointer), fact.attr), window, labels,
                        False, fact.entity, fact.attr, statement)
     return Example("abstain", query, encode_target(None, None), read.window, read.labels,
@@ -162,7 +162,7 @@ def make_paired_negative(bridge: JournalBridge, fact: Fact, rng: np.random.Gener
     cue = bridge.cues([query])[0]
     own = bridge.pointer_of.get(fact.entity)
     items = withheld_items(bridge, cue, own, rng, keep_shape=keep_shape)
-    window, labels = build_read_window(items, bridge.budget, rng)
+    window, labels = bridge.window_for(cue, items, rng)
     return Example("negative", query, encode_target(None, None), window, labels, False,
                    fact.entity, fact.attr, list(fact.statement.encode("utf-8")))
 

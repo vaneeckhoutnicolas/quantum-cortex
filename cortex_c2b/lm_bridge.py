@@ -181,23 +181,30 @@ def journal_gate(route: str, decision=None) -> float:
 # ---------------------------------------------------------------------------- #
 # The read window -- labelled, budgeted, in a seeded random order              #
 # ---------------------------------------------------------------------------- #
-def build_read_window(items: list[tuple[str, bytes]], budget: int, rng: np.random.Generator
-                      ) -> tuple[bytes, dict[int, str]]:
+def build_read_window(items: list[tuple[str, bytes]], budget: int, rng: np.random.Generator,
+                      marks: list[float] | None = None) -> tuple[bytes, dict[int, str]]:
     """`items` = (pointer, payload) as retrieved. Returns the window bytes
     (`A:<payload>\\n` per item, order shuffled with `rng` so a position is never a
     shortcut, each payload cut to its share of `budget`) and the label byte ->
-    pointer map the harness uses to verify a citation."""
+    pointer map the harness uses to verify a citation.
+    `marks` (RES-23, the familiarity mark, v9): one number per item, the organ's
+    own similarity for that line; the prefix becomes `A(0.97):` (two decimals,
+    clamped at zero) and each payload gives six more bytes to it inside the same
+    budget. None keeps the window byte for byte as every earlier run wrote it."""
     items = list(items)[: len(LABELS)]
     if not items:
         return b"", {}
+    if marks is not None and len(marks) != len(items):
+        raise ValueError("one mark per item")
     order = rng.permutation(len(items))
-    per = max(1, budget // len(items) - 3)                     # 'X:' and the newline
+    per = max(1, budget // len(items) - (9 if marks is not None else 3))   # 'X:' or 'X(0.97):', and the newline
     out, labels = [], {}
     for slot, i in enumerate(order):
         pointer, payload = items[i]
         label = LABELS[slot]
         labels[label] = pointer
-        out.append(bytes([label]) + b":" + payload[:per] + b"\n")
+        prefix = bytes([label]) + (f"({max(0.0, min(1.0, float(marks[i]))):.2f})".encode("ascii") if marks is not None else b"") + b":"
+        out.append(prefix + payload[:per] + b"\n")
     return b"".join(out), labels
 
 
@@ -250,7 +257,7 @@ class JournalBridge:
 
     def __init__(self, model, journal: Journal, write_path: WritePath | None = None,
                  journal_path: JournalPath | None = None, k: int = 4, budget_bytes: int = 256,
-                 seed: int = 0, shuffle_seed: int | None = None, device=None):
+                 seed: int = 0, shuffle_seed: int | None = None, device=None, mark: bool = False):
         """`seed` is the scope's separation seed (DG) and the index seed -- it must
         be the same at every open of a journal (Decision 8: a journal written under
         another separation is refused). `shuffle_seed` only drives the order of
@@ -263,6 +270,7 @@ class JournalBridge:
         self.wp = write_path or WritePath(journal, seed=seed)
         self.jp = journal_path or JournalPath(journal, seed=seed)
         self.k, self.budget = k, budget_bytes
+        self.mark = mark                                        # RES-23: the organ's similarity in every window line
         self.rng = np.random.default_rng(seed if shuffle_seed is None else shuffle_seed)
         self.device = device or next(model.parameters()).device
         self.pointer_of: dict[str, str] = {}                   # entity -> pointer, for the curriculum's targets
@@ -300,9 +308,22 @@ class JournalBridge:
     def read(self, cue: np.ndarray) -> ReadResult:
         hits = self.jp.retrieve(cue, k=self.k)
         items = [(e.pointer, payload) for e, payload, _ in hits]
-        window, labels = build_read_window(items, self.budget, self.rng)
-        return ReadResult(window=window, labels=labels, pointers=[p for p, _ in items],
-                          scores=[float(s) for _, _, s in hits])
+        scores = [float(s) for _, _, s in hits]
+        window, labels = build_read_window(items, self.budget, self.rng, marks=scores if self.mark else None)
+        return ReadResult(window=window, labels=labels, pointers=[p for p, _ in items], scores=scores)
+
+    def marks_for(self, cue: np.ndarray, pointers: list[str]) -> list[float]:
+        """The organ's similarity between `cue` and each episode, whatever route put
+        the line in a window (a plain read, a paired negative, a forced bootstrap,
+        a shape filler): the same computation as the index's scoring."""
+        return [self.jp.cue_similarity(cue, p) for p in pointers]
+
+    def window_for(self, cue: np.ndarray, items: list[tuple[str, bytes]], rng: np.random.Generator
+                   ) -> tuple[bytes, dict[int, str]]:
+        """A window over arbitrary items, marked with the organ's similarities when
+        the bridge marks, unmarked otherwise; the curriculum's windows go through here."""
+        marks = self.marks_for(cue, [p for p, _ in items]) if self.mark else None
+        return build_read_window(items, self.budget, rng, marks=marks)
 
     def window_tensors(self, windows: list[bytes], window_len: int) -> tuple[torch.Tensor, torch.Tensor]:
         """Byte windows -> (tokens, mask), each cut to `window_len`; an empty

@@ -149,6 +149,19 @@ class JournalPath:
         hits = [(eid, s) for eid, s in hits if self._resolve(eid)[0].state != STATE_EVICTED]
         return float(max(0.0, hits[0][1])) if hits else 0.0
 
+    def cue_similarity(self, span_cue, pointer: str) -> float:
+        """The organ's own evidence for one line (RES-23, the familiarity mark): the
+        cosine between a query's cue and the stored cue of the alive entry whose
+        payload is `pointer`, computed exactly as the index scores a retrieval;
+        0.0 when no alive entry holds that pointer. Never a value the harness supplies."""
+        q = np.asarray(span_cue, dtype=np.float32)
+        qn = float(np.linalg.norm(q)) + 1e-8
+        for eid, e in self.j._entries.items():
+            if e.pointer == pointer and e.state != STATE_EVICTED and eid in self.index.vecs:
+                v = self.index.vecs[eid]
+                return float(q @ v / (qn * (float(np.linalg.norm(v)) + 1e-8)))
+        return 0.0
+
     def retrieve(self, span_cue, k: int = 3) -> list[tuple[Entry, bytes, float]]:
         out = []
         for eid, s in self.index.query(np.asarray(span_cue, dtype=np.float32), k=k):

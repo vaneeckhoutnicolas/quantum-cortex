@@ -138,11 +138,20 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
     strict = abstain = invalid = valid = attr_ok = guess = attr_by_chance = hit = 0
     masses = []
     match_right = match_n = 0                                   # RES-21: the head's own judgment, against the read
+    mark_own, mark_other_max, mark_max = [], [], []             # RES-23: the organ's similarities per read
     for f in facts:
         query = encode_query(f.query)
         if journal_on:
             cue = bridge.cues([query])[0]
             read = bridge.read(cue)
+            if read.scores:
+                own_p = pointer_of.get(f.entity) if pointer_of else None
+                others = [sc for pt, sc in zip(read.pointers, read.scores) if pt != own_p]
+                if own_p in read.pointers:
+                    mark_own.append(float(read.scores[read.pointers.index(own_p)]))
+                if others:
+                    mark_other_max.append(float(max(others)))
+                mark_max.append(float(max(read.scores)))
             wt, wm = bridge.window_tensors([read.window], window_len)
             toks, mass = generate(model, query, wt, wm, gate=1.0, policy=policy, window_bytes=read.window)
             if mass is not None:
@@ -180,7 +189,73 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             "attr_hit_any": attr_by_chance / n,
             "retrieval_hit": (hit / n) if (journal_on and pointer_of) else None,
             "attention_mass": (float(np.mean(masses)) if masses else None),
-            "match_acc": (match_right / match_n) if match_n else None}
+            "match_acc": (match_right / match_n) if match_n else None,
+            "marks": {"own": _stats(mark_own), "other_max": _stats(mark_other_max), "max": _stats(mark_max)}}
+
+
+def _stats(xs: list[float]) -> dict | None:
+    if not xs:
+        return None
+    a = np.asarray(xs, dtype=np.float64)
+    return {"n": int(a.size), "mean": float(a.mean()), "min": float(a.min()), "max": float(a.max()),
+            "q10": float(np.quantile(a, 0.10)), "q50": float(np.quantile(a, 0.50)), "q90": float(np.quantile(a, 0.90))}
+
+
+@torch.no_grad()
+def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact], pointer_of: dict[str, str],
+                train_seed: int = 100_000, train_n: int = 200, k: int | None = None) -> dict:
+    """RES-23, declared before v9 ran: the ceiling the organ's marks allow, with no
+    model output. A rule: cite the line with the highest mark when that mark clears
+    a threshold, else abstain. The threshold is read from the training facts family
+    only (a scratch journal of `train_n` training facts planted with this model's
+    cues, seed `train_seed`, and their never planted negatives), never from the
+    protocol's facts; then the rule is applied to the protocol's own reads. Strict
+    recall counts the own episode cited; a claim on a never planted entity counts
+    against; the skill arm does not apply (no model). Deterministic from the
+    checkpoint and the sealed journal."""
+    from cortex_c2b.organ_use import training_facts, plant_pool
+    k = k or bridge.k
+    tf, tneg, _ = training_facts(train_n, train_seed)
+    scratch = JournalBridge(model, Journal(), k=k, budget_bytes=bridge.budget, seed=0, shuffle_seed=1,
+                            device=bridge.device, mark=bridge.mark)
+    plant_pool(scratch, tf)
+    pos, negs = [], []
+    for f in tf:
+        r = scratch.read(scratch.cues([encode_query(f.query)])[0])
+        own = scratch.pointer_of.get(f.entity)
+        if r.scores and own in r.pointers:
+            pos.append((max(r.scores), r.pointers[int(np.argmax(r.scores))] == own))
+        elif r.scores:
+            pos.append((max(r.scores), False))
+    for f in tneg:
+        r = scratch.read(scratch.cues([encode_query(f.query)])[0])
+        negs.append(max(r.scores) if r.scores else 0.0)
+    cands = sorted({m for m, _ in pos} | set(negs))
+    best_thr, best_acc = 0.0, -1.0
+    for thr in cands:                                           # claim iff max mark > thr; the best on the training family
+        acc = (sum(1 for m, right in pos if m > thr and right) + sum(1 for m in negs if m <= thr)) / max(1, len(pos) + len(negs))
+        if acc > best_acc:
+            best_thr, best_acc = float(thr), float(acc)
+    def apply(fs, planted: bool):
+        claims = strict = 0
+        for f in fs:
+            r = bridge.read(bridge.cues([encode_query(f.query)])[0])
+            if not r.scores:
+                continue
+            top = int(np.argmax(r.scores))
+            if r.scores[top] > best_thr:
+                claims += 1
+                if planted and r.pointers[top] == pointer_of.get(f.entity):
+                    strict += 1
+        return claims / max(1, len(fs)), strict / max(1, len(fs))
+    on_claims, on_strict = apply(facts, True)
+    neg_claims, _ = apply(neg, False)
+    gap = on_strict - 0.0                                       # off is zero by construction: no window, no citation
+    passes = (gap >= DELTA) and (neg_claims < NEGCTRL_INVALID)
+    return {"oracle": "mark oracle (RES-23): cite the highest marked line above a threshold read from the training family",
+            "threshold": best_thr, "training_accuracy": best_acc, "training_pairs": len(pos) + len(negs),
+            "recall_on_strict": on_strict, "claims_on": on_claims, "negctrl_claims": neg_claims,
+            "gap": gap, "passes_without_skill_arm": bool(passes), "encoder": "this checkpoint's own cue encoder"}
 
 
 @torch.no_grad()
@@ -202,7 +277,7 @@ def skill_delta(model, bridge: JournalBridge, val_batches: list[tuple[torch.Tens
 
 def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: int = 0,
               k: int = 4, budget: int = 256, window_len: int = 256, val_batches=None,
-              on_disk: bool = False, reopen: bool = True) -> dict:
+              on_disk: bool = False, reopen: bool = True, mark: bool = False) -> dict:
     """`journal_factory()` returns the run's journal (a fresh one on the first
     call; the same on-disk scope reopened on the second). Session A plants the
     frozen protocol's facts through the model's cues; session B reopens the
@@ -216,7 +291,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
 
     # --- session A: plant through the NORMAL gated path, cues from the model ---
     journal = journal_factory()
-    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, device=device)
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, device=device, mark=mark)
     admitted = 0
     for i, f in enumerate(facts):
         admitted += int(bridge.write(f.statement, f.schema, now=float(i), entity=f.entity).admitted)
@@ -227,7 +302,8 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
     if on_disk and reopen:
         del bridge
         journal = journal_factory()
-    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device)
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
+                           mark=mark)
     storage = lifecycle_declaration(journal)["storage"]
     persistent = bool(on_disk and reopen and durable_a and journal.mode == MODE_DURABLE)
 
@@ -236,6 +312,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
     neg_on = _probe(model, bridge, neg, True, window_len, {})
     neg_off = _probe(model, bridge, neg, False, window_len, {})
     delta, ppl_on, ppl_off = skill_delta(model, bridge, val_batches, window_len) if val_batches else (0.0, None, None)
+    oracle = mark_oracle(model, bridge, facts, neg, pointer_of)
 
     negctrl_claims = neg_on["guess_rate"]                     # a claim on a never-planted entity
     valid = negctrl_claims < NEGCTRL_INVALID
@@ -257,6 +334,8 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
         "hm_false_abstention_on": on["abstain_rate"], "hm_invalid_citation_on": on["invalid_citation_rate"],
         "hm_valid_citation_on": on["valid_citation_rate"], "hm_attr_exact_given_valid": on["attr_exact_given_valid"],
         "hm_retrieval_hit": on["retrieval_hit"], "hm_attention_mass": on["attention_mass"],
+        "hm_marks": {"on": on["marks"], "negctrl": neg_on["marks"], "written_in_window": bool(mark)},
+        "hm_mark_oracle": oracle,
         "hm_guess_rate_off": off["guess_rate"], "hm_attr_hit_off_by_chance": off["attr_hit_any"],
         "hm_match_acc_on": on["match_acc"], "hm_match_acc_negctrl": neg_on["match_acc"],   # RES-21 diagnostics (None without the head)
         "run_valid": valid, "hm_dissociation_pass": int(dissociation),
@@ -467,7 +546,9 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     ck = torch.load(ckpt_path, map_location=device, weights_only=False)
     model.load_state_dict(ck["model"]); model.eval()
     journal = Journal(journal_path, key=key_from_env(), policy=POLICY_STOP)
-    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device)
+    mark = bool(getattr(cfg, "journal_familiarity_mark", False))
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
+                           mark=mark)
     facts, gen_hash = generate_facts(n_facts, seed)
     neg, _ = generate_facts(n_negctrl, seed + 10_000)
     pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
@@ -491,7 +572,10 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
                        "abstain_rate": tp["abstain_rate"], "retrieval_hit": tp["retrieval_hit"]}
     chance = float(np.mean([1.0 / len(_ATTRS[s]) for s in SCHEMAS])); floor = chance + FLOOR_MARGIN
     verdict_fields = _verdict(on, off, neg_on, floor)
+    oracle = mark_oracle(model, bridge, facts, neg, pointer_of)
     return {"benchmark": "hm_protocol_lm_session_b_new_process", "policy": policy, **verdict_fields,
+            "hm_marks": {"on": on["marks"], "negctrl": neg_on["marks"], "written_in_window": mark},
+            "hm_mark_oracle": oracle,
             "training_pool_probe": train_probe,
             "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
                            "step": ck.get("step")},
