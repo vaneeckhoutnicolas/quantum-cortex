@@ -1,0 +1,270 @@
+6.0s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+6.0s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+6.0s 3 0.00s - to python to disable frozen modules.
+6.0s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+6.6s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+6.6s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+6.6s 7 0.00s - to python to disable frozen modules.
+6.6s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+7.9s 9 Cloning into 'quantum-cortex'...
+8.8s 10 remote: Enumerating objects: 1461, done.[K
+8.8s 11 remote: Counting objects:   0% (1/1012)[Kremote: Counting objects:   1% (11/1012)[Kremote: Counting objects:   2% (21/1012)[Kremote: Counting objects:   3% (31/1012)[Kremote: Counting objects:   4% (41/1012)[Kremote: Counting objects:   5% (51/1012)[Kremote: Counting objects:   6% (61/1012)[Kremote: Counting objects:   7% (71/1012)[Kremote: Counting objects:   8% (81/1012)[Kremote: Counting objects:   9% (92/1012)[Kremote: Counting objects:  10% (102/1012)[Kremote: Counting objects:  11% (112/1012)[Kremote: Counting objects:  12% (122/1012)[Kremote: Counting objects:  13% (132/1012)[Kremote: Counting objects:  14% (142/1012)[Kremote: Counting objects:  15% (152/1012)[Kremote: Counting objects:  16% (162/1012)[Kremote: Counting objects:  17% (173/1012)[Kremote: Counting objects:  18% (183/1012)[Kremote: Counting objects:  19% (193/1012)[Kremote: Counting objects:  20% (203/1012)[Kremote: Counting objects:  21% (213/1012)[Kremote: Counting objects:  22% (223/1012)[Kremote: Counting objects:  23% (233/1012)[Kremote: Counting objects:  24% (243/1012)[Kremote: Counting objects:  25% (253/1012)[Kremote: Counting objects:  26% (264/1012)[Kremote: Counting objects:  27% (274/1012)[Kremote: Counting objects:  28% (284/1012)[Kremote: Counting objects:  29% (294/1012)[Kremote: Counting objects:  30% (304/1012)[Kremote: Counting objects:  31% (314/1012)[Kremote: Counting objects:  32% (324/1012)[Kremote: Counting objects:  33% (334/1012)[Kremote: Counting objects:  34% (345/1012)[Kremote: Counting objects:  35% (355/1012)[Kremote: Counting objects:  36% (365/1012)[Kremote: Counting objects:  37% (375/1012)[Kremote: Counting objects:  38% (385/1012)[Kremote: Counting objects:  39% (395/1012)[Kremote: Counting objects:  40% (405/1012)[Kremote: Counting objects:  41% (415/1012)[Kremote: Counting objects:  42% (426/1012)[Kremote: Counting objects:  43% (436/1012)[Kremote: Counting objects:  44% (446/1012)[Kremote: Counting objects:  45% (456/1012)[Kremote: Counting objects:  46% (466/1012)[Kremote: Counting objects:  47% (476/1012)[Kremote: Counting objects:  48% (486/1012)[Kremote: Counting objects:  49% (496/1012)[Kremote: Counting objects:  50% (506/1012)[Kremote: Counting objects:  51% (517/1012)[Kremote: Counting objects:  52% (527/1012)[Kremote: Counting objects:  53% (537/1012)[Kremote: Counting objects:  54% (547/1012)[Kremote: Counting objects:  55% (557/1012)[Kremote: Counting objects:  56% (567/1012)[Kremote: Counting objects:  57% (577/1012)[Kremote: Counting objects:  58% (587/1012)[Kremote: Counting objects:  59% (598/1012)[Kremote: Counting objects:  60% (608/1012)[Kremote: Counting objects:  61% (618/1012)[Kremote: Counting objects:  62% (628/1012)[Kremote: Counting objects:  63% (638/1012)[Kremote: Counting objects:  64% (648/1012)[Kremote: Counting objects:  65% (658/1012)[Kremote: Counting objects:  66% (668/1012)[Kremote: Counting objects:  67% (679/1012)[Kremote: Counting objects:  68% (689/1012)[Kremote: Counting objects:  69% (699/1012)[Kremote: Counting objects:  70% (709/1012)[Kremote: Counting objects:  71% (719/1012)[Kremote: Counting objects:  72% (729/1012)[Kremote: Counting objects:  73% (739/1012)[Kremote: Counting objects:  74% (749/1012)[Kremote: Counting objects:  75% (759/1012)[Kremote: Counting objects:  76% (770/1012)[Kremote: Counting objects:  77% (780/1012)[Kremote: Counting objects:  78% (790/1012)[Kremote: Counting objects:  79% (800/1012)[Kremote: Counting objects:  80% (810/1012)[Kremote: Counting objects:  81% (820/1012)[Kremote: Counting objects:  82% (830/1012)[Kremote: Counting objects:  83% (840/1012)[Kremote: Counting objects:  84% (851/1012)[Kremote: Counting objects:  85% (861/1012)[Kremote: Counting objects:  86% (871/1012)[Kremote: Counting objects:  87% (881/1012)[Kremote: Counting objects:  88% (891/1012)[Kremote: Counting objects:  89% (901/1012)[Kremote: Counting objects:  90% (911/1012)[Kremote: Counting objects:  91% (921/1012)[Kremote: Counting objects:  92% (932/1012)[Kremote: Counting objects:  93% (942/1012)[Kremote: Counting objects:  94% (952/1012)[Kremote: Counting objects:  95% (962/1012)[Kremote: Counting objects:  96% (972/1012)[Kremote: Counting objects:  97% (982/1012)[Kremote: Counting objects:  98% (992/1012)[Kremote: Counting objects:  99% (1002/1012)[Kremote: Counting objects: 100% (1012/1012)[Kremote: Counting objects: 100% (1012/1012), done.[K
+8.8s 12 remote: Compressing objects:   0% (1/569)[Kremote: Compressing objects:   1% (6/569)[Kremote: Compressing objects:   2% (12/569)[Kremote: Compressing objects:   3% (18/569)[Kremote: Compressing objects:   4% (23/569)[Kremote: Compressing objects:   5% (29/569)[Kremote: Compressing objects:   6% (35/569)[Kremote: Compressing objects:   7% (40/569)[Kremote: Compressing objects:   8% (46/569)[Kremote: Compressing objects:   9% (52/569)[Kremote: Compressing objects:  10% (57/569)[Kremote: Compressing objects:  11% (63/569)[Kremote: Compressing objects:  12% (69/569)[Kremote: Compressing objects:  13% (74/569)[Kremote: Compressing objects:  14% (80/569)[Kremote: Compressing objects:  15% (86/569)[Kremote: Compressing objects:  16% (92/569)[Kremote: Compressing objects:  17% (97/569)[Kremote: Compressing objects:  18% (103/569)[Kremote: Compressing objects:  19% (109/569)[Kremote: Compressing objects:  20% (114/569)[Kremote: Compressing objects:  21% (120/569)[Kremote: Compressing objects:  22% (126/569)[Kremote: Compressing objects:  23% (131/569)[Kremote: Compressing objects:  24% (137/569)[Kremote: Compressing objects:  25% (143/569)[Kremote: Compressing objects:  26% (148/569)[Kremote: Compressing objects:  27% (154/569)[Kremote: Compressing objects:  28% (160/569)[Kremote: Compressing objects:  29% (166/569)[Kremote: Compressing objects:  30% (171/569)[Kremote: Compressing objects:  31% (177/569)[Kremote: Compressing objects:  32% (183/569)[Kremote: Compressing objects:  33% (188/569)[Kremote: Compressing objects:  34% (194/569)[Kremote: Compressing objects:  35% (200/569)[Kremote: Compressing objects:  36% (205/569)[Kremote: Compressing objects:  37% (211/569)[Kremote: Compressing objects:  38% (217/569)[Kremote: Compressing objects:  39% (222/569)[Kremote: Compressing objects:  40% (228/569)[Kremote: Compressing objects:  41% (234/569)[Kremote: Compressing objects:  42% (239/569)[Kremote: Compressing objects:  43% (245/569)[Kremote: Compressing objects:  44% (251/569)[Kremote: Compressing objects:  45% (257/569)[Kremote: Compressing objects:  46% (262/569)[Kremote: Compressing objects:  47% (268/569)[Kremote: Compressing objects:  48% (274/569)[Kremote: Compressing objects:  49% (279/569)[Kremote: Compressing objects:  50% (285/569)[Kremote: Compressing objects:  51% (291/569)[Kremote: Compressing objects:  52% (296/569)[Kremote: Compressing objects:  53% (302/569)[Kremote: Compressing objects:  54% (308/569)[Kremote: Compressing objects:  55% (313/569)[Kremote: Compressing objects:  56% (319/569)[Kremote: Compressing objects:  57% (325/569)[Kremote: Compressing objects:  58% (331/569)[Kremote: Compressing objects:  59% (336/569)[Kremote: Compressing objects:  60% (342/569)[Kremote: Compressing objects:  61% (348/569)[Kremote: Compressing objects:  62% (353/569)[Kremote: Compressing objects:  63% (359/569)[Kremote: Compressing objects:  64% (365/569)[Kremote: Compressing objects:  65% (370/569)[Kremote: Compressing objects:  66% (376/569)[Kremote: Compressing objects:  67% (382/569)[Kremote: Compressing objects:  68% (387/569)[Kremote: Compressing objects:  69% (393/569)[Kremote: Compressing objects:  70% (399/569)[Kremote: Compressing objects:  71% (404/569)[Kremote: Compressing objects:  72% (410/569)[Kremote: Compressing objects:  73% (416/569)[Kremote: Compressing objects:  74% (422/569)[Kremote: Compressing objects:  75% (427/569)[Kremote: Compressing objects:  76% (433/569)[Kremote: Compressing objects:  77% (439/569)[Kremote: Compressing objects:  78% (444/569)[Kremote: Compressing objects:  79% (450/569)[Kremote: Compressing objects:  80% (456/569)[Kremote: Compressing objects:  81% (461/569)[Kremote: Compressing objects:  82% (467/569)[Kremote: Compressing objects:  83% (473/569)[Kremote: Compressing objects:  84% (478/569)[Kremote: Compressing objects:  85% (484/569)[Kremote: Compressing objects:  86% (490/569)[Kremote: Compressing objects:  87% (496/569)[Kremote: Compressing objects:  88% (501/569)[Kremote: Compressing objects:  89% (507/569)[Kremote: Compressing objects:  90% (513/569)[Kremote: Compressing objects:  91% (518/569)[Kremote: Compressing objects:  92% (524/569)[Kremote: Compressing objects:  93% (530/569)[Kremote: Compressing objects:  94% (535/569)[Kremote: Compressing objects:  95% (541/569)[Kremote: Compressing objects:  96% (547/569)[Kremote: Compressing objects:  97% (552/569)[Kremote: Compressing objects:  98% (558/569)[Kremote: Compressing objects:  99% (564/569)[Kremote: Compressing objects: 100% (569/569)[Kremote: Compressing objects: 100% (569/569), done.[K
+9.0s 13 Receiving objects:   0% (1/1461)Receiving objects:   1% (15/1461)Receiving objects:   2% (30/1461)Receiving objects:   3% (44/1461)Receiving objects:   4% (59/1461)Receiving objects:   5% (74/1461)Receiving objects:   6% (88/1461)Receiving objects:   7% (103/1461)Receiving objects:   8% (117/1461)Receiving objects:   9% (132/1461)Receiving objects:  10% (147/1461)Receiving objects:  11% (161/1461)Receiving objects:  12% (176/1461)Receiving objects:  13% (190/1461)Receiving objects:  14% (205/1461)Receiving objects:  15% (220/1461)Receiving objects:  16% (234/1461)Receiving objects:  17% (249/1461)Receiving objects:  18% (263/1461)Receiving objects:  19% (278/1461)Receiving objects:  20% (293/1461)Receiving objects:  21% (307/1461)Receiving objects:  22% (322/1461)Receiving objects:  23% (337/1461)Receiving objects:  24% (351/1461)Receiving objects:  25% (366/1461)Receiving objects:  26% (380/1461)Receiving objects:  27% (395/1461)Receiving objects:  28% (410/1461)Receiving objects:  29% (424/1461)Receiving objects:  30% (439/1461)Receiving objects:  31% (453/1461)Receiving objects:  32% (468/1461)Receiving objects:  33% (483/1461)Receiving objects:  34% (497/1461)Receiving objects:  35% (512/1461)Receiving objects:  36% (526/1461)Receiving objects:  37% (541/1461)Receiving objects:  38% (556/1461)Receiving objects:  39% (570/1461)Receiving objects:  40% (585/1461)Receiving objects:  41% (600/1461)Receiving objects:  42% (614/1461)Receiving objects:  43% (629/1461)Receiving objects:  44% (643/1461)Receiving objects:  45% (658/1461)Receiving objects:  46% (673/1461)Receiving objects:  47% (687/1461)Receiving objects:  48% (702/1461)Receiving objects:  49% (716/1461)Receiving objects:  50% (731/1461)Receiving objects:  51% (746/1461)Receiving objects:  52% (760/1461)Receiving objects:  53% (775/1461)Receiving objects:  54% (789/1461)Receiving objects:  55% (804/1461)Receiving objects:  56% (819/1461)Receiving objects:  57% (833/1461)Receiving objects:  58% (848/1461)Receiving objects:  59% (862/1461)Receiving objects:  60% (877/1461)Receiving objects:  61% (892/1461)Receiving objects:  62% (906/1461)Receiving objects:  63% (921/1461)Receiving objects:  64% (936/1461)Receiving objects:  65% (950/1461)Receiving objects:  66% (965/1461)Receiving objects:  67% (979/1461)Receiving objects:  68% (994/1461)Receiving objects:  69% (1009/1461)Receiving objects:  70% (1023/1461)Receiving objects:  71% (1038/1461)Receiving objects:  72% (1052/1461)Receiving objects:  73% (1067/1461)Receiving objects:  74% (1082/1461)Receiving objects:  75% (1096/1461)Receiving objects:  76% (1111/1461)Receiving objects:  77% (1125/1461)Receiving objects:  78% (1140/1461)Receiving objects:  79% (1155/1461)Receiving objects:  80% (1169/1461)Receiving objects:  81% (1184/1461)Receiving objects:  82% (1199/1461)Receiving objects:  83% (1213/1461)Receiving objects:  84% (1228/1461)Receiving objects:  85% (1242/1461)Receiving objects:  86% (1257/1461)Receiving objects:  87% (1272/1461)Receiving objects:  88% (1286/1461)remote: Total 1461 (delta 811), reused 622 (delta 436), pack-reused 449 (from 1)[K
+9.1s 14 Receiving objects:  89% (1301/1461)Receiving objects:  90% (1315/1461)Receiving objects:  91% (1330/1461)Receiving objects:  92% (1345/1461)Receiving objects:  93% (1359/1461)Receiving objects:  94% (1374/1461)Receiving objects:  95% (1388/1461)Receiving objects:  96% (1403/1461)Receiving objects:  97% (1418/1461)Receiving objects:  98% (1432/1461)Receiving objects:  99% (1447/1461)Receiving objects: 100% (1461/1461)Receiving objects: 100% (1461/1461), 1.03 MiB | 5.78 MiB/s, done.
+9.1s 15 Resolving deltas:   0% (0/1081)Resolving deltas:   1% (11/1081)Resolving deltas:   2% (22/1081)Resolving deltas:   3% (33/1081)Resolving deltas:   4% (44/1081)Resolving deltas:   5% (55/1081)Resolving deltas:   6% (65/1081)Resolving deltas:   7% (76/1081)Resolving deltas:   8% (87/1081)Resolving deltas:   9% (98/1081)Resolving deltas:  10% (109/1081)Resolving deltas:  11% (119/1081)Resolving deltas:  12% (130/1081)Resolving deltas:  13% (141/1081)Resolving deltas:  14% (152/1081)Resolving deltas:  15% (163/1081)Resolving deltas:  16% (173/1081)Resolving deltas:  17% (184/1081)Resolving deltas:  18% (195/1081)Resolving deltas:  19% (206/1081)Resolving deltas:  20% (217/1081)Resolving deltas:  21% (228/1081)Resolving deltas:  22% (238/1081)Resolving deltas:  23% (249/1081)Resolving deltas:  24% (260/1081)Resolving deltas:  25% (271/1081)Resolving deltas:  26% (282/1081)Resolving deltas:  27% (292/1081)Resolving deltas:  28% (303/1081)Resolving deltas:  29% (314/1081)Resolving deltas:  30% (325/1081)Resolving deltas:  31% (336/1081)Resolving deltas:  32% (346/1081)Resolving deltas:  33% (357/1081)Resolving deltas:  34% (368/1081)Resolving deltas:  35% (379/1081)Resolving deltas:  36% (390/1081)Resolving deltas:  37% (400/1081)Resolving deltas:  38% (411/1081)Resolving deltas:  39% (422/1081)Resolving deltas:  40% (433/1081)Resolving deltas:  41% (444/1081)Resolving deltas:  42% (455/1081)Resolving deltas:  43% (465/1081)Resolving deltas:  44% (476/1081)Resolving deltas:  45% (488/1081)Resolving deltas:  46% (498/1081)Resolving deltas:  47% (509/1081)Resolving deltas:  48% (519/1081)Resolving deltas:  49% (530/1081)Resolving deltas:  50% (541/1081)Resolving deltas:  51% (552/1081)Resolving deltas:  52% (563/1081)Resolving deltas:  53% (573/1081)Resolving deltas:  54% (584/1081)Resolving deltas:  55% (595/1081)Resolving deltas:  56% (606/1081)Resolving deltas:  57% (617/1081)Resolving deltas:  58% (627/1081)Resolving deltas:  59% (638/1081)Resolving deltas:  60% (649/1081)Resolving deltas:  61% (660/1081)Resolving deltas:  62% (671/1081)Resolving deltas:  63% (682/1081)Resolving deltas:  64% (692/1081)Resolving deltas:  65% (703/1081)Resolving deltas:  66% (714/1081)Resolving deltas:  67% (725/1081)Resolving deltas:  68% (736/1081)Resolving deltas:  69% (746/1081)Resolving deltas:  70% (757/1081)Resolving deltas:  71% (768/1081)Resolving deltas:  72% (779/1081)Resolving deltas:  73% (790/1081)Resolving deltas:  74% (800/1081)Resolving deltas:  75% (811/1081)Resolving deltas:  76% (822/1081)Resolving deltas:  77% (833/1081)Resolving deltas:  78% (844/1081)Resolving deltas:  79% (854/1081)Resolving deltas:  80% (865/1081)Resolving deltas:  81% (876/1081)Resolving deltas:  82% (887/1081)Resolving deltas:  83% (898/1081)Resolving deltas:  84% (909/1081)Resolving deltas:  85% (919/1081)Resolving deltas:  86% (930/1081)Resolving deltas:  87% (941/1081)Resolving deltas:  88% (952/1081)Resolving deltas:  89% (963/1081)Resolving deltas:  90% (973/1081)Resolving deltas:  91% (984/1081)Resolving deltas:  92% (995/1081)Resolving deltas:  93% (1006/1081)Resolving deltas:  94% (1017/1081)Resolving deltas:  95% (1027/1081)Resolving deltas:  96% (1038/1081)Resolving deltas:  97% (1049/1081)Resolving deltas:  98% (1060/1081)Resolving deltas:  99% (1071/1081)Resolving deltas: 100% (1081/1081)Resolving deltas: 100% (1081/1081), done.
+9.2s 16 /kaggle/working/quantum-cortex
+13.6s 17 relay: on
+13.6s 18 resume references from: (none — fresh start)
+13.6s 19 resume arms from: (none — fresh start)
+15.0s 20 [resumable] 16 units total, 6 already done, 13 to run
+628.5s 21 [unit] L3-+local-conv__s1337__kv8_seq128 -> acc=0.8926 (601.5s)  [7/16]
+1217.3s 22 [unit] L3-+local-conv__s99__kv8_seq128 -> acc=0.8965 (586.2s)  [8/16]
+1812.9s 23 [unit] L3-+local-conv__s3__kv8_seq128 -> acc=0.8711 (593.3s)  [9/16]
+2413.2s 24 [unit] L3-+local-conv__s11__kv8_seq128 -> acc=0.8418 (597.7s)  [10/16]
+3009.4s 25 [unit] L3-+local-conv__s2026__kv8_seq128 -> acc=0.8477 (593.9s)  [11/16]
+3159.7s 26 [mqar] variant=none kv=8 seq=128 -> acc=0.119
+3162.4s 27 [unit] ARCH-none__s1337__kv8_seq128 -> acc=0.1191 (150.3s)  [12/16]
+3310.7s 28 [mqar] variant=none kv=8 seq=128 -> acc=0.117
+3313.2s 29 [unit] ARCH-none__s2024__kv8_seq128 -> acc=0.1172 (148.4s)  [13/16]
+3460.6s 30 [mqar] variant=none kv=8 seq=128 -> acc=0.143
+3463.1s 31 [unit] ARCH-none__s7__kv8_seq128 -> acc=0.1426 (147.5s)  [14/16]
+3614.2s 32 [mqar] variant=none kv=8 seq=128 -> acc=0.084
+3616.5s 33 [unit] ARCH-none__s42__kv8_seq128 -> acc=0.0840 (151.2s)  [15/16]
+3765.5s 34 [mqar] variant=none kv=8 seq=128 -> acc=0.146
+3768.0s 35 [unit] ARCH-none__s99__kv8_seq128 -> acc=0.1465 (149.0s)  [16/16]
+3920.1s 36 [mqar] variant=none kv=8 seq=128 -> acc=0.150
+3922.4s 37 [unit] ARCH-none__s3__kv8_seq128 -> acc=0.1504 (152.1s)  [17/16]
+4073.5s 38 [mqar] variant=none kv=8 seq=128 -> acc=0.164
+4075.9s 39 [unit] ARCH-none__s11__kv8_seq128 -> acc=0.1641 (151.1s)  [18/16]
+4226.0s 40 [mqar] variant=none kv=8 seq=128 -> acc=0.131
+4228.4s 41 [unit] ARCH-none__s2026__kv8_seq128 -> acc=0.1309 (150.1s)  [19/16]
+4228.4s 42 [resumable] COMPLETE (subset ['L3-+local-conv', 'ARCH-none']) — per path stats written; no paired tests on a subset
+4231.2s 43 [resumable-rb] 16 units total, 0 already done, 16 to run; 19 reference units loaded
+4880.2s 44 [unit] RB-bare__s1337__kv8_seq128 -> acc=0.9648 trunk=0.0039 gate=1.0 (640.3s)  [1/16]
+5523.2s 45 [unit] RB-bare__s2024__kv8_seq128 -> acc=0.9512 trunk=0.0020 gate=1.0 (640.6s)  [2/16]
+6168.9s 46 [unit] RB-bare__s7__kv8_seq128 -> acc=0.9688 trunk=0.0078 gate=1.0 (643.3s)  [3/16]
+6818.5s 47 [unit] RB-bare__s42__kv8_seq128 -> acc=0.9688 trunk=0.0117 gate=1.0 (647.3s)  [4/16]
+7465.1s 48 [unit] RB-bare__s99__kv8_seq128 -> acc=0.9883 trunk=0.0117 gate=1.0 (644.0s)  [5/16]
+8116.2s 49 [unit] RB-bare__s3__kv8_seq128 -> acc=0.9785 trunk=0.0059 gate=1.0 (648.5s)  [6/16]
+8767.4s 50 [unit] RB-bare__s11__kv8_seq128 -> acc=0.9629 trunk=0.0039 gate=1.0 (648.8s)  [7/16]
+9411.4s 51 [unit] RB-bare__s2026__kv8_seq128 -> acc=0.9727 trunk=0.0195 gate=1.0 (641.5s)  [8/16]
+10055.8s 52 [unit] RB-critical__s1337__kv8_seq128 -> acc=0.9707 trunk=0.0176 gate=1.0 (641.9s)  [9/16]
+10696.5s 53 [unit] RB-critical__s2024__kv8_seq128 -> acc=0.9453 trunk=0.0117 gate=1.0 (638.3s)  [10/16]
+11340.9s 54 [unit] RB-critical__s7__kv8_seq128 -> acc=0.9570 trunk=0.0117 gate=1.0 (642.1s)  [11/16]
+11991.2s 55 [unit] RB-critical__s42__kv8_seq128 -> acc=0.9727 trunk=0.0078 gate=1.0 (647.6s)  [12/16]
+12635.5s 56 [unit] RB-critical__s99__kv8_seq128 -> acc=0.9746 trunk=0.0020 gate=1.0 (641.8s)  [13/16]
+13283.9s 57 [unit] RB-critical__s3__kv8_seq128 -> acc=0.9746 trunk=0.0098 gate=1.0 (645.9s)  [14/16]
+13928.4s 58 [unit] RB-critical__s11__kv8_seq128 -> acc=0.9668 trunk=0.0098 gate=1.0 (641.9s)  [15/16]
+14571.3s 59 [unit] RB-critical__s2026__kv8_seq128 -> acc=0.9824 trunk=0.0117 gate=1.0 (640.4s)  [16/16]
+14571.3s 60 [resumable-rb] COMPLETE — aggregate written
+14572.1s 61 metrics/mqar/ref3000-ckpt/SUBSET-L3-local-conv-ARCH-none-3000steps.json
+14572.1s 62 {
+14572.1s 63 "units_done": 19,
+14572.1s 64 "units_total": 16,
+14572.1s 65 "complete": true,
+14572.1s 66 "stats": {
+14572.1s 67 "L3-+local-conv": {
+14572.1s 68 "mean": 0.7654,
+14572.1s 69 "sd": 0.2726,
+14572.1s 70 "ci95": [
+14572.1s 71 0.5374,
+14572.1s 72 0.9933
+14572.1s 73 ],
+14572.1s 74 "n": 8,
+14572.1s 75 "per_seed": [
+14572.1s 76 0.892578125,
+14572.1s 77 0.8828125,
+14572.1s 78 0.095703125,
+14572.1s 79 0.794921875,
+14572.1s 80 0.896484375,
+14572.1s 81 0.87109375,
+14572.1s 82 0.841796875,
+14572.1s 83 0.84765625
+14572.1s 84 ],
+14572.1s 85 "per_tier": {
+14572.1s 86 "kv8": [
+14572.1s 87 0.892578125,
+14572.1s 88 0.8828125,
+14572.1s 89 0.095703125,
+14572.1s 90 0.794921875,
+14572.1s 91 0.896484375,
+14572.1s 92 0.87109375,
+14572.1s 93 0.841796875,
+14572.1s 94 0.84765625
+14572.1s 95 ]
+14572.1s 96 }
+14572.1s 97 },
+14572.1s 98 "ARCH-none": {
+14572.1s 99 "mean": 0.1318,
+14572.1s 100 "sd": 0.025,
+14572.1s 101 "ci95": [
+14572.1s 102 0.1109,
+14572.1s 103 0.1527
+14572.1s 104 ],
+14572.1s 105 "n": 8,
+14572.1s 106 "per_seed": [
+14572.1s 107 0.119140625,
+14572.1s 108 0.1171875,
+14572.1s 109 0.142578125,
+14572.1s 110 0.083984375,
+14572.1s 111 0.146484375,
+14572.1s 112 0.150390625,
+14572.1s 113 0.1640625,
+14572.1s 114 0.130859375
+14572.1s 115 ],
+14572.1s 116 "per_tier": {
+14572.1s 117 "kv8": [
+14572.1s 118 0.119140625,
+14572.1s 119 0.1171875,
+14572.1s 120 0.142578125,
+14572.1s 121 0.083984375,
+14572.1s 122 0.146484375,
+14572.1s 123 0.150390625,
+14572.1s 124 0.1640625,
+14572.1s 125 0.130859375
+14572.1s 126 ]
+14572.1s 127 }
+14572.1s 128 }
+14572.1s 129 }
+14572.1s 130 }
+14572.1s 131 metrics/mqar/rb3000-ckpt/LATEST-rb.json
+14572.1s 132 {
+14572.1s 133 "units_done": 16,
+14572.1s 134 "units_total": 16,
+14572.1s 135 "complete": true,
+14572.1s 136 "stats": {
+14572.1s 137 "RB-bare": {
+14572.1s 138 "full": {
+14572.1s 139 "mean": 0.9695,
+14572.1s 140 "sd": 0.011,
+14572.1s 141 "ci95": [
+14572.1s 142 0.9603,
+14572.1s 143 0.9787
+14572.1s 144 ],
+14572.1s 145 "n": 8
+14572.1s 146 },
+14572.1s 147 "trunk_only": {
+14572.1s 148 "mean": 0.0083,
+14572.1s 149 "sd": 0.0058,
+14572.1s 150 "ci95": [
+14572.1s 151 0.0035,
+14572.1s 152 0.0131
+14572.1s 153 ],
+14572.1s 154 "n": 8
+14572.1s 155 },
+14572.1s 156 "take_off_rate": 0.0,
+14572.1s 157 "kv16_mean": null,
+14572.1s 158 "gap_mean": 0.9611749999999999,
+14572.1s 159 "gate_final_mean": 1.0
+14572.1s 160 },
+14572.1s 161 "RB-critical": {
+14572.1s 162 "full": {
+14572.1s 163 "mean": 0.968,
+14572.1s 164 "sd": 0.0117,
+14572.1s 165 "ci95": [
+14572.1s 166 0.9582,
+14572.1s 167 0.9778
+14572.1s 168 ],
+14572.1s 169 "n": 8
+14572.1s 170 },
+14572.1s 171 "trunk_only": {
+14572.1s 172 "mean": 0.0103,
+14572.1s 173 "sd": 0.0044,
+14572.1s 174 "ci95": [
+14572.1s 175 0.0066,
+14572.1s 176 0.0139
+14572.1s 177 ],
+14572.1s 178 "n": 8
+14572.1s 179 },
+14572.1s 180 "take_off_rate": 0.0,
+14572.1s 181 "kv16_mean": null,
+14572.1s 182 "gap_mean": 0.9577499999999999,
+14572.1s 183 "gate_final_mean": 1.0
+14572.1s 184 }
+14572.1s 185 },
+14572.1s 186 "references": {
+14572.1s 187 "L3": [
+14572.1s 188 0.892578125,
+14572.1s 189 0.8828125,
+14572.1s 190 0.095703125,
+14572.1s 191 0.794921875,
+14572.1s 192 0.896484375,
+14572.1s 193 0.87109375,
+14572.1s 194 0.841796875,
+14572.1s 195 0.84765625
+14572.1s 196 ],
+14572.1s 197 "control": [
+14572.1s 198 0.119140625,
+14572.1s 199 0.1171875,
+14572.1s 200 0.142578125,
+14572.1s 201 0.083984375,
+14572.1s 202 0.146484375,
+14572.1s 203 0.150390625,
+14572.1s 204 0.1640625,
+14572.1s 205 0.130859375
+14572.1s 206 ],
+14572.1s 207 "missing": []
+14572.1s 208 },
+14572.1s 209 "paired_tests": {
+14572.1s 210 "RB-bare_full_vs_L3": {
+14572.1s 211 "mean_diff": 0.2041,
+14572.1s 212 "t": 2.119,
+14572.1s 213 "df": 7,
+14572.1s 214 "t_crit_95": 2.365,
+14572.1s 215 "significant_95": false
+14572.1s 216 },
+14572.1s 217 "RB-bare_trunk_vs_L3": {
+14572.1s 218 "mean_diff": -0.7571,
+14572.1s 219 "t": -7.851,
+14572.1s 220 "df": 7,
+14572.1s 221 "t_crit_95": 2.365,
+14572.1s 222 "significant_95": true
+14572.1s 223 },
+14572.1s 224 "RB-bare_full_vs_control": {
+14572.1s 225 "mean_diff": 0.8376,
+14572.1s 226 "t": 98.35,
+14572.1s 227 "df": 7,
+14572.1s 228 "t_crit_95": 2.365,
+14572.1s 229 "significant_95": true
+14572.1s 230 },
+14572.1s 231 "RB-critical_full_vs_L3": {
+14572.1s 232 "mean_diff": 0.2026,
+14572.1s 233 "t": 2.133,
+14572.1s 234 "df": 7,
+14572.1s 235 "t_crit_95": 2.365,
+14572.1s 236 "significant_95": false
+14572.1s 237 },
+14572.1s 238 "RB-critical_trunk_vs_L3": {
+14572.1s 239 "mean_diff": -0.7551,
+14572.1s 240 "t": -7.818,
+14572.1s 241 "df": 7,
+14572.1s 242 "t_crit_95": 2.365,
+14572.1s 243 "significant_95": true
+14572.1s 244 },
+14572.1s 245 "RB-critical_full_vs_control": {
+14572.1s 246 "mean_diff": 0.8362,
+14572.1s 247 "t": 87.689,
+14572.1s 248 "df": 7,
+14572.1s 249 "t_crit_95": 2.365,
+14572.1s 250 "significant_95": true
+14572.1s 251 }
+14572.1s 252 },
+14572.1s 253 "gate_readout": {
+14572.1s 254 "RB-bare_full_vs_L3": "held",
+14572.1s 255 "RB-bare_trunk_vs_L3": "gated",
+14572.1s 256 "RB-bare_full_vs_control": "gated",
+14572.1s 257 "RB-critical_full_vs_L3": "held",
+14572.1s 258 "RB-critical_trunk_vs_L3": "gated",
+14572.1s 259 "RB-critical_full_vs_control": "gated"
+14572.1s 260 }
+14572.1s 261 }
+14572.1s 262 Commit metrics/mqar/ref3000-ckpt/ and metrics/mqar/rb3000-ckpt/ — the units are the record.
+14574.5s 263 /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+14574.5s 264 cells[i][c] = re.sub('\\\\\|', '|', cell)
+14574.7s 265 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+14574.7s 266 text = re.sub(r'_', '\_', text) # Escape underscores in display text
+14575.3s 267 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+14575.6s 268 [NbConvertApp] Writing 19950 bytes to __notebook__.ipynb
+14578.0s 269 [NbConvertApp] Converting notebook __notebook__.ipynb to html
+14578.8s 270 [NbConvertApp] Writing 296884 bytes to __results__.html

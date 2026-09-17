@@ -56,7 +56,7 @@ What the cortex is not: a general chatbot, a frontier code model, or a competito
 | The local model of an agent | The encoder retrieves (0.98) and the reader reads (0.98) on the model; the decode contract exists | The decision and the citation are the measured limit of the data recipes; the closing test (a matching head, two decode policies) decides this week | Lands if a policy passes the four conditions; otherwise written as a limit at this size and postponed to scale |
 | An assistant whose world changes | Nothing | | The oracle channel C3 is not built; the setting is not served |
 | Private, local, encrypted memory | The journal sealed at rest, one scope per subject, survives a process restart (ADR-007) | Served by the organ only | The model that fits on a device (scale, ternary weights) is not built |
-| The recurrent ladder and the hybrids | The eight seed ladder (rows 18 to 20) and the Σ (row 27): L3 takes off, mostly a matter of training length; no memory advantage of the hybrids at this size | A finding and a negative structural line, not a product | The recurrent base arms are a research thread, staged after the closing test |
+| The recurrent ladder and the hybrids | The eight seed ladder (rows 18 to 20) and the Σ (row 27): L3 takes off, mostly a matter of training length; no memory advantage of the hybrids at this size | A finding and a negative structural line, not a product | Stage A of the recurrent base arms measured (rows 30 and 31): the attention path pre empts the recurrent trunk in the bare and critical arms; stage B is the founder's decision |
 
 ## Reproduce it (no GPU needed to verify)
 
@@ -64,7 +64,7 @@ What the cortex is not: a general chatbot, a frontier code model, or a competito
 git clone https://github.com/vaneeckhoutnicolas/quantum-cortex && cd quantum-cortex
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -e . && pip install pytest
-pytest tests/ -m "not slow"        # 153 tests: ledger, data-mix invariants, C2 layers, router, journal, lifecycle, restart, storage policy, journal in the decode loop, recurrent base hybrid, Molaison
+pytest tests/ -m "not slow"        # 179 tests: ledger, data-mix invariants, C2 layers, router, journal, lifecycle, restart, storage policy, journal in the decode loop, recurrent base hybrid, Molaison
 python -m cortex_c2b.hm_protocol    # the Molaison dissociation, end to end, in seconds (persistent: false, in memory)
 python -m cortex_c2b.hm_protocol --persistent   # the same, sealed on disk, session B reopened from the disk alone
 python train.py --config configs/smoke_journal_cpu.json   # the journal in the decode loop, the whole loop on CPU in a minute (ADR-008); a mechanics smoke, not a result
@@ -85,7 +85,7 @@ GPU runs (the MQAR ablation, the confirmation run) reproduce from the notebooks 
 
 ## What comes next (gated, in order)
 
-1. ~~**The recurrent ladder at eight seeds**~~ **Done (2026-09-12): read cold, graved as rows 18 to 20.** It contradicted its hypothesis and produced the run's real finding, L3's bimodal take off. The Σ of the convergence ran (2026-09-13, row 27): two of the three floor seeds take off by 3000 steps, the third is undecided, and no seed learns 16 pairs at 3000 either: the bimodality was mostly speed, and a floor at 1500 steps is not a verdict. Next (Rev38, after item 2): the recurrent base hybrid, four declared arms, to learn whether one model can carry both regimes.
+1. ~~**The recurrent ladder at eight seeds**~~ **Done (2026-09-12): read cold, graved as rows 18 to 20.** It contradicted its hypothesis and produced the run's real finding, L3's bimodal take off. The Σ of the convergence ran (2026-09-13, row 27): two of the three floor seeds take off by 3000 steps, the third is undecided, and no seed learns 16 pairs at 3000 either: the bimodality was mostly speed, and a floor at 1500 steps is not a verdict. Stage A of the recurrent base hybrid ran (2026-09-16, rows 30 and 31): at 3000 steps seven seeds of eight take off on L3 pure; the two decisive arms reach 0.97 with a trunk that never takes off: the attention pre empts the recurrent base, the risk named before the code; stage B (the consolidation arms) is the declared answer, not yet run.
 2. **The language-model arm of Molaison** — the model reading its own journal in generation (learned cue encoder, real skill suites) → continuity measured on the *model*, not the organ.
 3. **C3, the oracle channel** → the second component of the triad (adaptive revision).
 4. **A 100M+ run** (EuroHPC Development Access; the author's company is eligible) → whether any of this generalises → paper v1.

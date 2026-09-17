@@ -1,0 +1,208 @@
+{
+  "benchmark": "recurrent_base_hybrid_resumable",
+  "timestamp_utc": "2026-09-16T03:51:44.926303+00:00",
+  "regime": {
+    "seeds": [
+      1337,
+      2024,
+      7,
+      42,
+      99,
+      3,
+      11,
+      2026
+    ],
+    "n_seeds": 8,
+    "steps": 3000,
+    "tiers": [
+      [
+        8,
+        128
+      ]
+    ],
+    "arms": [
+      "RB-bare",
+      "RB-critical"
+    ],
+    "arm_hashes": {
+      "RB-bare": "849449c0ab8f3879",
+      "RB-critical": "212a6075da4f2e72"
+    }
+  },
+  "units_done": 16,
+  "units_total": 16,
+  "complete": true,
+  "stopped_early": false,
+  "stats": {
+    "RB-bare": {
+      "full": {
+        "mean": 0.9695,
+        "sd": 0.011,
+        "ci95": [
+          0.9603,
+          0.9787
+        ],
+        "n": 8
+      },
+      "trunk_only": {
+        "mean": 0.0083,
+        "sd": 0.0058,
+        "ci95": [
+          0.0035,
+          0.0131
+        ],
+        "n": 8
+      },
+      "take_off_rate": 0.0,
+      "kv16_mean": null,
+      "gap_mean": 0.9611749999999999,
+      "gate_final_mean": 1.0
+    },
+    "RB-critical": {
+      "full": {
+        "mean": 0.968,
+        "sd": 0.0117,
+        "ci95": [
+          0.9582,
+          0.9778
+        ],
+        "n": 8
+      },
+      "trunk_only": {
+        "mean": 0.0103,
+        "sd": 0.0044,
+        "ci95": [
+          0.0066,
+          0.0139
+        ],
+        "n": 8
+      },
+      "take_off_rate": 0.0,
+      "kv16_mean": null,
+      "gap_mean": 0.9577499999999999,
+      "gate_final_mean": 1.0
+    }
+  },
+  "per_seed": {
+    "full": {
+      "RB-bare": [
+        0.96484375,
+        0.951171875,
+        0.96875,
+        0.96875,
+        0.98828125,
+        0.978515625,
+        0.962890625,
+        0.97265625
+      ],
+      "RB-critical": [
+        0.970703125,
+        0.9453125,
+        0.95703125,
+        0.97265625,
+        0.974609375,
+        0.974609375,
+        0.966796875,
+        0.982421875
+      ]
+    },
+    "trunk_only": {
+      "RB-bare": [
+        0.00390625,
+        0.001953125,
+        0.0078125,
+        0.01171875,
+        0.01171875,
+        0.005859375,
+        0.00390625,
+        0.01953125
+      ],
+      "RB-critical": [
+        0.017578125,
+        0.01171875,
+        0.01171875,
+        0.0078125,
+        0.001953125,
+        0.009765625,
+        0.009765625,
+        0.01171875
+      ]
+    }
+  },
+  "references": {
+    "L3": [
+      0.892578125,
+      0.8828125,
+      0.095703125,
+      0.794921875,
+      0.896484375,
+      0.87109375,
+      0.841796875,
+      0.84765625
+    ],
+    "control": [
+      0.119140625,
+      0.1171875,
+      0.142578125,
+      0.083984375,
+      0.146484375,
+      0.150390625,
+      0.1640625,
+      0.130859375
+    ],
+    "missing": []
+  },
+  "paired_tests": {
+    "RB-bare_full_vs_L3": {
+      "mean_diff": 0.2041,
+      "t": 2.119,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "RB-bare_trunk_vs_L3": {
+      "mean_diff": -0.7571,
+      "t": -7.851,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    },
+    "RB-bare_full_vs_control": {
+      "mean_diff": 0.8376,
+      "t": 98.35,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    },
+    "RB-critical_full_vs_L3": {
+      "mean_diff": 0.2026,
+      "t": 2.133,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": false
+    },
+    "RB-critical_trunk_vs_L3": {
+      "mean_diff": -0.7551,
+      "t": -7.818,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    },
+    "RB-critical_full_vs_control": {
+      "mean_diff": 0.8362,
+      "t": 87.689,
+      "df": 7,
+      "t_crit_95": 2.365,
+      "significant_95": true
+    }
+  },
+  "gate_readout": {
+    "RB-bare_full_vs_L3": "held",
+    "RB-bare_trunk_vs_L3": "gated",
+    "RB-bare_full_vs_control": "gated",
+    "RB-critical_full_vs_L3": "held",
+    "RB-critical_trunk_vs_L3": "gated",
+    "RB-critical_full_vs_control": "gated"
+  },
+  "note": "paired on seed at identical steps/tiers against the ladder8 units; gated = significant at 95% with >= 3 seeds; a bimodal comparator (L3) gets its reserve written next to the number."
+}

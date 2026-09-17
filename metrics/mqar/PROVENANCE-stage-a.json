@@ -1,0 +1,71 @@
+{
+ "purpose": "provenance of stage A of the recurrent base arms (register Rev38; REPRISE 4c): the references at 3000 steps at 8 pairs (ref3000-ckpt, 13 units; the six units of the Sigma run reused from sigma-l3-3000-ckpt, not recomputed) and the two decisive arms RB-bare and RB-critical (rb3000-ckpt, 16 units). Read before citing RESULTS rows 30 and 31.",
+ "date": "2026-09-17",
+ "run": {
+  "notebook": "nicolasvaneeckhout/notebook1fed1aa077 (notebooks/recurrent_base_stage_a.ipynb)",
+  "code": "the clone at commit b4b2c402b7df7af97cecc91b0e74d0676e909653 (the Output's .git HEAD)",
+  "execution": "one execution, 2026-09-15 23:49 UTC (clone) to 2026-09-16 03:51 UTC (last unit): 4 h 03 of T4, relay on (quantum-cortex-relay-ref3000, quantum-cortex-relay-rb3000), no relaunch, no resume line; the units written 23:59 to 03:51 UTC",
+  "counter": "the runner printed [7/16] to [19/16] and units_done 19 of units_total 16: load_done merged the six Sigma units (three at 8 pairs, three at 16 pairs) with the 13 new ones; the three at 16 pairs are counted as done and lie outside the 8 pair subset; the eight values per path are unaffected",
+  "self_containment": "the engineering lesson of PROVENANCE-ladder8 stands: the reused units were not copied into ref3000-ckpt; the record is self contained in the repository because sigma-l3-3000-ckpt is committed"
+ },
+ "files": {
+  "ref3000-ckpt/unit-*.json (13)": "REAL, written by the runner, retrieved via kaggle kernels output, byte for byte",
+  "ref3000-ckpt/SUBSET-L3-local-conv-ARCH-none-3000steps.json": "REAL, the runner's subset aggregate (per path stats, no paired tests on a subset)",
+  "rb3000-ckpt/unit-*.json (16)": "REAL, written by the runner (accuracy, accuracy_trunk_only, consolidation_gap, took_off, gate_final, opened_at, retractions, arm_hash)",
+  "rb3000-ckpt/LATEST-rb.json": "REAL, the runner's aggregate with the six declared paired tests against the references of ref3000-ckpt and sigma-l3-3000-ckpt",
+  "sigma-l3-3000-ckpt/unit-L3-+local-conv__s{7,42,2024}__kv{8,16}_seq128.json": "the six reused references, committed on 2026-09-13 (RESULTS row 27), unchanged"
+ },
+ "verification_2026-09-17": {
+  "who": "the instance that graves, cold, from the log as a file and the retrieved directories",
+  "checks": [
+   "the 29 [unit] lines of the log identify exact values (k over 512) and equal the 29 unit files' accuracies",
+   "the SUBSET stats (mean, sd, ci95, per_seed, per_tier) recomputed from the 13 + 6 units with the runner's own functions equal the committed file",
+   "the LATEST-rb aggregate (stats, references, the six paired tests, the gate readout) recomputed from the 16 units and the 19 references with resumable_rb.aggregate equals the committed file, test for test",
+   "the paired tests recomputed independently from the [unit] lines: t 2.119, 98.35, -7.851, 2.133, 87.689, -7.818, as the runner printed",
+   "every RB unit carries the arm hash of the code (RB-bare 849449c0ab8f3879, RB-critical 212a6075da4f2e72)",
+   "RB-critical opened_at on the eight seeds: 217, 222, 224, 225, 227, 229, 233, 234 (the plateau criterion fires at the first check after step 200)",
+   "the Output's own copy of the log (Kaggle's JSON stream, 270 records, stdout and stderr) holds the same 674 events as the text log retained here"
+  ]
+ },
+ "logs_retained_in_repo": {
+  "stage_a": {
+   "path": "metrics/mqar/logs/recurrent-base-stage-a.log",
+   "sha256_16": "76cbece6fad75444",
+   "bytes": 26964
+  }
+ },
+ "sha256_16": {
+  "ref3000-ckpt/SUBSET-L3-local-conv-ARCH-none-3000steps.json": "82b0c9d88ded5d05",
+  "ref3000-ckpt/unit-ARCH-none__s11__kv8_seq128.json": "6773d691098f59a2",
+  "ref3000-ckpt/unit-ARCH-none__s1337__kv8_seq128.json": "c66d192314b689a6",
+  "ref3000-ckpt/unit-ARCH-none__s2024__kv8_seq128.json": "8113801cf9b46dcf",
+  "ref3000-ckpt/unit-ARCH-none__s2026__kv8_seq128.json": "716c15da69217e99",
+  "ref3000-ckpt/unit-ARCH-none__s3__kv8_seq128.json": "27704d55867a8255",
+  "ref3000-ckpt/unit-ARCH-none__s42__kv8_seq128.json": "bd89ad72b16e3d8f",
+  "ref3000-ckpt/unit-ARCH-none__s7__kv8_seq128.json": "547f18b1547b5938",
+  "ref3000-ckpt/unit-ARCH-none__s99__kv8_seq128.json": "11a274d02829c868",
+  "ref3000-ckpt/unit-L3-+local-conv__s11__kv8_seq128.json": "0154009be66b8529",
+  "ref3000-ckpt/unit-L3-+local-conv__s1337__kv8_seq128.json": "35abc5248e121c09",
+  "ref3000-ckpt/unit-L3-+local-conv__s2026__kv8_seq128.json": "f856b7e202cf0895",
+  "ref3000-ckpt/unit-L3-+local-conv__s3__kv8_seq128.json": "f11784d9f5dd38b5",
+  "ref3000-ckpt/unit-L3-+local-conv__s99__kv8_seq128.json": "d827a48b7a0f2498",
+  "rb3000-ckpt/LATEST-rb.json": "ca01d7924ecc031e",
+  "rb3000-ckpt/unit-RB-bare__s11__kv8_seq128.json": "2467e65d5aaf23d4",
+  "rb3000-ckpt/unit-RB-bare__s1337__kv8_seq128.json": "551aeda6bfc97c36",
+  "rb3000-ckpt/unit-RB-bare__s2024__kv8_seq128.json": "52fe6a1bf514c260",
+  "rb3000-ckpt/unit-RB-bare__s2026__kv8_seq128.json": "6a325c5fd6cd25ee",
+  "rb3000-ckpt/unit-RB-bare__s3__kv8_seq128.json": "8b371b2eca7c74f0",
+  "rb3000-ckpt/unit-RB-bare__s42__kv8_seq128.json": "0b3f79b16635eefd",
+  "rb3000-ckpt/unit-RB-bare__s7__kv8_seq128.json": "997d0fd3cfc68fe6",
+  "rb3000-ckpt/unit-RB-bare__s99__kv8_seq128.json": "07e4dbfa6310dc9e",
+  "rb3000-ckpt/unit-RB-critical__s11__kv8_seq128.json": "247fb74aa20035cd",
+  "rb3000-ckpt/unit-RB-critical__s1337__kv8_seq128.json": "cb51dacd15fc4936",
+  "rb3000-ckpt/unit-RB-critical__s2024__kv8_seq128.json": "42db96123d06c090",
+  "rb3000-ckpt/unit-RB-critical__s2026__kv8_seq128.json": "2bcf4d96fd8246ec",
+  "rb3000-ckpt/unit-RB-critical__s3__kv8_seq128.json": "96c293617a401c6e",
+  "rb3000-ckpt/unit-RB-critical__s42__kv8_seq128.json": "c70cda5f53447b1b",
+  "rb3000-ckpt/unit-RB-critical__s7__kv8_seq128.json": "b6a438429615a0b3",
+  "rb3000-ckpt/unit-RB-critical__s99__kv8_seq128.json": "83c740fe56513696"
+ },
+ "status": "the unit files are the record; nothing here is a claim; RESULTS rows 30 and 31 read them"
+}
