@@ -1,0 +1,1 @@
+{"unit_id": "L3-+local-conv__s100__kv8_seq128", "rung": "L3-+local-conv", "seed": 100, "kv_pairs": 8, "seq_len": 128, "steps": 3000, "accuracy": 0.904296875, "status": "done", "wall_s": 555.5, "written_utc": "2026-09-17T15:52:30.880872+00:00"}

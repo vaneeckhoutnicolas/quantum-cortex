@@ -1,0 +1,91 @@
+{
+ "purpose": "provenance of register Rev62 (declared before the run): the horizon of the convolved control (its four floor seeds at 6000 and 12 000 steps) and the paired extension to sixteen seeds (eight new seeds, 100 to 800, for the three references and the two decisive arms), with the sixteen seed readouts. Read before citing RESULTS rows 33, 34 and 35.",
+ "date": "2026-09-17",
+ "run": {
+  "notebook": "nicolasvaneeckhout/notebook3fc621046d (notebooks/recurrent_base_s16_kaggle.ipynb)",
+  "code": "the clone at commit 4e4f53f6b00d69a88e6a925b7e6efb2a753c4e08 (the Output's .git HEAD)",
+  "execution": "one execution, 2026-09-17 14:32 to 20:24 UTC, 5 h 52 of T4, no relaunch, no resume; 48 units written 14:35 to 20:20 UTC; the horizon units 335 to 413 s at 6000 steps and 659 to 802 s at 12 000; L3 546 to 568 s; the controls 139 to 174 s; the arms 568 to 589 s",
+  "relay": "every push printed; two pushes to quantum-cortex-relay-ref3000-s16 failed on Kaggle server errors (503, then 504) and the following pushes carried the whole directory, so nothing was lost; the image's kaggle command is 2.0.2 (2.2.2 current); the pull path was not exercised (fresh start)",
+  "seeds": "the eight of the ladder (1337, 2024, 7, 42, 99, 3, 11, 2026) and the eight declared in Rev62 (100, 200, 300, 400, 500, 600, 700, 800)"
+ },
+ "files": {
+  "conv6000-ckpt, conv12000-ckpt": "REAL, four units each and their subset aggregate: ARCH-none+local-conv on seeds 1337, 7, 42, 11 at 6000 and at 12 000 steps, each unit from scratch",
+  "ref3000-s16-ckpt": "REAL, 24 units (L3 pure, the control, the convolved control on the eight new seeds), their subset aggregate, and READOUT-control-conv-3000steps-16seeds.json (the declared readout over the sixteen seeds)",
+  "rb3000-s16-ckpt": "REAL, 16 units (RB-bare, RB-critical on the eight new seeds), LATEST-rb.json (their aggregate over the eight new seeds) and LATEST-rb-16seeds.json (the aggregate over the sixteen, paired against the sixteen references)",
+  "ref3000-ckpt, rb3000-ckpt, sigma-l3-3000-ckpt in the same Output": "identical, byte for byte, to the committed ones; nothing overwritten"
+ },
+ "verification_2026-09-17": {
+  "who": "the instance that graves, cold, from the log as a file and the retrieved directories",
+  "checks": [
+   "the 48 [unit] lines of the log identify exact values (k over 512) and equal the 48 unit files' accuracies; every unit done at its declared steps",
+   "the three committed directories present in the Output are unchanged",
+   "the two horizon subsets, the sixteen seed references subset, LATEST-rb.json (eight new seeds), LATEST-rb-16seeds.json and READOUT-control-conv-3000steps-16seeds.json all recompute from the units with the runner's own functions, test for test",
+   "the sixteen seed paired tests recomputed independently from the [unit] lines of the two logs: RB-bare vs L3 +0.1621 t 3.357, RB-critical vs L3 +0.1616 t 3.395, both arms vs control t 133.5 and 117.4, arms vs the convolved control +0.3706 t 3.184 and +0.3701 t 3.165, convolved control vs control +0.4647 t 3.997, vs L3 -0.2085 t -1.892 (df 15, t_crit 2.131)",
+   "every arm unit carries the code's arm hash; RB-critical opened its gate at steps 225 to 235 on the eight new seeds (217 to 234 on the first eight)"
+  ]
+ },
+ "logs_retained_in_repo": {
+  "s16": {
+   "path": "metrics/mqar/logs/recurrent-base-s16.log",
+   "sha256_16": "fc676fa4a756df31",
+   "bytes": 36535
+  }
+ },
+ "sha256_16": {
+  "conv6000-ckpt/SUBSET-ARCH-nonelocal-conv-6000steps.json": "6e6224c9e7c3749e",
+  "conv6000-ckpt/unit-ARCH-none+local-conv__s11__kv8_seq128.json": "647ec18dbc2f000d",
+  "conv6000-ckpt/unit-ARCH-none+local-conv__s1337__kv8_seq128.json": "741722059c76fd5a",
+  "conv6000-ckpt/unit-ARCH-none+local-conv__s42__kv8_seq128.json": "0ddd3188ff9b01c9",
+  "conv6000-ckpt/unit-ARCH-none+local-conv__s7__kv8_seq128.json": "ef800c4cd1df2bad",
+  "conv12000-ckpt/SUBSET-ARCH-nonelocal-conv-12000steps.json": "5c465fa271b9a4e6",
+  "conv12000-ckpt/unit-ARCH-none+local-conv__s11__kv8_seq128.json": "029452eff27871f0",
+  "conv12000-ckpt/unit-ARCH-none+local-conv__s1337__kv8_seq128.json": "93102eadf5d0e586",
+  "conv12000-ckpt/unit-ARCH-none+local-conv__s42__kv8_seq128.json": "dbbe176e45186e72",
+  "conv12000-ckpt/unit-ARCH-none+local-conv__s7__kv8_seq128.json": "312875cf545c9d60",
+  "ref3000-s16-ckpt/READOUT-control-conv-3000steps-16seeds.json": "73ebafcc5d51bf49",
+  "ref3000-s16-ckpt/SUBSET-L3-local-conv-ARCH-none-ARCH-nonelocal-c-3000steps.json": "19be0d329076fe28",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s100__kv8_seq128.json": "234d2f047a73b71a",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s200__kv8_seq128.json": "7146207fb4443dd1",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s300__kv8_seq128.json": "004056ec9070728b",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s400__kv8_seq128.json": "11f4771cb214a13d",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s500__kv8_seq128.json": "ba56307c79105337",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s600__kv8_seq128.json": "b94b3c44e4a72494",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s700__kv8_seq128.json": "ec1575497320b18e",
+  "ref3000-s16-ckpt/unit-ARCH-none+local-conv__s800__kv8_seq128.json": "97b0647fa9b32648",
+  "ref3000-s16-ckpt/unit-ARCH-none__s100__kv8_seq128.json": "f232e4305862d75a",
+  "ref3000-s16-ckpt/unit-ARCH-none__s200__kv8_seq128.json": "44653914a3aa59e1",
+  "ref3000-s16-ckpt/unit-ARCH-none__s300__kv8_seq128.json": "48a5535a02893106",
+  "ref3000-s16-ckpt/unit-ARCH-none__s400__kv8_seq128.json": "0e873228b31f4f14",
+  "ref3000-s16-ckpt/unit-ARCH-none__s500__kv8_seq128.json": "e49fc735d0b25c8f",
+  "ref3000-s16-ckpt/unit-ARCH-none__s600__kv8_seq128.json": "3e07ef9d70553fa1",
+  "ref3000-s16-ckpt/unit-ARCH-none__s700__kv8_seq128.json": "d494efce7d2fd65e",
+  "ref3000-s16-ckpt/unit-ARCH-none__s800__kv8_seq128.json": "cf54c36221b5de0f",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s100__kv8_seq128.json": "f70c54e6701c54b0",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s200__kv8_seq128.json": "88455cf0f98f61c8",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s300__kv8_seq128.json": "38a1b71d1367cf5d",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s400__kv8_seq128.json": "fe5f3e22b11f906f",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s500__kv8_seq128.json": "8e490479c49bb20a",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s600__kv8_seq128.json": "64aa77070640ad29",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s700__kv8_seq128.json": "2a91e566b521dc8e",
+  "ref3000-s16-ckpt/unit-L3-+local-conv__s800__kv8_seq128.json": "ce04f20f30e120bd",
+  "rb3000-s16-ckpt/LATEST-rb-16seeds.json": "cac0819eb658d280",
+  "rb3000-s16-ckpt/LATEST-rb.json": "f2c194523ed2fabf",
+  "rb3000-s16-ckpt/unit-RB-bare__s100__kv8_seq128.json": "e1492fc482b99b24",
+  "rb3000-s16-ckpt/unit-RB-bare__s200__kv8_seq128.json": "b7fa547aedd01a74",
+  "rb3000-s16-ckpt/unit-RB-bare__s300__kv8_seq128.json": "1a3c7a0831597187",
+  "rb3000-s16-ckpt/unit-RB-bare__s400__kv8_seq128.json": "f2638242dd693ed8",
+  "rb3000-s16-ckpt/unit-RB-bare__s500__kv8_seq128.json": "c5931041b1d69b9c",
+  "rb3000-s16-ckpt/unit-RB-bare__s600__kv8_seq128.json": "110d5cad0073a644",
+  "rb3000-s16-ckpt/unit-RB-bare__s700__kv8_seq128.json": "96a4588a377b24a6",
+  "rb3000-s16-ckpt/unit-RB-bare__s800__kv8_seq128.json": "a5be1a8fe8263b08",
+  "rb3000-s16-ckpt/unit-RB-critical__s100__kv8_seq128.json": "cd3ab8cb873770b5",
+  "rb3000-s16-ckpt/unit-RB-critical__s200__kv8_seq128.json": "b82a169a7c470008",
+  "rb3000-s16-ckpt/unit-RB-critical__s300__kv8_seq128.json": "b1a345cf4c6b9f23",
+  "rb3000-s16-ckpt/unit-RB-critical__s400__kv8_seq128.json": "723dbd564733c1a6",
+  "rb3000-s16-ckpt/unit-RB-critical__s500__kv8_seq128.json": "340da5c85ad5eedd",
+  "rb3000-s16-ckpt/unit-RB-critical__s600__kv8_seq128.json": "a2c8e7a265cf3d9c",
+  "rb3000-s16-ckpt/unit-RB-critical__s700__kv8_seq128.json": "760d749badbe2994",
+  "rb3000-s16-ckpt/unit-RB-critical__s800__kv8_seq128.json": "ba651fb3bb645889"
+ },
+ "status": "the unit files are the record; nothing here is a claim; RESULTS rows 33, 34 and 35 read them"
+}

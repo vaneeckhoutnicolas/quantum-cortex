@@ -1,0 +1,234 @@
+7.4s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+7.4s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+7.4s 3 0.00s - to python to disable frozen modules.
+7.4s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+8.0s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+8.0s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+8.0s 7 0.00s - to python to disable frozen modules.
+8.0s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+9.6s 9 Cloning into 'quantum-cortex'...
+11.0s 10 remote: Enumerating objects: 1646, done.[K
+11.0s 11 remote: Counting objects:   0% (1/150)[Kremote: Counting objects:   1% (2/150)[Kremote: Counting objects:   2% (3/150)[Kremote: Counting objects:   3% (5/150)[Kremote: Counting objects:   4% (6/150)[Kremote: Counting objects:   5% (8/150)[Kremote: Counting objects:   6% (9/150)[Kremote: Counting objects:   7% (11/150)[Kremote: Counting objects:   8% (12/150)[Kremote: Counting objects:   9% (14/150)[Kremote: Counting objects:  10% (15/150)[Kremote: Counting objects:  11% (17/150)[Kremote: Counting objects:  12% (18/150)[Kremote: Counting objects:  13% (20/150)[Kremote: Counting objects:  14% (21/150)[Kremote: Counting objects:  15% (23/150)[Kremote: Counting objects:  16% (24/150)[Kremote: Counting objects:  17% (26/150)[Kremote: Counting objects:  18% (27/150)[Kremote: Counting objects:  19% (29/150)[Kremote: Counting objects:  20% (30/150)[Kremote: Counting objects:  21% (32/150)[Kremote: Counting objects:  22% (33/150)[Kremote: Counting objects:  23% (35/150)[Kremote: Counting objects:  24% (36/150)[Kremote: Counting objects:  25% (38/150)[Kremote: Counting objects:  26% (39/150)[Kremote: Counting objects:  27% (41/150)[Kremote: Counting objects:  28% (42/150)[Kremote: Counting objects:  29% (44/150)[Kremote: Counting objects:  30% (45/150)[Kremote: Counting objects:  31% (47/150)[Kremote: Counting objects:  32% (48/150)[Kremote: Counting objects:  33% (50/150)[Kremote: Counting objects:  34% (51/150)[Kremote: Counting objects:  35% (53/150)[Kremote: Counting objects:  36% (54/150)[Kremote: Counting objects:  37% (56/150)[Kremote: Counting objects:  38% (57/150)[Kremote: Counting objects:  39% (59/150)[Kremote: Counting objects:  40% (60/150)[Kremote: Counting objects:  41% (62/150)[Kremote: Counting objects:  42% (63/150)[Kremote: Counting objects:  43% (65/150)[Kremote: Counting objects:  44% (66/150)[Kremote: Counting objects:  45% (68/150)[Kremote: Counting objects:  46% (69/150)[Kremote: Counting objects:  47% (71/150)[Kremote: Counting objects:  48% (72/150)[Kremote: Counting objects:  49% (74/150)[Kremote: Counting objects:  50% (75/150)[Kremote: Counting objects:  51% (77/150)[Kremote: Counting objects:  52% (78/150)[Kremote: Counting objects:  53% (80/150)[Kremote: Counting objects:  54% (81/150)[Kremote: Counting objects:  55% (83/150)[Kremote: Counting objects:  56% (84/150)[Kremote: Counting objects:  57% (86/150)[Kremote: Counting objects:  58% (87/150)[Kremote: Counting objects:  59% (89/150)[Kremote: Counting objects:  60% (90/150)[Kremote: Counting objects:  61% (92/150)[Kremote: Counting objects:  62% (93/150)[Kremote: Counting objects:  63% (95/150)[Kremote: Counting objects:  64% (96/150)[Kremote: Counting objects:  65% (98/150)[Kremote: Counting objects:  66% (99/150)[Kremote: Counting objects:  67% (101/150)[Kremote: Counting objects:  68% (102/150)[Kremote: Counting objects:  69% (104/150)[Kremote: Counting objects:  70% (105/150)[Kremote: Counting objects:  71% (107/150)[Kremote: Counting objects:  72% (108/150)[Kremote: Counting objects:  73% (110/150)[Kremote: Counting objects:  74% (111/150)[Kremote: Counting objects:  75% (113/150)[Kremote: Counting objects:  76% (114/150)[Kremote: Counting objects:  77% (116/150)[Kremote: Counting objects:  78% (117/150)[Kremote: Counting objects:  79% (119/150)[Kremote: Counting objects:  80% (120/150)[Kremote: Counting objects:  81% (122/150)[Kremote: Counting objects:  82% (123/150)[Kremote: Counting objects:  83% (125/150)[Kremote: Counting objects:  84% (126/150)[Kremote: Counting objects:  85% (128/150)[Kremote: Counting objects:  86% (129/150)[Kremote: Counting objects:  87% (131/150)[Kremote: Counting objects:  88% (132/150)[Kremote: Counting objects:  89% (134/150)[Kremote: Counting objects:  90% (135/150)[Kremote: Counting objects:  91% (137/150)[Kremote: Counting objects:  92% (138/150)[Kremote: Counting objects:  93% (140/150)[Kremote: Counting objects:  94% (141/150)[Kremote: Counting objects:  95% (143/150)[Kremote: Counting objects:  96% (144/150)[Kremote: Counting objects:  97% (146/150)[Kremote: Counting objects:  98% (147/150)[Kremote: Counting objects:  99% (149/150)[Kremote: Counting objects: 100% (150/150)[Kremote: Counting objects: 100% (150/150), done.[K
+11.0s 12 remote: Compressing objects:   1% (1/82)[Kremote: Compressing objects:   2% (2/82)[Kremote: Compressing objects:   3% (3/82)[Kremote: Compressing objects:   4% (4/82)[Kremote: Compressing objects:   6% (5/82)[Kremote: Compressing objects:   7% (6/82)[Kremote: Compressing objects:   8% (7/82)[Kremote: Compressing objects:   9% (8/82)[Kremote: Compressing objects:  10% (9/82)[Kremote: Compressing objects:  12% (10/82)[Kremote: Compressing objects:  13% (11/82)[Kremote: Compressing objects:  14% (12/82)[Kremote: Compressing objects:  15% (13/82)[Kremote: Compressing objects:  17% (14/82)[Kremote: Compressing objects:  18% (15/82)[Kremote: Compressing objects:  19% (16/82)[Kremote: Compressing objects:  20% (17/82)[Kremote: Compressing objects:  21% (18/82)[Kremote: Compressing objects:  23% (19/82)[Kremote: Compressing objects:  24% (20/82)[Kremote: Compressing objects:  25% (21/82)[Kremote: Compressing objects:  26% (22/82)[Kremote: Compressing objects:  28% (23/82)[Kremote: Compressing objects:  29% (24/82)[Kremote: Compressing objects:  30% (25/82)[Kremote: Compressing objects:  31% (26/82)[Kremote: Compressing objects:  32% (27/82)[Kremote: Compressing objects:  34% (28/82)[Kremote: Compressing objects:  35% (29/82)[Kremote: Compressing objects:  36% (30/82)[Kremote: Compressing objects:  37% (31/82)[Kremote: Compressing objects:  39% (32/82)[Kremote: Compressing objects:  40% (33/82)[Kremote: Compressing objects:  41% (34/82)[Kremote: Compressing objects:  42% (35/82)[Kremote: Compressing objects:  43% (36/82)[Kremote: Compressing objects:  45% (37/82)[Kremote: Compressing objects:  46% (38/82)[Kremote: Compressing objects:  47% (39/82)[Kremote: Compressing objects:  48% (40/82)[Kremote: Compressing objects:  50% (41/82)[Kremote: Compressing objects:  51% (42/82)[Kremote: Compressing objects:  52% (43/82)[Kremote: Compressing objects:  53% (44/82)[Kremote: Compressing objects:  54% (45/82)[Kremote: Compressing objects:  56% (46/82)[Kremote: Compressing objects:  57% (47/82)[Kremote: Compressing objects:  58% (48/82)[Kremote: Compressing objects:  59% (49/82)[Kremote: Compressing objects:  60% (50/82)[Kremote: Compressing objects:  62% (51/82)[Kremote: Compressing objects:  63% (52/82)[Kremote: Compressing objects:  64% (53/82)[Kremote: Compressing objects:  65% (54/82)[Kremote: Compressing objects:  67% (55/82)[Kremote: Compressing objects:  68% (56/82)[Kremote: Compressing objects:  69% (57/82)[Kremote: Compressing objects:  70% (58/82)[Kremote: Compressing objects:  71% (59/82)[Kremote: Compressing objects:  73% (60/82)[Kremote: Compressing objects:  74% (61/82)[Kremote: Compressing objects:  75% (62/82)[Kremote: Compressing objects:  76% (63/82)[Kremote: Compressing objects:  78% (64/82)[Kremote: Compressing objects:  79% (65/82)[Kremote: Compressing objects:  80% (66/82)[Kremote: Compressing objects:  81% (67/82)[Kremote: Compressing objects:  82% (68/82)[Kremote: Compressing objects:  84% (69/82)[Kremote: Compressing objects:  85% (70/82)[Kremote: Compressing objects:  86% (71/82)[Kremote: Compressing objects:  87% (72/82)[Kremote: Compressing objects:  89% (73/82)[Kremote: Compressing objects:  90% (74/82)[Kremote: Compressing objects:  91% (75/82)[Kremote: Compressing objects:  92% (76/82)[Kremote: Compressing objects:  93% (77/82)[Kremote: Compressing objects:  95% (78/82)[Kremote: Compressing objects:  96% (79/82)[Kremote: Compressing objects:  97% (80/82)[Kremote: Compressing objects:  98% (81/82)[Kremote: Compressing objects: 100% (82/82)[Kremote: Compressing objects: 100% (82/82), done.[K
+11.1s 13 Receiving objects:   0% (1/1646)Receiving objects:   1% (17/1646)Receiving objects:   2% (33/1646)Receiving objects:   3% (50/1646)Receiving objects:   4% (66/1646)Receiving objects:   5% (83/1646)Receiving objects:   6% (99/1646)Receiving objects:   7% (116/1646)Receiving objects:   8% (132/1646)Receiving objects:   9% (149/1646)Receiving objects:  10% (165/1646)Receiving objects:  11% (182/1646)Receiving objects:  12% (198/1646)Receiving objects:  13% (214/1646)Receiving objects:  14% (231/1646)Receiving objects:  15% (247/1646)Receiving objects:  16% (264/1646)Receiving objects:  17% (280/1646)Receiving objects:  18% (297/1646)Receiving objects:  19% (313/1646)Receiving objects:  20% (330/1646)Receiving objects:  21% (346/1646)Receiving objects:  22% (363/1646)Receiving objects:  23% (379/1646)Receiving objects:  24% (396/1646)Receiving objects:  25% (412/1646)Receiving objects:  26% (428/1646)Receiving objects:  27% (445/1646)Receiving objects:  28% (461/1646)Receiving objects:  29% (478/1646)Receiving objects:  30% (494/1646)Receiving objects:  31% (511/1646)Receiving objects:  32% (527/1646)Receiving objects:  33% (544/1646)Receiving objects:  34% (560/1646)Receiving objects:  35% (577/1646)Receiving objects:  36% (593/1646)Receiving objects:  37% (610/1646)Receiving objects:  38% (626/1646)Receiving objects:  39% (642/1646)Receiving objects:  40% (659/1646)Receiving objects:  41% (675/1646)Receiving objects:  42% (692/1646)Receiving objects:  43% (708/1646)Receiving objects:  44% (725/1646)Receiving objects:  45% (741/1646)Receiving objects:  46% (758/1646)Receiving objects:  47% (774/1646)Receiving objects:  48% (791/1646)Receiving objects:  49% (807/1646)Receiving objects:  50% (823/1646)Receiving objects:  51% (840/1646)Receiving objects:  52% (856/1646)Receiving objects:  53% (873/1646)Receiving objects:  54% (889/1646)Receiving objects:  55% (906/1646)Receiving objects:  56% (922/1646)Receiving objects:  57% (939/1646)Receiving objects:  58% (955/1646)Receiving objects:  59% (972/1646)Receiving objects:  60% (988/1646)Receiving objects:  61% (1005/1646)Receiving objects:  62% (1021/1646)Receiving objects:  63% (1037/1646)Receiving objects:  64% (1054/1646)Receiving objects:  65% (1070/1646)Receiving objects:  66% (1087/1646)Receiving objects:  67% (1103/1646)Receiving objects:  68% (1120/1646)Receiving objects:  69% (1136/1646)Receiving objects:  70% (1153/1646)Receiving objects:  71% (1169/1646)Receiving objects:  72% (1186/1646)Receiving objects:  73% (1202/1646)Receiving objects:  74% (1219/1646)Receiving objects:  75% (1235/1646)Receiving objects:  76% (1251/1646)Receiving objects:  77% (1268/1646)Receiving objects:  78% (1284/1646)Receiving objects:  79% (1301/1646)Receiving objects:  80% (1317/1646)Receiving objects:  81% (1334/1646)Receiving objects:  82% (1350/1646)Receiving objects:  83% (1367/1646)Receiving objects:  84% (1383/1646)Receiving objects:  85% (1400/1646)Receiving objects:  86% (1416/1646)Receiving objects:  87% (1433/1646)Receiving objects:  88% (1449/1646)Receiving objects:  89% (1465/1646)Receiving objects:  90% (1482/1646)Receiving objects:  91% (1498/1646)Receiving objects:  92% (1515/1646)Receiving objects:  93% (1531/1646)remote: Total 1646 (delta 99), reused 112 (delta 68), pack-reused 1496 (from 1)[K
+11.1s 14 Receiving objects:  94% (1548/1646)Receiving objects:  95% (1564/1646)Receiving objects:  96% (1581/1646)Receiving objects:  97% (1597/1646)Receiving objects:  98% (1614/1646)Receiving objects:  99% (1630/1646)Receiving objects: 100% (1646/1646)Receiving objects: 100% (1646/1646), 1.16 MiB | 20.91 MiB/s, done.
+11.1s 15 Resolving deltas:   0% (0/1258)Resolving deltas:   1% (13/1258)Resolving deltas:   2% (26/1258)Resolving deltas:   3% (38/1258)Resolving deltas:   4% (51/1258)Resolving deltas:   5% (63/1258)Resolving deltas:   6% (76/1258)Resolving deltas:   7% (89/1258)Resolving deltas:   8% (101/1258)Resolving deltas:   9% (114/1258)Resolving deltas:  10% (126/1258)Resolving deltas:  11% (139/1258)Resolving deltas:  12% (151/1258)Resolving deltas:  13% (164/1258)Resolving deltas:  14% (177/1258)Resolving deltas:  15% (189/1258)Resolving deltas:  16% (202/1258)Resolving deltas:  17% (214/1258)Resolving deltas:  18% (227/1258)Resolving deltas:  19% (240/1258)Resolving deltas:  20% (252/1258)Resolving deltas:  21% (265/1258)Resolving deltas:  22% (277/1258)Resolving deltas:  23% (290/1258)Resolving deltas:  24% (302/1258)Resolving deltas:  25% (315/1258)Resolving deltas:  26% (328/1258)Resolving deltas:  27% (340/1258)Resolving deltas:  28% (353/1258)Resolving deltas:  29% (365/1258)Resolving deltas:  30% (378/1258)Resolving deltas:  31% (390/1258)Resolving deltas:  32% (403/1258)Resolving deltas:  33% (416/1258)Resolving deltas:  34% (428/1258)Resolving deltas:  35% (441/1258)Resolving deltas:  36% (453/1258)Resolving deltas:  37% (466/1258)Resolving deltas:  38% (479/1258)Resolving deltas:  39% (491/1258)Resolving deltas:  40% (504/1258)Resolving deltas:  41% (516/1258)Resolving deltas:  42% (529/1258)Resolving deltas:  43% (541/1258)Resolving deltas:  44% (554/1258)Resolving deltas:  45% (567/1258)Resolving deltas:  46% (579/1258)Resolving deltas:  47% (592/1258)Resolving deltas:  48% (604/1258)Resolving deltas:  49% (617/1258)Resolving deltas:  50% (629/1258)Resolving deltas:  51% (642/1258)Resolving deltas:  52% (655/1258)Resolving deltas:  53% (667/1258)Resolving deltas:  54% (680/1258)Resolving deltas:  55% (692/1258)Resolving deltas:  56% (705/1258)Resolving deltas:  57% (718/1258)Resolving deltas:  58% (730/1258)Resolving deltas:  59% (743/1258)Resolving deltas:  60% (755/1258)Resolving deltas:  61% (768/1258)Resolving deltas:  62% (780/1258)Resolving deltas:  63% (793/1258)Resolving deltas:  64% (806/1258)Resolving deltas:  65% (818/1258)Resolving deltas:  66% (831/1258)Resolving deltas:  67% (843/1258)Resolving deltas:  68% (856/1258)Resolving deltas:  69% (869/1258)Resolving deltas:  70% (881/1258)Resolving deltas:  71% (894/1258)Resolving deltas:  72% (906/1258)Resolving deltas:  73% (919/1258)Resolving deltas:  74% (931/1258)Resolving deltas:  75% (944/1258)Resolving deltas:  76% (957/1258)Resolving deltas:  77% (969/1258)Resolving deltas:  78% (982/1258)Resolving deltas:  79% (994/1258)Resolving deltas:  80% (1007/1258)Resolving deltas:  81% (1019/1258)Resolving deltas:  82% (1032/1258)Resolving deltas:  83% (1045/1258)Resolving deltas:  84% (1057/1258)Resolving deltas:  85% (1070/1258)Resolving deltas:  86% (1082/1258)Resolving deltas:  87% (1095/1258)Resolving deltas:  88% (1108/1258)Resolving deltas:  89% (1120/1258)Resolving deltas:  90% (1133/1258)Resolving deltas:  91% (1145/1258)Resolving deltas:  92% (1158/1258)Resolving deltas:  93% (1170/1258)Resolving deltas:  94% (1183/1258)Resolving deltas:  95% (1196/1258)Resolving deltas:  96% (1208/1258)Resolving deltas:  97% (1221/1258)Resolving deltas:  98% (1233/1258)Resolving deltas:  99% (1246/1258)Resolving deltas: 100% (1258/1258)Resolving deltas: 100% (1258/1258), done.
+11.2s 16 /kaggle/working/quantum-cortex
+16.2s 17 relay: on
+16.3s 18 resume conv6000-ckpt from: (none — fresh start)
+16.3s 19 resume conv12000-ckpt from: (none — fresh start)
+16.3s 20 resume ref3000-s16-ckpt from: (none — fresh start)
+16.3s 21 resume rb3000-s16-ckpt from: (none — fresh start)
+18.1s 22 [resumable] 4 units total, 0 already done, 4 to run
+396.9s 23 [mqar] variant=none kv=8 seq=128 -> acc=0.102
+406.2s 24 [relay] pushed quantum-cortex-relay-conv6000 (ARCH-none+local-conv__s1337__kv8_seq128): being created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv6000
+406.2s 25 [unit] ARCH-none+local-conv__s1337__kv8_seq128 -> acc=0.1016 (378.8s)  [1/4]
+755.9s 26 [mqar] variant=none kv=8 seq=128 -> acc=0.096
+761.2s 27 [relay] pushed quantum-cortex-relay-conv6000 (ARCH-none+local-conv__s7__kv8_seq128): being created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv6000
+761.2s 28 [unit] ARCH-none+local-conv__s7__kv8_seq128 -> acc=0.0957 (349.7s)  [2/4]
+1096.6s 29 [mqar] variant=none kv=8 seq=128 -> acc=0.115
+1101.6s 30 [relay] pushed quantum-cortex-relay-conv6000 (ARCH-none+local-conv__s42__kv8_seq128): being created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv6000
+1101.6s 31 [unit] ARCH-none+local-conv__s42__kv8_seq128 -> acc=0.1152 (335.3s)  [3/4]
+1514.4s 32 [mqar] variant=none kv=8 seq=128 -> acc=0.082
+1520.1s 33 [relay] pushed quantum-cortex-relay-conv6000 (ARCH-none+local-conv__s11__kv8_seq128): being created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv6000
+1520.1s 34 [unit] ARCH-none+local-conv__s11__kv8_seq128 -> acc=0.0820 (412.8s)  [4/4]
+1520.1s 35 [resumable] COMPLETE (subset ['ARCH-none+local-conv']) — per path stats written; no paired tests on a subset
+1524.4s 36 [resumable] 4 units total, 0 already done, 4 to run
+2260.1s 37 [mqar] variant=none kv=8 seq=128 -> acc=0.088
+2270.9s 38 [relay] pushed quantum-cortex-relay-conv12000 (ARCH-none+local-conv__s1337__kv8_seq128): eing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv12000
+2270.9s 39 [unit] ARCH-none+local-conv__s1337__kv8_seq128 -> acc=0.0879 (735.7s)  [1/4]
+2957.7s 40 [mqar] variant=none kv=8 seq=128 -> acc=0.098
+2962.0s 41 [relay] pushed quantum-cortex-relay-conv12000 (ARCH-none+local-conv__s7__kv8_seq128): eing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv12000
+2962.0s 42 [unit] ARCH-none+local-conv__s7__kv8_seq128 -> acc=0.0977 (686.7s)  [2/4]
+3621.0s 43 [mqar] variant=none kv=8 seq=128 -> acc=0.084
+3626.9s 44 [relay] pushed quantum-cortex-relay-conv12000 (ARCH-none+local-conv__s42__kv8_seq128): eing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv12000
+3626.9s 45 [unit] ARCH-none+local-conv__s42__kv8_seq128 -> acc=0.0840 (658.9s)  [3/4]
+4428.6s 46 [mqar] variant=none kv=8 seq=128 -> acc=0.094
+4434.2s 47 [relay] pushed quantum-cortex-relay-conv12000 (ARCH-none+local-conv__s11__kv8_seq128): eing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-conv12000
+4434.2s 48 [unit] ARCH-none+local-conv__s11__kv8_seq128 -> acc=0.0938 (801.6s)  [4/4]
+4434.2s 49 [resumable] COMPLETE (subset ['ARCH-none+local-conv']) — per path stats written; no paired tests on a subset
+4436.1s 50 [resumable] 24 units total, 0 already done, 24 to run
+5004.1s 51 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s100__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+5004.1s 52 [unit] L3-+local-conv__s100__kv8_seq128 -> acc=0.9043 (555.5s)  [1/24]
+5570.2s 53 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s200__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+5570.2s 54 [unit] L3-+local-conv__s200__kv8_seq128 -> acc=0.8867 (559.7s)  [2/24]
+6144.8s 55 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s300__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+6144.8s 56 [unit] L3-+local-conv__s300__kv8_seq128 -> acc=0.8691 (567.7s)  [3/24]
+6718.8s 57 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s400__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+6718.8s 58 [unit] L3-+local-conv__s400__kv8_seq128 -> acc=0.9043 (566.6s)  [4/24]
+7288.5s 59 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s500__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+7288.5s 60 [unit] L3-+local-conv__s500__kv8_seq128 -> acc=0.8359 (565.3s)  [5/24]
+7851.5s 61 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s600__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+7851.5s 62 [unit] L3-+local-conv__s600__kv8_seq128 -> acc=0.8086 (557.1s)  [6/24]
+8408.1s 63 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s700__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+8408.1s 64 [unit] L3-+local-conv__s700__kv8_seq128 -> acc=0.7832 (551.3s)  [7/24]
+8962.6s 65 [relay] pushed quantum-cortex-relay-ref3000-s16 (L3-+local-conv__s800__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+8962.6s 66 [unit] L3-+local-conv__s800__kv8_seq128 -> acc=0.8184 (546.2s)  [8/24]
+9101.2s 67 [mqar] variant=none kv=8 seq=128 -> acc=0.115
+9107.8s 68 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none__s100__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+9107.8s 69 [unit] ARCH-none__s100__kv8_seq128 -> acc=0.1152 (138.6s)  [9/24]
+9247.0s 70 [mqar] variant=none kv=8 seq=128 -> acc=0.150
+9252.1s 71 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none__s200__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+9252.1s 72 [unit] ARCH-none__s200__kv8_seq128 -> acc=0.1504 (139.1s)  [10/24]
+9394.2s 73 [mqar] variant=none kv=8 seq=128 -> acc=0.143
+9399.8s 74 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none__s300__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+9399.8s 75 [unit] ARCH-none__s300__kv8_seq128 -> acc=0.1426 (142.1s)  [11/24]
+9539.5s 76 [mqar] variant=none kv=8 seq=128 -> acc=0.102
+9544.6s 77 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none__s400__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+9544.6s 78 [unit] ARCH-none__s400__kv8_seq128 -> acc=0.1016 (139.6s)  [12/24]
+9687.4s 79 [mqar] variant=none kv=8 seq=128 -> acc=0.131
+9692.4s 80 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none__s500__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+9692.4s 81 [unit] ARCH-none__s500__kv8_seq128 -> acc=0.1309 (142.8s)  [13/24]
+9834.6s 82 [mqar] variant=none kv=8 seq=128 -> acc=0.182
+9883.5s 83 [relay] push failed (quantum-cortex-relay-ref3000-s16): Warning: Looks like you're using an outdated `kaggle` version (installed: 2.0.2), please consider upgrading to the latest version (2.2.2)
+9883.5s 84 503 Server Error: Service Unavailable for url: https://api.kaggle.com/v1/datasets.DatasetApiService/CreateDatasetVersion
+9883.5s 85 [unit] ARCH-none__s600__kv8_seq128 -> acc=0.1816 (142.2s)  [14/24]
+10026.4s 86 [mqar] variant=none kv=8 seq=128 -> acc=0.135
+10215.8s 87 [relay] push failed (quantum-cortex-relay-ref3000-s16): Warning: Looks like you're using an outdated `kaggle` version (installed: 2.0.2), please consider upgrading to the latest version (2.2.2)
+10215.8s 88 504 Server Error: Gateway Timeout for url: https://api.kaggle.com/v1/datasets.DatasetApiService/CreateDatasetVersion
+10215.8s 89 [unit] ARCH-none__s700__kv8_seq128 -> acc=0.1348 (142.9s)  [15/24]
+10358.4s 90 [mqar] variant=none kv=8 seq=128 -> acc=0.150
+10363.2s 91 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none__s800__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+10363.2s 92 [unit] ARCH-none__s800__kv8_seq128 -> acc=0.1504 (142.5s)  [16/24]
+10530.6s 93 [mqar] variant=none kv=8 seq=128 -> acc=0.111
+10539.0s 94 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s100__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+10539.0s 95 [unit] ARCH-none+local-conv__s100__kv8_seq128 -> acc=0.1113 (167.4s)  [17/24]
+10702.2s 96 [mqar] variant=none kv=8 seq=128 -> acc=1.000
+10707.2s 97 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s200__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+10707.2s 98 [unit] ARCH-none+local-conv__s200__kv8_seq128 -> acc=1.0000 (163.3s)  [18/24]
+10871.0s 99 [mqar] variant=none kv=8 seq=128 -> acc=1.000
+10876.9s 100 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s300__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+10876.9s 101 [unit] ARCH-none+local-conv__s300__kv8_seq128 -> acc=1.0000 (163.8s)  [19/24]
+11043.8s 102 [mqar] variant=none kv=8 seq=128 -> acc=1.000
+11049.7s 103 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s400__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+11049.7s 104 [unit] ARCH-none+local-conv__s400__kv8_seq128 -> acc=1.0000 (167.0s)  [20/24]
+11220.9s 105 [mqar] variant=none kv=8 seq=128 -> acc=1.000
+11225.5s 106 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s500__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+11225.5s 107 [unit] ARCH-none+local-conv__s500__kv8_seq128 -> acc=1.0000 (171.1s)  [21/24]
+11390.9s 108 [mqar] variant=none kv=8 seq=128 -> acc=1.000
+11396.0s 109 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s600__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+11396.0s 110 [unit] ARCH-none+local-conv__s600__kv8_seq128 -> acc=1.0000 (165.4s)  [22/24]
+11569.9s 111 [mqar] variant=none kv=8 seq=128 -> acc=0.086
+11575.5s 112 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s700__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+11575.5s 113 [unit] ARCH-none+local-conv__s700__kv8_seq128 -> acc=0.0859 (173.8s)  [23/24]
+11747.2s 114 [mqar] variant=none kv=8 seq=128 -> acc=0.057
+11750.9s 115 [relay] pushed quantum-cortex-relay-ref3000-s16 (ARCH-none+local-conv__s800__kv8_seq128): ng created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-ref3000-s16
+11750.9s 116 [unit] ARCH-none+local-conv__s800__kv8_seq128 -> acc=0.0566 (171.7s)  [24/24]
+11750.9s 117 [resumable] COMPLETE (subset ['L3-+local-conv', 'ARCH-none', 'ARCH-none+local-conv']) — per path stats written; no paired tests on a subset
+11753.6s 118 [resumable-rb] 16 units total, 0 already done, 16 to run; 24 reference units loaded
+12354.7s 119 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s100__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+12354.7s 120 [unit] RB-bare__s100__kv8_seq128 -> acc=0.9727 trunk=0.0020 gate=1.0 (588.5s)  [1/16]
+12942.6s 121 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s200__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+12942.6s 122 [unit] RB-bare__s200__kv8_seq128 -> acc=0.9727 trunk=0.0059 gate=1.0 (581.4s)  [2/16]
+13537.3s 123 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s300__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+13537.3s 124 [unit] RB-bare__s300__kv8_seq128 -> acc=0.9668 trunk=0.0156 gate=1.0 (589.0s)  [3/16]
+14120.1s 125 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s400__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+14120.1s 126 [unit] RB-bare__s400__kv8_seq128 -> acc=0.9883 trunk=0.0059 gate=1.0 (577.6s)  [4/16]
+14700.4s 127 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s500__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+14700.4s 128 [unit] RB-bare__s500__kv8_seq128 -> acc=0.9629 trunk=0.0117 gate=1.0 (574.8s)  [5/16]
+15276.0s 129 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s600__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+15276.0s 130 [unit] RB-bare__s600__kv8_seq128 -> acc=0.9785 trunk=0.0039 gate=1.0 (571.1s)  [6/16]
+15852.0s 131 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s700__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+15852.0s 132 [unit] RB-bare__s700__kv8_seq128 -> acc=0.9531 trunk=0.0137 gate=1.0 (570.9s)  [7/16]
+16427.4s 133 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-bare__s800__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+16427.4s 134 [unit] RB-bare__s800__kv8_seq128 -> acc=0.9766 trunk=0.0078 gate=1.0 (570.2s)  [8/16]
+17000.2s 135 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s100__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+17000.2s 136 [unit] RB-critical__s100__kv8_seq128 -> acc=0.9785 trunk=0.0020 gate=1.0 (567.6s)  [9/16]
+17587.6s 137 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s200__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+17587.6s 138 [unit] RB-critical__s200__kv8_seq128 -> acc=0.9668 trunk=0.0059 gate=1.0 (583.0s)  [10/16]
+18179.5s 139 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s300__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+18179.5s 140 [unit] RB-critical__s300__kv8_seq128 -> acc=0.9766 trunk=0.0059 gate=1.0 (586.5s)  [11/16]
+18759.2s 141 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s400__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+18759.2s 142 [unit] RB-critical__s400__kv8_seq128 -> acc=0.9863 trunk=0.0059 gate=1.0 (574.4s)  [12/16]
+19334.7s 143 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s500__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+19334.7s 144 [unit] RB-critical__s500__kv8_seq128 -> acc=0.9707 trunk=0.0098 gate=1.0 (569.9s)  [13/16]
+19921.2s 145 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s600__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+19921.2s 146 [unit] RB-critical__s600__kv8_seq128 -> acc=0.9609 trunk=0.0137 gate=1.0 (580.5s)  [14/16]
+20511.9s 147 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s700__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+20511.9s 148 [unit] RB-critical__s700__kv8_seq128 -> acc=0.9668 trunk=0.0078 gate=1.0 (585.6s)  [15/16]
+21104.0s 149 [relay] pushed quantum-cortex-relay-rb3000-s16 (RB-critical__s800__kv8_seq128): ing created. Please check progress at https://www.kaggle.com/datasets/nicolasvaneeckhout/quantum-cortex-relay-rb3000-s16
+21104.0s 150 [unit] RB-critical__s800__kv8_seq128 -> acc=0.9688 trunk=0.0078 gate=1.0 (585.5s)  [16/16]
+21104.0s 151 [resumable-rb] COMPLETE — aggregate written (LATEST-rb.json)
+21105.0s 152 [resumable-rb] 32 units total, 32 already done, 0 to run; 51 reference units loaded
+21105.0s 153 [resumable-rb] COMPLETE — aggregate written (LATEST-rb-16seeds.json)
+21105.3s 154 metrics/mqar/ref3000-s16-ckpt/READOUT-control-conv-3000steps-16seeds.json
+21105.3s 155 {
+21105.3s 156 "stats": {
+21105.3s 157 "ARCH-none+local-conv": {
+21105.3s 158 "mean": 0.5999,
+21105.3s 159 "sd": 0.4688,
+21105.3s 160 "ci95": [
+21105.3s 161 0.3501,
+21105.3s 162 0.8496
+21105.3s 163 ],
+21105.3s 164 "n": 16
+21105.3s 165 },
+21105.3s 166 "ARCH-none": {
+21105.3s 167 "mean": 0.1351,
+21105.3s 168 "sd": 0.0241,
+21105.3s 169 "ci95": [
+21105.3s 170 0.1223,
+21105.3s 171 0.148
+21105.3s 172 ],
+21105.3s 173 "n": 16
+21105.3s 174 },
+21105.3s 175 "L3-+local-conv": {
+21105.3s 176 "mean": 0.8083,
+21105.3s 177 "sd": 0.194,
+21105.3s 178 "ci95": [
+21105.3s 179 0.705,
+21105.3s 180 0.9117
+21105.3s 181 ],
+21105.3s 182 "n": 16
+21105.3s 183 }
+21105.3s 184 },
+21105.3s 185 "paired_tests": {
+21105.3s 186 "control_conv_vs_control": {
+21105.3s 187 "mean_diff": 0.4647,
+21105.3s 188 "t": 3.997,
+21105.3s 189 "df": 15,
+21105.3s 190 "t_crit_95": 2.131,
+21105.3s 191 "significant_95": true
+21105.3s 192 },
+21105.3s 193 "control_conv_vs_L3": {
+21105.3s 194 "mean_diff": -0.2085,
+21105.3s 195 "t": -1.892,
+21105.3s 196 "df": 15,
+21105.3s 197 "t_crit_95": 2.131,
+21105.3s 198 "significant_95": false
+21105.3s 199 },
+21105.3s 200 "RB-bare_full_vs_control_conv": {
+21105.3s 201 "mean_diff": 0.3706,
+21105.3s 202 "t": 3.184,
+21105.3s 203 "df": 15,
+21105.3s 204 "t_crit_95": 2.131,
+21105.3s 205 "significant_95": true
+21105.3s 206 },
+21105.3s 207 "RB-critical_full_vs_control_conv": {
+21105.3s 208 "mean_diff": 0.3701,
+21105.3s 209 "t": 3.165,
+21105.3s 210 "df": 15,
+21105.3s 211 "t_crit_95": 2.131,
+21105.3s 212 "significant_95": true
+21105.3s 213 }
+21105.3s 214 },
+21105.3s 215 "gate_readout": {
+21105.3s 216 "control_conv_vs_control": "gated",
+21105.3s 217 "control_conv_vs_L3": "held",
+21105.3s 218 "RB-bare_full_vs_control_conv": "gated",
+21105.3s 219 "RB-critical_full_vs_control_conv": "gated"
+21105.3s 220 }
+21105.3s 221 }
+21105.5s 222 conv6000-ckpt 5 files
+21105.5s 223 conv12000-ckpt 5 files
+21105.5s 224 ref3000-s16-ckpt 26 files
+21105.5s 225 rb3000-s16-ckpt 18 files
+21105.5s 226 Commit the four directories under metrics/mqar/ — the units are the record.
+21108.2s 227 /usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+21108.2s 228 cells[i][c] = re.sub('\\\\\|', '|', cell)
+21108.4s 229 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+21108.4s 230 text = re.sub(r'_', '\_', text) # Escape underscores in display text
+21109.0s 231 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+21109.3s 232 [NbConvertApp] Writing 33328 bytes to __notebook__.ipynb
+21111.7s 233 [NbConvertApp] Converting notebook __notebook__.ipynb to html
+21112.6s 234 [NbConvertApp] Writing 312671 bytes to __results__.html

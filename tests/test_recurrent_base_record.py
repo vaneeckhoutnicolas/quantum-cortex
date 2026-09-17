@@ -97,3 +97,43 @@ def test_the_convolved_control_provenance_hashes_match_the_committed_files():
         assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()[:16] == sha, rel
     log = ROOT / "logs" / "control-conv-3000.log"
     assert hashlib.sha256(log.read_bytes()).hexdigest()[:16] == prov["logs_retained_in_repo"]["control_conv"]["sha256_16"]
+
+
+def test_the_sixteen_seed_record_rows_33_to_35_is_reproducible_from_its_units():
+    """Rev62 (declared before the run): the horizon, the eight new seeds of the three references
+    and the two decisive arms, the sixteen seed aggregates and readout."""
+    from cortex_eval.resumable_rb import REF_CONTROL_CONV, control_conv_readout
+    S16 = SEEDS + [100, 200, 300, 400, 500, 600, 700, 800]
+    for d, steps in (("conv6000-ckpt", 6000), ("conv12000-ckpt", 12000)):
+        done = load_done([ROOT / d]); assert len(done) == 4 and all(u["steps"] == steps for u in done.values())
+        sub = json.loads(next((ROOT / d).glob("SUBSET-*.json")).read_text())
+        vals = [done[f"{REF_CONTROL_CONV}__s{s}__kv8_seq128"]["accuracy"] for s in (1337, 7, 42, 11)]
+        assert vals == sub["stats"][REF_CONTROL_CONV]["per_seed"] and _mean_ci(vals)["mean"] == sub["stats"][REF_CONTROL_CONV]["mean"]
+    s16 = ROOT / "ref3000-s16-ckpt"; rb16 = ROOT / "rb3000-s16-ckpt"
+    refs_new = load_done([s16]); assert len(refs_new) == 24
+    sub = json.loads(next(s16.glob("SUBSET-*.json")).read_text())
+    for path in ("L3-+local-conv", "ARCH-none", REF_CONTROL_CONV):
+        vals = [refs_new[f"{path}__s{s}__kv8_seq128"]["accuracy"] for s in S16[8:]]
+        assert vals == sub["stats"][path]["per_seed"]
+    refs_all = load_done([SIG, REF, s16]); assert len(refs_all) == 51
+    arms = [ARM_BY_NAME["RB-bare"], ARM_BY_NAME["RB-critical"]]
+    done8 = load_done([rb16]); assert len(done8) == 16
+    for name, done, seeds in (("LATEST-rb.json", done8, S16[8:]), ("LATEST-rb-16seeds.json", load_done([RB, rb16]), S16)):
+        rec = aggregate(done, refs_all, arms, seeds, TIERS); committed = json.loads((rb16 / name).read_text())
+        for key in ("stats", "per_seed", "references", "paired_tests", "gate_readout"):
+            assert rec[key] == committed[key], (name, key)
+    rr = control_conv_readout(refs_all, load_done([RB, rb16]), arms, S16, TIERS)
+    committed = json.loads((s16 / "READOUT-control-conv-3000steps-16seeds.json").read_text())
+    for key in ("stats", "per_seed", "paired_tests", "gate_readout"):
+        assert rr[key] == committed[key], key
+    for p in rb16.glob("unit-*.json"):
+        u = json.loads(p.read_text()); assert u["arm_hash"] == ARM_BY_NAME[u["arm"]].config_hash()
+
+
+def test_the_sixteen_seed_provenance_hashes_match_the_committed_files():
+    import hashlib
+    prov = json.loads((ROOT / "PROVENANCE-s16.json").read_text())
+    for rel, sha in prov["sha256_16"].items():
+        assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()[:16] == sha, rel
+    log = ROOT / "logs" / "recurrent-base-s16.log"
+    assert hashlib.sha256(log.read_bytes()).hexdigest()[:16] == prov["logs_retained_in_repo"]["s16"]["sha256_16"]

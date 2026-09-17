@@ -1,0 +1,1 @@
+{"unit_id": "ARCH-none+local-conv__s11__kv8_seq128", "rung": "ARCH-none+local-conv", "seed": 11, "kv_pairs": 8, "seq_len": 128, "steps": 12000, "accuracy": 0.09375, "status": "done", "wall_s": 801.6, "written_utc": "2026-09-17T15:43:07.795780+00:00"}
