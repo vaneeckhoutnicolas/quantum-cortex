@@ -68,6 +68,7 @@ pytest tests/ -m "not slow"        # 183 tests: ledger, data-mix invariants, C2 
 python -m cortex_c2b.hm_protocol    # the Molaison dissociation, end to end, in seconds (persistent: false, in memory)
 python -m cortex_c2b.hm_protocol --persistent   # the same, sealed on disk, session B reopened from the disk alone
 python train.py --config configs/smoke_journal_cpu.json   # the journal in the decode loop, the whole loop on CPU in a minute (ADR-008); a mechanics smoke, not a result
+python -m cortex_c2b.external_arm --frame                 # the external model arm's frozen prompt, hash 7fda43aced410d65; the runbook is docs/benchmarks/external-arm.md
 python -m cortex_eval.resumable_rb --quick --reference-from <a ladder subset dir>   # the recurrent base hybrid family, four arms, in seconds (Rev38); mechanics, not a result
 python -m cortex_eval.domain_map    # the per-tier domain map from the committed artefacts
 ```

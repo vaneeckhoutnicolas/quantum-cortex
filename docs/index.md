@@ -30,4 +30,5 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `adr/ADR-004-evaluation-pareto.md` — the evaluation law (**D16**) and its publication twin (**D17**, open-results, revises D6): a Pareto frontier over declared axes is what we measure *and* what we publish.
 - `adr/ADR-006-c2-ablation-protocol.md` — the C2 ablation protocol (N2): Hopfield vs delta-rule vs control, MQAR + serial-position, advancement rule frozen before runs.
 - `benchmarks/hm-protocol.md` — the Molaison (H.M., after the patient Henry Molaison; defined in docs/benchmarks/hm-protocol.md) episodic/semantic dissociation diagnostic, spec v1 (thresholds frozen before any run).
+- `benchmarks/external-arm.md` — runbook of the external model arm: the Molaison dissociation on an open model (Qwen3 at 1.7, 4 and 8 billion parameters) through the frozen prompt adapter; prerequisites, the six commands in order with their expected outputs, the files produced, how to read a run (declared in ADR-008, amendment 2026-09-16)
 - `glossary.md` — coined terms. `roadmap.md` — ordered steps with gates.
