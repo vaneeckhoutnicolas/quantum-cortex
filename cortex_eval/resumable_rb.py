@@ -33,6 +33,7 @@ from cortex_eval.recurrent_base import ARMS, ARM_BY_NAME, RBArm, run_rb_unit
 from cortex_eval.resumable_ladder import DEFAULT_SEEDS, DEFAULT_TIERS, load_done
 
 REF_L3, REF_CONTROL = "L3-+local-conv", "ARCH-none"
+REF_CONTROL_CONV = "ARCH-none+local-conv"      # the control plus a local convolution (Rev60), a declared reference
 
 
 def rb_unit_id(arm: RBArm, seed: int, tier: MQARTier) -> str:
@@ -136,6 +137,33 @@ def aggregate(done: dict, refs: dict, arms, seeds, tiers) -> dict:
                     "a bimodal comparator (L3) gets its reserve written next to the number."}
 
 
+def control_conv_readout(refs: dict, done: dict, arms, seeds, tiers) -> dict:
+    """Rev60, declared before the run: the control plus a local convolution against
+    the control (does the convolution lift the two layer transformer), against L3
+    pure (does it reach the recurrent trunk's level) and against each measured arm's
+    full accuracy (does the arm add anything beyond a convolved transformer). Paired
+    on seed at identical steps and tier; gated = significant at 95 % with >= 3 seeds.
+    Deterministic from the unit files alone."""
+    def ref_values(name):
+        return [float(np.mean([refs[ref_unit_id(name, s, t)]["accuracy"] for t in tiers])) for s in seeds]
+    cc, ctrl, l3 = ref_values(REF_CONTROL_CONV), ref_values(REF_CONTROL), ref_values(REF_L3)
+    tests = {"control_conv_vs_control": _paired_test(cc, ctrl), "control_conv_vs_L3": _paired_test(cc, l3)}
+    per_full = {}
+    for a in arms:
+        try:
+            per_full[a.name] = [float(np.mean([done[rb_unit_id(a, s, t)]["accuracy"] for t in tiers])) for s in seeds]
+        except KeyError:
+            continue
+        tests[f"{a.name}_full_vs_control_conv"] = _paired_test(per_full[a.name], cc)
+    gate = {k: ("gated" if (v.get("significant_95") and len(seeds) >= 3) else "held") for k, v in tests.items()}
+    return {"benchmark": "control_plus_local_conv_readout", "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "regime": {"seeds": list(seeds), "n_seeds": len(seeds), "tiers": [(t.kv_pairs, t.seq_len) for t in tiers]},
+            "stats": {REF_CONTROL_CONV: _mean_ci(cc), REF_CONTROL: _mean_ci(ctrl), REF_L3: _mean_ci(l3)},
+            "per_seed": {REF_CONTROL_CONV: cc, REF_CONTROL: ctrl, REF_L3: l3, "arms_full": per_full},
+            "paired_tests": tests, "gate_readout": gate,
+            "note": "Rev60: the readings were declared before the run; a subset readout, paired on seed at identical steps and tier"}
+
+
 def _cli():
     ap = argparse.ArgumentParser(description="Resumable recurrent base hybrid run (4 arms)")
     ap.add_argument("--steps", type=int, default=1500)
@@ -149,9 +177,21 @@ def _cli():
     ap.add_argument("--tiers", nargs="*", default=None, help="restrict to these tiers as KVxSEQ (e.g. 8x128 for the tier where L3 takes off); a subset aggregate, never a paired claim across tiers")
     ap.add_argument("--relay", default=None, help="checkpoint relay: a private Kaggle dataset slug pulled before the resume lookup and pushed after every unit")
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--control-conv-readout", default=None, metavar="OUT",
+                    help="Rev60: no training; read the control plus convolution units from --reference-from and the arms from "
+                         "--ckpt-dir, compute the declared paired tests, write them to OUT")
     args = ap.parse_args()
     from cortex_eval.resumable_ladder import parse_tiers
     tiers = parse_tiers(args.tiers)
+    if args.control_conv_readout:
+        refs = load_done([Path(p) for p in args.reference_from])
+        done = load_done([Path(args.ckpt_dir)])
+        arms = [ARM_BY_NAME[n] for n in (args.arms or [a.name for a in ARMS])]
+        r = control_conv_readout(refs, done, arms, tuple(args.seeds), tiers or list(DEFAULT_TIERS))
+        out = Path(args.control_conv_readout); out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(r, indent=2) + "\n")
+        print(out); print(json.dumps({k: r[k] for k in ("stats", "paired_tests", "gate_readout")}, indent=1))
+        return
     if args.quick:
         run_resumable_rb(seeds=(1, 2), tiers=tiers or [MQARTier(kv_pairs=4, seq_len=32)], steps=40, ckpt_dir=args.ckpt_dir,
                          resume_from=args.resume_from, reference_from=args.reference_from, arms=args.arms, d_model=32, relay=args.relay)

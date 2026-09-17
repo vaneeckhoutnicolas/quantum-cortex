@@ -72,6 +72,9 @@ class Config:
     seed: int = 1337
     optimizer: str = "adamw"             # F1 (NorMuon-class) arrives only via its own ablation
     c2_variant: str = "none"             # none | hopfield | delta  (ADR-006: C2 associative layer, default off)
+    attn_local_conv: bool = False        # the ladder's L3 convolution (depthwise, kernel 3, causal) on the attention's
+                                         # normalised input in every block: the control plus a local convolution, a declared
+                                         # reference (register Rev60, 2026-09-17); default off, transparent to the hash
     c2_mem_slots: int = 64               # hopfield: number of stored key/value patterns
     c2_heads: int = 4                    # delta: number of recurrent heads
     c2_delta_l2_keys: bool = True        # delta: L2-normalise q,k before the write (KDA-style stability)
@@ -147,7 +150,8 @@ def load_config(path: str) -> Config:
 # like any other field.
 HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window": False, "journal_neg_frac": 0.25,
                                "journal_paired_negatives": False, "journal_paired_keep_shape": False,
-                               "journal_match_head": False, "journal_match_loss_weight": 1.0, "journal_match_coupling": 2.0}
+                               "journal_match_head": False, "journal_match_loss_weight": 1.0, "journal_match_coupling": 2.0,
+                               "attn_local_conv": False}
 
 
 def config_hash(cfg: Config) -> str:
@@ -287,6 +291,9 @@ class Block(nn.Module):
         self.mlp_up = nn.Linear(cfg.n_embd, 4 * cfg.n_embd)
         self.mlp_down = nn.Linear(4 * cfg.n_embd, cfg.n_embd)
         self.n_head = cfg.n_head
+        # the control plus a local convolution (Rev60): L3's depthwise causal conv, kernel 3, on ln1(x), the residual untouched
+        self.conv = (nn.Conv1d(cfg.n_embd, cfg.n_embd, kernel_size=3, padding=2, groups=cfg.n_embd)
+                     if cfg.attn_local_conv else None)
         # C2 associative layer (ADR-006), default off — a third residual sub-block
         if cfg.c2_variant == "hopfield":
             self.c2 = HopfieldMemory(cfg)
@@ -303,6 +310,8 @@ class Block(nn.Module):
     def forward(self, x, window=None, window_mask=None, gate: float = 1.0):
         b, t, c = x.shape
         h = self.ln1(x)
+        if self.conv is not None:                                             # Rev60: causal crop, as L3 does it
+            h = self.conv(h.transpose(1, 2))[:, :, :t].transpose(1, 2)
         q, k, v = self.attn(h).split(c, dim=2)
         q = q.view(b, t, self.n_head, c // self.n_head).transpose(1, 2)
         k = k.view(b, t, self.n_head, c // self.n_head).transpose(1, 2)

@@ -31,14 +31,14 @@ def _lazy_torch():
 
 
 def _build_model(vocab: int, d_model: int, n_layer: int, n_head: int,
-                 c2_variant: str, block_size: int, mem_slots: int = 64):
+                 c2_variant: str, block_size: int, mem_slots: int = 64, attn_local_conv: bool = False):
     """Reuse train.py's VanillaGPT with a Config, so the C2 layers under test
     are exactly the ones N2 will train (single source of truth)."""
     from train import Config, VanillaGPT
     cfg = Config(
         n_layer=n_layer, n_head=n_head, n_embd=d_model, block_size=block_size,
         vocab_bytes=vocab - 8, reserved_oracle_tokens=8,   # vocab = symbols + SEP room; keep 8 oracle slot convention
-        c2_variant=c2_variant, c2_mem_slots=mem_slots,
+        c2_variant=c2_variant, c2_mem_slots=mem_slots, attn_local_conv=attn_local_conv,
     )
     return cfg, VanillaGPT(cfg)
 
@@ -47,6 +47,7 @@ def _build_model(vocab: int, d_model: int, n_layer: int, n_head: int,
 class MQARRunConfig:
     c2_variant: str = "none"
     c2_mem_slots: int = 64      # hopfield capacity — the axis of the founder's question
+    attn_local_conv: bool = False   # the control plus a local convolution (Rev60), default off
     d_model: int = 64
     n_layer: int = 2
     n_head: int = 2
@@ -64,7 +65,7 @@ def _train_one_tier(rc: MQARRunConfig, tier: MQARTier):
     vocab = 256 + 8
     block = max(tier.seq_len, 2 * tier.kv_pairs + 1 + tier.queries()) + 4
     cfg, model = _build_model(vocab, rc.d_model, rc.n_layer, rc.n_head,
-                              rc.c2_variant, block, mem_slots=rc.c2_mem_slots)
+                              rc.c2_variant, block, mem_slots=rc.c2_mem_slots, attn_local_conv=rc.attn_local_conv)
     opt = torch.optim.AdamW(model.parameters(), lr=rc.lr)
 
     diverged = False

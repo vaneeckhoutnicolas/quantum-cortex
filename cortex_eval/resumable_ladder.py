@@ -43,6 +43,8 @@ from cortex_eval.run_mqar import run_curriculum
 # The three ARCHITECTURE paths measured alongside the pure ladder, same seeds, same
 # tiers, same steps — so every comparison below is a PAIRED test on identical data.
 ARCH = ("none", "hopfield", "delta")     # control / Hopfield hybrid / delta hybrid
+ARCH_EXTRA = ("none+local-conv",)         # the control plus a local convolution (Rev60): a declared reference, --paths only,
+                                          # never part of the full ladder's 128 units nor of its aggregate
 
 DEFAULT_SEEDS = (1337, 2024, 7, 42, 99, 3, 11, 2026)      # 8 seeds → df 7, t_crit 2.365
 DEFAULT_TIERS = [MQARTier(kv_pairs=16, seq_len=128), MQARTier(kv_pairs=8, seq_len=128)]
@@ -57,6 +59,9 @@ def unit_id(rung, seed: int, tier: MQARTier) -> str:
 def run_unit(rung, tier: MQARTier, steps: int, seed: int, **kw) -> float:
     if isinstance(rung, Rung):
         return run_rung(rung, tier, steps, seed, **kw)
+    if rung == "none+local-conv":                                       # Rev60: the control, one variable added
+        res = run_curriculum(c2_variant="none", attn_local_conv=True, steps=steps, tiers=[tier], seed=seed, **kw)
+        return float(res.per_tier[0]["accuracy"])
     res = run_curriculum(c2_variant=rung, steps=steps, tiers=[tier], seed=seed, **kw)
     return float(res.per_tier[0]["accuracy"])
 
@@ -98,7 +103,7 @@ def run_resumable_ladder(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500,
     done = load_done(dirs)
     all_paths = list(LADDER) + list(ARCH)
     if paths:
-        names = {(r.name if isinstance(r, Rung) else f"ARCH-{r}"): r for r in all_paths}
+        names = {(r.name if isinstance(r, Rung) else f"ARCH-{r}"): r for r in all_paths + list(ARCH_EXTRA)}
         unknown = [n for n in paths if n not in names]
         if unknown:
             raise SystemExit(f"unknown paths {unknown}; known: {sorted(names)}")
