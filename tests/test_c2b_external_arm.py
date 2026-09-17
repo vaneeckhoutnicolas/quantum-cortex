@@ -186,3 +186,10 @@ def test_the_pinned_models_are_three_sizes_of_one_family_with_full_shas():
     assert list(ea.PINNED_MODELS) == ["Qwen/Qwen3-1.7B", "Qwen/Qwen3-4B", "Qwen/Qwen3-8B"]
     assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for sha in ea.PINNED_MODELS.values())
     assert ea.model_slug("Qwen/Qwen3-1.7B", "chat") == "qwen-qwen3-1.7b" and ea.model_slug("Qwen/Qwen3-8B", "raw").endswith("-raw")
+
+
+def test_the_frame_is_written_with_unix_line_endings_on_every_machine(tmp_path, monkeypatch):
+    monkeypatch.setattr(ea, "FRAME_DIR", tmp_path)
+    ea._cli(["--frame"])
+    p = next(tmp_path.glob("external-arm-prompt-*.txt"))
+    assert b"\r" not in p.read_bytes() and p.read_text(encoding="utf-8") == ea.build_frame()

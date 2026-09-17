@@ -97,6 +97,8 @@ def push(src, slug: str, message: str = "") -> bool:
     shutil.rmtree(stage, ignore_errors=True)
     if r.returncode != 0:
         print(f"[relay] push failed ({slug}): {(r.stdout + r.stderr).strip()[-300:]}")
+    else:
+        print(f"[relay] pushed {slug} ({message}): {(r.stdout + r.stderr).strip()[-120:] or 'ok'}")
     return r.returncode == 0
 
 
@@ -141,8 +143,11 @@ def pull(slug: str, dest) -> bool:
                        capture_output=True, text=True)
     tar_path = next(iter(tmp.rglob(ARCHIVE)), None)
     if r.returncode != 0 or tar_path is None:
+        landed = sorted(str(q.relative_to(tmp)) for q in tmp.rglob("*") if q.is_file())[:8]
         shutil.rmtree(tmp, ignore_errors=True)
-        print(f"[relay] pull found nothing for {slug}")
+        print(f"[relay] pull found nothing for {slug}: download rc={r.returncode}, "
+              f"archive {'absent' if tar_path is None else 'present'}, files landed {landed}, "
+              f"output {(r.stdout + r.stderr).strip()[-200:]!r}")
         return False
     with tarfile.open(tar_path) as tar:
         members = tar.getmembers()

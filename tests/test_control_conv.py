@@ -65,3 +65,16 @@ def test_the_declared_readout_computes_the_paired_tests_from_units_alone():
     assert r["gate_readout"]["control_conv_vs_control"] == "gated"
     assert r["stats"][REF_CONTROL_CONV]["n"] == 4 and r["per_seed"][REF_CONTROL_CONV] == [0.9, 0.91, 0.92, 0.93]
     assert "RB-critical" not in r["per_seed"]["arms_full"]         # an arm without units is skipped, not invented
+
+
+def test_the_runner_writes_the_aggregate_under_the_given_name_next_to_the_default(tmp_path):
+    """Rev62: a sixteen seed aggregate lands next to the eight seed one, never over it."""
+    from cortex_eval.resumable_ladder import run_resumable_ladder
+    from cortex_eval.resumable_rb import run_resumable_rb
+    tier = [MQARTier(kv_pairs=2, seq_len=16)]
+    run_resumable_ladder(seeds=(1, 2), tiers=tier, steps=2, ckpt_dir=tmp_path / "ref", paths=["L3-+local-conv", "ARCH-none"], d_model=16)
+    run_resumable_rb(seeds=(1, 2), tiers=tier, steps=2, ckpt_dir=tmp_path / "rb", reference_from=[tmp_path / "ref"],
+                     arms=["RB-bare"], d_model=16)
+    run_resumable_rb(seeds=(1, 2), tiers=tier, steps=2, ckpt_dir=tmp_path / "rb", reference_from=[tmp_path / "ref"],
+                     arms=["RB-bare"], d_model=16, latest_name="LATEST-rb-other.json")
+    assert (tmp_path / "rb" / "LATEST-rb.json").exists() and (tmp_path / "rb" / "LATEST-rb-other.json").exists()

@@ -44,7 +44,7 @@ def ref_unit_id(name: str, seed: int, tier: MQARTier) -> str:
     return f"{name}__s{seed}__kv{tier.kv_pairs}_seq{tier.seq_len}"
 
 
-def run_resumable_rb(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500, relay: str | None = None,
+def run_resumable_rb(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500, relay: str | None = None, latest_name: str = "LATEST-rb.json",
                      ckpt_dir: str | Path = "metrics/mqar/rb-ckpt",
                      resume_from: list[str | Path] | None = None,
                      reference_from: list[str | Path] | None = None,
@@ -91,8 +91,8 @@ def run_resumable_rb(seeds=DEFAULT_SEEDS, tiers=None, steps: int = 1500, relay: 
               "units_done": len(done), "units_total": len(units), "complete": complete, "stopped_early": stopped_early}
     if complete:
         result.update(aggregate(done, refs, chosen, seeds, tiers))
-        (ckpt / "LATEST-rb.json").write_text(json.dumps(result, indent=2) + "\n")
-        print("[resumable-rb] COMPLETE \u2014 aggregate written")
+        (ckpt / latest_name).write_text(json.dumps(result, indent=2) + "\n")
+        print(f"[resumable-rb] COMPLETE \u2014 aggregate written ({latest_name})")
     else:
         (ckpt / "PROGRESS-rb.json").write_text(json.dumps(result, indent=2) + "\n")
         print(f"[resumable-rb] incomplete ({len(done)}/{len(units)}) \u2014 progress written; rerun with this dir as Input")
@@ -177,6 +177,8 @@ def _cli():
     ap.add_argument("--tiers", nargs="*", default=None, help="restrict to these tiers as KVxSEQ (e.g. 8x128 for the tier where L3 takes off); a subset aggregate, never a paired claim across tiers")
     ap.add_argument("--relay", default=None, help="checkpoint relay: a private Kaggle dataset slug pulled before the resume lookup and pushed after every unit")
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--latest-name", default="LATEST-rb.json",
+                    help="the aggregate's file name in --ckpt-dir (Rev62: a 16 seed aggregate next to the 8 seed one, never over it)")
     ap.add_argument("--control-conv-readout", default=None, metavar="OUT",
                     help="Rev60: no training; read the control plus convolution units from --reference-from and the arms from "
                          "--ckpt-dir, compute the declared paired tests, write them to OUT")
@@ -185,7 +187,7 @@ def _cli():
     tiers = parse_tiers(args.tiers)
     if args.control_conv_readout:
         refs = load_done([Path(p) for p in args.reference_from])
-        done = load_done([Path(args.ckpt_dir)])
+        done = load_done([Path(p) for p in args.resume_from] + [Path(args.ckpt_dir)])
         arms = [ARM_BY_NAME[n] for n in (args.arms or [a.name for a in ARMS])]
         r = control_conv_readout(refs, done, arms, tuple(args.seeds), tiers or list(DEFAULT_TIERS))
         out = Path(args.control_conv_readout); out.parent.mkdir(parents=True, exist_ok=True)
@@ -197,7 +199,8 @@ def _cli():
                          resume_from=args.resume_from, reference_from=args.reference_from, arms=args.arms, d_model=32, relay=args.relay)
     else:
         run_resumable_rb(seeds=tuple(args.seeds), tiers=tiers, steps=args.steps, ckpt_dir=args.ckpt_dir, resume_from=args.resume_from,
-                         reference_from=args.reference_from, time_budget_min=args.time_budget_min, arms=args.arms, relay=args.relay)
+                         reference_from=args.reference_from, time_budget_min=args.time_budget_min, arms=args.arms, relay=args.relay,
+                         latest_name=args.latest_name)
 
 
 if __name__ == "__main__":

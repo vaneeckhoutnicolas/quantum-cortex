@@ -266,7 +266,7 @@ def plant(journal_dir: Path, n_facts: int = N_FACTS, seed: int = 0, key: bytes |
     side = {"session": "A", "generator": {"config_hash": gen_hash, "n_facts": n_facts, "seed": seed},
             "admitted": admitted, "durable": journal.mode == MODE_DURABLE,
             "storage": lifecycle_declaration(journal)["storage"], "timestamp_utc": datetime.now(timezone.utc).isoformat()}
-    (journal_dir / "session-a.json").write_text(json.dumps(side, indent=2) + "\n", encoding="utf-8")
+    (journal_dir / "session-a.json").write_text(json.dumps(side, indent=2) + "\n", encoding="utf-8", newline="\n")
     return side
 
 
@@ -545,7 +545,7 @@ def _cli(argv=None):
         frame = build_frame(); p = frame_path(frame); p.parent.mkdir(parents=True, exist_ok=True)
         if p.exists() and p.read_text(encoding="utf-8") != frame:
             raise SystemExit(f"{p} exists with another content: the frame drifted")
-        p.write_text(frame, encoding="utf-8")
+        p.write_text(frame, encoding="utf-8", newline="\n")      # the same bytes on every machine
         print(f"frame: {p}  hash: {frame_hash(frame)}  bytes: {len(frame.encode('utf-8'))}")
         return
     if a.resolve:
@@ -580,7 +580,7 @@ def _cli(argv=None):
                   spans=spans, data_note=note)
         out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
         name = f"hm-lm-external-{model_slug(a.model, 'raw' if a.raw else 'chat')}-{frame_hash(frame)}" + ("-repeat" if a.repeat else "") + ".json"
-        (out / name).write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+        (out / name).write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8", newline="\n")
         print(f"[record] retained: {out / name}")
         print(json.dumps({k: v for k, v in r.items() if k not in ("answers", "session_a", "skill_arm")}, indent=2))
         return
