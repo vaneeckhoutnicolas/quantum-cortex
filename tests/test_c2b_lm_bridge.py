@@ -554,7 +554,7 @@ def test_decode_policies_head_decides_and_pointer_cites_the_attended_line():
     off_a, _ = generate(m, q, None, None, gate=0.0, policy="head+pointer")
     off_b, _ = generate(m, q, None, None, gate=0.0, policy="plain")
     assert off_a == off_b                                                       # no window: the plain policy
-    assert set(POLICIES) == {"plain", "head", "head+pointer"}
+    assert set(POLICIES) == {"plain", "head", "head+pointer", "mark-veto", "mark-veto+value"}   # the two organ side policies of 2026-09-18
     with pytest.raises(ValueError):
         generate(m, q, wt, wm, policy="oracle")
 

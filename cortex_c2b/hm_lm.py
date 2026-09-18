@@ -47,7 +47,40 @@ from cortex_c2b.read_path import JournalPath
 INVALID_CITATION_MAX = 0.01      # declared 2026-09-12, before any run on the model
 
 
-POLICIES = ("plain", "head", "head+pointer")
+POLICIES = ("plain", "head", "head+pointer", "mark-veto", "mark-veto+value")
+
+
+def policy_outcome(kind: str, label, labels: dict, marks_by_pointer: dict, payloads, own_pointer, attr: str | None,
+                   expected_attr: str, policy: str, threshold: float | None):
+    """ADR-008 amendment 2026-09-18, the two organ side decode policies, one function used
+    live (in the probe) and in replay (on an answers file), so the two cannot disagree.
+    `mark-veto`: the model's citation stands unless the cited line's mark is below the
+    oracle's threshold (or the label is not in the window); then it is an abstention.
+    `mark-veto+value`: the veto, and the attribute answered is the cited line's own
+    value, read by the organ from the line's statement by the generator's templates,
+    never generated; a vetoed or missing line is an abstention.
+    Returns (kind, attr, outcome) with outcome in strict | valid | invalid | abstain."""
+    from cortex_c2b.hm_protocol import value_of_statement
+    if kind == "unknown":
+        return kind, None, "abstain"
+    if policy in ("mark-veto", "mark-veto+value"):
+        pointer = labels.get(label) if kind == "cite" else None
+        mark = marks_by_pointer.get(pointer) if pointer is not None else None
+        if pointer is None or mark is None or (threshold is not None and mark < threshold):
+            return "unknown", None, "abstain"                       # the organ vetoes: no line, or a low mark
+        if policy == "mark-veto+value":
+            payload = payloads.get(pointer) if pointer in payloads else b""
+            v = value_of_statement(payload.decode("utf-8", errors="replace")) if payload else None
+            attr = v[2] if v else None
+            if attr is None:
+                return "unknown", None, "abstain"
+    if kind == "cite" and label in labels:
+        payload = payloads.get(labels[label]) if labels[label] in payloads else b""
+        cited_ok = (attr or "").encode("utf-8") in payload and len(attr or "") > 0
+        if not cited_ok:
+            return kind, attr, "invalid"
+        return kind, attr, ("strict" if attr == expected_attr else "valid")
+    return kind, attr, "invalid"
 
 
 def pointer_label(model, window_bytes: bytes) -> int | None:
@@ -131,7 +164,7 @@ def generate(model, prefix: list[int], window_tokens=None, window_mask=None, gat
 
 
 def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, window_len: int,
-           pointer_of: dict[str, str], policy: str = "plain") -> dict:
+           pointer_of: dict[str, str], policy: str = "plain", veto_threshold: float | None = None) -> dict:
     """One arm over a fact list. `pointer_of`: entity -> pointer for planted facts
     (empty for the negative control)."""
     n = max(1, len(facts))
@@ -169,6 +202,9 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             labels = {}
         kind, label, attr = parse_contract(toks)
         own_p = pointer_of.get(f.entity) if pointer_of else None
+        mbp = dict(zip(read.pointers, [float(x) for x in read.scores])) if (read is not None and read.scores) else {}
+        if policy in ("mark-veto", "mark-veto+value"):
+            kind, attr, _ = policy_outcome(kind, label, labels, mbp, bridge.j.payloads, own_p, attr, f.attr, policy, veto_threshold)
         rec = {"entity": f.entity, "schema": f.schema, "attr": f.attr, "kind": kind,
                "label": (chr(label) if isinstance(label, int) else label) if label is not None else None, "answered": attr,
                "outcome": None, "own_in_window": (own_p in read.pointers) if (read is not None and own_p) else None}
@@ -206,6 +242,37 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             "match_acc": (match_right / match_n) if match_n else None,
             "marks": {"own": _stats(mark_own), "other_max": _stats(mark_other_max), "max": _stats(mark_max)},
             "answers": answers}
+
+
+def replay_policy(answers_file: dict, policy: str) -> dict:
+    """Post hoc: apply an organ side policy to the answers a session B kept (Rev66 files), with
+    the oracle's threshold of that file. The rates it returns are what the live policy would
+    have produced on the same checkpoint and reads, because both use `policy_outcome`;
+    a replay on the seed the policy was conceived on is a post hoc reading, never a result."""
+    thr = answers_file["hm_mark_oracle"]["threshold"]
+    def outcome(a):
+        kind, label = a["kind"], a.get("label")
+        labels = {label: "cited"} if (kind == "cite" and a.get("mark_cited") is not None) else {}
+        mbp = {"cited": a["mark_cited"]} if a.get("mark_cited") is not None else {}
+        own = "cited" if a.get("cited_pointer_is_own") else "own"
+        # the value read from the cited line is the fact's attribute iff the cited line is the own one
+        payloads = {"cited": (f"x took place in {a['attr']}" if a.get("cited_pointer_is_own") else "x took place in other").encode()}
+        if policy == "mark-veto+value":
+            k, attr, o = policy_outcome(kind, label, labels, mbp, payloads, own, a.get("answered"), a["attr"], "mark-veto", thr)
+            if o == "abstain":
+                return "abstain"
+            return "strict" if a.get("cited_pointer_is_own") else "invalid"
+        k, attr, o = policy_outcome(kind, label, labels, mbp, {"cited": ((a.get("answered") or "") if a["outcome"] in ("strict", "valid") else "").encode()}, own, a.get("answered"), a["attr"], policy, thr)
+        if policy == "mark-veto" and o != "abstain":
+            return a["outcome"]                                    # the model's own outcome stands when not vetoed
+        return o
+    on = [outcome(a) for a in answers_file["answers"]["on"]]; n = len(on)
+    neg = [outcome(a) for a in answers_file["answers"]["negctrl"]]
+    strict, valid, invalid, abst = on.count("strict"), on.count("strict") + on.count("valid"), on.count("invalid"), on.count("abstain")
+    negc = sum(1 for o in neg if o != "abstain")
+    return {"policy": policy, "post_hoc": True, "threshold": thr, "hm_recall_on": strict / n, "hm_valid_citation_on": valid / n,
+            "hm_invalid_citation_on": invalid / n, "hm_false_abstention_on": abst / n, "hm_negctrl_rate": negc / len(neg),
+            "gate_conditions_without_skill_arm": int(strict / n >= DELTA and negc / len(neg) < NEGCTRL_INVALID and invalid / n <= INVALID_CITATION_MAX)}
 
 
 def _stats(xs: list[float]) -> dict | None:
@@ -568,9 +635,10 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     neg, _ = generate_facts(n_negctrl, seed + 10_000)
     pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
                   if content_hash(f.statement.encode("utf-8")) in journal.payloads}
-    on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy)
-    off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy)
-    neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy)
+    thr = mark_oracle(model, bridge, facts, neg, pointer_of)["threshold"] if policy.startswith("mark-veto") else None
+    on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy, veto_threshold=thr)
+    off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy, veto_threshold=thr)
+    neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy, veto_threshold=thr)
     storage = lifecycle_declaration(journal)["storage"]
     # the memorisation probe (run dc34fcf000aa): the same contract on entities the model SAW during training
     # (the first training pool), planted into a memory scope; a model that reads its window scores alike on
@@ -613,6 +681,7 @@ def _cli():
     import train
     ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
     ap.add_argument("--session-b", action="store_true")
+    ap.add_argument("--replay", default=None, help="post hoc: apply --policy to a session B answers file (Rev66) and print the rates; never a result on the seed the policy was conceived on")
     ap.add_argument("--shape-probe", action="store_true",
                     help="the shape probe alone (claims at k - 1 against k lines), a diagnostic: metrics/mqar/shape-probe-<run_id>.json")
     ap.add_argument("--representation-probe", action="store_true",
@@ -624,10 +693,13 @@ def _cli():
     ap.add_argument("--probe-training-pool", action="store_true",
                     help="also probe the contract on the run's FIRST training pool (entities seen in training): memorisation evidence")
     ap.add_argument("--policy", default="plain", choices=list(POLICIES),
-                    help="decode policy (ADR-008 amendment 2026-09-14): plain | head | head+pointer")
+                    help="decode policy: plain | head | head+pointer (ADR-008 amendment 2026-09-14) | mark-veto | mark-veto+value (amendment 2026-09-18)")
     args = ap.parse_args()
     if not (args.session_b or args.shape_probe or args.representation_probe):
-        ap.error("one of --session-b / --shape-probe / --representation-probe is required")
+        if args.replay:
+            r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy)
+            print(json.dumps(r, indent=2)); return
+        ap.error("one of --session-b / --shape-probe / --representation-probe / --replay is required")
     cfg = train.load_config(args.config)
     if args.representation_probe:
         r = representation_probe_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, seed=args.seed,

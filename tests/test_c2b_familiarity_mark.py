@@ -200,3 +200,38 @@ def test_row_36_answers_file_recomputes_the_session_b_scalars():
     assert len(ab) == 21 and sum(1 for a in ab if a["own_in_window"] is False) == 12
     claims = [a for a in neg if a["outcome"] != "abstain"]
     assert len(claims) == 5 and max(a["mark_max"] for a in claims) < r["hm_mark_oracle"]["threshold"]
+
+
+def test_the_organ_side_policies_replay_on_the_v9_answers_as_declared_post_hoc():
+    """ADR-008 amendment 2026-09-18: `mark-veto` and `mark-veto+value` on the recorded v9 answers
+    (a post hoc reading on the seed they were conceived on, never a result): the numbers of row 36."""
+    import json
+    from cortex_c2b.hm_lm import replay_policy
+    r = json.loads((Path(__file__).resolve().parent.parent / "metrics" / "mqar" / "hm-lm-8ceba5db8d0b-session-b-answers.json").read_text())
+    v = replay_policy(r, "mark-veto")
+    assert v["post_hoc"] and v["hm_negctrl_rate"] == 0.0 and abs(v["hm_invalid_citation_on"] - 0.125) < 1e-9 and v["gate_conditions_without_skill_arm"] == 0
+    w = replay_policy(r, "mark-veto+value")
+    assert abs(w["hm_recall_on"] - 0.875) < 1e-9 and w["hm_invalid_citation_on"] == 0.0 and w["hm_negctrl_rate"] == 0.0
+    assert abs(w["hm_false_abstention_on"] - 0.125) < 1e-9 and w["gate_conditions_without_skill_arm"] == 1
+
+
+def test_the_organ_side_policies_run_live_in_session_b_and_the_value_policy_never_cites_invalidly(tmp_path, monkeypatch):
+    from cortex_c2b.hm_lm import session_b_from_disk
+    from cortex_c2b.crypto import generate_key
+    from cortex_c2b import Journal, POLICY_STOP
+    key = generate_key(); monkeypatch.setenv("QUANTUM_CORTEX_JOURNAL_KEY", key.hex())
+    cfg, m = tiny(journal_familiarity_mark=True)
+    ck = tmp_path / "ckpt.pt"; jp = tmp_path / "journal.jsonl"
+    torch.save({"model": m.state_dict(), "run_id": "tiny0002", "config_hash": train.config_hash(cfg)}, ck)
+    facts, _ = generate_facts(8, 0)
+    j = Journal(jp, key=key, policy=POLICY_STOP)
+    b = JournalBridge(m, j, k=3, budget_bytes=96, seed=0, shuffle_seed=1, mark=True)
+    for i, f in enumerate(facts):
+        b.write(f.statement, f.schema, now=100.0 + i, entity=f.entity)
+    for policy in ("mark-veto", "mark-veto+value"):
+        r = session_b_from_disk(ck, jp, cfg, n_facts=8, n_negctrl=4, k=3, budget=96, window_len=96, policy=policy)
+        assert r["policy"] == policy
+        outs = [a["outcome"] for a in r["answers"]["on"]]
+        if policy == "mark-veto+value":
+            assert "valid" not in outs                               # the organ's value is exact or the line is not the own one
+            assert all(a["kind"] != "cite" or a.get("mark_cited") is None or a["mark_cited"] >= r["hm_mark_oracle"]["threshold"] for a in r["answers"]["on"])

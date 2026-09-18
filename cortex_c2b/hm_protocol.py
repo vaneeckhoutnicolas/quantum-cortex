@@ -100,6 +100,20 @@ def _cue_for(text: str, dim: int = CUE_DIM) -> np.ndarray:
     return v / (np.linalg.norm(v) + 1e-8)
 
 
+def value_of_statement(statement: str) -> tuple[str, str, str] | None:
+    """The organ's own reading of a line: (schema, entity, attribute) recovered from a
+    planted statement by the generator's templates, or None when no template matches.
+    Used by the `+value` decode policies (ADR-008 amendment 2026-09-18): the value the
+    model answers is then the cited line's, read by the organ, never generated."""
+    import re
+    for schema, (st, _, _) in _TEMPLATES.items():
+        pat = "^" + re.escape(st).replace(r"\{e\}", "(?P<e>.+?)").replace(r"\{a\}", "(?P<a>.+)") + "$"
+        m = re.match(pat, statement)
+        if m:
+            return schema, m.group("e"), m.group("a")
+    return None
+
+
 def generate_facts(n: int = N_FACTS, seed: int = 0) -> tuple[list[Fact], str]:
     """Balanced across 5 schemas; returns (facts, config_hash of the generator)."""
     rng = np.random.default_rng(seed)
