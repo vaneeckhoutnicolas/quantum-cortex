@@ -1,0 +1,115 @@
+{
+  "benchmark": "hm_protocol_lm_session_b_new_process",
+  "policy": "plain",
+  "hm_gap": 0.75,
+  "run_valid": false,
+  "gate_conditions_without_skill_arm": 0,
+  "verdict_without_skill_arm": "INVALID -- the skill delta is the in process arm's",
+  "hm_marks": {
+    "on": {
+      "own": {
+        "n": 187,
+        "mean": 0.9794963824557749,
+        "min": 0.956644594669342,
+        "max": 0.992742121219635,
+        "q10": 0.9692615866661072,
+        "q50": 0.980716347694397,
+        "q90": 0.9880424976348877
+      },
+      "other_max": {
+        "n": 195,
+        "mean": 0.2679375694673628,
+        "min": -0.2570458650588989,
+        "max": 0.7505779266357422,
+        "q10": 0.07731113433837891,
+        "q50": 0.25944381952285767,
+        "q90": 0.47174711227416993
+      },
+      "max": {
+        "n": 200,
+        "mean": 0.9321468320488929,
+        "min": -0.2570458650588989,
+        "max": 0.992742121219635,
+        "q10": 0.9645769655704498,
+        "q50": 0.9799996316432953,
+        "q90": 0.9878951907157898
+      }
+    },
+    "negctrl": {
+      "own": null,
+      "other_max": {
+        "n": 49,
+        "mean": 0.25732059600972096,
+        "min": -0.13048014044761658,
+        "max": 0.6859064698219299,
+        "q10": 0.09218763411045075,
+        "q50": 0.25133657455444336,
+        "q90": 0.4246399283409119
+      },
+      "max": {
+        "n": 49,
+        "mean": 0.25732059600972096,
+        "min": -0.13048014044761658,
+        "max": 0.6859064698219299,
+        "q10": 0.09218763411045075,
+        "q50": 0.25133657455444336,
+        "q90": 0.4246399283409119
+      }
+    },
+    "written_in_window": true
+  },
+  "hm_mark_oracle": {
+    "oracle": "mark oracle (RES-23): cite the highest marked line above a threshold read from the training family",
+    "threshold": 0.5360026359558105,
+    "training_accuracy": 0.956,
+    "training_pairs": 250,
+    "recall_on_strict": 0.935,
+    "claims_on": 0.94,
+    "negctrl_claims": 0.04,
+    "gap": 0.935,
+    "passes_without_skill_arm": true,
+    "encoder": "this checkpoint's own cue encoder"
+  },
+  "training_pool_probe": {
+    "seed": 100000,
+    "n": 200,
+    "recall_strict": 0.065,
+    "valid_citation": 0.09,
+    "invalid_citation": 0.64,
+    "abstain_rate": 0.27,
+    "retrieval_hit": 0.945
+  },
+  "checkpoint": {
+    "path": "runs/journal-n1-v9/ckpt.pt",
+    "run_id": "8ceba5db8d0b",
+    "config_hash": "36a3dd10bbff84eb",
+    "step": 7323
+  },
+  "journal": {
+    "path": "runs/journal-n1-v9/journal.jsonl",
+    "entries": 200,
+    "mode": "durable",
+    "policy": "stop",
+    "planted_found": 200
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0
+  },
+  "hm_recall_on": 0.75,
+  "hm_recall_off": 0.0,
+  "hm_false_abstention_on": 0.105,
+  "hm_invalid_citation_on": 0.14,
+  "hm_valid_citation_on": 0.755,
+  "hm_attr_exact_given_valid": 0.9933774834437086,
+  "hm_retrieval_hit": 0.935,
+  "hm_attention_mass": 0.9963938125967979,
+  "hm_negctrl_rate": 0.1,
+  "hm_negctrl_abstain_on": 0.9,
+  "hm_match_acc_on": null,
+  "hm_match_acc_negctrl": null,
+  "persistent": true,
+  "process": "new (nothing of session A but the disk)"
+}

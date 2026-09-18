@@ -57,6 +57,7 @@ What the cortex is not: a general chatbot, a frontier code model, or a competito
 | An assistant whose world changes | Nothing | | The oracle channel C3 is not built; the setting is not served |
 | Private, local, encrypted memory | The journal sealed at rest, one scope per subject, survives a process restart (ADR-007) | Served by the organ only | The model that fits on a device (scale, ternary weights) is not built |
 | The recurrent ladder and the hybrids | The eight seed ladder (rows 18 to 20) and the Σ (row 27): L3 takes off, mostly a matter of training length; no memory advantage of the hybrids at this size | A finding and a negative structural line, not a product | The recurrent base arms at sixteen seeds (rows 30 to 35): both arms beat the pure rung at 95 %, with a trunk that never takes off (the attention pre empts it); the trunk's contribution is the reliability of the take off; stage B is the founder's decision |
+| v9, the familiarity mark (row 36): the organ's own similarity written in every read window line; the oracle passes, and for the first time the 27M model's discrimination moves (claims on absent entities 0.62 to 0.10, strict recall 0.385 to 0.75); INVALID by the invalid citations and by the negative control at the line; the external model arm's first execution (Qwen3-1.7B) retained: the episodic contract holds, the skill arm fails |
 
 ## Reproduce it (no GPU needed to verify)
 
