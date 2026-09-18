@@ -246,3 +246,19 @@ def test_the_post_hoc_system_reading_holds_across_the_veto_threshold_plateau():
         assert w["gate_conditions_without_skill_arm"] == 1 and abs(w["hm_recall_on"] - 0.875) < 1e-9, thr
     assert replay_policy(r, "mark-veto+value", threshold=0.97)["hm_recall_on"] < 0.875           # the veto starts refusing own lines
     assert replay_policy(r, "mark-veto+value", threshold=0.20)["hm_negctrl_rate"] > 0.0          # a low threshold lets a claim through
+
+
+def test_the_second_and_third_seed_configurations_of_v9_change_only_the_seed_and_the_provider():
+    import json
+    fields = train.Config.__dataclass_fields__
+    root = Path(__file__).resolve().parent.parent / "configs"
+    load = lambda n: json.load(open(root / n))
+    v9 = load("kaggle_t4_journal_v9.json")
+    for name, seed in (("local_journal_v9_seed2.json", 2024), ("kaggle_t4_journal_v9_seed2.json", 2024), ("local_journal_v9_seed3.json", 7), ("kaggle_t4_journal_v9_seed3.json", 7)):
+        c = load(name)
+        diff = {k for k in set(v9) | set(c) if v9.get(k) != c.get(k)}
+        assert diff <= {"seed", "provider", "out_dir", "journal_path", "notes"}, (name, diff)
+        assert c["seed"] == seed and c["journal_familiarity_mark"] is True
+    h = lambda n: train.config_hash(train.Config(**{k: v for k, v in load(n).items() if k in fields}))
+    assert h("local_journal_v9_seed2.json") == h("kaggle_t4_journal_v9_seed2.json") != h("kaggle_t4_journal_v9.json")
+    assert h("local_journal_v9_seed3.json") == h("kaggle_t4_journal_v9_seed3.json") not in (h("kaggle_t4_journal_v9.json"), h("kaggle_t4_journal_v9_seed2.json"))

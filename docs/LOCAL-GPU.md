@@ -39,3 +39,23 @@ python -m cortex_c2b.hm_lm --session-b --policy head+pointer --ckpt runs\journal
 ```
 
 Each writes `metrics/mqar/hm-lm-<run_id>-session-b-<policy>.json`; retain the console as a log file next to the others.
+
+## v9 on a second and a third seed (2026-09-18, ADR-008 amendment on the organ side policies)
+
+The seeds that did not conceive the policies: `configs/local_journal_v9_seed2.json` (seed 2024) and `configs/local_journal_v9_seed3.json` (seed 7), v9's recipe with the seed and the provider changed. On the GTX 1660 Ti (fp16, about 9 hours; `--resume` after an interruption picks the run up at its last checkpoint):
+
+```powershell
+cd C:\git\quantum-cortex; .\.venv\Scripts\Activate.ps1
+$env:QUANTUM_CORTEX_JOURNAL_KEY = "<the 64 hex characters>"
+python -u train.py --config configs\local_journal_v9_seed2.json 2>&1 | Tee-Object -FilePath metrics\mqar\logs\journal-n1-v9-seed2.log
+```
+
+Then session B in a new window, once per policy (the plain one first; each writes its own file, `-mark-veto` and `-mark-veto-value` suffixed):
+
+```powershell
+python -m cortex_c2b.hm_lm --session-b --ckpt runs\journal-n1-v9-seed2\ckpt.pt --journal runs\journal-n1-v9-seed2\journal.jsonl --config configs\local_journal_v9_seed2.json
+python -m cortex_c2b.hm_lm --session-b --policy mark-veto --ckpt runs\journal-n1-v9-seed2\ckpt.pt --journal runs\journal-n1-v9-seed2\journal.jsonl --config configs\local_journal_v9_seed2.json
+python -m cortex_c2b.hm_lm --session-b --policy mark-veto+value --ckpt runs\journal-n1-v9-seed2\ckpt.pt --journal runs\journal-n1-v9-seed2\journal.jsonl --config configs\local_journal_v9_seed2.json
+```
+
+On Kaggle the same seeds run through `notebooks/journal_finetune_kaggle.ipynb` with `CONFIG = 'configs/kaggle_t4_journal_v9_seed2.json'` (or `_seed3`), about 2 h 15 of T4, and the three policies through `notebooks/session_b_reread_kaggle.ipynb` with `V = 'v9-seed2'`. The readings are written in ADR-008 before any of this runs.
