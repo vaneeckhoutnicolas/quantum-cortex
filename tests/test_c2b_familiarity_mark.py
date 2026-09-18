@@ -178,3 +178,25 @@ def test_session_b_keeps_every_answer_per_line_with_its_marks(tmp_path, monkeypa
         if a.get("mark_own") is not None:
             assert a["own_in_window"] is True and a["mark_own"] <= a["mark_max"] + 1e-9
     assert all(a["own_in_window"] is None for a in ans["off"])
+
+
+def test_row_36_answers_file_recomputes_the_session_b_scalars():
+    """The per line answers of v9 (session B re read on the Kaggle CPU, 2026-09-18) reproduce the
+    committed session B's rates, and carry the three facts row 36 reads from them."""
+    import json
+    root = Path(__file__).resolve().parent.parent / "metrics" / "mqar"
+    r = json.loads((root / "hm-lm-8ceba5db8d0b-session-b-answers.json").read_text())
+    b = json.loads((root / "hm-lm-8ceba5db8d0b-session-b.json").read_text())
+    on, neg = r["answers"]["on"], r["answers"]["negctrl"]
+    n = len(on); assert n == 200 and len(neg) == 50
+    outcomes = [a["outcome"] for a in on]
+    for key, val in (("hm_recall_on", outcomes.count("strict") / n), ("hm_invalid_citation_on", outcomes.count("invalid") / n),
+                     ("hm_false_abstention_on", outcomes.count("abstain") / n), ("hm_valid_citation_on", (outcomes.count("strict") + outcomes.count("valid")) / n),
+                     ("hm_negctrl_rate", sum(1 for a in neg if a["outcome"] != "abstain") / 50)):
+        assert abs(b[key] - val) < 1e-9 and abs(r[key] - val) < 1e-9, key
+    inv = [a for a in on if a["outcome"] == "invalid"]
+    assert len(inv) == 28 and sum(1 for a in inv if a.get("cited_pointer_is_own")) == 25
+    ab = [a for a in on if a["outcome"] == "abstain"]
+    assert len(ab) == 21 and sum(1 for a in ab if a["own_in_window"] is False) == 12
+    claims = [a for a in neg if a["outcome"] != "abstain"]
+    assert len(claims) == 5 and max(a["mark_max"] for a in claims) < r["hm_mark_oracle"]["threshold"]
