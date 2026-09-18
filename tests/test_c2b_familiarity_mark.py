@@ -235,3 +235,14 @@ def test_the_organ_side_policies_run_live_in_session_b_and_the_value_policy_neve
         if policy == "mark-veto+value":
             assert "valid" not in outs                               # the organ's value is exact or the line is not the own one
             assert all(a["kind"] != "cite" or a.get("mark_cited") is None or a["mark_cited"] >= r["hm_mark_oracle"]["threshold"] for a in r["answers"]["on"])
+
+
+def test_the_post_hoc_system_reading_holds_across_the_veto_threshold_plateau():
+    import json
+    from cortex_c2b.hm_lm import replay_policy
+    r = json.loads((Path(__file__).resolve().parent.parent / "metrics" / "mqar" / "hm-lm-8ceba5db8d0b-session-b-answers.json").read_text())
+    for thr in (0.40, 0.536, 0.70, 0.95):
+        w = replay_policy(r, "mark-veto+value", threshold=thr)
+        assert w["gate_conditions_without_skill_arm"] == 1 and abs(w["hm_recall_on"] - 0.875) < 1e-9, thr
+    assert replay_policy(r, "mark-veto+value", threshold=0.97)["hm_recall_on"] < 0.875           # the veto starts refusing own lines
+    assert replay_policy(r, "mark-veto+value", threshold=0.20)["hm_negctrl_rate"] > 0.0          # a low threshold lets a claim through

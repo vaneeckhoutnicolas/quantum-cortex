@@ -244,12 +244,12 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             "answers": answers}
 
 
-def replay_policy(answers_file: dict, policy: str) -> dict:
+def replay_policy(answers_file: dict, policy: str, threshold: float | None = None) -> dict:
     """Post hoc: apply an organ side policy to the answers a session B kept (Rev66 files), with
     the oracle's threshold of that file. The rates it returns are what the live policy would
     have produced on the same checkpoint and reads, because both use `policy_outcome`;
     a replay on the seed the policy was conceived on is a post hoc reading, never a result."""
-    thr = answers_file["hm_mark_oracle"]["threshold"]
+    thr = answers_file["hm_mark_oracle"]["threshold"] if threshold is None else float(threshold)   # a sweep reads the sensitivity
     def outcome(a):
         kind, label = a["kind"], a.get("label")
         labels = {label: "cited"} if (kind == "cite" and a.get("mark_cited") is not None) else {}
@@ -682,6 +682,7 @@ def _cli():
     ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
     ap.add_argument("--session-b", action="store_true")
     ap.add_argument("--replay", default=None, help="post hoc: apply --policy to a session B answers file (Rev66) and print the rates; never a result on the seed the policy was conceived on")
+    ap.add_argument("--threshold", type=float, default=None, help="with --replay: override the oracle's veto threshold (a sensitivity sweep)")
     ap.add_argument("--shape-probe", action="store_true",
                     help="the shape probe alone (claims at k - 1 against k lines), a diagnostic: metrics/mqar/shape-probe-<run_id>.json")
     ap.add_argument("--representation-probe", action="store_true",
@@ -697,7 +698,7 @@ def _cli():
     args = ap.parse_args()
     if not (args.session_b or args.shape_probe or args.representation_probe):
         if args.replay:
-            r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy)
+            r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy, threshold=args.threshold)
             print(json.dumps(r, indent=2)); return
         ap.error("one of --session-b / --shape-probe / --representation-probe / --replay is required")
     cfg = train.load_config(args.config)
