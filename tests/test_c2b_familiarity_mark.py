@@ -145,3 +145,36 @@ def test_the_arm_records_the_marks_and_the_oracle_with_or_without_the_mark_in_th
         assert 0 < r["hm_marks"]["on"]["max"]["n"] <= 8                 # a read may return fewer than k lines, or none
         assert r["hm_marks"]["negctrl"]["max"] is None or r["hm_marks"]["negctrl"]["max"]["n"] <= 4
         assert "threshold" in r["hm_mark_oracle"]
+
+
+def test_session_b_keeps_every_answer_per_line_with_its_marks(tmp_path, monkeypatch):
+    """Rev66: a recording addition, not a variable: the same numbers plus the answers."""
+    import os
+    from cortex_c2b.hm_lm import session_b_from_disk
+    from cortex_c2b.crypto import generate_key
+    key = generate_key(); monkeypatch.setenv("QUANTUM_CORTEX_JOURNAL_KEY", key.hex())
+    cfg, m = tiny()
+    ck = tmp_path / "ckpt.pt"; jp = tmp_path / "journal.jsonl"
+    torch.save({"model": m.state_dict(), "run_id": "tiny0001", "config_hash": train.config_hash(cfg)}, ck)
+    facts, _ = generate_facts(8, 0)
+    from cortex_c2b import Journal, POLICY_STOP
+    j = Journal(jp, key=key, policy=POLICY_STOP)
+    b = JournalBridge(m, j, k=3, budget_bytes=96, seed=0, shuffle_seed=1, mark=True)
+    for i, f in enumerate(facts):
+        b.write(f.statement, f.schema, now=100.0 + i, entity=f.entity)
+    j.close() if hasattr(j, "close") else None
+    r = session_b_from_disk(ck, jp, cfg, n_facts=8, n_negctrl=4, k=3, budget=96, window_len=96)
+    ans = r["answers"]
+    n = len(ans["on"])                                          # the planted facts session B found (admission by surprise)
+    assert 0 < n <= 8 and len(ans["off"]) == n and len(ans["negctrl"]) == len(generate_facts(4, 10_000)[0])
+    outcomes = [a["outcome"] for a in ans["on"]]
+    assert all(o in ("strict", "valid", "invalid", "abstain") for o in outcomes)
+    assert abs(outcomes.count("strict") / n - r["hm_recall_on"]) < 1e-9
+    assert abs(outcomes.count("invalid") / n - r["hm_invalid_citation_on"]) < 1e-9
+    assert abs(outcomes.count("abstain") / n - r["hm_false_abstention_on"]) < 1e-9
+    import json; json.dumps(ans)                                 # serialisable as the file writes it
+    for a in ans["on"]:
+        assert set(a) >= {"entity", "schema", "attr", "kind", "label", "answered", "outcome", "own_in_window"}
+        if a.get("mark_own") is not None:
+            assert a["own_in_window"] is True and a["mark_own"] <= a["mark_max"] + 1e-9
+    assert all(a["own_in_window"] is None for a in ans["off"])

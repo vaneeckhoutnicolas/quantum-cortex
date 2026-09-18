@@ -139,8 +139,10 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
     masses = []
     match_right = match_n = 0                                   # RES-21: the head's own judgment, against the read
     mark_own, mark_other_max, mark_max = [], [], []             # RES-23: the organ's similarities per read
+    answers = []                                                # Rev66: every answer kept per line, a recording, not a variable
     for f in facts:
         query = encode_query(f.query)
+        read = None
         if journal_on:
             cue = bridge.cues([query])[0]
             read = bridge.read(cue)
@@ -166,21 +168,33 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             toks, _ = generate(model, query, None, None, gate=0.0)
             labels = {}
         kind, label, attr = parse_contract(toks)
+        own_p = pointer_of.get(f.entity) if pointer_of else None
+        rec = {"entity": f.entity, "schema": f.schema, "attr": f.attr, "kind": kind,
+               "label": (chr(label) if isinstance(label, int) else label) if label is not None else None, "answered": attr,
+               "outcome": None, "own_in_window": (own_p in read.pointers) if (read is not None and own_p) else None}
+        if read is not None and read.scores:
+            marks_by_pointer = dict(zip(read.pointers, [float(x) for x in read.scores]))
+            rec["mark_own"] = marks_by_pointer.get(own_p) if own_p else None
+            rec["mark_max"] = max(marks_by_pointer.values())
+            rec["cited_pointer_is_own"] = (labels.get(label) == own_p) if (kind == "cite" and label in labels and own_p) else None
+            rec["mark_cited"] = marks_by_pointer.get(labels[label]) if (kind == "cite" and label in labels) else None
+            rec["cited_is_highest_mark"] = (labels.get(label) is not None and marks_by_pointer.get(labels[label]) == rec["mark_max"]) if (kind == "cite" and label in labels) else None
+        answers.append(rec)
         if kind == "unknown":
-            abstain += 1
+            abstain += 1; rec["outcome"] = "abstain"
             continue
         guess += 1
         if kind == "cite" and label in labels:
             payload = bridge.j.payloads.get(labels[label]) if labels[label] in bridge.j.payloads else b""
             cited_ok = (attr or "").encode("utf-8") in payload and len(attr or "") > 0
             if cited_ok:
-                valid += 1
+                valid += 1; rec["outcome"] = "valid"
                 if attr == f.attr:
-                    strict += 1; attr_ok += 1
+                    strict += 1; attr_ok += 1; rec["outcome"] = "strict"
             else:
-                invalid += 1                                   # a label that exists but does not hold the claim
+                invalid += 1; rec["outcome"] = "invalid"       # a label that exists but does not hold the claim
         else:
-            invalid += 1                                       # a citation of nothing, or a malformed claim
+            invalid += 1; rec["outcome"] = "invalid"           # a citation of nothing, or a malformed claim
         if attr == f.attr:
             attr_by_chance += 1
     return {"recall_strict": strict / n, "abstain_rate": abstain / n, "guess_rate": guess / n,
@@ -190,7 +204,8 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             "retrieval_hit": (hit / n) if (journal_on and pointer_of) else None,
             "attention_mass": (float(np.mean(masses)) if masses else None),
             "match_acc": (match_right / match_n) if match_n else None,
-            "marks": {"own": _stats(mark_own), "other_max": _stats(mark_other_max), "max": _stats(mark_max)}}
+            "marks": {"own": _stats(mark_own), "other_max": _stats(mark_other_max), "max": _stats(mark_max)},
+            "answers": answers}
 
 
 def _stats(xs: list[float]) -> dict | None:
@@ -576,6 +591,7 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     return {"benchmark": "hm_protocol_lm_session_b_new_process", "policy": policy, **verdict_fields,
             "hm_marks": {"on": on["marks"], "negctrl": neg_on["marks"], "written_in_window": mark},
             "hm_mark_oracle": oracle,
+            "answers": {"on": on["answers"], "off": off["answers"], "negctrl": neg_on["answers"]},
             "training_pool_probe": train_probe,
             "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
                            "step": ck.get("step")},
