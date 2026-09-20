@@ -42,7 +42,7 @@ from cortex_c2b.hm_protocol import (Fact, generate_facts, SCHEMAS, _ATTRS, DELTA
 from cortex_c2b.lm_bridge import (JournalBridge, encode_query, parse_contract, build_read_window, NEWLINE, TOK_EPI,
                                   TOK_CITE, TOK_ANS, TOK_UNKNOWN, LABELS)
 from cortex_c2b.write_path import WritePath
-from cortex_c2b.read_path import JournalPath
+from cortex_c2b.read_path import JournalPath, STATE_EVICTED
 
 INVALID_CITATION_MAX = 0.01      # declared 2026-09-12, before any run on the model
 
@@ -242,6 +242,61 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             "match_acc": (match_right / match_n) if match_n else None,
             "marks": {"own": _stats(mark_own), "other_max": _stats(mark_other_max), "max": _stats(mark_max)},
             "answers": answers}
+
+
+@torch.no_grad()
+def retrieval_probe(model, journal, facts: list[Fact], neg: list[Fact], pointer_of: dict[str, str],
+                    k: int = 4, seed: int = 0) -> dict:
+    """ADR-008 amendment 2026-09-19, the retrieval policy probe: the first factor of the
+    decomposition (retrieval) read on its own, with no generation and no training, on a
+    checkpoint and a sealed journal that already exist. For each protocol question the
+    query cue is the model's own; the same entries are indexed twice, ranked by the dense
+    cosine of every run to date and by the expand and sparsify tag of ADR-003 line 6
+    (the dentate gyrus in the map, the mushroom body in Dasgupta, Stevens and Navlakha
+    2017). Reports, per ranking: whether the own episode is among the candidates the
+    buckets return at all, and whether it is in the top k. A miss in the first is the
+    bucketing's, a miss in the second only is the ranking's; the two are never mixed."""
+    from cortex_c2b.read_path import CueIndex, JournalPath
+    device = next(model.parameters()).device
+    out = {"probe": "retrieval policy (ADR-003 line 6): dense cosine against expand and sparsify",
+           "k": k, "n_facts": len(facts), "n_negctrl": len(neg), "rankings": {}}
+    for rank in ("cosine", "fly"):
+        jp = JournalPath(journal, index=CueIndex(seed=seed, rank=rank), seed=seed)
+        for eid, e in journal._entries.items():
+            if e.state != STATE_EVICTED:
+                jp.index.add(eid, np.asarray(e.cue, dtype=np.float32))
+        bridge = JournalBridge(model, journal, journal_path=jp, k=k, seed=seed, device=device)
+        in_cand = in_topk = 0; ranks = []; margins = []; neg_best = []
+        for f in facts:
+            cue = bridge.cues([encode_query(f.query)])[0]
+            own = pointer_of.get(f.entity)
+            scored = jp.index.query(np.asarray(cue, dtype=np.float32), k=len(jp.index))
+            by_pointer = []
+            for eid, sc in scored:
+                e, pointer = jp._resolve(eid)
+                by_pointer.append((pointer, sc))
+            pos = next((i for i, (pt, _) in enumerate(by_pointer) if pt == own), None)
+            if pos is None:
+                continue
+            in_cand += 1; ranks.append(pos + 1)
+            if pos < k:
+                in_topk += 1
+            others = [sc for i, (pt, sc) in enumerate(by_pointer) if pt != own]
+            margins.append(float(by_pointer[pos][1] - max(others))) if others else None
+        for f in neg:
+            cue = bridge.cues([encode_query(f.query)])[0]
+            sc = jp.index.query(np.asarray(cue, dtype=np.float32), k=1)
+            neg_best.append(float(sc[0][1]) if sc else float("nan"))
+        n = len(facts)
+        out["rankings"][rank] = {
+            "own_in_candidates": in_cand / n, "own_in_top_k": in_topk / n,
+            "own_rank": _stats([float(r) for r in ranks]), "own_minus_best_other": _stats(margins),
+            "negctrl_best_score": _stats([x for x in neg_best if x == x])}
+    c, f_ = out["rankings"]["cosine"], out["rankings"]["fly"]
+    out["reading"] = {"top_k_cosine": c["own_in_top_k"], "top_k_fly": f_["own_in_top_k"],
+                      "candidate_misses_cosine": round(1 - c["own_in_candidates"], 4),
+                      "candidate_misses_fly": round(1 - f_["own_in_candidates"], 4)}
+    return out
 
 
 def replay_policy(answers_file: dict, policy: str, threshold: float | None = None) -> dict:
@@ -681,6 +736,7 @@ def _cli():
     import train
     ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
     ap.add_argument("--session-b", action="store_true")
+    ap.add_argument("--retrieval-probe", action="store_true", help="ADR-008 amendment 2026-09-19: the retrieval policy probe on a checkpoint and its sealed journal (no generation, no training)")
     ap.add_argument("--replay", default=None, help="post hoc: apply --policy to a session B answers file (Rev66) and print the rates; never a result on the seed the policy was conceived on")
     ap.add_argument("--threshold", type=float, default=None, help="with --replay: override the oracle's veto threshold (a sensitivity sweep)")
     ap.add_argument("--shape-probe", action="store_true",

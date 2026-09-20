@@ -36,12 +36,46 @@ if PATH_JOURNAL not in PATH_NAMES:
 # ---------------------------------------------------------------------------- #
 # ANN over cues: random-hyperplane LSH (sub-linear; touches buckets, not all)   #
 # ---------------------------------------------------------------------------- #
+FLY_EXPAND = 1024                # expanded units against CUE_DIM inputs (the fly: 2000 Kenyon cells for 50 projection neurons)
+FLY_SAMPLE = 6                   # inputs each expanded unit samples (the fly: about 6)
+FLY_SPARSITY = 0.05              # the winner take all keeps this fraction (the fly's APL silences all but about 5 %)
+
+
+def fly_planes(dim: int = CUE_DIM, expand: int = FLY_EXPAND, sample: int = FLY_SAMPLE, seed: int = 0) -> np.ndarray:
+    """The fixed sparse binary projection of the mushroom body (Dasgupta, Stevens and
+    Navlakha, Science 2017): each expanded unit sums a few inputs, drawn once and never
+    learned. Returned as an (expand, dim) matrix of zeros and ones."""
+    rng = np.random.default_rng(seed)
+    P = np.zeros((expand, dim), dtype=np.float32)
+    for i in range(expand):
+        P[i, rng.choice(dim, size=min(sample, dim), replace=False)] = 1.0
+    return P
+
+
+def fly_tag(cue, planes: np.ndarray, sparsity: float = FLY_SPARSITY) -> np.ndarray:
+    """Expand, then sparsify: the indices of the highest firing fraction of the expanded
+    units, as a sorted array. Two cues are compared by how many indices they share."""
+    y = planes @ np.asarray(cue, dtype=np.float32)
+    keep = max(1, int(round(sparsity * y.shape[0])))
+    idx = np.argpartition(-y, keep - 1)[:keep]
+    return np.sort(idx)
+
+
 class CueIndex:
     """Locality-sensitive hashing over cues. `n_bits` hyperplanes → a signature;
     `n_tables` independent tables raise recall. A query probes n_tables buckets
     and ranks the candidates by exact cosine — never the whole store."""
 
-    def __init__(self, dim: int = CUE_DIM, n_bits: int = 10, n_tables: int = 4, seed: int = 0):
+    def __init__(self, dim: int = CUE_DIM, n_bits: int = 10, n_tables: int = 4, seed: int = 0,
+                 rank: str = "cosine"):
+        # `rank`: "cosine" (the dense cue, every run to date) or "fly" (the expand and
+        # sparsify tag of ADR-003 line 6, declared 2026-09-19, probe only); the candidate
+        # buckets are the same in both, only the ranking of the candidates changes.
+        if rank not in ("cosine", "fly"):
+            raise ValueError("rank is cosine or fly")
+        self.rank = rank
+        self.fly_planes = fly_planes(dim, seed=seed) if rank == "fly" else None
+        self.tags: dict[str, np.ndarray] = {}
         rng = np.random.default_rng(seed)
         self.planes = [rng.standard_normal((dim, n_bits)).astype(np.float32) for _ in range(n_tables)]
         self.tables: list[dict[int, list[str]]] = [dict() for _ in range(n_tables)]
@@ -58,6 +92,8 @@ class CueIndex:
     def add(self, entry_id: str, cue: np.ndarray):
         v = np.asarray(cue, dtype=np.float32)
         self.vecs[entry_id] = v
+        if self.rank == "fly":
+            self.tags[entry_id] = fly_tag(v, self.fly_planes)
         for t in range(len(self.planes)):
             self.tables[t].setdefault(self._sig(v, t), []).append(entry_id)
 
@@ -70,6 +106,11 @@ class CueIndex:
         self.touch_log.append(len(cand))
         if not cand:
             return []
+        if self.rank == "fly":                               # shared indices of the two sparse tags, in [0, 1]
+            qt = fly_tag(q, self.fly_planes); n_keep = float(qt.size)
+            scored = [(eid, float(np.intersect1d(qt, self.tags[eid], assume_unique=True).size) / n_keep) for eid in cand]
+            scored.sort(key=lambda x: -x[1])
+            return scored[:k]
         qn = np.linalg.norm(q) + 1e-8
         scored = []
         for eid in cand:

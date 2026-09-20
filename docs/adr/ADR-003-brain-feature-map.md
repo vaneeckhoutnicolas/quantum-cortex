@@ -19,7 +19,7 @@ One table rules them all. Columns: brain feature → cortex feature → owner �
 | 3 | Corpus callosum, arcuate, wiring cost | Connectome first-class: bottleneck commissure, dedicated links, profiles | RES-10 | connectome & commissure sweeps | W4 |
 | 4 | CA3 pattern completion | Associative retrieval (Hopfield/energy) | C2 / RES-1 | MQAR family | W1 (N2) |
 | 5 | Delta-rule kinship (KDA, dopamine RPE) | Gated delta-rule baseline variant | C2 | MQAR family | W1 (N2) |
-| 6 | Dentate gyrus separation | Expand-sparsify before journal writes | C2b | interference rate | W2 |
+| 6 | Dentate gyrus separation; the fly's mushroom body tag (Dasgupta, Stevens and Navlakha 2017) | Expand-sparsify as a retrieval ranking (`CueIndex(rank="fly")`), probe only | C2b | `hm_lm --retrieval-probe`: the own episode in the candidates and in the top k, per ranking | **declared 2026-09-19** (ADR-008), built, not measured |
 | 7 | CA1 comparator | **Computed** surprise at the memory interface | RES-2 input | write precision | W2 |
 | 8 | Index theory | Journal entry = (cue, content-addressed pointer, salience, schema id) — never a blob | C2b / RES-8 | — design law, applies at first C2b code, no ablation needed | W2 |
 | 9 | Grid cells / TEM | Structure–content factorization in the memory graph | RES-3 / C2b | zero-shot relational transfer | W4 |
@@ -40,6 +40,8 @@ One table rules them all. Columns: brain feature → cortex feature → owner �
 | 24 | Molaison (H.M., after the patient Henry Molaison; defined in docs/benchmarks/hm-protocol.md) dissociation | Standing falsifiable diagnostic: cut journal → skills intact, episodes lost | eval suite | the dissociation holds, or the memory story is wrong | from N2 |
 | 25 | Cerebellum forward model | Speculative drafter | NOW-2 | quality per dollar | W2 |
 | 26 | Motor / pons / medulla / spinal | — deliberately not transposed | QM / runtime | — | — |
+| 27 | Familiarity before recollection (perirhinal against hippocampal; Yonelinas 2002, Brown and Aggleton 2001, disputed by Squire, Wixted and Clark 2007) | The organ's own retrieval similarity carried in every read window line (RES-23, the familiarity mark) | C2b | the Molaison protocol's four conditions; the mark oracle as the ceiling | **measured 2026-09-18**, RESULTS row 36 |
+| 28 | The chickadee's episodic barcode: an event unique sparse pattern, uncorrelated between neighbours, reactivated at retrieval (Chettih, Mackevicius, Hale and Aronov, Cell 2024) | An event tag at the write path, separating two near duplicate episodes; the query carries content only, so retrieval would need a completion step | C2b | interference between near duplicate episodes | **named 2026-09-19, not declared**: the failure it addresses has never been produced by this protocol |
 
 Waves: **W1** = N2 (C2 core family + the two benchmarks). **W1b** = N3 (C3 family). **W2** = N4–N5 window (C2b pipeline & format law, habit cache, drafter, graft fidelity). **W3** = first post-N5 wave (bus, homeostat, heterogeneous experts, insula, trust gating). **W4** = research wave (connectome, TEM, reverse replay). Parked items stay parked.
 

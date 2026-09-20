@@ -262,3 +262,44 @@ def test_the_second_and_third_seed_configurations_of_v9_change_only_the_seed_and
     h = lambda n: train.config_hash(train.Config(**{k: v for k, v in load(n).items() if k in fields}))
     assert h("local_journal_v9_seed2.json") == h("kaggle_t4_journal_v9_seed2.json") != h("kaggle_t4_journal_v9.json")
     assert h("local_journal_v9_seed3.json") == h("kaggle_t4_journal_v9_seed3.json") not in (h("kaggle_t4_journal_v9.json"), h("kaggle_t4_journal_v9_seed2.json"))
+
+
+def test_the_fly_ranking_is_transparent_and_only_reorders_the_same_candidates():
+    """ADR-008 amendment 2026-09-19 (ADR-003 line 6): the expand and sparsify tag is a
+    ranking over the buckets every run has used, never a different index."""
+    import numpy as np
+    from cortex_c2b.read_path import CueIndex, fly_tag, fly_planes, FLY_SPARSITY, FLY_EXPAND
+    rng = np.random.default_rng(0)
+    vs = {f"e{i}": (lambda v: v / np.linalg.norm(v))(rng.standard_normal(64).astype("float32")) for i in range(120)}
+    a, b = CueIndex(seed=1), CueIndex(seed=1, rank="fly")
+    for eid, v in vs.items():
+        a.add(eid, v); b.add(eid, v)
+    assert a.rank == "cosine" and b.rank == "fly" and a.fly_planes is None
+    for q in list(vs.values())[:12]:
+        ca = {e for e, _ in a.query(q, k=len(a))}
+        cb = {e for e, _ in b.query(q, k=len(b))}
+        assert ca == cb                                        # the same candidates, a different order
+    P = fly_planes(64, seed=3)
+    assert P.shape == (FLY_EXPAND, 64) and set(np.unique(P)) <= {0.0, 1.0} and (P.sum(axis=1) == 6).all()
+    t = fly_tag(vs["e0"], P)
+    assert t.size == round(FLY_SPARSITY * FLY_EXPAND) and len(set(t.tolist())) == t.size
+    assert (fly_tag(vs["e0"], P) == t).all()                   # deterministic
+    with pytest.raises(ValueError):
+        CueIndex(rank="barcode")
+
+
+def test_the_retrieval_probe_separates_a_bucket_miss_from_a_ranking_miss():
+    from cortex_c2b import Journal
+    from cortex_c2b.hm_lm import retrieval_probe
+    cfg, m = tiny()
+    j = Journal()
+    b = JournalBridge(m, j, k=3, budget_bytes=96, seed=0, shuffle_seed=1, mark=True)
+    facts, _ = generate_facts(24, 0); neg, _ = generate_facts(8, 10_000)
+    for i, f in enumerate(facts):
+        b.write(f.statement, f.schema, now=100.0 + i, entity=f.entity)
+    r = retrieval_probe(m, j, facts, neg, dict(b.pointer_of), k=3)
+    assert set(r["rankings"]) == {"cosine", "fly"}
+    for rank, v in r["rankings"].items():
+        assert 0.0 <= v["own_in_top_k"] <= v["own_in_candidates"] <= 1.0, rank   # top k is a subset of the candidates
+        assert v["own_rank"] is None or v["own_rank"]["min"] >= 1.0
+    assert r["reading"]["candidate_misses_cosine"] == round(1 - r["rankings"]["cosine"]["own_in_candidates"], 4)

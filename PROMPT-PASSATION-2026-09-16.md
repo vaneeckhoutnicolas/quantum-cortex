@@ -4,7 +4,7 @@
 
 ---
 
-Tu reprends quantum-cortex avec moi, Nicolas Van Eeckhout. Tout ce qui a été décidé est dans le repo, daté, jamais effacé. Commence par lire, dans cet ordre : `REPRISE-2026-09-16.md` (l'état et ce qui attend), `docs/RESULTS.md` (chaque chiffre et son artefact, lignes 1 à 36), `docs/IDEAS-REGISTER-2026-08-07.md` (les décisions, Rev1 à Rev68), `docs/WHITEPAPER.md` (la v1, édition d'atterrissage, à taguer vendredi 18), `docs/STATUS-2026-09-13.md` et ses addenda. Ne propose rien avant d'avoir lu ces cinq fichiers.
+Tu reprends quantum-cortex avec moi, Nicolas Van Eeckhout. Tout ce qui a été décidé est dans le repo, daté, jamais effacé. Commence par lire, dans cet ordre : `REPRISE-2026-09-16.md` (l'état et ce qui attend), `docs/RESULTS.md` (chaque chiffre et son artefact, lignes 1 à 36), `docs/IDEAS-REGISTER-2026-08-07.md` (les décisions, Rev1 à Rev70), `docs/WHITEPAPER.md` (la v1, édition d'atterrissage, à taguer vendredi 18), `docs/STATUS-2026-09-13.md` et ses addenda. Ne propose rien avant d'avoir lu ces cinq fichiers.
 
 ## Qui je suis dans ce projet, et comment tu me complètes
 
