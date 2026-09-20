@@ -752,12 +752,33 @@ def _cli():
     ap.add_argument("--policy", default="plain", choices=list(POLICIES),
                     help="decode policy: plain | head | head+pointer (ADR-008 amendment 2026-09-14) | mark-veto | mark-veto+value (amendment 2026-09-18)")
     args = ap.parse_args()
-    if not (args.session_b or args.shape_probe or args.representation_probe):
+    if not (args.session_b or args.shape_probe or args.representation_probe or args.retrieval_probe):
         if args.replay:
             r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy, threshold=args.threshold)
             print(json.dumps(r, indent=2)); return
-        ap.error("one of --session-b / --shape-probe / --representation-probe / --replay is required")
+        ap.error("one of --session-b / --shape-probe / --representation-probe / --retrieval-probe / --replay is required")
     cfg = train.load_config(args.config)
+    if args.retrieval_probe:                                  # ADR-008 amendment 2026-09-19 (RES-24)
+        from cortex_c2b.crypto import key_from_env
+        from cortex_c2b import content_hash
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = train.VanillaGPT(cfg).to(device)
+        ck = torch.load(args.ckpt, map_location=device, weights_only=False)
+        model.load_state_dict(ck["model"]); model.eval()
+        journal = Journal(args.journal, key=key_from_env(), policy=POLICY_STOP)
+        facts, _ = generate_facts(args.n_facts, args.seed)
+        neg, _ = generate_facts(args.n_negctrl, args.seed + 10_000)
+        pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
+                      if content_hash(f.statement.encode("utf-8")) in journal.payloads}
+        r = retrieval_probe(model, journal, facts, neg, pointer_of, k=cfg.journal_k, seed=args.seed)
+        r["checkpoint"] = {"path": str(args.ckpt), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash")}
+        r["journal"] = {"path": str(args.journal), "entries": len(journal._entries)}
+        out = Path(args.out) if args.out else Path("metrics/mqar") / f"retrieval-probe-{ck.get('run_id')}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+        print(f"retained: {out}")
+        print(json.dumps({"reading": r["reading"], "rankings": {k2: {kk: v2[kk] for kk in ("own_in_candidates", "own_in_top_k")} for k2, v2 in r["rankings"].items()}}, indent=2))
+        return
     if args.representation_probe:
         r = representation_probe_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, seed=args.seed,
                                            k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
