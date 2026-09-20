@@ -1,0 +1,120 @@
+{
+  "benchmark": "hm_protocol_lm",
+  "spec": "docs/benchmarks/hm-protocol.md (frozen thresholds; LM arm amendment 2026-09-12)",
+  "thresholds": {
+    "delta": 0.5,
+    "epsilon_s": 0.01,
+    "floor": 0.175,
+    "chance": 0.125,
+    "negctrl_invalid": 0.1,
+    "invalid_citation_max": 0.01
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0,
+    "admitted": 200
+  },
+  "hm_recall_on": 0.74,
+  "hm_recall_off": 0.0,
+  "hm_gap": 0.74,
+  "hm_skill_delta": 0.0004120200075589198,
+  "ppl_on": 2.603331674361205,
+  "ppl_off": 2.602259491385894,
+  "hm_negctrl_rate": 0.14,
+  "hm_negctrl_on": 0.02,
+  "hm_negctrl_abstain_on": 0.86,
+  "hm_negctrl_abstain_off": 1.0,
+  "hm_false_abstention_on": 0.125,
+  "hm_invalid_citation_on": 0.13,
+  "hm_valid_citation_on": 0.745,
+  "hm_attr_exact_given_valid": 0.9932885906040269,
+  "hm_retrieval_hit": 0.935,
+  "hm_attention_mass": 0.9959307739138603,
+  "hm_marks": {
+    "on": {
+      "own": {
+        "n": 187,
+        "mean": 0.9780650132480152,
+        "min": 0.9465976357460022,
+        "max": 0.9927374720573425,
+        "q10": 0.9658186197280884,
+        "q50": 0.9799326062202454,
+        "q90": 0.9872721672058106
+      },
+      "other_max": {
+        "n": 196,
+        "mean": 0.2697018488131794,
+        "min": -0.13192866742610931,
+        "max": 0.6999848484992981,
+        "q10": 0.08536813408136368,
+        "q50": 0.25267164409160614,
+        "q90": 0.47701846063137054
+      },
+      "max": {
+        "n": 200,
+        "mean": 0.9299486003816128,
+        "min": 0.0695074200630188,
+        "max": 0.9927374720573425,
+        "q10": 0.9564901769161225,
+        "q50": 0.9791423678398132,
+        "q90": 0.9871310710906982
+      }
+    },
+    "negctrl": {
+      "own": null,
+      "other_max": {
+        "n": 49,
+        "mean": 0.28336576553897896,
+        "min": -0.009399430826306343,
+        "max": 0.5618757009506226,
+        "q10": 0.09124454110860825,
+        "q50": 0.29401886463165283,
+        "q90": 0.46606932878494267
+      },
+      "max": {
+        "n": 49,
+        "mean": 0.28336576553897896,
+        "min": -0.009399430826306343,
+        "max": 0.5618757009506226,
+        "q10": 0.09124454110860825,
+        "q50": 0.29401886463165283,
+        "q90": 0.46606932878494267
+      }
+    },
+    "written_in_window": true
+  },
+  "hm_mark_oracle": {
+    "oracle": "mark oracle (RES-23): cite the highest marked line above a threshold read from the training family",
+    "threshold": 0.6122397184371948,
+    "training_accuracy": 0.96,
+    "training_pairs": 250,
+    "recall_on_strict": 0.935,
+    "claims_on": 0.935,
+    "negctrl_claims": 0.0,
+    "gap": 0.935,
+    "passes_without_skill_arm": true,
+    "encoder": "this checkpoint's own cue encoder"
+  },
+  "hm_guess_rate_off": 0.0,
+  "hm_attr_hit_off_by_chance": 0.0,
+  "hm_match_acc_on": null,
+  "hm_match_acc_negctrl": null,
+  "run_valid": false,
+  "hm_dissociation_pass": 0,
+  "persistent": true,
+  "claimable": 0,
+  "storage": {
+    "on_disk": true,
+    "mode": "durable",
+    "policy": "stop",
+    "plaintext_scope": false
+  },
+  "attribution": {
+    "encoder": 0.935,
+    "reader": 0.9959307739138603,
+    "answer": 0.9932885906040269
+  },
+  "verdict": "INVALID -- LM arm, cite-or-abstain contract"
+}

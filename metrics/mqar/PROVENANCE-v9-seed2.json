@@ -1,0 +1,38 @@
+{
+ "purpose": "provenance of v9 on a second seed (2024) and of the first live reading of the organ side decode policies and of the retrieval policy probe. Read before citing RESULTS rows 37 and 38.",
+ "date": "2026-09-20",
+ "run": {
+  "run_id": "4cfd6f6e1406",
+  "config": "configs/local_journal_v9_seed2.json",
+  "config_hash": "d0c0d93ba24555a8",
+  "parent_run_id": "be1fa8139f59",
+  "seed": 2024,
+  "steps": 7324,
+  "tokens_seen": 119996416,
+  "hardware": "NVIDIA GeForce GTX 1660 Ti, local",
+  "gpu_hours": 19.2628,
+  "git_commit": "6bf75dd998a89fd429384e4edb481d6c498688b5",
+  "started_utc": "2026-09-18T20:29:50+00:00",
+  "anomalies": "the circuit breaker recorded that the train loss did not decrease over the run (0.9157 to 0.9418); the token rate fell from about 3100 to about 1730 over the last third of the run, on a laptop card. A plateaued run, not a broken one, as v7 seed 2 was (row 29)."
+ },
+ "sessions_b": {
+  "policies": [
+   "plain",
+   "mark-veto",
+   "mark-veto+value"
+  ],
+  "note": "run on 2026-09-20 AFTER the oracle's generator fix of the same day, so the three see the same windows: 194 of 200 answers identical across policies, and the only outcome changes are invalid or valid becoming abstain, which is the only thing a veto can do. The three files written before the fix were discarded and are not in the record."
+ },
+ "retrieval_probe": {
+  "file": "metrics/mqar/retrieval-probe-4cfd6f6e1406.json",
+  "note": "RES-24, declared 2026-09-19 before this measurement"
+ },
+ "sha256_16": {
+  "mqar/hm-lm-4cfd6f6e1406-session-b-mark-veto-value.json": "1f72981f47965cff",
+  "mqar/hm-lm-4cfd6f6e1406-session-b-mark-veto.json": "0870ca67813ad71f",
+  "mqar/hm-lm-4cfd6f6e1406-session-b.json": "40e26bfa5bd65220",
+  "mqar/hm-lm-4cfd6f6e1406.json": "03fa33c0d11e824d",
+  "mqar/retrieval-probe-4cfd6f6e1406.json": "046d9770884782a4"
+ },
+ "status": "the files are the record; RESULTS rows 37 and 38 read them"
+}
