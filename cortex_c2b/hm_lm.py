@@ -352,7 +352,9 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
     checkpoint and the sealed journal."""
     from cortex_c2b.organ_use import training_facts, plant_pool
     k = k or bridge.k
-    tf, tneg, _ = training_facts(train_n, train_seed)
+    rng_state = bridge.rng.bit_generator.state          # the oracle reads through the bridge and must leave no trace:
+    tf, tneg, _ = training_facts(train_n, train_seed)   # its reads would otherwise advance the window shuffle and make
+                                                        # two policies see different windows (found and fixed 2026-09-20)
     scratch = JournalBridge(model, Journal(), k=k, budget_bytes=bridge.budget, seed=0, shuffle_seed=1,
                             device=bridge.device, mark=bridge.mark)
     plant_pool(scratch, tf)
@@ -387,6 +389,8 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
         return claims / max(1, len(fs)), strict / max(1, len(fs))
     on_claims, on_strict = apply(facts, True)
     neg_claims, _ = apply(neg, False)
+    bridge.rng.bit_generator.state = rng_state          # restored: the probes that follow see the same windows as a
+                                                        # run without the oracle, whatever the policy
     gap = on_strict - 0.0                                       # off is zero by construction: no window, no citation
     passes = (gap >= DELTA) and (neg_claims < NEGCTRL_INVALID)
     return {"oracle": "mark oracle (RES-23): cite the highest marked line above a threshold read from the training family",

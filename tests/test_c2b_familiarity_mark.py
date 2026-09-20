@@ -303,3 +303,24 @@ def test_the_retrieval_probe_separates_a_bucket_miss_from_a_ranking_miss():
         assert 0.0 <= v["own_in_top_k"] <= v["own_in_candidates"] <= 1.0, rank   # top k is a subset of the candidates
         assert v["own_rank"] is None or v["own_rank"]["min"] >= 1.0
     assert r["reading"]["candidate_misses_cosine"] == round(1 - r["rankings"]["cosine"]["own_in_candidates"], 4)
+
+
+def test_the_oracle_leaves_the_window_shuffle_untouched_so_policies_are_paired():
+    """Found on the seed 2024 files of 2026-09-20: the oracle read through the bridge and
+    advanced its shuffle, so a run with a veto policy saw different windows from a plain
+    run. The oracle now restores the generator state and the three policies are paired."""
+    from cortex_c2b import Journal
+    from cortex_c2b.hm_lm import mark_oracle
+    from cortex_c2b.hm_protocol import generate_facts as gf
+    cfg, m = tiny()
+    j = Journal()
+    b = JournalBridge(m, j, k=3, budget_bytes=96, seed=0, shuffle_seed=1, mark=True)
+    facts, _ = gf(16, 0); neg, _ = gf(6, 10_000)
+    for i, f in enumerate(facts):
+        b.write(f.statement, f.schema, now=100.0 + i, entity=f.entity)
+    cue = b.cues([encode_query(facts[0].query)])[0]
+    before = [b.read(cue).window for _ in range(3)]
+    b.rng = np.random.default_rng(1)                                   # same start as the bridge above
+    mark_oracle(m, b, facts, neg, dict(b.pointer_of), train_n=8)
+    after = [b.read(cue).window for _ in range(3)]
+    assert before == after
