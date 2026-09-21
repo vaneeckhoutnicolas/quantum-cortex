@@ -1,3 +1,5 @@
+> **Historical document, not the current state.** True when written; kept because the sequence of decisions is part of the method. For where the project stands now, read `docs/RESULTS.md`, `docs/roadmap.md` and `docs/WHITEPAPER.md`; for the labels, `docs/NAVIGATION.md`.
+
 # EUROHPC PLAN — eligibility, two-stage access, trainability guarantees — 2026-08-07
 
 **Goal:** be certain that if the EuroHPC route is taken, quantum-cortex actually trains in that environment — before depending on it. This document amends the earlier plan ("applications gated on N5") with a two-stage strategy; the amendment is dated, the earlier statement is kept in the REPRISE with its amendment marker.

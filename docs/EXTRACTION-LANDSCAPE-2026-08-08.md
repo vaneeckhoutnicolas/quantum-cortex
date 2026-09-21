@@ -1,3 +1,5 @@
+> **Historical document, not the current state.** True when written; kept because the sequence of decisions is part of the method. For where the project stands now, read `docs/RESULTS.md`, `docs/roadmap.md` and `docs/WHITEPAPER.md`; for the labels, `docs/NAVIGATION.md`.
+
 # EXTRACTION — the August 2026 landscape — 2026-08-08
 
 **Input:** Nicolas's curated list (Top 10 relevant + Top 5 original). **Pipeline applied to every entry:** LICENSE first, classify, load beyond the README where the code carries the idea, extract **knowledge only** (our words, equations, file:line evidence), filter by complementarity with continuity (D15) and C1–C6. **Legal verdict up front: PASS by construction** — zero code copied anywhere; two entries caught by the protocol and ruled read-only.

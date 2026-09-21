@@ -7,6 +7,7 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 
 ## Reading paths
 
+- [How this repository is organised](NAVIGATION.md) — what RES, Rev, ADR, row, D, NOW and W mean, the path an idea takes from the register to a measured row, and which documents are kept current versus kept for the history.
 - **New here** → `../README.md` → `../REPRISE-2026-08-07.md` → hub decision 019 (ecosystem founding decision, `quantum-meridian/docs/decisions/019-quantum-cortex-architecture.md`) → `adr/ADR-001-metrics-first-class.md` → `adr/ADR-002-training-stack-portability.md`.
 - **Reproduce a run** → `../metrics/README.md` → `../metrics/schema/run-v1.schema.json` → `roadmap.md` (N1) → `EUROHPC-PLAN-2026-08-07.md` (§4 environment checklist).
 - **Contribute a component** → `glossary.md` → `IDEAS-REGISTER-2026-08-07.md` → `FEATURES-2026-08-07.md` → `roadmap.md` (gates) → `../CONTRIBUTING.md`.

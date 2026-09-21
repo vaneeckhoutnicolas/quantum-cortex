@@ -100,6 +100,8 @@ Contributions welcome on any of the four — see [`CONTRIBUTING.md`](CONTRIBUTIN
 
 ## License and attribution
 
+**Lost between RES, Rev, ADR, rows and D numbers?** `docs/NAVIGATION.md` is the key: what each label means, the path an idea takes from the register to a measured row, and which documents are current versus historical.
+
 **Where things are.** `docs/WHITEPAPER.md` is the paper. `docs/RESULTS.md` is the record: one row per measurement, with its artefacts, the test that recomputes it, and its reserve. `docs/FALSIFY.md` is the twenty minute way to attack it. `docs/adr/` holds the decisions, declared before the runs they govern; `docs/IDEAS-REGISTER-2026-08-07.md` holds every idea with its dated revision. `metrics/` holds the ledger, the artefacts and the retained logs. `cortex_c2b/` is the memory organ, `train.py` the training entry point, `tests/` the suite that recomputes every published aggregate. `docs/working/` holds the collaboration's own notes: method, not evidence.
 
 **Trying to break it?** `docs/FALSIFY.md` is the twenty minute version: the frozen thresholds and when they were fixed, the readings declared before each run, the negative rows, the command that recomputes every published aggregate from its artefacts, and what would falsify the central claim.

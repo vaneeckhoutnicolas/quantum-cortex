@@ -1,3 +1,5 @@
+> **Historical document, not the current state.** True when written; kept because the sequence of decisions is part of the method. For where the project stands now, read `docs/RESULTS.md`, `docs/roadmap.md` and `docs/WHITEPAPER.md`; for the labels, `docs/NAVIGATION.md`.
+
 # OSS SURVEY — relevant open-source repositories — 2026-08-07
 
 **Purpose:** curated preselection of open-source repositories worth loading *beyond the README* — structure, licenses, and specific files inspected — to extract ideas that strengthen quantum-cortex, challenged by the expert committee. Zero plagiarism: the protocol below is binding.

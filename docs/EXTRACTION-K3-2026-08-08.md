@@ -1,3 +1,5 @@
+> **Historical document, not the current state.** True when written; kept because the sequence of decisions is part of the method. For where the project stands now, read `docs/RESULTS.md`, `docs/roadmap.md` and `docs/WHITEPAPER.md`; for the labels, `docs/NAVIGATION.md`.
+
 # EXTRACTION — Kimi-K3 & kimi-k3-in-c — 2026-08-08
 
 **Purpose:** harvest everything of value from the two repositories **as knowledge**, with per-item legal status. Method (the copyright lock): copyright protects *expression* (code text), never ideas, algorithms, mathematics, or measured facts. This document re-states mechanisms in our own words and equations, cites file:line as evidence, and ships **zero copied code**. Exposure by construction: none.
