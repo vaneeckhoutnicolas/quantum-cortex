@@ -2,9 +2,19 @@
 
 **An open, from-scratch language model built to measure one capability nobody measures: *continuity* — a model that remembers your project and visibly changes its mind when the world changes.**
 
-Independent member of the [Quantum Meridian](https://github.com/vaneeckhoutnicolas/quantum-meridian) ecosystem: the same cognitive concepts that Quantum Meridian runs *as orchestration around third-party models* (expert zones, associative memory, an oracle channel, typed decode contracts) are implemented here *in the weights and the decode loop* of a model trained from scratch. Two planes, one architecture — and both produce measurements.
+Independent member of the [Quantum Meridian](https://github.com/vaneeckhoutnicolas/quantum-meridian) ecosystem: the same cognitive concepts that Quantum Meridian runs *as orchestration around third-party models* (expert zones, associative memory, an oracle channel, typed decode contracts) live here **in the weights and the decode loop**. Apache 2.0, trained from scratch, a dependency in neither direction.
 
-Built by one researcher with a language model as design, implementation and review partner, under an evidentiary discipline strict enough that **the absence of a result is itself a recorded result**. Every number below links to the artefact and the test that produced it. Apache-2.0.
+**The thesis, and what the record now says about it.** A language model is asked to be one system: to know, to recall and to judge, all from the same weights. This project separates them. A sealed journal outside the weights holds the episodes, with their address, their time and the evidence of their own retrieval; the model reads that journal in generation under a contract that obliges it to cite or to abstain. The question the record answers is not whether the model can memorise more, it is **what belongs in the weights and what belongs in an organ**.
+
+Three measured answers, each with a test that can fail:
+
+- **The organ holds what the weights should not.** Cut the journal and the episodes vanish while the skills are untouched; that dissociation is the protocol, frozen before any result existed, and it passes on four seeds in a new process from the disk alone.
+- **The model does not recompute what the organ already knows.** At 27M parameters it learns to retrieve the right episode and to read it, and never learns, from the bytes alone, to judge whether what it read answers the question. Six data recipes moved a prior without moving that judgment. The limit is stated with its size attached.
+- **Give it the organ's own judgment as a number, and the decision moves.** A familiarity mark written into every line of the read window cut claims on entities the journal never held from 0.62 to 0.10, the first movement of that discrimination in nine runs. With the organ also vetoing a weakly marked citation and supplying that line's own value, the four frozen thresholds hold on two independent seeds. The record states it as **the model decides, the organ answers** — never *the model manages it*, because the exactness of the answer is the organ's by construction.
+
+That last sentence is the point, and it is why this is not a memory feature bolted onto a language model. It is the two systems hypothesis made falsifiable at a size one researcher can afford: a cortex that does not rebuild what its hippocampus already holds. What such an organ could also carry — consequences that depend on context, the difference between *what happened* and *what would happen* — is a door this paper names and does not open; see `docs/IDEAS-REGISTER-2026-08-07.md`.
+
+Built by one researcher with a language model as design, implementation and review partner, under an evidentiary discipline strict enough that **the absence of a result is itself a recorded result**. Six of the eleven model measurements are INVALID and are published in the same table as the rest.
 
 ---
 
