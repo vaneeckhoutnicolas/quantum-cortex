@@ -33,3 +33,7 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `benchmarks/external-arm.md` — runbook of the external model arm: the Molaison dissociation on an open model (Qwen3 at 1.7, 4 and 8 billion parameters) through the frozen prompt adapter; prerequisites, the six commands in order with their expected outputs, the files produced, how to read a run (declared in ADR-008, amendment 2026-09-16)
 - `glossary.md` — coined terms. `roadmap.md` — ordered steps with gates.
 - [How to attack this in twenty minutes](FALSIFY.md) — the frozen thresholds, the declared readings, the negative rows, the command that recomputes the aggregates, and what would falsify the central claim.
+
+## Working notes (method, not evidence)
+
+- [docs/working/](working/) — the running state of the collaboration: what is done, what comes next, how a run is graved. Kept in the open because the method is one of the paper's contributions; nothing there is evidence.

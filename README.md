@@ -100,6 +100,8 @@ Contributions welcome on any of the four — see [`CONTRIBUTING.md`](CONTRIBUTIN
 
 ## License and attribution
 
+**Where things are.** `docs/WHITEPAPER.md` is the paper. `docs/RESULTS.md` is the record: one row per measurement, with its artefacts, the test that recomputes it, and its reserve. `docs/FALSIFY.md` is the twenty minute way to attack it. `docs/adr/` holds the decisions, declared before the runs they govern; `docs/IDEAS-REGISTER-2026-08-07.md` holds every idea with its dated revision. `metrics/` holds the ledger, the artefacts and the retained logs. `cortex_c2b/` is the memory organ, `train.py` the training entry point, `tests/` the suite that recomputes every published aggregate. `docs/working/` holds the collaboration's own notes: method, not evidence.
+
 **Trying to break it?** `docs/FALSIFY.md` is the twenty minute version: the frozen thresholds and when they were fixed, the readings declared before each run, the negative rows, the command that recomputes every published aggregate from its artefacts, and what would falsify the central claim.
 
 Apache License 2.0, unmodified. You may use, modify, fork and redistribute this work freely, on one condition that the License itself imposes (Section 4(d)): **the `NOTICE` file must travel with any copy or derivative work, unmodified**, and with it the statement that quantum-cortex was originally created by Nicolas Van Eeckhout. Removing that attribution is a breach of the License. To cite the work, use [`CITATION.cff`](CITATION.cff) (GitHub renders it as "Cite this repository"). The continuity benchmarks published here carry the same requirement.
