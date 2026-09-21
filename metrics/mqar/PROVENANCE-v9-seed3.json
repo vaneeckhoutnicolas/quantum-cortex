@@ -1,0 +1,35 @@
+{
+ "purpose": "provenance of v9 on a third seed (7) and of the second live reading of the organ side decode policies and of the retrieval probe. Read before citing RESULTS row 39.",
+ "date": "2026-09-20",
+ "run": {
+  "run_id": "2e1dc71913b1",
+  "config": "configs/kaggle_t4_journal_v9_seed3.json",
+  "config_hash": "a727d1cb445afa92",
+  "parent_run_id": "be1fa8139f59",
+  "seed": 7,
+  "steps": 7324,
+  "step_in_checkpoint": 7323,
+  "hardware": "Kaggle T4",
+  "provider": "kaggle",
+  "anomalies": "none recorded by the circuit breaker"
+ },
+ "sessions_b": {
+  "policies": [
+   "plain",
+   "mark-veto",
+   "mark-veto+value"
+  ],
+  "note": "run on 2026-09-20 in notebook2f6be15a11 from the fine tune notebook's Output, with the code of the oracle fix of the same day, so the three policies see the same windows. The retrieval probe ran in the same notebook on the same checkpoint."
+ },
+ "files_to_commit": [
+  "metrics/mqar/hm-lm-2e1dc71913b1.json",
+  "metrics/mqar/hm-lm-2e1dc71913b1-session-b.json",
+  "metrics/mqar/hm-lm-2e1dc71913b1-session-b-answers.json",
+  "metrics/mqar/hm-lm-2e1dc71913b1-session-b-answers-mark-veto.json",
+  "metrics/mqar/hm-lm-2e1dc71913b1-session-b-answers-mark-veto-value.json",
+  "metrics/mqar/retrieval-probe-2e1dc71913b1.json",
+  "metrics/mqar/logs/journal-n1-v9-seed3.log",
+  "metrics/mqar/logs/session-b-reread-v9-seed3.log"
+ ],
+ "status": "the two Kaggle logs are retained as files; the JSON files come from the notebooks' Output and are committed with row 39"
+}

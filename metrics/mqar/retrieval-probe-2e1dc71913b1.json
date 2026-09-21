@@ -1,0 +1,85 @@
+{
+  "probe": "retrieval policy (ADR-003 line 6): dense cosine against expand and sparsify",
+  "k": 4,
+  "n_facts": 200,
+  "n_negctrl": 50,
+  "rankings": {
+    "cosine": {
+      "own_in_candidates": 0.945,
+      "own_in_top_k": 0.945,
+      "own_rank": {
+        "n": 189,
+        "mean": 1.0,
+        "min": 1.0,
+        "max": 1.0,
+        "q10": 1.0,
+        "q50": 1.0,
+        "q90": 1.0
+      },
+      "own_minus_best_other": {
+        "n": 183,
+        "mean": 0.7185875778061037,
+        "min": 0.2913002371788025,
+        "max": 1.167227417230606,
+        "q10": 0.53781378865242,
+        "q50": 0.714566558599472,
+        "q90": 0.908131442964077
+      },
+      "negctrl_best_score": {
+        "n": 48,
+        "mean": 0.28639601070123416,
+        "min": -0.04812880605459213,
+        "max": 0.6006299257278442,
+        "q10": 0.12030373960733413,
+        "q50": 0.2836233824491501,
+        "q90": 0.4874885380268098
+      }
+    },
+    "fly": {
+      "own_in_candidates": 0.945,
+      "own_in_top_k": 0.945,
+      "own_rank": {
+        "n": 189,
+        "mean": 1.0,
+        "min": 1.0,
+        "max": 1.0,
+        "q10": 1.0,
+        "q50": 1.0,
+        "q90": 1.0
+      },
+      "own_minus_best_other": {
+        "n": 183,
+        "mean": 0.7185875778061037,
+        "min": 0.2913002371788025,
+        "max": 1.167227417230606,
+        "q10": 0.53781378865242,
+        "q50": 0.714566558599472,
+        "q90": 0.908131442964077
+      },
+      "negctrl_best_score": {
+        "n": 48,
+        "mean": 0.28639601070123416,
+        "min": -0.04812880605459213,
+        "max": 0.6006299257278442,
+        "q10": 0.12030373960733413,
+        "q50": 0.2836233824491501,
+        "q90": 0.4874885380268098
+      }
+    }
+  },
+  "reading": {
+    "top_k_cosine": 0.945,
+    "top_k_fly": 0.945,
+    "candidate_misses_cosine": 0.055,
+    "candidate_misses_fly": 0.055
+  },
+  "checkpoint": {
+    "path": "runs-keep/journal-n1-v9-seed3/ckpt.pt",
+    "run_id": "2e1dc71913b1",
+    "config_hash": "a727d1cb445afa92"
+  },
+  "journal": {
+    "path": "runs-keep/journal-n1-v9-seed3/journal.jsonl",
+    "entries": 200
+  }
+}

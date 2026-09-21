@@ -1,0 +1,120 @@
+{
+  "benchmark": "hm_protocol_lm",
+  "spec": "docs/benchmarks/hm-protocol.md (frozen thresholds; LM arm amendment 2026-09-12)",
+  "thresholds": {
+    "delta": 0.5,
+    "epsilon_s": 0.01,
+    "floor": 0.175,
+    "chance": 0.125,
+    "negctrl_invalid": 0.1,
+    "invalid_citation_max": 0.01
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0,
+    "admitted": 200
+  },
+  "hm_recall_on": 0.795,
+  "hm_recall_off": 0.0,
+  "hm_gap": 0.795,
+  "hm_skill_delta": 0.0,
+  "ppl_on": 2.6194498699342197,
+  "ppl_off": 2.619453656122897,
+  "hm_negctrl_rate": 0.22,
+  "hm_negctrl_on": 0.04,
+  "hm_negctrl_abstain_on": 0.78,
+  "hm_negctrl_abstain_off": 1.0,
+  "hm_false_abstention_on": 0.095,
+  "hm_invalid_citation_on": 0.11,
+  "hm_valid_citation_on": 0.795,
+  "hm_attr_exact_given_valid": 1.0,
+  "hm_retrieval_hit": 0.945,
+  "hm_attention_mass": 0.9838897946476937,
+  "hm_marks": {
+    "on": {
+      "own": {
+        "n": 189,
+        "mean": 0.980472981299042,
+        "min": 0.9525313377380371,
+        "max": 0.9936684370040894,
+        "q10": 0.9712411046028138,
+        "q50": 0.9814656376838684,
+        "q90": 0.9882796287536622
+      },
+      "other_max": {
+        "n": 192,
+        "mean": 0.26039851034389966,
+        "min": -0.1801028996706009,
+        "max": 0.6612324118614197,
+        "q10": 0.07009866312146189,
+        "q50": 0.26225967705249786,
+        "q90": 0.44433003962039946
+      },
+      "max": {
+        "n": 198,
+        "mean": 0.9464223544028673,
+        "min": -0.07301532477140427,
+        "max": 0.9936684370040894,
+        "q10": 0.9671391189098358,
+        "q50": 0.9807522892951965,
+        "q90": 0.9881644487380982
+      }
+    },
+    "negctrl": {
+      "own": null,
+      "other_max": {
+        "n": 48,
+        "mean": 0.2863959019693236,
+        "min": -0.0481288805603981,
+        "max": 0.6006301045417786,
+        "q10": 0.12030347287654877,
+        "q50": 0.28362321853637695,
+        "q90": 0.4874887943267824
+      },
+      "max": {
+        "n": 48,
+        "mean": 0.2863959019693236,
+        "min": -0.0481288805603981,
+        "max": 0.6006301045417786,
+        "q10": 0.12030347287654877,
+        "q50": 0.28362321853637695,
+        "q90": 0.4874887943267824
+      }
+    },
+    "written_in_window": true
+  },
+  "hm_mark_oracle": {
+    "oracle": "mark oracle (RES-23): cite the highest marked line above a threshold read from the training family",
+    "threshold": 0.59075528383255,
+    "training_accuracy": 0.936,
+    "training_pairs": 250,
+    "recall_on_strict": 0.945,
+    "claims_on": 0.945,
+    "negctrl_claims": 0.02,
+    "gap": 0.945,
+    "passes_without_skill_arm": true,
+    "encoder": "this checkpoint's own cue encoder"
+  },
+  "hm_guess_rate_off": 0.0,
+  "hm_attr_hit_off_by_chance": 0.0,
+  "hm_match_acc_on": null,
+  "hm_match_acc_negctrl": null,
+  "run_valid": false,
+  "hm_dissociation_pass": 0,
+  "persistent": true,
+  "claimable": 0,
+  "storage": {
+    "on_disk": true,
+    "mode": "durable",
+    "policy": "stop",
+    "plaintext_scope": false
+  },
+  "attribution": {
+    "encoder": 0.945,
+    "reader": 0.9838897946476937,
+    "answer": 1.0
+  },
+  "verdict": "INVALID -- LM arm, cite-or-abstain contract"
+}
