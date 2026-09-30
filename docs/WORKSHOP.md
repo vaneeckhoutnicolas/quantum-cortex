@@ -12,6 +12,8 @@ What stays in the workshop, removed from the copy's history:
 
 These files describe *how* the author works with a language model, which is his to keep; the method itself, at the level a reader can reproduce, is stated in the whitepaper (§2, §7b). Nothing in them is evidence: no number of the record depends on them, and the test suite does not read them.
 
+**Commit messages.** The copy's commit messages are the workshop's with two trailers rewritten at the filtering, and nothing else changed: the links to the author's private working sessions are removed, and the co-author trailer of the commits written with the language model reads `Co-Authored-By: Claude ecosystem` in place of the model's version name and address. The paper says what the collaborator did (§2, §7b); the trailers say on which commits.
+
 **Commit identifiers.** Filtering rewrites the identifiers of the commits it touches, so a commit identifier cited in a provenance file (`metrics/mqar/PROVENANCE-*.json`) refers to the workshop's history. The mapping from the workshop's identifiers to the copy's, produced by the filtering tool at the moment of the switch, is published here as `docs/COMMIT-MAP.txt` at the first public tag; a reader checks a cited commit by looking up its identifier in that file. The dates of every declaration are those of the workshop's commits, unchanged.
 
 **What the copy is refreshed from.** The workshop remains the place where the work happens; the copy is refreshed from it at each tag, with the same filter, so that the two histories keep the same commits and dates from the first public tag onward.

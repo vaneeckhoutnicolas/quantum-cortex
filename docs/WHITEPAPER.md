@@ -5,6 +5,8 @@ grows by consolidation (RES-19) — a section is filled only with claims that ha
 **admission gate** below. Everything else lives in *Open questions*, explicitly labelled. The
 skeleton is versioned like everything else: dated additions, prior text kept.
 
+**Edition.** v1.0.0, the landing edition, tagged 2026-10-01 and released without announcement, to reviewers first: the record it reports ends at RESULTS row 41, its counts are those of §2.10, and its tag carries its date (`CITATION.cff`, the git tag). A tag does not move: corrections enter the author's workshop first and the public copy by the same filter (`docs/WORKSHOP.md`), each as a dated point release (v1.0.1, …), and the archival identifier is taken on the release the review closes on. Nothing in the text is a promise; every number has its row in `docs/RESULTS.md`.
+
 **Why a paper, and why now:** D19 says the method is as much the contribution as the model — the
 demonstration that an individual with an AI alter-ego can build something significant *by rigour,
 not force*. A paper is how that demonstration reaches the world. Specifying it early keeps every

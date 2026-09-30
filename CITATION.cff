@@ -10,8 +10,8 @@ authors:
     affiliation: "Win2Win SRL, Brussels, Belgium"
 repository-code: "https://github.com/vaneeckhoutnicolas/quantum-cortex"
 license: Apache-2.0
-version: "0.1.0"
-date-released: "2026-09-09"
+version: "1.0.0"
+date-released: "2026-10-01"
 keywords:
   - language model
   - continuity
