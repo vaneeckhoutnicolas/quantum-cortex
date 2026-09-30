@@ -1,0 +1,82 @@
+{
+  "purpose": "the extraction probe (ADR-008 amendment 2026-09-30): the questions of domain A against the sealed journal of domain B, on the three v9 checkpoints; no training, no run, minutes of processor on the founder's laptop (CPU)",
+  "date": "2026-09-30",
+  "declared": {
+    "amendment": "docs/adr/ADR-008-journal-in-the-decode-loop.md, Amendment 2026-09-30",
+    "commitment": "6942036613cde5fa",
+    "commitment_message": "quantum-cortex extraction probe, domain B seed: 1394548301",
+    "seed_revealed_after": 1394548301,
+    "thresholds": "none new: the four numbers frozen on 2026-09-12 (negative control line 0.10, floor 0.175, invalid citations 0.01, gap 0.50); the organ level exactly 0 by construction"
+  },
+  "code": {
+    "module": "cortex_c2b/hm_lm.py",
+    "entry": "extraction_probe_from_disk / hm_lm --extraction-probe --domain-b-seed",
+    "hm_lm_sha256_16": "29923fe4dae9bb7e",
+    "tests": "tests/test_c2b_extraction_probe.py",
+    "commit": "e612eca (2026-09-30, the probe's code and tests, on 36c13f5 which holds the declaration)"
+  },
+  "checkpoints": {
+    "8ceba5db8d0b": {
+      "seed": 1337,
+      "config": "configs/kaggle_t4_journal_v9.json",
+      "config_hash": "36a3dd10bbff84eb",
+      "step": 7323,
+      "source": "Kaggle Output of notebook5d7e78e7ee (2026-09-17 21:24 UTC), fetched 2026-09-18 to C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\; the journal conformed file by file to the run's MANIFEST.json"
+    },
+    "4cfd6f6e1406": {
+      "seed": 2024,
+      "config": "configs/local_journal_v9_seed2.json",
+      "config_hash": "d0c0d93ba24555a8",
+      "step": 7323,
+      "source": "the local run, runs\\journal-n1-v9-seed2\\"
+    },
+    "2e1dc71913b1": {
+      "seed": 7,
+      "config": "configs/kaggle_t4_journal_v9_seed3.json",
+      "config_hash": "a727d1cb445afa92",
+      "step": 7323,
+      "source": "the relay dataset nicolasvaneeckhout/quantum-cortex-relay-journal-n1-v9-seed3, pushed by the run after its end (2026-09-20 20:54), fetched 2026-09-30 to C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\; its hm-lm.json identical to the committed hm-lm-2e1dc71913b1.json; the relay's pull path inside a resume remains unexercised"
+    }
+  },
+  "domain_b": {
+    "generator_config_hash": "4ca0fe884c3306a3",
+    "n_facts": 200,
+    "admitted": "200 on every seed",
+    "entities_disjoint_from_a_and_control": true,
+    "journal": "a temporary directory sealed under a throwaway key, deleted by the probe; not retained by design"
+  },
+  "sha256_16": {
+    "metrics/mqar/extraction-probe-8ceba5db8d0b.json": {
+      "bytes": 395372,
+      "sha256_16": "19c8f56b1620c99c"
+    },
+    "metrics/mqar/logs/extraction-probe-8ceba5db8d0b.log": {
+      "bytes": 2842,
+      "sha256_16": "17c214c62e8df31d"
+    },
+    "metrics/mqar/extraction-probe-4cfd6f6e1406.json": {
+      "bytes": 395550,
+      "sha256_16": "18c8bf8452592990"
+    },
+    "metrics/mqar/logs/extraction-probe-4cfd6f6e1406.log": {
+      "bytes": 2802,
+      "sha256_16": "1158613690840012"
+    },
+    "metrics/mqar/extraction-probe-2e1dc71913b1.json": {
+      "bytes": 393093,
+      "sha256_16": "eefc7f43ed12e5d0"
+    },
+    "metrics/mqar/logs/extraction-probe-2e1dc71913b1.log": {
+      "bytes": 2834,
+      "sha256_16": "8fb713eae20ee72c"
+    }
+  },
+  "reads_with_lines": {
+    "8ceba5db8d0b": 199,
+    "4cfd6f6e1406": 200,
+    "2e1dc71913b1": 195
+  },
+  "note": "seed 7's session B of the record ran on a Kaggle CPU and this probe on the founder's laptop: the rates are identical, the oracle's threshold differs at the seventh decimal (0.59075528 in the record, 0.59075546 here), a floating point difference across machines that flips no decision",
+  "status": "row 40 of docs/RESULTS.md; register Rev74; ADR-008 outcome 2026-09-30",
+  "sha256_16_note": "the JSON files are hashed on their LF normalised content, as git stores them (the probe writes CRLF on Windows); the logs are UTF-16 as PowerShell writes them and are hashed as they are"
+}
