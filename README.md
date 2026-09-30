@@ -41,7 +41,7 @@ Built by one researcher with a language model as design, implementation and revi
 1. **A law borrowed from black-hole thermodynamics that decides when a result may be claimed.** The author's parallel physics program ([mirror-bh-thermodynamics](https://github.com/vaneeckhoutnicolas/mirror-bh-thermodynamics)) proves that thermodynamic invariants which look volatile when only the visible horizons are counted become *exact* when the complete root set is counted — the apparent noise is the share of what was left out (R² = 1 under full accounting, verified to forty digits). Transposed here as **rule 6 of the admission gate — the completeness test**: before claiming, regress the result on the declared context; unexplained variance is treated as an *omitted factor*, not as noise, and blocks the claim until it is found or declared a limit. The law has already acted on this repository twice, in both directions: it exposed an ill-posed metric (the router's "93% of the oracle ceiling" was a ratio over a collapsing denominator — replaced by an absolute measure) and it **refused** to rescue a near-miss (the 5-seed delta result at t = 2.65: the per-seed variance regressed on context at R² 0.15–0.20 — genuine, not omitted, so no adjusted analysis was admissible). A method that corrects its author in both directions is the strongest evidence this repository offers that its numbers can be trusted. → [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md) §2.7 and rule 6, [`metrics/mqar/completeness-test-router-2026-09-08.json`](metrics/mqar/completeness-test-router-2026-09-08.json), register RES-20.
 2. **A continuity benchmark that exists before a model scores well on it.** The Molaison protocol (episodic persistence), the oracle-shift protocol (adaptive revision) and the reference-ratio protocol (non-regeneration) are specified, seeded, config-hashed and open. Whoever defines the measurement frames the question. → [`docs/benchmarks/`](docs/benchmarks/)
 3. **A memory router that cannot degrade the model.** Control as the floor, routing regime that hardens as it consolidates, a circuit breaker that re-routes instead of killing — versioned behind a retro-compatible contract (v2 was added as one dispatch branch; v1 untouched). → [`cortex_c2/`](cortex_c2/), ADR-006
-4. **A method you can audit.** 226 tests in CI, 214 in about two minutes without the training smoke tests; 8 architecture decision records and a 24-entry decision log, dated and never rewritten; a run ledger where unknowns are `null`; two retrogradations and one invalid run kept in the artefacts. The collaboration itself follows a design thinking discipline the author formalised in 2018 (understand before solving; diverge then converge; hold desirability, viability and feasibility together): the researcher supplies the upstream structure, the model supplies rapid divergence and execution, and the ledger arbitrates — a pattern that caught five over claims in one week and is reproducible by others. One consequence is recorded as the project's long horizon (whitepaper §5b): the organ this repository builds, a journal that survives the session boundary and a gate that judges by persistence, is the organ its own AI collaborator lacks; the model that co designed it does not persist between sessions, and the author's ledger reproduced by hand the capability the project measures. That is an ambition, not a result. The same evidentiary discipline was independently converged on by the author's physics program (theorem register, per-claim novelty pre-gates, dated follow-up notes, an archive kept for provenance) — suggesting it is a property of the method, not of either subject. → [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md) §2, [`docs/adr/`](docs/adr/)
+4. **A method you can audit.** 228 tests in CI, 216 in about two minutes without the training smoke tests; 8 architecture decision records and a 25-entry decision log, dated and never rewritten; a run ledger where unknowns are `null`; two retrogradations and one invalid run kept in the artefacts. The collaboration itself follows a design thinking discipline the author formalised in 2018 (understand before solving; diverge then converge; hold desirability, viability and feasibility together): the researcher supplies the upstream structure, the model supplies rapid divergence and execution, and the ledger arbitrates — a pattern that caught five over claims in one week and is reproducible by others. One consequence is recorded as the project's long horizon (whitepaper §5b): the organ this repository builds, a journal that survives the session boundary and a gate that judges by persistence, is the organ its own AI collaborator lacks; the model that co designed it does not persist between sessions, and the author's ledger reproduced by hand the capability the project measures. That is an ambition, not a result. The same evidentiary discipline was independently converged on by the author's physics program (theorem register, per-claim novelty pre-gates, dated follow-up notes, an archive kept for provenance) — suggesting it is a property of the method, not of either subject. → [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md) §2, [`docs/adr/`](docs/adr/)
 
 ---
 
@@ -77,7 +77,7 @@ What the cortex is not: a general chatbot, a frontier code model, or a competito
 git clone https://github.com/vaneeckhoutnicolas/quantum-cortex && cd quantum-cortex
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -e . && pip install pytest
-pytest tests/ -m "not slow"        # 214 tests: ledger, data-mix invariants, C2 layers, router, journal, lifecycle, restart, storage policy, journal in the decode loop, recurrent base hybrid, Molaison
+pytest tests/ -m "not slow"        # 216 tests: ledger, data-mix invariants, C2 layers, router, journal, lifecycle, restart, storage policy, journal in the decode loop, recurrent base hybrid, Molaison
 python -m cortex_c2b.hm_protocol    # the Molaison dissociation, end to end, in seconds (persistent: false, in memory)
 python -m cortex_c2b.hm_protocol --persistent   # the same, sealed on disk, session B reopened from the disk alone
 python train.py --config configs/smoke_journal_cpu.json   # the journal in the decode loop, the whole loop on CPU in a minute (ADR-008); a mechanics smoke, not a result
@@ -87,6 +87,62 @@ python -m cortex_eval.domain_map    # the per-tier domain map from the committed
 ```
 
 GPU runs (the MQAR ablation, the confirmation run) reproduce from the notebooks in [`notebooks/`](notebooks/) on a free Kaggle T4; every run writes its record to the ledger. Full setup: [`docs/GETTING-STARTED.md`](docs/GETTING-STARTED.md).
+
+---
+
+## Use it with your own model
+
+The organ is a component; the 27M cortex is one of its users. Three ways to compose it with a model, each stated in whitepaper §3.6 with what it inherits from the record and what it has to measure for itself:
+
+1. **As a library, any model decoding, no training.** `Journal` (sealed per scope, one key per journal), `WritePath` (the gate: what the journal already predicts is refused), `JournalPath` (the index: a read is never a scan), `lifecycle`. Your model receives the retrieved lines as a window and answers under the contract: cite a label and give the attribute, or abstain. The cue is any unit vector of 64 floats: the protocol's hash seeded address below, or your own encoder. Worked example: `python -m cortex_c2b.companion_demo`.
+2. **A model people use, through the frozen prompt, no training.** `python -m cortex_c2b.external_arm` runs the Molaison dissociation unchanged around an open model (Qwen3 pinned at 1.7, 4 and 8 billion parameters; any other runtime is a wrapper with three calls: `complete`, `nll`, `describe`). First execution retained, not graved: the episodic conditions hold, the skill arm fails (+18.7 % perplexity with the window in front of ordinary text). Runbook: [`docs/benchmarks/external-arm.md`](docs/benchmarks/external-arm.md).
+3. **A model trained with the organ in its decode loop.** `cortex_c2b.lm_bridge` and `cortex_c2b.organ_use`, the way the cortex itself was measured; written for this repository's byte level transformer, not carried to another architecture in this edition.
+
+![Three ways to compose the organ with a model: as a library, behind a frozen prompt, in the decode loop](docs/figures/composition-three-ways.svg)
+
+The first way, in a dozen lines. Session A, today (the key comes from the environment, one per journal, never from a file):
+
+<!-- compose: session A -->
+```python
+import os
+from cortex_c2b import Journal, POLICY_STOP
+from cortex_c2b.write_path import WritePath
+from cortex_c2b.read_path import JournalPath
+from cortex_c2b.hm_protocol import address_cue
+
+key = bytes.fromhex(os.environ["QUANTUM_CORTEX_JOURNAL_KEY"])     # one key per journal, one journal per scope, never in a file
+journal = Journal("runs/my-scope/journal.jsonl", key=key, policy=POLICY_STOP)
+write, read = WritePath(journal, admission_threshold=0.15, seed=0), JournalPath(journal)
+report = write.write(address_cue("decision|argument:originality"),
+                     b"12 Jan: the originality argument is set aside on the strength of ruling 2024/AR/512",
+                     "decision", now=0.0)
+if report.admitted:                                                # the gate refuses what the journal already predicts
+    read.on_write(report.entry)
+print("written" if report.admitted else f"refused: {report.reason}", report.entry.pointer[:12] if report.entry else "")
+```
+
+Session B, months later, in a new process that knows nothing of session A but the disk:
+
+<!-- compose: session B -->
+```python
+import os
+from cortex_c2b import Journal, POLICY_STOP
+from cortex_c2b.read_path import JournalPath
+from cortex_c2b.hm_protocol import address_cue
+
+key = bytes.fromhex(os.environ["QUANTUM_CORTEX_JOURNAL_KEY"])
+journal = Journal("runs/my-scope/journal.jsonl", key=key, policy=POLICY_STOP)   # reopened from the disk alone
+read = JournalPath(journal)
+for address in ("decision|argument:originality", "decision|argument:database-right"):
+    hits = read.retrieve(address_cue(address), k=4)                # never a scan; (entry, payload, score) per hit
+    if hits and hits[0][2] >= 0.5:                                 # the declared line on the journal's own score
+        entry, payload, score = hits[0]
+        print("cite", entry.pointer[:12], payload.decode())        # the window your model answers from, under the contract
+    else:
+        print("abstain: no record for", address)
+```
+
+Expected: the first address is cited with its pointer and its record, the second is abstained on (no record was written); running session A again is refused as redundant; the files under `runs/my-scope/` are sealed (no plaintext at rest). `tests/test_compose_snippet.py` runs these two blocks as they stand, session B in a new process, and asserts all four. The line at 0.5 is declared for this cue convention; with your own encoder, set it on addresses never written before use, as the companion demonstration does. Before believing a pair of a model and the organ, run the protocol on it (`docs/benchmarks/hm-protocol.md`, thresholds frozen since 2026-09-12); a result on any model, PASS, FAIL or INVALID, is a row we publish next to ours with its attribution.
 
 ---
 

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" font-family="Helvetica, Arial, sans-serif">
+  <title>Three ways to compose the organ with a model: as a library around any model, behind a frozen prompt around an open model, and in the decode loop of a model trained with it</title>
+  <desc>Three panels, the organ drawn identically at the bottom of each: a journal sealed per scope, a gate on the write, an index on the read, a lifecycle; a cue goes in, a window of retrieved lines comes out and rises to the model, and the model's answer, cite a label and give the attribute or abstain, goes to a harness that maps the label to the pointer and verifies it. Panel one, the organ as a library: any model of any size behind any runtime, the window as text in the integrator's prompt, the cue from the integrator's encoder or the hash seeded address, no training; it inherits the organ's guarantees by design and the organ level rows, and the pair is to be measured with the protocol. Panel two, a model people use: an open model with frozen weights at a pinned revision, the window as text in a frame whose hash is in the record, the organ's hash seeded cue, no training; first execution retained and not graved, the episodic conditions hold and the skill arm fails at the size run. Panel three, the cortex trained with the organ: the window as content through a zero initialised cross attention gated by the router, a cue encoder learned by contrast, one fine tune; the model alone INVALID at this size, the system PASS on the live seeds under the organ side policy. No measured number appears in the figure.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+    </marker>
+  </defs>
+  <rect width="960" height="640" fill="#ffffff"/>
+<rect x="22" y="22" width="296" height="560" rx="10" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="170" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">(i)  As a library: any model decoding</text>
+<rect x="36" y="66" width="268" height="62" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+<text x="170" y="91" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">Your model</text>
+<text x="170" y="111" text-anchor="middle" font-size="12" fill="#333">any size, any runtime</text>
+<line x1="56" y1="128" x2="56" y2="402" stroke="#666" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="50" y="300" text-anchor="middle" font-size="11" fill="#555" transform="rotate(-90 50 300)">answer</text>
+<line x1="200" y1="262" x2="200" y2="130" stroke="#666" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="84" y="150" width="220" height="52" rx="6" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="194" y="171" text-anchor="middle" font-size="12" fill="#222">the window enters as text,</text>
+<text x="194" y="189" text-anchor="middle" font-size="12" fill="#222">in your prompt or your harness</text>
+<text x="208" y="245" text-anchor="start" font-size="11" fill="#555">window</text>
+<rect x="84" y="264" width="220" height="118" rx="6" fill="#dfe9f7" stroke="#1f3f7a" stroke-width="1"/>
+<text x="194" y="286" text-anchor="middle" font-size="13" font-weight="bold" fill="#1f3f7a">The organ  (cortex_c2b)</text>
+<text x="194" y="306" text-anchor="middle" font-size="11" fill="#333">a journal sealed per scope, one key per journal</text>
+<text x="194" y="323" text-anchor="middle" font-size="11" fill="#333">a gate on the write, an index on the read</text>
+<text x="194" y="340" text-anchor="middle" font-size="11" fill="#333">a lifecycle: consolidate, demote, evict</text>
+<text x="194" y="364" text-anchor="middle" font-size="11" fill="#1f5fbf">cue: your encoder, or the hash seeded address</text>
+<rect x="36" y="404" width="268" height="58" rx="6" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="170" y="424" text-anchor="middle" font-size="12" fill="#222">cite a label and give the attribute, or abstain</text>
+<text x="170" y="442" text-anchor="middle" font-size="12" fill="#333">the label mapped to the pointer and verified</text>
+<rect x="36" y="480" width="268" height="88" rx="6" fill="#f4f4f4" stroke="#bbb" stroke-width="1"/>
+<text x="170" y="500" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#222">no training</text>
+<text x="170" y="520" text-anchor="middle" font-size="11.5" fill="#333">inherits the organ&#x27;s guarantees by design</text>
+<text x="170" y="537" text-anchor="middle" font-size="11.5" fill="#333">and its organ level rows; the pair is yours to</text>
+<text x="170" y="554" text-anchor="middle" font-size="11.5" fill="#333">measure, with the protocol</text>
+<rect x="338" y="22" width="296" height="560" rx="10" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="486" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">(ii)  A model people use: the frozen prompt</text>
+<rect x="352" y="66" width="268" height="62" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="486" y="91" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">An open model, weights frozen</text>
+<text x="486" y="111" text-anchor="middle" font-size="12" fill="#333">pinned revision, published dtype</text>
+<line x1="372" y1="128" x2="372" y2="402" stroke="#666" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="366" y="300" text-anchor="middle" font-size="11" fill="#555" transform="rotate(-90 366 300)">answer</text>
+<line x1="516" y1="262" x2="516" y2="130" stroke="#666" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="400" y="150" width="220" height="52" rx="6" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="510" y="171" text-anchor="middle" font-size="12" fill="#222">the window enters as text,</text>
+<text x="510" y="189" text-anchor="middle" font-size="12" fill="#222">in a frame whose hash is in the record</text>
+<text x="524" y="245" text-anchor="start" font-size="11" fill="#555">window</text>
+<rect x="400" y="264" width="220" height="118" rx="6" fill="#dfe9f7" stroke="#1f3f7a" stroke-width="1"/>
+<text x="510" y="286" text-anchor="middle" font-size="13" font-weight="bold" fill="#1f3f7a">The organ  (cortex_c2b)</text>
+<text x="510" y="306" text-anchor="middle" font-size="11" fill="#333">a journal sealed per scope, one key per journal</text>
+<text x="510" y="323" text-anchor="middle" font-size="11" fill="#333">a gate on the write, an index on the read</text>
+<text x="510" y="340" text-anchor="middle" font-size="11" fill="#333">a lifecycle: consolidate, demote, evict</text>
+<text x="510" y="364" text-anchor="middle" font-size="11" fill="#1f5fbf">cue: the organ&#x27;s hash seeded address</text>
+<rect x="352" y="404" width="268" height="58" rx="6" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="486" y="424" text-anchor="middle" font-size="12" fill="#222">cite a label and give the attribute, or abstain</text>
+<text x="486" y="442" text-anchor="middle" font-size="12" fill="#333">the label mapped to the pointer and verified</text>
+<rect x="352" y="480" width="268" height="88" rx="6" fill="#f4f4f4" stroke="#bbb" stroke-width="1"/>
+<text x="486" y="500" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#222">no training</text>
+<text x="486" y="520" text-anchor="middle" font-size="11.5" fill="#333">first execution retained, not graved:</text>
+<text x="486" y="537" text-anchor="middle" font-size="11.5" fill="#333">the episodic conditions hold, the skill arm</text>
+<text x="486" y="554" text-anchor="middle" font-size="11.5" fill="#333">fails at the size run (the prompt&#x27;s cost)</text>
+<rect x="654" y="22" width="296" height="560" rx="10" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+<text x="802" y="48" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">(iii)  Trained with the organ: decode loop</text>
+<rect x="668" y="66" width="268" height="62" rx="6" fill="#eef3fa" stroke="#1f5fbf" stroke-width="1"/>
+<text x="802" y="91" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">The cortex, trained with the organ</text>
+<text x="802" y="111" text-anchor="middle" font-size="12" fill="#333">the reader: a zero initialised cross attention</text>
+<line x1="688" y1="128" x2="688" y2="402" stroke="#666" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="682" y="300" text-anchor="middle" font-size="11" fill="#555" transform="rotate(-90 682 300)">answer</text>
+<line x1="832" y1="262" x2="832" y2="130" stroke="#666" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="716" y="150" width="220" height="52" rx="6" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="826" y="171" text-anchor="middle" font-size="12" fill="#222">the window enters as content,</text>
+<text x="826" y="189" text-anchor="middle" font-size="12" fill="#222">through the reader, gated by the router</text>
+<text x="840" y="245" text-anchor="start" font-size="11" fill="#555">window</text>
+<rect x="716" y="264" width="220" height="118" rx="6" fill="#dfe9f7" stroke="#1f3f7a" stroke-width="1"/>
+<text x="826" y="286" text-anchor="middle" font-size="13" font-weight="bold" fill="#1f3f7a">The organ  (cortex_c2b)</text>
+<text x="826" y="306" text-anchor="middle" font-size="11" fill="#333">a journal sealed per scope, one key per journal</text>
+<text x="826" y="323" text-anchor="middle" font-size="11" fill="#333">a gate on the write, an index on the read</text>
+<text x="826" y="340" text-anchor="middle" font-size="11" fill="#333">a lifecycle: consolidate, demote, evict</text>
+<text x="826" y="364" text-anchor="middle" font-size="11" fill="#1f5fbf">cue: a learned encoder, trained by contrast</text>
+<rect x="668" y="404" width="268" height="58" rx="6" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="802" y="424" text-anchor="middle" font-size="12" fill="#222">cite a label and give the attribute, or abstain</text>
+<text x="802" y="442" text-anchor="middle" font-size="12" fill="#333">the label mapped to the pointer and verified</text>
+<rect x="668" y="480" width="268" height="88" rx="6" fill="#f4f4f4" stroke="#bbb" stroke-width="1"/>
+<text x="802" y="500" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#222">one fine tune: the contract, the organ&#x27;s use</text>
+<text x="802" y="520" text-anchor="middle" font-size="11.5" fill="#333">the model alone: INVALID at this size,</text>
+<text x="802" y="537" text-anchor="middle" font-size="11.5" fill="#333">attributed; the system, model deciding and</text>
+<text x="802" y="554" text-anchor="middle" font-size="11.5" fill="#333">organ answering: PASS on the live seeds</text>
+<text x="480" y="612" text-anchor="middle" font-size="12.5" fill="#222">The organ is the same in every panel. A result on any model, PASS, FAIL or INVALID, is a row of the record with its attribution.</text>
+</svg>

@@ -100,6 +100,12 @@ def _cue_for(text: str, dim: int = CUE_DIM) -> np.ndarray:
     return v / (np.linalg.norm(v) + 1e-8)
 
 
+address_cue = _cue_for
+"""The organ level cue convention, under its public name (whitepaper 3.6, added
+2026-09-30): the entity is the address. Any unit vector of CUE_DIM floats is a
+valid cue; this one stands in for a learned encoder and addresses no paraphrase."""
+
+
 def value_of_statement(statement: str) -> tuple[str, str, str] | None:
     """The organ's own reading of a line: (schema, entity, attribute) recovered from a
     planted statement by the generator's templates, or None when no template matches.
