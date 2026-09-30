@@ -21,3 +21,5 @@
 | Hemispheres, corpus callosum, connectome profiles | RES-10 (W4) | `connectome.md` — **page live** |
 
 Anyone may request an earlier dive by opening an issue with the use case; the promotion rule applies as everywhere — a dive without its wave ships no claims, only groundwork.
+
+**Added 2026-09-30.** `door-reconstruction-note-2026-09-30.md` is not a brain concept: it is the door note that reads the founder's thermodynamics program for the organ (the reconstruction theorem and the four part partition), versed here as written, as a declaration (register Rev77; whitepaper §3.5, §4.7c and §5d item 7). It ships no claim.
