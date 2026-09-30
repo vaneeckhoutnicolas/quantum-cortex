@@ -15,12 +15,10 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 ## Contents
 
 - `adr/` — local decision records, index `adr/README.md` (ecosystem-level decisions stay in the quantum-meridian hub; full decision log mirrored in `quantum-meridian/docs/reference/quantum-cortex.md`).
-- `HANDOFF-2026-08-07-ecosystem-context.md` — context capsule for any agent (upload to a dedicated workspace).
 - `IDEAS-REGISTER-2026-08-07.md` — innovation candidates, tiers NOW / RES / SPEC.
 - `OSS-SURVEY-2026-08-07.md` — surveyed repositories + binding anti-plagiarism protocol + GitOps tooling.
 - `FEATURES-2026-08-07.md` — features transposed from surveyed code, with evidence.
 - `EUROHPC-PLAN-2026-08-07.md` — eligibility, two-stage access, trainability checklist, sizing.
-- `EXECUTION-2026-08-07.md` — the N1 execution list (E0–E7) with the test → EuroHPC gate.
 - `EXTRACTION-K3-2026-08-08.md` — knowledge harvested from the two K3 repositories, with per-item legal status (zero code copied).
 - `GETTING-STARTED.md` — set up the local Python env and run/verify everything locally (smoke, ledger, the E5 commit loop). Start here to reproduce.
 - `SEQUENCE.md` — **the stage-by-stage synthesis**: everything that ships at each step/wave, one page, status-stamped (synthesizes with pointers, never overrides).
@@ -37,4 +35,4 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 
 ## Working notes (method, not evidence)
 
-- [docs/working/](working/) — the running state of the collaboration: what is done, what comes next, how a run is graved. Kept in the open because the method is one of the paper's contributions; nothing there is evidence.
+- The running state of the collaboration (what is done, what comes next, how a run is graved) is kept in the author's private workshop; this public repository is a filtered copy of it with the same commits and dates ([WORKSHOP.md](WORKSHOP.md)). The method itself is stated in the whitepaper, §2 and §7b; nothing in the working notes is evidence.

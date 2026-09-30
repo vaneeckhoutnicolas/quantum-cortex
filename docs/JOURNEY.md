@@ -24,6 +24,12 @@ Research on memory in language models is full of results that do not survive a s
 
 So when this edition says that something holds, it says on how many seeds, against which frozen threshold, with which reserve written next to it. When it says that something does not hold, it says why, as precisely as the measurements allow, and what would have to be true for it to hold later. The reader who wants to attack the work has a twenty minute page for it (`docs/FALSIFY.md`). Humility here is not a posture; it is what is left when every claim has to survive that page.
 
+## The conviction underneath, stated as a conviction
+
+One idea sits under the whole program and is not a result of it; the author asks that it be named, so that a reader knows where the design comes from. It is that a model's world is relative, not absolute. What a model knows is known from somewhere: in a context, at a time, by an observer with a frame; and the same statement, the same action, does not carry the same meaning or the same consequences in another context. A model trained on a corpus holds an environment that pretends to be absolute, the average of everything it read. The author's conviction, carried over from his work on the observer in thermodynamics (whitepaper §2.7 and §5d, door 7), is that intelligence in use is the opposite: relative to the world around it and to the context it is in.
+
+The organ is that conviction made into a component. It stores the where and the when at the write, because the origin of a record cannot be derived later (§3.5, rule 1); it is sealed per scope, one journal per world, so that no answer crosses into a world it was not written in (§4.9); and its answers are citations of a record at a time rather than reconstructions from an average. The door the paper names and does not open, that the same action has other consequences in another world, is the same conviction one step further (the register's world model door). None of this is measured as a thesis about relativity; what is measured is the organ. The conviction is stated here so that the design is legible, and so that a reader who does not share it knows what to attack.
+
 ## What this step means
 
 Three things are established at this edition, each with a test that can fail.

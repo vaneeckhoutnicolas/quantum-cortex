@@ -4,12 +4,12 @@ This file lists the authors of **quantum-cortex**, the pure-LLM member of the
 Quantum Meridian ecosystem (a project of Win2Win SRL, Belgium). It covers **this
 repository only** — each repository of the family keeps its own `AUTHORS.md`.
 
-The repositories of the family, each with its own `AUTHORS.md`:
+The repositories of the family, each with its own `AUTHORS.md` (private at the v1 edition of this repository; the two hub pages that govern this one are mirrored in `docs/hub/`):
 
-- [quantum-meridian](https://github.com/vaneeckhoutnicolas/quantum-meridian) — documentation & governance hub
-- [quantum-contracts](https://github.com/vaneeckhoutnicolas/quantum-contracts) — shared wire types & invariants
-- [quantum-proxy](https://github.com/vaneeckhoutnicolas/quantum-proxy) — control plane (`qctl`), premium tier
-- [quantum-agent](https://github.com/vaneeckhoutnicolas/quantum-agent) — VS Code extension (fork of Cline), free tier
+- quantum-meridian — documentation & governance hub
+- quantum-contracts — shared wire types & invariants
+- quantum-proxy — control plane (`qctl`), premium tier
+- quantum-agent — VS Code extension (fork of Cline), free tier
 - [quantum-figma-mcp](https://github.com/vaneeckhoutnicolas/quantum-figma-mcp) — design-system federation satellite
 - [quantum-cortex](https://github.com/vaneeckhoutnicolas/quantum-cortex) — the pure-LLM member, Apache-2.0, independent sibling  ← **you are here**
 

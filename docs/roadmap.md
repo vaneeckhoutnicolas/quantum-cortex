@@ -1,6 +1,6 @@
 # Roadmap — quantum-cortex
 
-**Status stamp: 2026-09-30.** Thin and scannable. Every step is gated by ledger data, not by calendar. This file says where the steps stand; `RESULTS.md` says what was measured and `FALSIFY.md` says how to attack it. Normative references: hub decision 019 (architecture and ablation protocol), ADR-001 (metrics discipline), ADR-003 (the transposition map and its waves), ADR-004 (how a result is read).
+**Status stamp: 2026-09-30.** Thin and scannable. Every step is gated by ledger data, not by calendar. This file says where the steps stand; `RESULTS.md` says what was measured and `FALSIFY.md` says how to attack it. Normative references: hub decision 019 (architecture and ablation protocol; mirrored in `docs/hub/`, the hub being private at this edition), ADR-001 (metrics discipline), ADR-003 (the transposition map and its waves), ADR-004 (how a result is read).
 
 ## Where the steps stand
 

@@ -18,8 +18,8 @@ wins. A claim you cannot trace to a `run_id` in the ledger is not a claim of thi
 project.
 
 This repository is an independent member of the Quantum Meridian ecosystem; the
-ecosystem's standing notice lives in the documentation hub:
-<https://github.com/vaneeckhoutnicolas/quantum-meridian/blob/main/docs/reference/disclaimer.md>
+ecosystem's standing notice lives in its documentation hub, which is private at
+this edition. For this repository, this file is the notice that applies.
 
 Independent of any licence, the author retains the moral rights under Belgian law
 (Code of Economic Law, Article XI.165).

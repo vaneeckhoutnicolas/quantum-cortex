@@ -21,7 +21,7 @@ keywords:
   - Quantum Meridian
 references:
   - type: software
-    title: "Quantum Meridian (hub)"
+    title: "Quantum Meridian (hub, private at the v1 edition of quantum-cortex)"
     authors:
       - family-names: "Van Eeckhout"
         given-names: "Nicolas"

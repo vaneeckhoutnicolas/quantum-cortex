@@ -4,7 +4,7 @@ One decision per file, in the quantum-meridian discipline: a record is written w
 decision is taken; an amendment gets its own dated paragraph and prior text is kept —
 errors are noted, never erased. Ecosystem-level decisions stay in the hub: the founding
 decision is **hub decision 019** (`quantum-meridian/docs/decisions/019-quantum-cortex-architecture.md`),
-and the full decision log **D1 to D24** is mirrored in `quantum-meridian/docs/reference/quantum-cortex.md`.
+and the full decision log **D1 to D25** is kept in the hub's `docs/reference/quantum-cortex.md`; the hub is private at the v1 edition, so that page and decision 019 are mirrored here in `docs/hub/`.
 
 | # | Decision | Status |
 |---|---|---|
