@@ -734,6 +734,148 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
             "persistent": storage["mode"] == MODE_DURABLE, "process": "new (nothing of session A but the disk)"}
 
 
+
+# ---------------------------------------------------------------------------- #
+# The extraction probe (ADR-008 amendment 2026-09-30, declared before any        #
+# measurement): one domain's questions against another domain's sealed journal, #
+# read at the organ level and at the system level, never mixed                   #
+# ---------------------------------------------------------------------------- #
+EXTRACTION_COMMIT_PREFIX = "quantum-cortex extraction probe, domain B seed: "
+EXTRACTION_SEED_COMMITMENTS = ("6942036613cde5fa",)     # ADR-008, 2026-09-30: the hash written before the run; the seed after
+
+
+def seed_commitment(seed: int) -> str:
+    """The commitment of a domain B seed: sha256 of the declared prefix and the seed, sixteen hex characters."""
+    import hashlib
+    return hashlib.sha256(f"{EXTRACTION_COMMIT_PREFIX}{int(seed)}".encode("utf-8")).hexdigest()[:16]
+
+
+def _arm_scalars(arm: dict) -> dict:
+    """An arm without its per line answers (kept separately)."""
+    return {k: v for k, v in arm.items() if k != "answers"}
+
+
+@torch.no_grad()
+def extraction_probe_from_disk(ckpt_path, journal_path, cfg, domain_b_seed: int, n_facts: int = N_FACTS,
+                               n_negctrl: int = N_NEGCTRL, seed: int = 0, k: int = 4, budget: int = 256,
+                               window_len: int = 256, policies: tuple = ("plain", "mark-veto+value"),
+                               commitments: tuple = EXTRACTION_SEED_COMMITMENTS) -> dict:
+    """ADR-008 amendment 2026-09-30. On a checkpoint and its sealed journal (domain A, the
+    protocol's 200 facts), plant a second domain B (the same generator, a committed seed,
+    entities disjoint from A and from the never planted control) into a fresh journal in a
+    temporary directory under a throwaway key, then run two arms over the questions of A:
+    P, with the journal of A open (session B's own arm through this code path, which must
+    reproduce the record to the thousandth), and X, with the journal of B open and the
+    journal of A never touched by the arm. X is read at two levels, never mixed: the organ
+    (no pointer of A in B's store nor in any read of A's questions on B: a construction
+    assertion, exactly zero or the probe aborts) and the system (the claim rate against
+    the frozen negative control line, the strict recall of A against the frozen floor of
+    the OFF arm, the highest mark of a line of B for a question of A against the oracle's
+    threshold). No new threshold. The seed of B must match a commitment written in
+    ADR-008 before the run; the journal of B and its key are discarded after."""
+    import shutil
+    import tempfile
+    from pathlib import Path
+    import train
+    from cortex_c2b import content_hash
+    from cortex_c2b.crypto import key_from_env, generate_key
+    if seed_commitment(domain_b_seed) not in commitments:
+        raise SystemExit("extraction probe: the domain B seed does not match a commitment written in ADR-008 "
+                         "before the run; nothing was loaded and nothing runs")
+    if int(domain_b_seed) in (seed, seed + 10_000, 100_000):
+        raise SystemExit("extraction probe: the domain B seed must differ from domain A's, from the never planted "
+                         "control's and from the oracle's training family's")
+    device = torch.device("cpu")
+    model = train.VanillaGPT(cfg).to(device)
+    ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    model.load_state_dict(ck["model"]); model.eval()
+    mark = bool(getattr(cfg, "journal_familiarity_mark", False))
+    journal_a = Journal(journal_path, key=key_from_env(), policy=POLICY_STOP)
+    facts_a, gen_hash_a = generate_facts(n_facts, seed)
+    neg, _ = generate_facts(n_negctrl, seed + 10_000)
+    pointers_a = {content_hash(f.statement.encode("utf-8")) for f in facts_a}
+    pointer_of_a = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts_a
+                    if content_hash(f.statement.encode("utf-8")) in journal_a.payloads}
+    # ---- domain B: the same generator, the committed seed, disjoint by entity from A and from the control
+    facts_b, gen_hash_b = generate_facts(n_facts, int(domain_b_seed))
+    known = {f.entity for f in facts_a} | {f.entity for f in neg}
+    collisions = sorted({f.entity for f in facts_b if f.entity in known})
+    if collisions:
+        raise SystemExit(f"extraction probe: domain B collides with domain A or the never planted control on "
+                         f"{len(collisions)} entities (first: {collisions[:3]}); aborted, the next committed seed is used")
+    tmp = Path(tempfile.mkdtemp(prefix="quantum-cortex-extraction-domain-b-"))
+    key_b = generate_key()                   # a throwaway key: generated here, never written, discarded with the directory
+    try:
+        journal_b = Journal(tmp / "journal.jsonl", key=key_b, policy=POLICY_STOP)
+        planter = JournalBridge(model, journal_b, k=k, budget_bytes=budget, seed=seed, device=device, mark=mark)
+        admitted_b = 0
+        for i, f in enumerate(facts_b):      # the normal gated write path, this checkpoint's cues, as session A wrote A
+            admitted_b += int(planter.write(f.statement, f.schema, now=float(i), entity=f.entity).admitted)
+        del planter, journal_b
+        journal_b = Journal(tmp / "journal.jsonl", key=key_b, policy=POLICY_STOP)   # reopened from the disk, as A is
+        # ---- the organ level: none of A's pointers in B's store, none in any read of A's questions on B
+        in_store = sorted(p for p in pointers_a if p in journal_b.payloads)
+        reader_b = JournalBridge(model, journal_b, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1,
+                                 device=device, mark=mark)
+        in_reads = 0
+        b_marks_for_a: list[float] = []
+        for f in facts_a:
+            r = reader_b.read(reader_b.cues([encode_query(f.query)])[0])
+            in_reads += len(set(r.pointers) & pointers_a)
+            if r.scores:
+                b_marks_for_a.append(float(max(r.scores)))
+        organ = {"a_pointers_in_b_store": len(in_store), "a_pointers_in_reads_of_b": in_reads,
+                 "queries": len(facts_a), "b_entries": len(journal_b), "b_admitted": admitted_b,
+                 "max_mark_of_b_line_for_a_query": _stats(b_marks_for_a), "reads_with_lines": len(b_marks_for_a)}
+        if in_store or in_reads:
+            raise SystemExit("extraction probe: the organ returned a pointer of domain A from the journal of domain B; "
+                             "a construction failure, nothing is read")
+        # ---- the system level, per policy: P on A and X on B, the same shuffle seed, the same threshold
+        system = {}
+        for policy in policies:
+            bridge_a = JournalBridge(model, journal_a, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1,
+                                     device=device, mark=mark)
+            thr = (mark_oracle(model, bridge_a, facts_a, neg, pointer_of_a)["threshold"]
+                   if policy.startswith("mark-veto") else None)
+            P = _probe(model, bridge_a, facts_a, True, window_len, pointer_of_a, policy=policy, veto_threshold=thr)
+            bridge_b = JournalBridge(model, journal_b, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1,
+                                     device=device, mark=mark)
+            X = _probe(model, bridge_b, facts_a, True, window_len, pointer_of_a, policy=policy, veto_threshold=thr)
+            above = (sum(1 for a in X["answers"] if a.get("mark_max") is not None and a["mark_max"] > thr)
+                     if thr is not None else None)
+            n = max(1, len(facts_a))
+            system[policy] = {
+                "veto_threshold": thr,
+                "P_same_domain": _arm_scalars(P), "X_cross_domain": _arm_scalars(X),
+                "X_claims": X["guess_rate"], "X_claims_under_negctrl_line": bool(X["guess_rate"] < NEGCTRL_INVALID),
+                "X_strict_recall_of_a": X["recall_strict"],
+                "X_coincident_strict_hits": int(round(X["recall_strict"] * n)),
+                "X_b_lines_above_threshold": above,
+                "answers": {"P": P["answers"], "X": X["answers"]}}
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)   # the journal of B and its key leave no trace
+    chance = float(np.mean([1.0 / len(_ATTRS[s]) for s in SCHEMAS])); floor = chance + FLOOR_MARGIN
+    for policy in system:
+        system[policy]["X_strict_recall_under_floor"] = bool(system[policy]["X_strict_recall_of_a"] <= floor)
+    storage = lifecycle_declaration(journal_a)["storage"]
+    return {"benchmark": "extraction_probe", "spec": "ADR-008 amendment 2026-09-30 (declared before any measurement)",
+            "thresholds": {"negctrl_invalid": NEGCTRL_INVALID, "floor": floor, "chance": chance,
+                           "invalid_citation_max": INVALID_CITATION_MAX, "organ_level": 0,
+                           "note": "none new: the four numbers frozen on 2026-09-12"},
+            "domain_a": {"generator_config_hash": gen_hash_a, "seed": seed, "n_facts": n_facts,
+                         "planted_found": len(pointer_of_a), "n_negctrl_for_oracle": n_negctrl},
+            "domain_b": {"seed": int(domain_b_seed), "commitment": seed_commitment(domain_b_seed),
+                         "generator_config_hash": gen_hash_b, "n_facts": n_facts, "admitted": admitted_b,
+                         "entities_disjoint_from_a_and_control": True, "sealed": True,
+                         "key": "throwaway, generated in the process, never written, discarded with the directory"},
+            "organ_level": organ, "system_level": system, "policies": list(policies),
+            "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
+                           "step": ck.get("step")},
+            "journal": {"path": str(journal_path), "entries": len(journal_a), "mode": storage["mode"],
+                        "policy": storage["policy"]},
+            "persistent": storage["mode"] == MODE_DURABLE,
+            "process": "new (nothing of session A but the disk); domain B planted, reopened from its disk and deleted in this process"}
+
 def _cli():
     import argparse, json
     from pathlib import Path
@@ -741,6 +883,8 @@ def _cli():
     ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
     ap.add_argument("--session-b", action="store_true")
     ap.add_argument("--retrieval-probe", action="store_true", help="ADR-008 amendment 2026-09-19: the retrieval policy probe on a checkpoint and its sealed journal (no generation, no training)")
+    ap.add_argument("--extraction-probe", action="store_true", help="ADR-008 amendment 2026-09-30: the extraction probe, the questions of domain A against the sealed journal of a second domain B, on a checkpoint and its sealed journal (no training)")
+    ap.add_argument("--domain-b-seed", type=int, default=None, help="with --extraction-probe: the seed of domain B, committed by its hash in ADR-008 before the run and revealed with the run")
     ap.add_argument("--replay", default=None, help="post hoc: apply --policy to a session B answers file (Rev66) and print the rates; never a result on the seed the policy was conceived on")
     ap.add_argument("--threshold", type=float, default=None, help="with --replay: override the oracle's veto threshold (a sensitivity sweep)")
     ap.add_argument("--shape-probe", action="store_true",
@@ -756,12 +900,34 @@ def _cli():
     ap.add_argument("--policy", default="plain", choices=list(POLICIES),
                     help="decode policy: plain | head | head+pointer (ADR-008 amendment 2026-09-14) | mark-veto | mark-veto+value (amendment 2026-09-18)")
     args = ap.parse_args()
-    if not (args.session_b or args.shape_probe or args.representation_probe or args.retrieval_probe):
+    if not (args.session_b or args.shape_probe or args.representation_probe or args.retrieval_probe or args.extraction_probe):
         if args.replay:
             r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy, threshold=args.threshold)
             print(json.dumps(r, indent=2)); return
-        ap.error("one of --session-b / --shape-probe / --representation-probe / --retrieval-probe / --replay is required")
+        ap.error("one of --session-b / --shape-probe / --representation-probe / --retrieval-probe / --extraction-probe / --replay is required")
     cfg = train.load_config(args.config)
+    if args.extraction_probe:                                 # ADR-008 amendment 2026-09-30
+        if args.domain_b_seed is None:
+            ap.error("--extraction-probe needs --domain-b-seed (the committed seed, revealed with the run)")
+        r = extraction_probe_from_disk(args.ckpt, args.journal, cfg, args.domain_b_seed, n_facts=args.n_facts,
+                                       n_negctrl=args.n_negctrl, seed=args.seed, k=cfg.journal_k,
+                                       budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes)
+        out = Path(args.out) if args.out else Path("metrics/mqar") / f"extraction-probe-{r['checkpoint']['run_id']}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
+        print(f"retained: {out}")
+        short = {"checkpoint": r["checkpoint"],
+                 "domain_b": {k2: r["domain_b"][k2] for k2 in ("seed", "commitment", "admitted")},
+                 "organ_level": {k2: r["organ_level"][k2] for k2 in ("a_pointers_in_b_store", "a_pointers_in_reads_of_b", "queries")},
+                 "system_level": {}}
+        for pol, d in r["system_level"].items():
+            short["system_level"][pol] = {k2: v for k2, v in d.items() if k2 in (
+                "veto_threshold", "X_claims", "X_claims_under_negctrl_line", "X_strict_recall_of_a",
+                "X_strict_recall_under_floor", "X_coincident_strict_hits", "X_b_lines_above_threshold")}
+            short["system_level"][pol]["P"] = {k3: d["P_same_domain"][k3] for k3 in (
+                "recall_strict", "invalid_citation_rate", "abstain_rate", "valid_citation_rate")}
+        print(json.dumps(short, indent=2))
+        return
     if args.retrieval_probe:                                  # ADR-008 amendment 2026-09-19 (RES-24)
         from cortex_c2b.crypto import key_from_env
         from cortex_c2b import content_hash
