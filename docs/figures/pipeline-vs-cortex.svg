@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="900" viewBox="0 0 960 900" font-family="Helvetica, Arial, sans-serif">
+  <title>The common pipeline and quantum-cortex, side by side: where they part</title>
+  <desc>Left, the common pipeline of a language model as a product: data, tokens, numbers, a transformer, pretraining, post training that bakes behaviour into the weights, a memory that is the context window or a store read on trust, and the weights as the product. Right, quantum-cortex: provenance before data, the same first five steps at a much smaller scale, post training as one fine tune that teaches a contract and the organ's use with no instruction or preference stage, measurement after every run against frozen thresholds, an organ outside the weights that holds the episodes and answers under the model's decision, and the product as weights, organ and register. No measured number appears in the figure.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+    </marker>
+  </defs>
+  <rect width="960" height="900" fill="#ffffff"/>
+
+  <text x="230" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">Common pipeline: a model as a product</text>
+  <text x="730" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">quantum-cortex: a model with an organ</text>
+
+  <!-- the common pipeline -->
+  <rect x="30" y="120" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="230" y="151" text-anchor="middle" font-size="15" fill="#222">1  Data</text>
+  <rect x="30" y="188" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="230" y="219" text-anchor="middle" font-size="15" fill="#222">2  Tokens</text>
+  <rect x="30" y="256" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="230" y="287" text-anchor="middle" font-size="15" fill="#222">3  Numbers</text>
+  <rect x="30" y="324" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="230" y="355" text-anchor="middle" font-size="15" fill="#222">4  Transformer</text>
+  <rect x="30" y="392" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="230" y="423" text-anchor="middle" font-size="15" fill="#222">5  Pretraining</text>
+  <rect x="30" y="460" width="400" height="64" rx="6" fill="#ececec" stroke="#444" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="230" y="484" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">6  Post training: instructions and human feedback</text>
+  <text x="230" y="506" text-anchor="middle" font-size="13" fill="#333">refusal, tone and preferences baked into the weights</text>
+  <rect x="30" y="558" width="400" height="64" rx="6" fill="#ececec" stroke="#444" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="230" y="582" text-anchor="middle" font-size="14" font-weight="bold" fill="#222">7  Memory: the context window, or a store</text>
+  <text x="230" y="604" text-anchor="middle" font-size="13" fill="#333">retrieved by similarity and read on trust</text>
+  <rect x="30" y="656" width="400" height="50" rx="6" fill="#ffffff" stroke="#222" stroke-width="1.5"/>
+  <text x="230" y="687" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Product: the weights</text>
+  <line x1="230" y1="170" x2="230" y2="186" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="230" y1="238" x2="230" y2="254" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="230" y1="306" x2="230" y2="322" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="230" y1="374" x2="230" y2="390" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="230" y1="442" x2="230" y2="458" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="230" y1="524" x2="230" y2="556" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="230" y1="622" x2="230" y2="654" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- quantum-cortex -->
+  <rect x="530" y="56" width="400" height="44" rx="6" fill="#eef3fa" stroke="#1f5fbf" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="730" y="83" text-anchor="middle" font-size="14" fill="#1f3f7a">0  Provenance: the training slice hashed and recorded</text>
+  <rect x="530" y="120" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="730" y="151" text-anchor="middle" font-size="15" fill="#222">1  Data: a slice of an open web corpus</text>
+  <rect x="530" y="188" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="730" y="219" text-anchor="middle" font-size="15" fill="#222">2  Tokens: bytes</text>
+  <rect x="530" y="256" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="730" y="287" text-anchor="middle" font-size="15" fill="#222">3  Numbers</text>
+  <rect x="530" y="324" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="730" y="345" text-anchor="middle" font-size="15" fill="#222">4  Transformer base</text>
+  <text x="730" y="364" text-anchor="middle" font-size="11" fill="#333">recurrent base arms: stage A measured, stage B declared and not run</text>
+  <rect x="530" y="392" width="400" height="50" rx="6" fill="#f4f4f4" stroke="#444" stroke-width="1"/>
+  <text x="730" y="423" text-anchor="middle" font-size="14" fill="#222">5  Pretraining: one run, the control, in the ledger</text>
+  <rect x="530" y="460" width="400" height="80" rx="6" fill="#eef3fa" stroke="#1f5fbf" stroke-width="1"/>
+  <text x="730" y="483" text-anchor="middle" font-size="14" font-weight="bold" fill="#1f3f7a">6  Post training: one fine tune teaching a contract</text>
+  <text x="730" y="505" text-anchor="middle" font-size="13" fill="#1f3f7a">cite or abstain, and the organ's use;</text>
+  <text x="730" y="525" text-anchor="middle" font-size="13" fill="#1f3f7a">no instruction or preference stage</text>
+  <rect x="530" y="558" width="400" height="80" rx="6" fill="#eef3fa" stroke="#1f5fbf" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="730" y="581" text-anchor="middle" font-size="14" font-weight="bold" fill="#1f3f7a">7  Measurement, after every run</text>
+  <text x="730" y="603" text-anchor="middle" font-size="13" fill="#1f3f7a">thresholds frozen before the run, negative controls,</text>
+  <text x="730" y="623" text-anchor="middle" font-size="13" fill="#1f3f7a">cold reading, rows graved</text>
+  <rect x="530" y="656" width="400" height="100" rx="6" fill="#dfe9f7" stroke="#1f5fbf" stroke-width="1.5"/>
+  <text x="730" y="679" text-anchor="middle" font-size="15" font-weight="bold" fill="#1f3f7a">8  Organ, outside the weights</text>
+  <text x="730" y="701" text-anchor="middle" font-size="12" fill="#1f3f7a">episodic memory sealed per domain, persistent across sessions</text>
+  <text x="730" y="721" text-anchor="middle" font-size="13" fill="#1f3f7a">the model decides, the organ answers</text>
+  <text x="730" y="741" text-anchor="middle" font-size="12" fill="#1f3f7a">refusal is the organ's veto at a frozen threshold</text>
+  <rect x="530" y="774" width="400" height="50" rx="6" fill="#ffffff" stroke="#222" stroke-width="1.5"/>
+  <text x="730" y="805" text-anchor="middle" font-size="15" font-weight="bold" fill="#222">Product: weights, organ and register</text>
+  <line x1="730" y1="100" x2="730" y2="118" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="170" x2="730" y2="186" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="238" x2="730" y2="254" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="306" x2="730" y2="322" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="374" x2="730" y2="390" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="442" x2="730" y2="458" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="540" x2="730" y2="556" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="638" x2="730" y2="654" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="730" y1="756" x2="730" y2="772" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- where they part -->
+  <line x1="436" y1="496" x2="524" y2="496" stroke="#1f5fbf" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="480" y="486" text-anchor="middle" font-size="11" fill="#1f5fbf">what post training is for</text>
+  <line x1="436" y1="592" x2="524" y2="700" stroke="#1f5fbf" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="436" y="626" width="88" height="34" fill="#ffffff"/>
+  <text x="480" y="639" text-anchor="middle" font-size="11" fill="#1f5fbf">where memory</text>
+  <text x="480" y="653" text-anchor="middle" font-size="11" fill="#1f5fbf">lives</text>
+
+  <!-- caption -->
+  <text x="480" y="862" text-anchor="middle" font-size="13" fill="#444">Steps 1 to 5 are shared. The two part twice: at post training, which bakes behaviour into the weights on the left</text>
+  <text x="480" y="880" text-anchor="middle" font-size="13" fill="#444">and teaches a contract on the right; and at memory, a window or a store read on trust against an organ sealed, persistent and measured.</text>
+</svg>
