@@ -39,7 +39,8 @@ A number that skipped a step is not in the record. That is the whole discipline,
 - **The brain side** → `docs/adr/ADR-003-brain-feature-map.md` (the transposition map, twenty eight lines, audited in whitepaper §5c bis), `docs/concepts/` (one page per structure).
 - **The protocol** → `docs/benchmarks/hm-protocol.md`, whose four thresholds have been frozen since 2026-09-12.
 - **The artefacts** → `metrics/runs.jsonl` (one line per training run), `metrics/ARTEFACTS.md` (where each checkpoint and sealed journal lives), `metrics/mqar/` (the measurement files and the retained logs).
-- **How the work is run** → `docs/working/`, method and not evidence.
+- **How the work is run** → `docs/working/`, method and not evidence; `docs/working/LEGAL-AUDIT-2026-09-30.md` for the licensing and provenance audit before the tag.
+- **The approach, for a reader who wants it before the numbers** → `docs/JOURNEY.md`: the long haul, what this edition means and does not, what comes next.
 
 ## Documents kept for the history, not for the current state
 

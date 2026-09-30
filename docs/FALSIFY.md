@@ -12,7 +12,7 @@ Every run of §4 was declared in `docs/adr/ADR-008-journal-in-the-decode-loop.md
 
 ## 3. The negative rows
 
-The model alone is INVALID on every one of its eleven measurements, in the same table as the rest, with their attribution: rows 21 to 29, 36, 37 and 39; what holds is the system of rows 37 and 39, the model deciding and the organ answering. A record that only shows what worked is not evidence; the fastest check of this one is to read the rows that did not.
+The model alone is INVALID on every one of its eleven measurements, in the same table as the rest, with their attribution: rows 21 to 26, 28, 29, 36, 37 and 39 (row 27 is the Σ of the convergence, not a model measurement); what holds is the system of rows 37 and 39, the model deciding and the organ answering. A record that only shows what worked is not evidence; the fastest check of this one is to read the rows that did not.
 
 ## 4. Recompute an aggregate from the artefacts
 

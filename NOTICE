@@ -7,18 +7,41 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not
 use this work except in compliance with the License. You may obtain a copy of
 the License at http://www.apache.org/licenses/LICENSE-2.0
 
-ATTRIBUTION NOTICE (required by Section 4(d) of the Apache License 2.0):
-This NOTICE file must be included, unmodified, in any redistribution or
-Derivative Work of this software, in source or object form, whether or not
-the work is modified, forked, renamed, or incorporated into a larger work.
-Any Derivative Work must retain the statement that quantum-cortex was
-originally created by Nicolas Van Eeckhout. Removing or altering this
-attribution is a breach of the License and terminates the rights it grants.
+ATTRIBUTION NOTICE (Apache License 2.0, Section 4):
+quantum-cortex was originally created by Nicolas Van Eeckhout. Redistribution
+of this work, or of any Derivative Work, in Source or Object form, is permitted
+by the License only on its conditions, two of which concern this file: the
+attribution notices it contains must be retained in the Source form of any
+Derivative Work (Section 4(c)), and a readable copy of them must be included
+with any Derivative Work you distribute, in a NOTICE file, in the source or
+documentation, or in a display where third party notices normally appear
+(Section 4(d)). This holds whether or not the work is modified, forked,
+renamed, or incorporated into a larger work. A redistribution that drops this
+attribution is outside the License. As Section 4(d) provides, the contents of
+this file are for informational purposes only and do not modify the License.
 
-This repository is the pure-LLM member of the Quantum Meridian ecosystem
+Independently of the License, the author holds the moral rights of authorship
+under Belgian law (Code of Economic Law, Article XI.165), including the right
+to be named as the author; these rights are not waived by the License.
+
+AUTHORSHIP: the design, the declarations, the readings and the integration of
+this work are the author's, documented in the repository's dated record; a
+language model produced most of the code and drafted text under his direction
+and review, as stated in the whitepaper (docs/WHITEPAPER.md, section 7b).
+
+THIRD PARTY DATA: the pretraining slice used by the runs in the record is drawn
+from FineWeb-Edu (HuggingFaceFW), made available under the Open Data Commons
+Attribution License v1.0 (ODC-By 1.0); its provenance is recorded in
+data/mixes/fineweb-edu-n1.json and data/mixes/fineweb-edu-n1.provenance.json,
+and the dataset is cited in the whitepaper's references. No third party code
+is vendored in this repository: core components are written from scratch, and
+peripheral needs are met by declared pip dependencies (see requirements.txt
+and docs/OSS-SURVEY-2026-08-07.md for the anti plagiarism protocol).
+
+This repository is the pure LLM member of the Quantum Meridian ecosystem
 (a project of Win2Win SRL). It is fully open and contains no proprietary
-Quantum Meridian control-plane code. The continuity benchmarks it publishes
-(the H.M. protocol, oracle shift, the reference ratio) are part of this work
-and carry the same attribution requirement.
+Quantum Meridian control plane code. The continuity benchmarks it publishes
+(the Molaison dissociation, the H.M. protocol; oracle shift; the reference
+ratio) are part of this work and carry the same attribution requirement.
 
 How to cite this work: see CITATION.cff in this repository.

@@ -10,6 +10,8 @@ before acting on it, for the data you train on, and for the credentials and data
 on any machine you run it on. Nothing here is legal, financial, or regulatory
 advice.
 
+The author accepts no responsibility for any use that anyone makes of this code, of the benchmarks, or of any model trained or run with them; what he asks, and what the License requires, is that his authorship travel with the work (`NOTICE`, `CITATION.cff`). The security guarantees of the memory organ are stated in the whitepaper (§4.9) in two registers, by design and by measure, with their non claims; they are a description of what was verified and measured, not a certification of any kind.
+
 Every claim about this model is bound to its run ledger (`metrics/`): a result
 without a committed record does not exist, and losses are published alongside
 wins. A claim you cannot trace to a `run_id` in the ledger is not a claim of this
