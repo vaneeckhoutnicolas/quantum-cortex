@@ -1,4 +1,4 @@
-> **Mirror.** This page is a copy of `docs/decisions/019-quantum-cortex-architecture.md` in the `quantum-meridian` hub repository, which is private at the v1 edition of quantum-cortex. Copied on 2026-09-30 at the hub's state that carries the D17 amendment of that day; the hub remains the authority and this copy is refreshed at each tag of this repository. Licence of this page: CC BY 4.0 (`LICENSE-DOCS.md`), by the same author.
+> **Mirror.** This page is a copy of `docs/decisions/019-quantum-cortex-architecture.md` in the `quantum-meridian` hub repository, which is private at the v1 edition of quantum-cortex. Copied on 2026-09-30 at the hub's state that carries the D17 amendment and D26 of that day; the hub remains the authority and this copy is refreshed at each tag of this repository. Licence of this page: CC BY 4.0 (`LICENSE-DOCS.md`), by the same author.
 
 # quantum-cortex — a trained kernel model, not an orchestration shell
 

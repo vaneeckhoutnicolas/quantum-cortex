@@ -1,0 +1,60 @@
+{
+  "purpose": "the reconstruction probe on the organ's layer of numbers (ADR-007 amendment 2026-09-30, declared before any measurement; the founder's second exception to the v1 bound): three levels and a reading, on copies of the three sealed journals of row 40; no training, no run, minutes of processor on the founder's laptop (CPU)",
+  "date": "2026-09-30",
+  "declared": {
+    "amendment": "docs/adr/ADR-007-c2b-persistent-tier.md, Amendment 2026-09-30 (corrected the same evening, before any run, on the population of level 2)",
+    "thresholds": {
+      "level_1": "exact at every phase",
+      "level_2_relative": 0.001,
+      "level_3_bound": "the lifecycle's own replay bound, 0.05"
+    },
+    "run": "forty phases on the logical clock from 200, no reads between phases, sentinels from the frozen generator at seed 2 (twenty contracted, ten never planted, the collision abort of row 40), the code's default LifecycleConfig (hash 3212d4c151c5c862), a second process from the disk alone that must agree number for number"
+  },
+  "code": {
+    "module": "cortex_c2b/reconstruction_probe.py",
+    "entry": "python -m cortex_c2b.reconstruction_probe --journal <dir> --run-id <id> --out metrics/mqar",
+    "tests": "tests/test_c2b_reconstruction_probe.py (the mechanics), tests/test_c2b_reconstruction_record.py (row 41 from the files)",
+    "commit": "4c4e6ee (2026-09-30, the probe's code and tests, on 07fd57b which holds the declaration)"
+  },
+  "journals": {
+    "8ceba5db8d0b": {
+      "seed": 1337,
+      "config": "configs/kaggle_t4_journal_v9.json",
+      "source": "C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\journal.jsonl (the same journal as row 40)"
+    },
+    "4cfd6f6e1406": {
+      "seed": 2024,
+      "config": "configs/local_journal_v9_seed2.json",
+      "source": "runs\\journal-n1-v9-seed2\\journal.jsonl (the local run, the same journal as row 40)"
+    },
+    "2e1dc71913b1": {
+      "seed": 7,
+      "config": "configs/kaggle_t4_journal_v9_seed3.json",
+      "source": "C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\journal.jsonl (the relay dataset, the same journal as row 40)"
+    }
+  },
+  "files": {
+    "8ceba5db8d0b": {
+      "file_sha256_lf": "14c9609ecea94809b480b043672d6de15bc719a160b895640638da2f7a13916e",
+      "journal_sha256": "d0d56e5a72fe4cf374154fea40564e4fbe5ef0ac9c2b366d40ed470c8166f1f3",
+      "journal_source": "C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\journal.jsonl",
+      "timestamp_utc": "2026-09-30T21:35:11+00:00",
+      "log": "metrics/mqar/logs/reconstruction-probe-8ceba5db8d0b.log (UTF-16, PowerShell Tee-Object)"
+    },
+    "4cfd6f6e1406": {
+      "file_sha256_lf": "6e5b15ff7beff965c3a81e2f838d1b1406b2f30a3e4985e596ef875d2067a888",
+      "journal_sha256": "697be97c15d2edf3a7c5e2a7fc5774bddec39b8d46c746da899bb3739c4fbccb",
+      "journal_source": "C:\\git\\quantum-cortex\\runs\\journal-n1-v9-seed2\\journal.jsonl",
+      "timestamp_utc": "2026-09-30T21:35:13+00:00",
+      "log": "metrics/mqar/logs/reconstruction-probe-4cfd6f6e1406.log (UTF-16, PowerShell Tee-Object)"
+    },
+    "2e1dc71913b1": {
+      "file_sha256_lf": "8fbb048daf2c71da9e541334871bd6f85c543ea958d050da3d4144565735971b",
+      "journal_sha256": "0e0c1d34438c85c3ced3f766ee0bc6cc7d3fdf030ad5f455fe60abbdbd972034",
+      "journal_source": "C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\journal.jsonl",
+      "timestamp_utc": "2026-09-30T21:35:18+00:00",
+      "log": "metrics/mqar/logs/reconstruction-probe-2e1dc71913b1.log (UTF-16, PowerShell Tee-Object)"
+    }
+  },
+  "note": "the JSON files were written by the probe on Windows with CRLF line endings and are committed LF normalised; the hashes above are of the LF content. The copies of the journals the probe ran on lived in temporary directories and are not retained, by design; the originals were never modified (their sha256 is in each file). The key never travelled: the probe ran on the founder's laptop."
+}
