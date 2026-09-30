@@ -44,4 +44,7 @@ Quantum Meridian control plane code. The continuity benchmarks it publishes
 (the Molaison dissociation, the H.M. protocol; oracle shift; the reference
 ratio) are part of this work and carry the same attribution requirement.
 
+The documentation, the whitepaper and the figures of this repository are licensed
+separately under CC BY 4.0 (see LICENSE-DOCS.md); the code is Apache 2.0.
+
 How to cite this work: see CITATION.cff in this repository.

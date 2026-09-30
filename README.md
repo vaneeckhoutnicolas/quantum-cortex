@@ -14,7 +14,7 @@ Three measured answers, each with a test that can fail:
 
 That last sentence is the point, and it is why this is not a memory feature bolted onto a language model. It is the two systems hypothesis made falsifiable at a size one researcher can afford: a cortex that does not rebuild what its hippocampus already holds. What such an organ could also carry — consequences that depend on context, the difference between *what happened* and *what would happen* — is a door this paper names and does not open; see `docs/IDEAS-REGISTER-2026-08-07.md`.
 
-Built by one researcher with a language model as design, implementation and review partner, under an evidentiary discipline strict enough that **the absence of a result is itself a recorded result**. Six of the eleven model measurements are INVALID and are published in the same table as the rest.
+Built by one researcher with a language model as design, implementation and review partner, under an evidentiary discipline strict enough that **the absence of a result is itself a recorded result**. All eleven measurements of the model alone are INVALID and are published in the same table as the rest, with their attribution; what holds is the system, the model deciding and the organ answering, on two live seeds.
 
 ---
 
@@ -93,7 +93,7 @@ GPU runs (the MQAR ablation, the confirmation run) reproduce from the notebooks 
 ## Where to read next
 
 - **The paper, as it is being written:** [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md) — thesis, method, architecture, results as a domain map, open questions; claims enter only through a seven-rule admission gate.
-- **Every decision, dated:** [`docs/adr/`](docs/adr/) (ADR-001…008) · [`docs/IDEAS-REGISTER-2026-08-07.md`](docs/IDEAS-REGISTER-2026-08-07.md) (20 ideas, each with an implementation status) · the ecosystem-level log D1–D23 in the [hub](https://github.com/vaneeckhoutnicolas/quantum-meridian/blob/main/docs/reference/quantum-cortex.md).
+- **Every decision, dated:** [`docs/adr/`](docs/adr/) (ADR-001…008) · [`docs/IDEAS-REGISTER-2026-08-07.md`](docs/IDEAS-REGISTER-2026-08-07.md) (37 ideas, each with an implementation status) · the ecosystem-level log D1 to D25 in the [hub](https://github.com/vaneeckhoutnicolas/quantum-meridian/blob/main/docs/reference/quantum-cortex.md).
 - **What happens next, and its gates:** [`docs/SEQUENCE.md`](docs/SEQUENCE.md).
 - **The approach, before the numbers:** [`docs/JOURNEY.md`](docs/JOURNEY.md) — a long haul, what this edition means and does not, what comes next, and what it implies if it holds.
 - **AI agents:** read [`CLAUDE.md`](CLAUDE.md) first — the working rules are non-negotiable.
@@ -117,7 +117,7 @@ Contributions welcome on any of the four — see [`CONTRIBUTING.md`](CONTRIBUTIN
 
 **Trying to break it?** `docs/FALSIFY.md` is the twenty minute version: the frozen thresholds and when they were fixed, the readings declared before each run, the negative rows, the command that recomputes every published aggregate from its artefacts, and what would falsify the central claim.
 
-Apache License 2.0, unmodified. You may use, modify, fork and redistribute this work freely, with no warranty and no liability on the author's side (Sections 7 and 8 of the License; [`DISCLAIMER.md`](DISCLAIMER.md)), on the conditions the License itself imposes, one of which is attribution: **the attribution notices of the `NOTICE` file must travel with any copy or derivative work** (Sections 4(c) and 4(d)), and with them the statement that quantum-cortex was originally created by Nicolas Van Eeckhout; a redistribution that drops them is outside the License, and the author's moral rights of authorship under Belgian law hold independently of it. To cite the work, use [`CITATION.cff`](CITATION.cff) (GitHub renders it as "Cite this repository"). The continuity benchmarks published here carry the same requirement. The pretraining slice is drawn from FineWeb-Edu (ODC-By 1.0), attributed in `NOTICE` and in the whitepaper's references.
+Apache License 2.0, unmodified. You may use, modify, fork and redistribute this work freely, with no warranty and no liability on the author's side (Sections 7 and 8 of the License; [`DISCLAIMER.md`](DISCLAIMER.md)), on the conditions the License itself imposes, one of which is attribution: **the attribution notices of the `NOTICE` file must travel with any copy or derivative work** (Sections 4(c) and 4(d)), and with them the statement that quantum-cortex was originally created by Nicolas Van Eeckhout; a redistribution that drops them is outside the License, and the author's moral rights of authorship under Belgian law hold independently of it. To cite the work, use [`CITATION.cff`](CITATION.cff) (GitHub renders it as "Cite this repository"). The continuity benchmarks published here carry the same requirement. The pretraining slice is drawn from FineWeb-Edu (ODC-By 1.0), attributed in `NOTICE` and in the whitepaper's references. The documentation, the whitepaper and the figures are under CC BY 4.0 ([`LICENSE-DOCS.md`](LICENSE-DOCS.md)); the code stays Apache 2.0.
 
 ---
 
