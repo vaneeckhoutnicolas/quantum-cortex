@@ -73,6 +73,8 @@ What the cortex is not: a general chatbot, a frontier code model, or a competito
 
 ## Reproduce it (no GPU needed to verify)
 
+The organ alone, as a library in your own project (§3.6, the first way), installs without the repository: `pip install quantum-cortex` (version 1.0.0 on the Python index, the packages `cortex_c2b`, `cortex_c2`, `cortex_data`, `cortex_eval`; built from the public copy, `docs/WORKSHOP.md`). Reproducing the record needs the repository: the tests, the configurations and the artefacts are not in the package.
+
 ```bash
 git clone https://github.com/vaneeckhoutnicolas/quantum-cortex && cd quantum-cortex
 pip install torch --index-url https://download.pytorch.org/whl/cpu
@@ -94,7 +96,7 @@ GPU runs (the MQAR ablation, the confirmation run) reproduce from the notebooks 
 
 The organ is a component; the 27M cortex is one of its users. Three ways to compose it with a model, each stated in whitepaper §3.6 with what it inherits from the record and what it has to measure for itself:
 
-1. **As a library, any model decoding, no training.** `Journal` (sealed per scope, one key per journal), `WritePath` (the gate: what the journal already predicts is refused), `JournalPath` (the index: a read is never a scan), `lifecycle`. Your model receives the retrieved lines as a window and answers under the contract: cite a label and give the attribute, or abstain. The cue is any unit vector of 64 floats: the protocol's hash seeded address below, or your own encoder. Worked example: `python -m cortex_c2b.companion_demo`.
+1. **As a library, any model decoding, no training.** `Journal` (sealed per scope, one key per journal), `WritePath` (the gate: what the journal already predicts is refused), `JournalPath` (the index: a read is never a scan), `lifecycle`. Your model receives the retrieved lines as a window and answers under the contract: cite a label and give the attribute, or abstain. The cue is any unit vector of 64 floats: the protocol's hash seeded address below, or your own encoder. Worked example: `python -m cortex_c2b.companion_demo`. Installs alone: `pip install quantum-cortex`.
 2. **A model people use, through the frozen prompt, no training.** `python -m cortex_c2b.external_arm` runs the Molaison dissociation unchanged around an open model (Qwen3 pinned at 1.7, 4 and 8 billion parameters; any other runtime is a wrapper with three calls: `complete`, `nll`, `describe`). First execution retained, not graved: the episodic conditions hold, the skill arm fails (+18.7 % perplexity with the window in front of ordinary text). Runbook: [`docs/benchmarks/external-arm.md`](docs/benchmarks/external-arm.md).
 3. **A model trained with the organ in its decode loop.** `cortex_c2b.lm_bridge` and `cortex_c2b.organ_use`, the way the cortex itself was measured; written for this repository's byte level transformer, not carried to another architecture in this edition.
 

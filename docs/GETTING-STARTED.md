@@ -29,6 +29,8 @@ python -m pip install --upgrade pip
 pip install numpy torch jsonschema
 ```
 
+To use the organ as a library in a project of your own, without this repository, `pip install quantum-cortex` installs the four packages (`cortex_c2b`, `cortex_c2`, `cortex_data`, `cortex_eval`) and nothing else: no tests, no configurations, no artefacts. Everything below assumes the clone.
+
 `.venv/` is git-ignored — never commit it. (No `requirements.txt` is pinned yet by design: the dependency surface is deliberately tiny and stated here; a pinned lockfile arrives with W2/DVC when the data pipeline does.)
 
 ## 3. The three things you can verify locally, right now

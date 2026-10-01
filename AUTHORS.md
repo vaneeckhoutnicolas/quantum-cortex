@@ -17,12 +17,16 @@ The repositories of the family, each with its own `AUTHORS.md` (private at the v
 - Nicolas Van Eeckhout (founder) — Win2Win SRL
 
 ## Contributors
-Contributors are added here when their pull request is merged. To be listed, add
-your name (optionally with a handle or email) in your first contribution, or in a
-follow-up PR.
+Contributors are added here when their contribution enters the record: no pull
+request is merged directly in this public copy; a retained contribution is applied
+in the author's workshop with the contributor's authorship kept on the commit and
+reaches this copy at the next refresh of the filter (`CONTRIBUTING.md`,
+`docs/WORKSHOP.md`). To be listed, add your name (optionally with a handle or
+email) in your first contribution, or in a follow-up pull request.
 
 Copyright in each contribution is retained by its author and licensed under the
-terms of this repository's LICENSE (Apache-2.0).
+terms of this repository: Apache-2.0 for the code (`LICENSE`), CC BY 4.0 for the
+documentation and the figures (`LICENSE-DOCS.md`).
 
 Independent of any licence, the author retains the moral rights under Belgian law
 (Code of Economic Law, Article XI.165).

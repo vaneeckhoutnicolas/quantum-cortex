@@ -2,18 +2,22 @@
 
 - **Product text in English.** Conversations may happen in any language; everything committed is English.
 - **The ledger rules everything:** a training run without its committed `metrics/runs.jsonl` record (schema `run-v1`) does not exist. One commit per run: code state + record + regenerated `metrics/LATEST.md`. Unknown values are `null`, never invented. CI enforces schema validity.
-- **Advancement rule (hub decision 019):** a component ships only if it beats the control on ≥ 1 declared capability with ≤ 2% perplexity degradation, tolerance stated before the run. Losses are published.
+- **Advancement rule (hub decision 019, mirrored in `docs/hub/019-quantum-cortex-architecture.md`):** a component ships only if it beats the control on ≥ 1 declared capability with ≤ 2% perplexity degradation, tolerance stated before the run. Losses are published.
 - **Decisions:** dated ADRs in `docs/adr/` (index: `docs/adr/README.md`); amendments are dated, prior text is kept — errors are noted, never erased. Promotions from the ideas register cite it.
 - **Anti-plagiarism protocol is binding:** see `docs/OSS-SURVEY-2026-08-07.md`. Core components (C1-C6 and the model's critical path) are **always written from scratch** - no verbatim reuse in the core, whatever the license. Peripheral needs: pip dependency > re-implementation from the paper > adaptation as a last resort (MIT/BSD/Apache-2.0 only, provenance header + NOTICE entry); unclear licenses are read-only. Understand, rewrite, optimize, criticize - never duplicate.
 - **Portability rules (ADR-002):** pure-framework ops; custom kernels Triton-only, with a framework fallback and a measured, ledger-recorded speedup.
 
 ## How to contribute
 
-1. **Open an issue first** for anything non-trivial — describe the change before large work.
-2. Fork, branch, and keep **commits granular**: one logical change per commit, with a clear message — in this project granular commits are documentation, not just hygiene.
-3. Run the CPU smoke before opening a PR: `python train.py --config configs/smoke_cpu.json` (seconds on CPU; correctness only — CPU never pretrains, ADR-002). CI runs the same smoke plus the ledger validation on every push.
-4. Open a pull request against `main`, describing what changed and why. Read the [Code of Conduct](CODE_OF_CONDUCT.md); by participating you agree to it.
+This public repository is a **filtered copy of the author's private workshop repository** (`docs/WORKSHOP.md`): the same commits and dates, with a declared set of working files removed from every commit. That has one consequence for contributions, stated here so that nobody is surprised by it: **no pull request is merged directly in this repository.** A pull request is read; if it is retained, it is applied in the workshop with your authorship kept on the commit (`git cherry-pick` or `git am`), credited in `AUTHORS.md`, and it reaches this copy at the next refresh of the filter; the pull request is then closed with the identifier of the commit that carries it. The two histories stay identical that way, which is what keeps the commit identifiers cited in the record resolvable.
+
+1. **Open an issue first** for anything beyond a typo: a wrong number, a stale sentence, a failing test, a proposed change. For a number, cite the row of `docs/RESULTS.md` and the file it points to. For a security problem, do not open an issue: see `SECURITY.md`.
+2. Fork, branch, and keep **commits granular**: one logical change per commit, with a clear message; in this project granular commits are documentation, not just hygiene.
+3. Run the fast suite before opening a pull request: `pytest tests/ -m "not slow"` (239 tests, about two minutes on a CPU), and the CPU smoke `python train.py --config configs/smoke_cpu.json` (seconds; correctness only, CPU never pretrains, ADR-002). CI runs the same on every push; a workflow from a fork runs only after the maintainer's approval.
+4. Open a pull request against `main`, describing what changed and why. It is answered there; if retained it arrives in `main` under your name by the refresh, as said above. Read the [Code of Conduct](CODE_OF_CONDUCT.md); by participating you agree to it.
+
+What a contribution cannot do: move a frozen threshold, edit a row of the record, or change a number without the file that produced it (`docs/FALSIFY.md`; the seven rule gate of the whitepaper, §2.6). A new measurement is declared before it is run, as an amendment to a decision record (thresholds, readings of every outcome, positive control), like every measurement in the record.
 
 ## Licensing of contributions
 
-This repository is fully open: **Apache-2.0, the whole repository** — no proprietary tier, no licence gate, ever. Contributions are accepted under the same licence (Apache License 2.0, section 5). By submitting a contribution you confirm you have the right to do so. Add yourself to [AUTHORS.md](AUTHORS.md) in your first contribution.
+The code is under the Apache License 2.0 (`LICENSE`, with the attribution conditions stated in `NOTICE`); the documentation, the whitepaper and the figures are under CC BY 4.0 (`LICENSE-DOCS.md`). There is no proprietary tier and no licence gate. A contribution to the code is accepted under the Apache License 2.0 (its section 5); a contribution to the documentation is accepted under CC BY 4.0. By submitting a contribution you confirm you have the right to do so. Add yourself to [AUTHORS.md](AUTHORS.md) in your first contribution.
