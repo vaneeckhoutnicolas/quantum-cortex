@@ -107,9 +107,14 @@ class LifecycleConfig:
     sentinel_negctrl: int = 10       # never planted facts probed at every phase
     sentinel_seed: int = 0
     seed: int = 0
+    withdraw_at_eviction: bool = False   # ADR-007 amendment 2026-10-01: an eviction withdraws the entry's pattern
+                                         # from the persistent memory; off until the withdrawal probe is read
 
     def config_hash(self) -> str:
-        return _hash_obj(asdict(self))
+        d = asdict(self)
+        if not d.get("withdraw_at_eviction"):
+            d.pop("withdraw_at_eviction", None)   # the hash of the record's files (rows 36 to 41) is unchanged while the flag is off
+        return _hash_obj(d)
 
 
 # ---------------------------------------------------------------------------- #
@@ -125,6 +130,7 @@ class PersistentMemory:
     def __init__(self, dim: int = CUE_DIM, beta: float = 16.0):
         self.dim, self.beta = dim, beta
         self._K = np.zeros((0, dim), dtype=np.float32)
+        self._ids: list[str | None] = []          # the entry behind each row, so that a withdrawal is by identity
 
     def __len__(self):
         return int(self._K.shape[0])
@@ -148,12 +154,38 @@ class PersistentMemory:
         declared threshold; a failed replay is withdrawn from the store."""
         q = self._unit(cue)
         self._K = np.vstack([self._K, q[None, :]])
+        self._ids.append(None)
         r = self.reconstruct(q)
         err = float(np.clip(1.0 - float(r @ q / (np.linalg.norm(r) + 1e-8)), 0.0, 1.0))
         return err
 
     def withdraw_last(self) -> None:
         self._K = self._K[:-1]
+        self._ids.pop()
+
+    def label_last(self, entry_id: str) -> None:
+        """Name the entry behind the last replayed pattern (ADR-007 amendment 2026-10-01), so
+        that a withdrawal can be by identity. The two call contract (replay, reconstruct) is
+        untouched; a memory without this call keeps the v1.0 behaviour, no withdrawal."""
+        if self._ids:
+            self._ids[-1] = entry_id
+
+    def withdraw(self, entry_id: str) -> bool:
+        """Remove the pattern stored for this entry (ADR-007 amendment 2026-10-01). The
+        store keeps its patterns explicitly, so the removal is exact by construction: after
+        it, the memory holds the patterns of the other entries and nothing of this one.
+        Returns whether a pattern was found; what the other patterns still reconstruct of
+        the withdrawn address is the probe's measurement, not this method's claim."""
+        rows = [i for i, x in enumerate(self._ids) if x == entry_id]
+        if not rows:
+            return False
+        keep = np.ones(len(self._ids), dtype=bool); keep[rows] = False
+        self._K = self._K[keep]
+        self._ids = [x for i, x in enumerate(self._ids) if keep[i]]
+        return True
+
+    def ids(self) -> list[str | None]:
+        return list(self._ids)
 
 
 # ---------------------------------------------------------------------------- #
@@ -191,7 +223,11 @@ class LifecycleScheduler:
         self.last_phase: dict | None = None
         # ---- Decision 8: a scheduler opened on a journal continues it, it does not restart it
         for eid in journal.consolidated_order:       # the persistent memory, in consolidation order
-            self.memory.replay(journal._entries[eid].cue)   # verified when it was consolidated
+            e = journal._entries[eid]
+            if self.cfg.withdraw_at_eviction and e.state == STATE_EVICTED:
+                continue                             # withdrawn at its eviction (ADR-007 amendment 2026-10-01): the log says so
+            self.memory.replay(e.cue)                # verified when it was consolidated
+            self._label(eid)
         self.phases = journal.phase_count
         self.refused = journal.refused_count
         # the sentinel set: contracted facts from the frozen H.M. generator (invariant 8)
@@ -211,6 +247,12 @@ class LifecycleScheduler:
         self.writes_since_phase = sum(1 for eid in journal.writes_since_last_phase
                                       if eid not in sentinel_ids
                                       and journal._entries[eid].schema_id != SCHEMA_SUMMARY)
+
+    def _label(self, entry_id: str) -> None:
+        """Name the last replayed pattern, when the memory can hold a name (optional call)."""
+        label = getattr(self.memory, "label_last", None)
+        if label is not None:
+            label(entry_id)
 
     # ------------------------------------------------------------------ writes --
     def write(self, cue, payload: bytes, schema_id: str, now: float):
@@ -391,18 +433,26 @@ class LifecycleScheduler:
             err = self.memory.replay(J._entries[eid].cue)
             if err <= cfg.replay_error_max:
                 J.transition(eid, STATE_CONSOLIDATED); consolidated += 1
+                self._label(eid)
             else:
                 self.memory.withdraw_last(); failed += 1
         self.replay_failed += failed
         demoted = 0
         for group in p.demote:                                     # 4. K similar -> one summary
             self._demote(group, now); demoted += 1
-        evicted = 0
+        evicted, withdrawn = 0, 0
         for eid in p.evict:                                        # 5. verdicts (cascade already listed)
             if J._entries[eid].state != STATE_EVICTED:
                 J.transition(eid, STATE_EVICTED); evicted += 1
-        return {"consolidated": consolidated, "replay_failed": failed,
-                "demoted_groups": demoted, "evicted": evicted}
+                if cfg.withdraw_at_eviction:                       # the address leaves with the content
+                    withdraw = getattr(self.memory, "withdraw", None)
+                    if withdraw is not None and withdraw(eid):
+                        withdrawn += 1
+        applied = {"consolidated": consolidated, "replay_failed": failed,
+                   "demoted_groups": demoted, "evicted": evicted}
+        if cfg.withdraw_at_eviction:
+            applied["withdrawn"] = withdrawn                       # the phase event carries it only under the flag
+        return applied
 
     def _demote(self, group: list[str], now: float) -> Entry:
         J = self.j
