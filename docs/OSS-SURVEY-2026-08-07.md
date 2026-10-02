@@ -12,6 +12,7 @@
 4. **GPL / AGPL / custom / unclear licenses:** inspiration only, zero code reuse. When a LICENSE file is non-standard, read it in full before deciding — until then the repo is read-only.
 5. **Datasets** carry their own licenses (e.g. FineWeb-Edu: ODC-By → attribution required).
 6. Every borrowed *idea* is cited in the whitepaper's related-work section — the positioning section hub decision 019 already mandates.
+7. **Research code is never a dependency (the founder, 2026-10-02; scoped 2026-10-03, A1).** For an idea taken from another research project (the code of a paper, the repository of a method), the preference order of rule 3 collapses to one option: reimplement from the paper, appropriate to this code, cite in the code and in the register; no pip dependency on the authors' code, no adaptation of it, whatever its licence. A similarity check (JPlag or an equivalent tool) is run on every such reimplementation before delivery and its result kept with it. The base stack (PyTorch, numpy, the test and packaging tools) and the models the external arm measures, with the libraries that load them, are outside the rule and stay ordinary, declared dependencies.
 
 ## Loaded and verified today (tarball, license read, structure inspected)
 
