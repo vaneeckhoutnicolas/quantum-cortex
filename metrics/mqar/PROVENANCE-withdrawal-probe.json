@@ -1,0 +1,62 @@
+{
+  "purpose": "the withdrawal at eviction, measured (ADR-007 amendment 2026-10-01, declared before any measurement; the first item of v1.1): each of the three sealed journals of rows 40 and 41 run twice from the same copy by the same code, once with the flag off (the control, which must reproduce the row 41 file number for number) and once with the flag on (the measurement); no training, no run, minutes of processor on the founder's laptop (CPU)",
+  "date": "2026-10-02",
+  "declared": {
+    "amendment": "docs/adr/ADR-007-c2b-persistent-tier.md, Amendment 2026-10-01 (declared 03:30, validated by the founder, built 17:00; the readings (a) to (d) written before the run)",
+    "thresholds": {
+      "level_1": "exact at every phase",
+      "level_2_relative": 0.001,
+      "level_3_bound": "the lifecycle's own replay bound, 0.05, unchanged",
+      "near_duplicate_radius": "the code's demotion radius, a cosine of 0.90 (demote_min_cosine), unchanged"
+    },
+    "run": "forty phases on the logical clock from 200, no reads between phases, the sentinels of the frozen generator at seed 2 (twenty contracted, ten never planted, the collision abort of row 40); two configurations one flag apart: withdraw_at_eviction off (hash 3212d4c151c5c862, the hash of rows 36 to 41) and on (hash 4c11b44d47901881); for each, a second process from the disk alone that must agree number for number"
+  },
+  "code": {
+    "module": "cortex_c2b/withdrawal_probe.py (over cortex_c2b/reconstruction_probe.py and cortex_c2b/lifecycle.py)",
+    "entry": "python -m cortex_c2b.withdrawal_probe --journal <journal.jsonl> --run-id <id> --out metrics/mqar (the row 41 file of the journal found from the run id)",
+    "tests": "tests/test_c2b_withdrawal_probe.py (the mechanics, 7 tests), tests/test_c2b_withdrawal_record.py (row 42 from the files, 15 tests)",
+    "commit": "9b79899 (2026-10-02, 23:01: the mechanism, the probe and their tests, with the amendment's text; the runs at 23:08 to 23:10 on that commit)"
+  },
+  "journals": {
+    "8ceba5db8d0b": {
+      "seed": 1337,
+      "config": "configs/kaggle_t4_journal_v9.json",
+      "source": "C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\journal.jsonl (the same journal as rows 40 and 41)"
+    },
+    "4cfd6f6e1406": {
+      "seed": 2024,
+      "config": "configs/local_journal_v9_seed2.json",
+      "source": "runs\\journal-n1-v9-seed2\\journal.jsonl (the local run, the same journal as rows 40 and 41)"
+    },
+    "2e1dc71913b1": {
+      "seed": 7,
+      "config": "configs/kaggle_t4_journal_v9_seed3.json",
+      "source": "C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\journal.jsonl (the relay dataset, the same journal as rows 40 and 41)"
+    }
+  },
+  "files": {
+    "8ceba5db8d0b": {
+      "file_sha256_lf": "159a7eaacb9739727fc8019631900ce5fe4565b90caabb7410e7c368d8dc4f3e",
+      "journal_sha256": "d0d56e5a72fe4cf374154fea40564e4fbe5ef0ac9c2b366d40ed470c8166f1f3",
+      "journal_source": "C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\journal.jsonl",
+      "timestamp_utc": "2026-10-02T21:08:07+00:00",
+      "log": "metrics/mqar/logs/withdrawal-probe-8ceba5db8d0b.log (UTF-16, PowerShell Tee-Object)"
+    },
+    "4cfd6f6e1406": {
+      "file_sha256_lf": "7f0de586e77f0a76e141da4cd5992c20412157281fd4dfc82b5261fc7bbe7142",
+      "journal_sha256": "697be97c15d2edf3a7c5e2a7fc5774bddec39b8d46c746da899bb3739c4fbccb",
+      "journal_source": "runs\\journal-n1-v9-seed2\\journal.jsonl",
+      "timestamp_utc": "2026-10-02T21:10:17+00:00",
+      "log": "metrics/mqar/logs/withdrawal-probe-4cfd6f6e1406.log (UTF-16, PowerShell Tee-Object)"
+    },
+    "2e1dc71913b1": {
+      "file_sha256_lf": "4e6f08a1cbd18fc76b4a8aa05a6fdeac2971ccc750108f269ffae147d5ce7d76",
+      "journal_sha256": "0e0c1d34438c85c3ced3f766ee0bc6cc7d3fdf030ad5f455fe60abbdbd972034",
+      "journal_source": "C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\journal.jsonl",
+      "timestamp_utc": "2026-10-02T21:10:38+00:00",
+      "log": "metrics/mqar/logs/withdrawal-probe-2e1dc71913b1.log (UTF-16, PowerShell Tee-Object)"
+    }
+  },
+  "reading": "(a) on the three journals: the control reproduces the row 41 file number for number (27 scalars, 40 phase records; beyond the declared comparison, both sessions and the forty phase records equal). (b1) on the three journals: 200 withdrawals in the phases of the 200 evictions, 20 patterns left in both processes, 0 of 200 withdrawn addresses still under the bound, the nearest kept pattern of any withdrawn address at a cosine of at most 0.47 against a radius of 0.90. (c) none. (d) the two processes agree on both configurations. Row 42.",
+  "note": "the JSON files were written by the probe on Windows with CRLF line endings and are committed LF normalised; the hashes above are of the LF content. The copies of the journals the probe ran on lived in temporary directories and are not retained, by design; the originals were never modified (their sha256 is in each file, equal to the row 41 file's). The key never travelled: the probe ran on the founder's laptop."
+}

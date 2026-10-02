@@ -5,7 +5,7 @@ grows by consolidation (RES-19) — a section is filled only with claims that ha
 **admission gate** below. Everything else lives in *Open questions*, explicitly labelled. The
 skeleton is versioned like everything else: dated additions, prior text kept.
 
-**Edition.** v1.0.0, the landing edition, tagged 2026-10-01 and released without announcement, to reviewers first: the record it reports ends at RESULTS row 41, its counts are those of §2.10, and its tag carries its date (`CITATION.cff`, the git tag). A tag does not move: corrections enter the author's workshop first and the public copy by the same filter (`docs/WORKSHOP.md`), each as a dated point release (v1.0.1, …), and the archival identifier is taken on the release the review closes on. Nothing in the text is a promise; every number has its row in `docs/RESULTS.md`.
+**Edition.** v1.0.0, the landing edition, tagged 2026-10-01 and announced the same night as an edition under review: the record it reports ends at RESULTS row 41, its counts are those of §2.10, and its tag carries its date (`CITATION.cff`, the git tag). A tag does not move: corrections enter the author's workshop first and the public copy by the same filter (`docs/WORKSHOP.md`), each as a dated point release (v1.0.1, …). The edition is archived: Zenodo holds the tag's source under the DOI 10.5281/zenodo.23110776 (taken on 2026-10-02 from the GitHub release of the tag; the concept DOI 10.5281/zenodo.23110775 resolves to the latest archived version, and each point release published as a GitHub release receives its own under it), and Software Heritage holds the same tree (`swh:1:dir:ab830a5c469705584ea586df1e4e144af94d5832`). Nothing in the text is a promise; every number has its row in `docs/RESULTS.md`.
 
 **Why a paper, and why now:** D19 says the method is as much the contribution as the model — the
 demonstration that an individual with an AI alter-ego can build something significant *by rigour,
@@ -362,7 +362,7 @@ A language model was the design, implementation and review partner throughout: i
 
 What this suggests, and no more: the barrier to evidence grade work at this scale is no longer compute, tooling or literature access. It is the willingness to declare in advance and to publish the negative rows. That barrier is one a single person can cross, and this paper is one instance, not a proof that it generalises.
 
-The repository's code is Apache 2.0 and its documentation, this paper included, CC BY 4.0 (`LICENSE-DOCS.md`); the tag of this edition is archived with a citable identifier, and every declaration in it is dated in a public history. Those three facts, not this paragraph, are what make the work attributable and checkable.
+The repository's code is Apache 2.0 and its documentation, this paper included, CC BY 4.0 (`LICENSE-DOCS.md`); the tag of this edition is archived with a citable identifier (Zenodo, DOI 10.5281/zenodo.23110776, the same tree mirrored by Software Heritage), and every declaration in it is dated in a public history. Those three facts, not this paragraph, are what make the work attributable and checkable.
 
 ### 8. Conclusion
 

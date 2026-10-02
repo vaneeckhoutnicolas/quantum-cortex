@@ -10,6 +10,20 @@ authors:
     affiliation: "Win2Win SRL, Brussels, Belgium"
 repository-code: "https://github.com/vaneeckhoutnicolas/quantum-cortex"
 repository-artifact: "https://pypi.org/project/quantum-cortex/1.0.0/"
+doi: 10.5281/zenodo.23110776
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23110776
+    description: "The archived v1.0.0 edition on Zenodo (this version; deposited 2026-10-02 from the GitHub release of the tag)."
+  - type: doi
+    value: 10.5281/zenodo.23110775
+    description: "The concept DOI of the archive: every archived version, resolving to the latest one."
+  - type: swh
+    value: "swh:1:dir:ab830a5c469705584ea586df1e4e144af94d5832"
+    description: "The Software Heritage identifier of the archived directory (the tag's tree, bit for bit, under the archive's folder)."
+  - type: url
+    value: "https://github.com/vaneeckhoutnicolas/quantum-cortex/releases/tag/v1.0.0"
+    description: "The GitHub release of the landing edition (immutable; commit 6572467)."
 license: Apache-2.0
 version: "1.0.0"
 date-released: "2026-10-01"
