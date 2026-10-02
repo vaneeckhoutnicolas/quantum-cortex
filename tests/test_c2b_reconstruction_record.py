@@ -33,7 +33,7 @@ def _load(rid: str) -> dict:
 @pytest.mark.parametrize("rid", list(FILES))
 def test_the_declared_run_and_thresholds_are_in_the_file(rid):
     d = _load(rid)
-    cfg = LifecycleConfig(sentinel_seed=2)
+    cfg = LifecycleConfig(sentinel_seed=2, withdraw_at_eviction=False)       # the configuration that produced the files (the flag off; row 42 turned it on)
     assert d["config"]["config_hash"] == cfg.config_hash() == "3212d4c151c5c862"
     assert d["config"]["phases"] == 40 and len(d["phases"]) == 40 and d["config"]["reads_between_phases"] == 0
     assert d["config"]["sentinel_seed"] == 2 and d["config"]["now_plant"] == 200.0

@@ -337,12 +337,17 @@ def _compare(a: dict, b: dict, path: str = "") -> list[str]:
 
 # ---------------------------------------------------------------------------- #
 # Session A: copy, plant the sentinels, run the phases, measure                  #
+def _withdraw(flag: bool | None) -> bool:
+    """The flag as given, or the organ's default when none is given (ADR-007, Decision 11)."""
+    return LifecycleConfig().withdraw_at_eviction if flag is None else bool(flag)
+
+
 # ---------------------------------------------------------------------------- #
 def session_a(src: Path, copy_dir: Path, key: bytes, phases: int = PHASES, sentinel_seed: int = SENTINEL_SEED,
-              cfg: LifecycleConfig | None = None, withdraw: bool = False) -> tuple[dict, Path]:
+              cfg: LifecycleConfig | None = None, withdraw: bool | None = None) -> tuple[dict, Path]:
     if int(sentinel_seed) in RESERVED_SEEDS:
         raise SystemExit("reconstruction probe: the sentinel seed must differ from the protocol's seeds")
-    cfg = cfg or LifecycleConfig(sentinel_seed=int(sentinel_seed), withdraw_at_eviction=bool(withdraw))
+    cfg = cfg or LifecycleConfig(sentinel_seed=int(sentinel_seed), withdraw_at_eviction=_withdraw(withdraw))
     if cfg.sentinel_seed != int(sentinel_seed):
         raise SystemExit("reconstruction probe: the configuration's sentinel seed must be the declared one")
     src = journal_file(src)
@@ -406,8 +411,8 @@ def session_a(src: Path, copy_dir: Path, key: bytes, phases: int = PHASES, senti
 # Session B: a new process, the disk alone                                       #
 # ---------------------------------------------------------------------------- #
 def session_b(copy: Path, key: bytes, sentinel_seed: int = SENTINEL_SEED, cfg: LifecycleConfig | None = None,
-              withdraw: bool = False) -> dict:
-    cfg = cfg or LifecycleConfig(sentinel_seed=int(sentinel_seed), withdraw_at_eviction=bool(withdraw))
+              withdraw: bool | None = None) -> dict:
+    cfg = cfg or LifecycleConfig(sentinel_seed=int(sentinel_seed), withdraw_at_eviction=_withdraw(withdraw))
     journal, wp, jp = _open(journal_file(copy), key)
     sched = LifecycleScheduler(journal, wp, jp, cfg=cfg)          # rebuilds the memory from the consolidation order
     return {"process": "new (nothing of session A but the disk)", "phases_found": journal.phase_count,
@@ -416,13 +421,14 @@ def session_b(copy: Path, key: bytes, sentinel_seed: int = SENTINEL_SEED, cfg: L
 
 
 def run(src: Path, key: bytes, phases: int = PHASES, sentinel_seed: int = SENTINEL_SEED, keep_copy: Path | None = None,
-        withdraw: bool = False) -> dict:
+        withdraw: bool | None = None) -> dict:
+    withdraw = _withdraw(withdraw)                                   # resolved once, so that session B receives the same flag
     tmp = Path(tempfile.mkdtemp(prefix="reconstruction-probe-")) if keep_copy is None else keep_copy
     try:
         out, copy = session_a(src, tmp, key, phases=phases, sentinel_seed=sentinel_seed, withdraw=withdraw)
         env = dict(os.environ, QUANTUM_CORTEX_JOURNAL_KEY=key.hex())
         proc = subprocess.run([sys.executable, "-m", "cortex_c2b.reconstruction_probe", "--session-b", str(copy),
-                               "--sentinel-seed", str(sentinel_seed)] + (["--withdraw"] if withdraw else []),
+                               "--sentinel-seed", str(sentinel_seed), "--withdraw" if withdraw else "--no-withdraw"],
                               capture_output=True, text=True, env=env, cwd=str(Path(__file__).resolve().parents[1]))
         if proc.returncode != 0:
             raise RuntimeError(f"session B failed:\n{proc.stderr[-3000:]}")
@@ -495,7 +501,9 @@ def _cli(argv=None):
     ap.add_argument("--phases", type=int, default=PHASES)
     ap.add_argument("--sentinel-seed", type=int, default=SENTINEL_SEED)
     ap.add_argument("--session-b", default=None, help="(internal) reopen this copy in a new process and measure")
-    ap.add_argument("--withdraw", action="store_true", help="withdraw_at_eviction on (ADR-007 amendment 2026-10-01); off by default")
+    ap.add_argument("--withdraw", action=argparse.BooleanOptionalAction, default=None,
+                    help="withdraw_at_eviction on (--withdraw) or off (--no-withdraw, the configuration of rows 36 to 41); "
+                         "the organ's default when neither is given (on since Decision 11 of ADR-007, 2026-10-02)")
     args = ap.parse_args(argv)
     from cortex_c2b.crypto import key_from_env
     key = key_from_env()

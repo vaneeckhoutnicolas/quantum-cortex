@@ -52,13 +52,17 @@ def events(path):
 
 
 # ------------------------------------------------------------------ invariant 1
-def test_replay_rebuilds_lifecycle_state_exactly(tmp_path):
+@pytest.mark.parametrize("withdraw", [False, True])     # the configuration of rows 36 to 41, and the default since Decision 11
+def test_replay_rebuilds_lifecycle_state_exactly(tmp_path, withdraw):
     path = tmp_path / "journal.jsonl"
-    cfg = LifecycleConfig(period_writes=6, demote_k=3, demote_min_cosine=0.85, bytes_setpoint=20_000)
+    cfg = LifecycleConfig(period_writes=6, demote_k=3, demote_min_cosine=0.85, bytes_setpoint=20_000, withdraw_at_eviction=withdraw)
     j, wp, jp, sch = make(cfg, path)
     rng = np.random.default_rng(1)
     base = unit(rng)
     drive(sch, 60, rng, cue_fn=lambda i: near(base, rng, eps=0.05) if i % 2 == 0 else unit(rng))
+    if not any(e.state == STATE_LIVE for e in j._entries.values()):
+        drive(sch, 1, rng, start=200.0)        # with the flag on no replay fails here (the withdrawn patterns no longer
+                                               # interfere), so every entry consolidated: one more write gives a live entry
     any_live = next(e for e in j._entries.values() if e.state == STATE_LIVE)
     wp.credit(any_live.entry_id, 0.3)                       # a credit is an event too
     sch.phase(now=500.0)

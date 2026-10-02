@@ -1,6 +1,6 @@
 """The withdrawal at eviction (ADR-007 amendment 2026-10-01, declared before any measurement,
 built after the founder's validation). What these tests pin on a small sealed journal: the
-configuration hash of the record's files is unchanged while the flag is off; the memory
+configuration hash of the record's files is the flag off one, and the default is on (Decision 11); the memory
 withdraws a pattern by identity, exactly; under the flag the phase that evicts an entry
 withdraws its pattern and says so in its event, and a scheduler reopened on the journal
 rebuilds the same memory from the log alone; with the flag off nothing changes (the phase
@@ -46,11 +46,11 @@ def _plant(tmp_path: Path, key: bytes, n: int = N, seed: int = JOURNAL_SEED) -> 
     return d / "journal.jsonl"
 
 
-def test_the_hash_of_the_record_is_unchanged_while_the_flag_is_off():
-    assert LifecycleConfig(sentinel_seed=2).config_hash() == "3212d4c151c5c862"          # rows 36 to 41
-    assert LifecycleConfig(sentinel_seed=2, withdraw_at_eviction=False).config_hash() == "3212d4c151c5c862"
-    on = LifecycleConfig(sentinel_seed=2, withdraw_at_eviction=True).config_hash()
-    assert on != "3212d4c151c5c862" and len(on) == 16
+def test_the_hash_of_the_record_is_the_flag_off_one_and_the_default_is_on():
+    assert LifecycleConfig(sentinel_seed=2, withdraw_at_eviction=False).config_hash() == "3212d4c151c5c862"   # rows 36 to 41
+    assert LifecycleConfig().withdraw_at_eviction is True                                 # Decision 11 (2026-10-02, row 42)
+    assert LifecycleConfig(sentinel_seed=2).config_hash() == "4c11b44d47901881"           # the default since Decision 11
+    assert LifecycleConfig(sentinel_seed=2, withdraw_at_eviction=True).config_hash() == "4c11b44d47901881"   # row 42's measurement
 
 
 def test_the_memory_withdraws_a_pattern_by_identity_exactly():

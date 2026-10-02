@@ -17,6 +17,8 @@ Brain derived features enter only through the wave order of **ADR-003**, behind 
 
 ## After the v1 tag, in the order the record names them
 
+*The next edition is v1.1.0 (the founder, 2026-10-02): row 42, the organ's new default (ADR-007, Decision 11), the review's corrections and the paper's text that the amendment of 2026-10-01 sent to the next edition; no v1.0.1, since a changed default is not a correction. The items below continue on the v1.1 line.*
+
 1. **No training required.** The index's bucketing, the variable row 38 leaves open (more tables, or the sparse tag as the bucket itself), a probe like RES-24's. Widening the negative control past fifty entities, which is what would size the veto margin reserve of rows 39 and 40 (0.005 of mark on one seed). The security doors declared at the tag (register, RES-25 and RES-26): the detectors as code with a two arm suite, membership inference by the mark, the manipulation of retention, the write side separation of near duplicates with its threshold on the marks; the sequence integrity of the journal (a chained counter in every line's associated datum). The reconstruction test on the organ's layer of numbers, whitepaper §5d item 7, once a layer with a first law is identified.
 2. **Runs, with GPU.** Stage B of the recurrent base arms, about 4 h 30, the only measurement that can hold the intent of Rev38 by making the trunk take off instead of being pre empted by the attention. Then v8, the reader with an identity initialised local convolution, about 2 h 15, declared and built. Then a fourth seed of v9 if the first three ever divide.
 3. **The external model arm.** Its agreement between two executions on one hardware is still pending; then the larger sizes. Door 2 of §5d.

@@ -46,7 +46,7 @@ def probe_run(tmp_path_factory):
     tmp = tmp_path_factory.mktemp("recon")
     src = _plant(tmp, key)
     before = hashlib.sha256(src.read_bytes()).hexdigest()
-    out = rp.run(src, key, phases=12, sentinel_seed=rp.SENTINEL_SEED)
+    out = rp.run(src, key, phases=12, sentinel_seed=rp.SENTINEL_SEED, withdraw=False)     # the configuration of row 41 (the flag off)
     after = hashlib.sha256(src.read_bytes()).hexdigest()
     return {"key": key, "src": src, "out": out, "before": before, "after": after}
 
@@ -135,3 +135,12 @@ def test_a_reserved_sentinel_seed_and_a_journal_with_phases_are_refused(tmp_path
     out, copy = rp.session_a(src, tmp_path / "copy1", key, phases=1)
     with pytest.raises(SystemExit, match="phases"):
         rp.session_a(copy, tmp_path / "copy2", key, phases=1)
+
+
+def test_the_probe_without_a_flag_runs_the_organs_default_which_is_on(probe_run):
+    """Decision 11 (ADR-007, 2026-10-02): the organ withdraws at eviction by default; the probe without
+    a flag measures that configuration, and the row 41 configuration is asked for explicitly."""
+    assert LifecycleConfig().withdraw_at_eviction is True
+    assert probe_run["out"]["config"]["withdraw_at_eviction"] is False                 # asked for explicitly above
+    assert probe_run["out"]["config"]["config_hash"] == LifecycleConfig(sentinel_seed=rp.SENTINEL_SEED, withdraw_at_eviction=False).config_hash()
+    assert rp._withdraw(None) is True and rp._withdraw(False) is False and rp._withdraw(True) is True

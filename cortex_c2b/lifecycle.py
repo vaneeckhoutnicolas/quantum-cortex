@@ -107,13 +107,15 @@ class LifecycleConfig:
     sentinel_negctrl: int = 10       # never planted facts probed at every phase
     sentinel_seed: int = 0
     seed: int = 0
-    withdraw_at_eviction: bool = False   # ADR-007 amendment 2026-10-01: an eviction withdraws the entry's pattern
-                                         # from the persistent memory; off until the withdrawal probe is read
+    withdraw_at_eviction: bool = True    # ADR-007 amendment 2026-10-01: an eviction withdraws the entry's pattern
+                                         # from the persistent memory. Off until the withdrawal probe was read; on by
+                                         # default since Decision 11 (2026-10-02, row 42: reading (b1) on three journals)
 
     def config_hash(self) -> str:
         d = asdict(self)
         if not d.get("withdraw_at_eviction"):
-            d.pop("withdraw_at_eviction", None)   # the hash of the record's files (rows 36 to 41) is unchanged while the flag is off
+            d.pop("withdraw_at_eviction", None)   # the flag enters the hash only when on: the files of rows 36 to 41, produced
+                                                  # with it off, keep their hash under withdraw_at_eviction=False
         return _hash_obj(d)
 
 
