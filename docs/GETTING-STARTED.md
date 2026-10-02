@@ -29,7 +29,7 @@ python -m pip install --upgrade pip
 pip install numpy torch jsonschema
 ```
 
-To use the organ as a library in a project of your own, without this repository, `pip install quantum-cortex` installs the four packages (`cortex_c2b`, `cortex_c2`, `cortex_data`, `cortex_eval`) and nothing else: no tests, no configurations, no artefacts. Everything below assumes the clone.
+To use the organ as a library in a project of your own, without this repository, `pip install quantum-cortex` installs the four packages (`cortex_c2b`, `cortex_c2`, `cortex_data`, `cortex_eval`) and nothing else: no tests, no configurations, no artefacts. One change of behaviour between editions to know about: since v1.1.0 the organ withdraws the address of an evicted episode from its persistent memory in the phase of the eviction, by default (ADR-007, Decision 11, from row 42); a journal written under 1.0.0 and reopened under 1.1.0 rebuilds its memory from the log without the patterns of its evicted entries, and the reopening scheduler's configuration hash names the rule it read the log under; `LifecycleConfig(withdraw_at_eviction=False)` reopens it under the old rule. Everything below assumes the clone.
 
 `.venv/` is git-ignored — never commit it. (No `requirements.txt` is pinned yet by design: the dependency surface is deliberately tiny and stated here; a pinned lockfile arrives with W2/DVC when the data pipeline does.)
 

@@ -8,7 +8,7 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 ## Reading paths
 
 - [How this repository is organised](NAVIGATION.md) — what RES, Rev, ADR, row, D, NOW and W mean, the path an idea takes from the register to a measured row, and which documents are kept current versus kept for the history.
-- **New here** → `../README.md` → `../REPRISE-2026-08-07.md` → hub decision 019 (ecosystem founding decision, `quantum-meridian/docs/decisions/019-quantum-cortex-architecture.md`) → `adr/ADR-001-metrics-first-class.md` → `adr/ADR-002-training-stack-portability.md`.
+- **New here** → `../README.md` → `JOURNEY.md` → `RESULTS.md` → hub decision 019 (ecosystem founding decision, `quantum-meridian/docs/decisions/019-quantum-cortex-architecture.md`) → `adr/ADR-001-metrics-first-class.md` → `adr/ADR-002-training-stack-portability.md`.
 - **Reproduce a run** → `../metrics/README.md` → `../metrics/schema/run-v1.schema.json` → `roadmap.md` (N1) → `EUROHPC-PLAN-2026-08-07.md` (§4 environment checklist).
 - **Contribute a component** → `glossary.md` → `IDEAS-REGISTER-2026-08-07.md` → `FEATURES-2026-08-07.md` → `roadmap.md` (gates) → `../CONTRIBUTING.md`.
 
@@ -22,7 +22,7 @@ Doc organization follows the quantum-meridian discipline (named reading paths, A
 - `EXTRACTION-K3-2026-08-08.md` — knowledge harvested from the two K3 repositories, with per-item legal status (zero code copied).
 - `GETTING-STARTED.md` — set up the local Python env and run/verify everything locally (smoke, ledger, the E5 commit loop). Start here to reproduce.
 - `SEQUENCE.md` — **the stage-by-stage synthesis**: everything that ships at each step/wave, one page, status-stamped (synthesizes with pointers, never overrides).
-- `WHITEPAPER.md` — the paper's living skeleton: sections, the **admission gate** for claims (statistical, anchored, real, reproducible, bounded), what is admissible vs open, and the gates for v0/v1.
+- `WHITEPAPER.md` — the paper: the **admission gate** for claims (statistical, anchored, real, reproducible, bounded), the measured sections, the doors it names and does not open, and its edition line.
 - `EXTRACTION-LANDSCAPE-2026-08-08.md` — the August-2026 landscape pass: 15 repos, licenses verified, ideas mapped, legal PASS.
 - `concepts/README.md` — concepts index + the deep-dive schedule (a region earns its dive when its wave opens).
 - `concepts/brain-atlas.md` — the systematic brain → cortex transposition atlas (mapped / candidate / deliberately not transposed). `concepts/hippocampus.md` — the memory-organ deep dive.
