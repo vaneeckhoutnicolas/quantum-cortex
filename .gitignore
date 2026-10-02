@@ -4,7 +4,9 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
-*.egg-info/          # produced by `pip install -e .` (2026-09-12); never a source
+# produced by `pip install -e .` (2026-09-12); never a source. A trailing comment is part of a gitignore
+# pattern, so the rule as first written matched nothing (found 2026-10-03, Rev94).
+*.egg-info/
 
 # Training artefacts are never committed - the ledger record is the only trace of a run (ADR-001).
 # metrics/runs.jsonl and metrics/LATEST.md ARE committed (one commit per run).
