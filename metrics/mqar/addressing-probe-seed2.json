@@ -1,0 +1,27 @@
+{
+  "probe": "addressing (ADR-007 amendment 2026-10-08; row 13c)",
+  "timestamp_utc": "2026-10-09T19:28:02+00:00",
+  "config": {
+    "n_facts": 200,
+    "seed": 2,
+    "admission_threshold": 0.15,
+    "generator_hash": "80bb909b049846de",
+    "chance_band": 0.05,
+    "k": 1,
+    "encoder": "the protocol's hash seeded cue (_cue_for); the entity is the address at the write"
+  },
+  "admitted": 200,
+  "rates": {
+    "by_planted_address": 1.0,
+    "by_question_text": 0.025,
+    "by_paraphrase": 0.02,
+    "by_random_cue": 0.03,
+    "by_random_line_attribute": 0.015
+  },
+  "readings": {
+    "address_exact": true,
+    "text_at_chance": true,
+    "letter": "a: by the planted address the organ returns every attribute; by the text of the question and by the paraphrase it is at chance: the organ's encoder is an index, rows 13 and 13b validate storage and persistence, and continuity by the text is the model arm's measurement"
+  },
+  "verdict": "a: by the planted address the organ returns every attribute; by the text of the question and by the paraphrase it is at chance: the organ's encoder is an index, rows 13 and 13b validate storage and persistence, and continuity by the text is the model arm's measurement"
+}
