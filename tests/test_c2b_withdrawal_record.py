@@ -156,3 +156,63 @@ def test_no_summary_existed_on_the_three_journals_so_the_cascade_correction_of_2
         assert snap["demoted"] == 0 and snap["summaries"] == 0 and snap["evicted"] == 200 and snap["consolidated"] == 20
         assert run["process_b"]["snapshot"]["demoted"] == 0 and run["process_b"]["snapshot"]["summaries"] == 0
     assert sum(p["applied"]["withdrawn"] for p in d["measurement"]["phases"]) == 200      # one withdrawal per eviction, none by cascade
+
+
+# ---------------------------------------------------------------------------- the rerun of 2026-10-12
+RERUN = ROOT / "metrics/mqar/withdrawal-probe-8ceba5db8d0b-rerun-2026-10-12.json"
+RERUN_LOG = ROOT / "metrics/mqar/logs/withdrawal-probe-8ceba5db8d0b-rerun-2026-10-12.log"
+RERUN_SHA_LF = "baa662a719cd057b4211858f98165e00ae08de94c4c3313046e8f562fe04f7f4"
+RERUN_LOG_SHA_LF = "2b17eb23511b6bab872be9a473cb7c928a568fb3fd8704429cfd2774848f9123"
+RERUN_TIMESTAMP = "2026-10-11T22:40:11+00:00"
+
+
+def _rerun() -> dict:
+    return json.loads(RERUN.read_text(encoding="utf-8"))
+
+
+def test_the_rerun_of_2026_10_12_on_seed_1337_reproduces_the_row_42_file_number_for_number_recomputed_here():
+    """ADR-007, correction of 2026-10-12, its declared rerun: the probe run again by the founder on the journal
+    of seed 1337 with the corrected code, both configurations. The comparison with the row 42 file is
+    recomputed here from the two files, not read from the rerun file's own field: the journal, the
+    configuration, the control and the measurement on the declared scalars, the forty phase records and the
+    per entry rows, the readings and the letter. The correction changed nothing of the row on this journal."""
+    import hashlib
+    rerun, record, row41 = _rerun(), _load("8ceba5db8d0b"), _row41("8ceba5db8d0b")
+    assert hashlib.sha256(RERUN.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == RERUN_SHA_LF
+    assert rerun["timestamp_utc"] == RERUN_TIMESTAMP and record["timestamp_utc"] == "2026-10-02T21:08:07+00:00"
+    assert rerun["journal"]["sha256"] == record["journal"]["sha256"] == row41["journal"]["sha256"]
+    assert rerun["config"] == record["config"]
+    cmp = wp.compare_with_previous_run(rerun, record)
+    assert cmp["equal_number_for_number"] and cmp["differences"] == []
+    assert cmp["control"] == {"reproduced_number_for_number": True, "scalars_compared": 27, "phases_compared": 40}
+    assert cmp["measurement"] == {"reproduced_number_for_number": True, "scalars_compared": 27, "phases_compared": 40}
+    own = rerun["rerun_against_previous"]                                # the file's own field says the same
+    assert own["equal_number_for_number"] and own["differences"] == [] and own["previous_timestamp_utc"] == record["timestamp_utc"]
+    assert wp.compare_with_record(rerun["control"], row41)["reproduced_number_for_number"]   # reading (a), still true
+    assert rerun["verdict"] == record["verdict"] and rerun["verdict"].startswith("b1:")
+
+
+def test_the_rerun_holds_no_summary_and_no_source_text_so_the_two_changes_of_2026_10_12_leave_its_records():
+    rerun = _rerun()
+    for name in ("control", "measurement"):
+        ph = rerun[name]["phases"]
+        assert len(ph) == 40 and all(not p["refused"] for p in ph)
+        assert sum(p["applied"]["demoted_groups"] for p in ph) == 0 and all(p["summaries"] == 0 for p in ph)
+        assert all("source_released" not in p["applied"] for p in ph)   # ADR-009 B2: the journal of the record holds no source text
+        assert sum(p["applied"]["evicted"] for p in ph) == 200
+    assert sum(p["applied"]["withdrawn"] for p in rerun["measurement"]["phases"]) == 200
+    assert all("withdrawn" not in p["applied"] for p in rerun["control"]["phases"])
+
+
+def test_the_rerun_log_is_the_summary_of_its_file_and_the_provenance_names_both():
+    import hashlib
+    rerun = _rerun()
+    raw = RERUN_LOG.read_bytes()
+    assert hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest() == RERUN_LOG_SHA_LF
+    log = raw.decode("utf-8").splitlines()                                # UTF-8 this time, the provenance says so
+    assert len(log) == 11 and log[:-1] == wp.summary_lines(rerun) and log[-1].startswith("[record] retained:")
+    assert log[9].startswith("rerun against withdrawal-probe-8ceba5db8d0b.json (2026-10-02T21:08:07+00:00): equal number for number = True")
+    prov = json.loads((ROOT / "metrics/mqar/PROVENANCE-withdrawal-probe.json").read_text(encoding="utf-8"))["rerun_2026_10_12"]
+    assert prov["file"]["file_sha256_lf"] == RERUN_SHA_LF and prov["file"]["timestamp_utc"] == RERUN_TIMESTAMP
+    assert prov["file"]["journal_sha256"] == rerun["journal"]["sha256"] and prov["code_commit"].startswith("ba6fc60")
+    assert RERUN_LOG_SHA_LF in prov["file"]["log"]

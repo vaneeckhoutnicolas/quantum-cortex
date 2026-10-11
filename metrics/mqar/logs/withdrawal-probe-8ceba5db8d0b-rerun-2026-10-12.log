@@ -1,0 +1,11 @@
+journal d0d56e5a72fe4cf3  phases 40  hashes control 3212d4c151c5c862 / measurement 4c11b44d47901881
+reading a (control vs row 41): reproduced number for number = True (27 scalars, 40 phases)
+memory patterns: control 220, measurement 20; withdrawals at eviction 200
+level 2 identical to control: True; level 1 exact: True; level 4 holds: True
+level 3 kept: all under bound = True; max defect 5.960464477539063e-08 (control 1.1920928955078125e-07)
+level 3b: 0/200 withdrawn addresses still under the bound; 0 with a kept neighbour within 0.9, 0 without; defects of the withdrawn: min 0.4221614599227905, max 0.9092052727937698
+collateral on kept addresses: 0
+two processes agree: control True, measurement True
+reading: b1: the withdrawal is exact at the memory's level; no withdrawn address is reconstructed from the kept patterns
+rerun against withdrawal-probe-8ceba5db8d0b.json (2026-10-02T21:08:07+00:00): equal number for number = True (control 27 scalars and 40 phases, measurement 27 and 40; 0 differences)
+[record] retained: metrics\mqar\withdrawal-probe-8ceba5db8d0b-rerun-2026-10-12.json

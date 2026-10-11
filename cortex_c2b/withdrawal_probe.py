@@ -230,7 +230,8 @@ def summary_lines(out: dict) -> list[str]:
     lines.append(f"reading: {out['verdict']}")
     if "rerun_against_previous" in out:                              # only a rerun says this line; the files of row 42 have nine
         p = out["rerun_against_previous"]
-        lines.append(f"rerun against {Path(p['previous_file']).name} ({p['previous_timestamp_utc']}): equal number for number = "
+        name = p["previous_file"].replace("\\", "/").rsplit("/", 1)[-1]   # the bare name, the same on Windows and on Linux (a record
+        lines.append(f"rerun against {name} ({p['previous_timestamp_utc']}): equal number for number = "   # test replays this line)
                      f"{p['equal_number_for_number']} (control {p['control']['scalars_compared']} scalars and {p['control']['phases_compared']} phases, "
                      f"measurement {p['measurement']['scalars_compared']} and {p['measurement']['phases_compared']}; {len(p['differences'])} differences)")
     return lines
