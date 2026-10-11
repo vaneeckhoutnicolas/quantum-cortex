@@ -22,7 +22,7 @@ Nothing here is a number typed into a document. Clone, install, and run the suit
 pytest tests/ -m "not slow"
 ```
 
-Among those tests, `tests/test_recurrent_base_record.py` recomputes every published aggregate of rows 30 to 35 from the committed unit files and fails if a digit differs; `tests/test_c2b_familiarity_mark.py` recomputes the rates of row 36 from the per answer file; `tests/test_c2b_extraction_probe.py` recomputes row 40 from its three files and checks its positive arm against the session B files of rows 36, 37 and 39. `metrics/runs.jsonl` holds one line per training run with its identifier, configuration hash and git commit; `metrics/ARTEFACTS.md` says where each checkpoint and sealed journal lives.
+Among those tests, `tests/test_recurrent_base_record.py` recomputes every published aggregate of rows 30 to 35 from the committed unit files and fails if a digit differs; `tests/test_c2b_familiarity_mark.py` recomputes the rates of row 36 from the per answer file; `tests/test_c2b_extraction_probe.py` recomputes row 40 from its three files and checks its positive arm against the session B files of rows 36, 37 and 39; `tests/test_c2b_addressing_record.py` recomputes row 13c from its four files, recomputes the amendment's letter from the rates alone, and runs the probe again at each seed in about two seconds, no key and no checkpoint. `metrics/runs.jsonl` holds one line per training run with its identifier, configuration hash and git commit; `metrics/ARTEFACTS.md` says where each checkpoint and sealed journal lives.
 
 ## 5. What we already know is weak
 

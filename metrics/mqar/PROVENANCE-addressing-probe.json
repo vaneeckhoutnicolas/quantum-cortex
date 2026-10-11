@@ -1,0 +1,43 @@
+{
+  "row": "13c",
+  "what": "the addressing probe on the organ alone (ADR-007 amendment 2026-10-08), run by the founder on 2026-10-09 at the four seeds of row 13b, n 200, k 1, admission threshold 0.15, chance band 0.05; no key, no checkpoint, no training",
+  "command": "python -m cortex_c2b.addressing_probe --n 200 --seed <s> --out metrics\\mqar  (s in 0, 1, 2, 3)",
+  "code_commit": "92a3a40",
+  "code_commit_note": "the workshop commit that carries cortex_c2b/addressing_probe.py and the seed 0 file; seeds 1 to 3 were retained at 741a916 (public copy 0e933d9)",
+  "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters; the founder's console printed the hash of the CRLF bytes PowerShell wrote, which is not the committed form",
+  "read_cold": "2026-10-11, from the files of the founder's GitHub main archive, by the instance that keeps the record; row 13c and tests/test_c2b_addressing_record.py follow",
+  "files": {
+    "addressing-probe-seed0.json": {
+      "seed": 0,
+      "sha256_lf": "5c2339b23fabcb80",
+      "timestamp_utc": "2026-10-09T19:23:21+00:00",
+      "generator_hash": "a5e22c70a3275ed4",
+      "retained_at": "92a3a40",
+      "public_copy_commit": "571dbf8"
+    },
+    "addressing-probe-seed1.json": {
+      "seed": 1,
+      "sha256_lf": "cd1edece0a88efc8",
+      "timestamp_utc": "2026-10-09T19:28:01+00:00",
+      "generator_hash": "82bd2ff094d9b030",
+      "retained_at": "741a916",
+      "public_copy_commit": "0e933d9"
+    },
+    "addressing-probe-seed2.json": {
+      "seed": 2,
+      "sha256_lf": "7323f8537e4a9d1a",
+      "timestamp_utc": "2026-10-09T19:28:02+00:00",
+      "generator_hash": "80bb909b049846de",
+      "retained_at": "741a916",
+      "public_copy_commit": "0e933d9"
+    },
+    "addressing-probe-seed3.json": {
+      "seed": 3,
+      "sha256_lf": "464a09c234e60234",
+      "timestamp_utc": "2026-10-09T19:28:04+00:00",
+      "generator_hash": "0c37aac8c10a178f",
+      "retained_at": "741a916",
+      "public_copy_commit": "0e933d9"
+    }
+  }
+}
