@@ -33,8 +33,9 @@ def run(n: int = N_FACTS, seed: int = 0, admission_threshold: float = ADMISSION_
     w, r = WritePath(j, admission_threshold=admission_threshold, seed=seed), JournalPath(j)
     admitted = 0
     for i, f in enumerate(facts):
-        rep = w.write(f.cue, f.statement.encode(), f.schema, now=float(i))
-        if rep.admitted:
+        rep = w.write(f.cue, f.statement.encode(), f.schema, now=float(i),
+                      source=f.address_text)                    # the text of the address, sealed beside the content (ADR-009 B2,
+        if rep.admitted:                                        # 2026-10-12); the rates read the cues alone and do not move
             r.on_write(rep.entry); admitted += 1
 
     def rate(cue_of) -> float:

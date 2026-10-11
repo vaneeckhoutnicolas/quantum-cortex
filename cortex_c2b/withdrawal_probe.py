@@ -99,6 +99,35 @@ def compare_with_record(control: dict, record: dict) -> dict:
             "scalars_compared": len(RECORD_PATHS), "phases_compared": len(pb)}
 
 
+def compare_with_previous_run(out: dict, previous: dict) -> dict:
+    """A rerun of this probe against an earlier file of it on the same journal (the row 42 file,
+    say), number for number: the journal, the configuration, the control and the measurement each
+    through `compare_with_record` (the declared scalars, the forty phase records, the per entry rows
+    of levels 2 and 3), the readings and the letter. Added 2026-10-12 for the correction of the
+    withdrawal under the cascade (ADR-007): whether a rerun with the corrected code reproduces the
+    row 42 file is read from this comparison, not reasoned."""
+    diffs = []
+    for k in ("sha256", "entries_before"):
+        if out["journal"].get(k) != previous["journal"].get(k):
+            diffs.append(f"journal/{k}: {out['journal'].get(k)!r} != {previous['journal'].get(k)!r}")
+    for k in sorted(set(out["config"]) | set(previous["config"])):
+        if out["config"].get(k) != previous["config"].get(k):
+            diffs.append(f"config/{k}: {out['config'].get(k)!r} != {previous['config'].get(k)!r}")
+    parts = {}
+    for name in ("control", "measurement"):
+        c = compare_with_record(out[name], previous[name])
+        parts[name] = {"reproduced_number_for_number": c["reproduced_number_for_number"],
+                       "scalars_compared": c["scalars_compared"], "phases_compared": c["phases_compared"]}
+        diffs += [f"{name}/{d}" for d in c["differences"]]
+    for k in sorted(previous["readings"]):
+        if out["readings"].get(k) != previous["readings"][k]:
+            diffs.append(f"readings/{k}: {out['readings'].get(k)!r} != {previous['readings'][k]!r}")
+    if out.get("verdict") != previous.get("verdict"):
+        diffs.append(f"verdict: {out.get('verdict')!r} != {previous.get('verdict')!r}")
+    return {"previous_timestamp_utc": previous.get("timestamp_utc"), "equal_number_for_number": not diffs,
+            "differences": diffs[:100], **parts}
+
+
 def readings(control: dict, measurement: dict, regression: dict | None) -> dict:
     """The readings of the amendment, in its letters."""
     c3, m3 = control["process_a"]["level_3_memory"], measurement["process_a"]["level_3_memory"]
@@ -159,7 +188,7 @@ def readings(control: dict, measurement: dict, regression: dict | None) -> dict:
 
 
 def run(src: Path, key: bytes, phases: int = rp.PHASES, sentinel_seed: int = rp.SENTINEL_SEED,
-        record_file: Path | None = None) -> dict:
+        record_file: Path | None = None, compare_file: Path | None = None) -> dict:
     control = rp.run(src, key, phases=phases, sentinel_seed=sentinel_seed, withdraw=False)
     measurement = rp.run(src, key, phases=phases, sentinel_seed=sentinel_seed, withdraw=True)
     regression = None
@@ -168,16 +197,20 @@ def run(src: Path, key: bytes, phases: int = rp.PHASES, sentinel_seed: int = rp.
         regression = compare_with_record(control, record)
         regression["record_file"] = str(record_file)
     r = readings(control, measurement, regression)
-    return {"probe": "withdrawal at eviction (ADR-007 amendment 2026-10-01; v1.1, first item; origin RESULTS row 41)",
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "journal": control["journal"],
-            "config": {"phases": int(phases), "sentinel_seed": int(sentinel_seed),
-                       "config_hash_control": control["config"]["config_hash"],
-                       "config_hash_measurement": measurement["config"]["config_hash"],
-                       "bound": LifecycleConfig().replay_error_max, "radius": LifecycleConfig().demote_min_cosine},
-            "control": control, "measurement": measurement,
-            "regression_against_row_41": regression if regression else {"record_file_present": False},
-            "readings": r, "verdict": r["letter"]}
+    out = {"probe": "withdrawal at eviction (ADR-007 amendment 2026-10-01; v1.1, first item; origin RESULTS row 41)",
+           "timestamp_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "journal": control["journal"],
+           "config": {"phases": int(phases), "sentinel_seed": int(sentinel_seed),
+                      "config_hash_control": control["config"]["config_hash"],
+                      "config_hash_measurement": measurement["config"]["config_hash"],
+                      "bound": LifecycleConfig().replay_error_max, "radius": LifecycleConfig().demote_min_cosine},
+           "control": control, "measurement": measurement,
+           "regression_against_row_41": regression if regression else {"record_file_present": False},
+           "readings": r, "verdict": r["letter"]}
+    if compare_file is not None:                                     # a rerun against an earlier file of this probe
+        previous = json.loads(Path(compare_file).read_text(encoding="utf-8"))
+        out["rerun_against_previous"] = {"previous_file": str(compare_file), **compare_with_previous_run(out, previous)}
+    return out
 
 
 def summary_lines(out: dict) -> list[str]:
@@ -195,6 +228,11 @@ def summary_lines(out: dict) -> list[str]:
     lines.append(f"collateral on kept addresses: {len(r['c_collateral_kept_addresses'])}")
     lines.append(f"two processes agree: control {r['d_control_two_processes_agree']}, measurement {r['d_measurement_two_processes_agree']}")
     lines.append(f"reading: {out['verdict']}")
+    if "rerun_against_previous" in out:                              # only a rerun says this line; the files of row 42 have nine
+        p = out["rerun_against_previous"]
+        lines.append(f"rerun against {Path(p['previous_file']).name} ({p['previous_timestamp_utc']}): equal number for number = "
+                     f"{p['equal_number_for_number']} (control {p['control']['scalars_compared']} scalars and {p['control']['phases_compared']} phases, "
+                     f"measurement {p['measurement']['scalars_compared']} and {p['measurement']['phases_compared']}; {len(p['differences'])} differences)")
     return lines
 
 
@@ -206,6 +244,10 @@ def _cli(argv=None):
     ap.add_argument("--record", default=None, help="the row 41 file for this journal (default: metrics/mqar/reconstruction-probe-<run-id>.json)")
     ap.add_argument("--phases", type=int, default=rp.PHASES)
     ap.add_argument("--sentinel-seed", type=int, default=rp.SENTINEL_SEED)
+    ap.add_argument("--compare", default=None,
+                    help="an earlier file of this probe on the same journal (the row 42 file): the rerun is compared to it "
+                         "number for number (control, measurement, readings, letter) and the result is printed and retained; "
+                         "give --out a file name of its own, never the record's")
     args = ap.parse_args(argv)
     from cortex_c2b.crypto import key_from_env
     key = key_from_env()
@@ -213,7 +255,10 @@ def _cli(argv=None):
         raise SystemExit("QUANTUM_CORTEX_JOURNAL_KEY missing")
     record = Path(args.record) if args.record else (
         Path(__file__).resolve().parents[1] / "metrics" / "mqar" / f"reconstruction-probe-{args.run_id}.json" if args.run_id else None)
-    out = run(Path(args.journal), key, phases=args.phases, sentinel_seed=args.sentinel_seed, record_file=record)
+    compare = Path(args.compare) if args.compare else None
+    if args.compare and args.out and Path(args.out).resolve() == compare.resolve():
+        raise SystemExit("withdrawal probe: --out must not be the file given to --compare; a file of the record is never overwritten")
+    out = run(Path(args.journal), key, phases=args.phases, sentinel_seed=args.sentinel_seed, record_file=record, compare_file=compare)
     for line in summary_lines(out):
         print(line)
     if args.out:
@@ -221,6 +266,8 @@ def _cli(argv=None):
         if o.is_dir() or not o.suffix:
             o.mkdir(parents=True, exist_ok=True)
             o = o / f"withdrawal-probe-{args.run_id or out['journal']['sha256'][:12]}.json"
+        if compare is not None and o.resolve() == compare.resolve():
+            raise SystemExit("withdrawal probe: the retained file would overwrite the file given to --compare; name it apart")
         o.parent.mkdir(parents=True, exist_ok=True)
         o.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
         print(f"[record] retained: {o}")

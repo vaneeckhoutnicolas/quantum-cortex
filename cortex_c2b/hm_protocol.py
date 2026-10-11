@@ -88,6 +88,7 @@ class Fact:
     query: str
     paraphrase: str
     cue: np.ndarray = field(repr=False)
+    address_text: str = ""      # the text the cue was computed from, `{schema}|{entity}`: kept sealed with every write (ADR-009 B2)
 
 
 def _cue_for(text: str, dim: int = CUE_DIM) -> np.ndarray:
@@ -131,9 +132,10 @@ def generate_facts(n: int = N_FACTS, seed: int = 0) -> tuple[list[Fact], str]:
             e = _entity_name(rng)
             a = rng.choice(_ATTRS[schema])
             statement = st.format(e=e, a=a)
+            address_text = f"{schema}|{e}"                        # the entity is the address
             facts.append(Fact(entity=e, schema=schema, attr=a, statement=statement,
                               query=q.format(e=e), paraphrase=p.format(e=e),
-                              cue=_cue_for(f"{schema}|{e}")))   # the entity is the address
+                              cue=_cue_for(address_text), address_text=address_text))
     cfg = hashlib.sha256(json.dumps({"n": n, "seed": seed, "schemas": SCHEMAS,
                                      "templates": _TEMPLATES}, sort_keys=True).encode()).hexdigest()[:16]
     return facts, cfg
@@ -212,7 +214,8 @@ def run_hm_protocol(n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: in
     jp = JournalPath(journal)
     admitted = 0
     for f in facts:
-        rep = wp.write(f.cue, f.statement.encode(), f.schema, now=float(admitted))
+        rep = wp.write(f.cue, f.statement.encode(), f.schema, now=float(admitted),
+                       source=f.address_text)                   # the text of the address, sealed beside the content (ADR-009 B2)
         if rep.admitted:
             jp.on_write(rep.entry); admitted += 1
     durable_a = journal.mode == MODE_DURABLE

@@ -260,7 +260,8 @@ def plant(journal_dir: Path, n_facts: int = N_FACTS, seed: int = 0, key: bytes |
     jp = JournalPath(journal, seed=seed)
     admitted = 0
     for i, f in enumerate(facts):
-        rep = wp.write(f.cue, f.statement.encode("utf-8"), f.schema, now=float(i))
+        rep = wp.write(f.cue, f.statement.encode("utf-8"), f.schema, now=float(i),
+                       source=f.address_text)                                   # the text of the address, sealed (ADR-009 B2)
         if rep.admitted:
             jp.on_write(rep.entry); admitted += 1
     side = {"session": "A", "generator": {"config_hash": gen_hash, "n_facts": n_facts, "seed": seed},

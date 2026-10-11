@@ -257,12 +257,13 @@ class LifecycleScheduler:
             label(entry_id)
 
     # ------------------------------------------------------------------ writes --
-    def write(self, cue, payload: bytes, schema_id: str, now: float):
+    def write(self, cue, payload: bytes, schema_id: str, now: float, source: bytes | str | None = None):
         """The one entry point in the lifecycle world: gated write, index, rhythm.
         A journal in read only mode refuses the write and says so in the report
-        (Decision 9); a `stop` policy lets StorageExhausted propagate."""
+        (Decision 9); a `stop` policy lets StorageExhausted propagate. `source`
+        (ADR-009 B2): the text the cue was computed from, sealed beside the content."""
         try:
-            rep = self.wp.write(cue, payload, schema_id, now=now)
+            rep = self.wp.write(cue, payload, schema_id, now=now, source=source)
         except JournalReadOnly as e:
             return WriteReport(admitted=False, surprise=float("nan"), reason=f"refused, {e}")
         if rep.admitted:
@@ -284,6 +285,12 @@ class LifecycleScheduler:
 
     # -------------------------------------------------------------- sentinels --
     def _plant_sentinels(self, now: float) -> None:
+        """A sentinel carries no source text (ADR-009 B2, the dated line of 2026-10-12): its
+        text is a function of the hashed configuration (the frozen generator at its seed),
+        regenerated at every open, so the scheduler can recompute its address without the
+        journal; and a scheduler opened on a journal of the record then writes exactly what
+        it wrote before the decision, which is what lets the controls of rows 41 and 42
+        reproduce their files number for number."""
         facts, _ = generate_facts(self.cfg.sentinel_facts, seed=self.cfg.sentinel_seed)
         self.negctrl, _ = generate_facts(self.cfg.sentinel_negctrl, seed=self.cfg.sentinel_seed + 10_000)
         for i, f in enumerate(facts):
@@ -443,17 +450,25 @@ class LifecycleScheduler:
         for group in p.demote:                                     # 4. K similar -> one summary
             self._demote(group, now); demoted += 1
         evicted, withdrawn = 0, 0
+        alive_before = [eid for eid, e in J._entries.items() if e.state != STATE_EVICTED]
         for eid in p.evict:                                        # 5. verdicts (cascade already listed)
             if J._entries[eid].state != STATE_EVICTED:
-                J.transition(eid, STATE_EVICTED); evicted += 1
-                if cfg.withdraw_at_eviction:                       # the address leaves with the content
-                    withdraw = getattr(self.memory, "withdraw", None)
-                    if withdraw is not None and withdraw(eid):
+                J.transition(eid, STATE_EVICTED); evicted += 1    # a summary takes its sources with it inside the store
+        left = [eid for eid in alive_before if J._entries[eid].state == STATE_EVICTED]   # everything this phase evicted,
+        if cfg.withdraw_at_eviction:                               # by its list or by the store's cascade down the hierarchy
+            withdraw = getattr(self.memory, "withdraw", None)      # the address leaves with the content, for every one of them
+            if withdraw is not None:                               # (correction of 2026-10-12, ADR-007: until then the cascaded
+                for eid in left:                                   # sources kept their pattern in process A and lost it in the
+                    if withdraw(eid):                              # rebuild of process B; found by the third test of ADR-009 B2)
                         withdrawn += 1
         applied = {"consolidated": consolidated, "replay_failed": failed,
                    "demoted_groups": demoted, "evicted": evicted}
         if cfg.withdraw_at_eviction:
             applied["withdrawn"] = withdrawn                       # the phase event carries it only under the flag
+        if J.sourced_entries:                                      # the journal holds source texts (B2): the phase event says how
+            applied["source_released"] = sum(                      # many left the store with their content this phase; a journal
+                1 for eid in left if J._entries[eid].source_pointer is not None       # written before B2 keeps its records
+                and J._entries[eid].source_pointer not in J.payloads)
         return applied
 
     def _demote(self, group: list[str], now: float) -> Entry:
@@ -467,7 +482,8 @@ class LifecycleScheduler:
                               "digest": [round(float(x), 3) for x in centroid[:8]]},
                              separators=(",", ":")).encode()
         salience = max(J._entries[i].salience for i in group)
-        summary = J.write(centroid, payload, salience=salience, schema_id=SCHEMA_SUMMARY, now=now)
+        summary = J.write(centroid, payload, salience=salience, schema_id=SCHEMA_SUMMARY, now=now)   # no source text: the
+        # address of a summary is a centroid of cues, not a text (ADR-009 B2, the dated line of 2026-10-12)
         self.jp.on_write(summary)
         J.demote(summary.entry_id, list(group), level=level)      # the link (an event)
         for src in group:

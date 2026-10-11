@@ -88,8 +88,13 @@ QUESTIONS_NEVER_WRITTEN = [
 ]
 
 
+def address_text(schema: str, entity: str) -> str:
+    """The text the address is computed from: the entity, under its schema (ADR-009 B2 keeps it sealed with the record)."""
+    return f"{schema}|{entity}"
+
+
 def cue(schema: str, entity: str):
-    return _cue_for(f"{schema}|{entity}")
+    return _cue_for(address_text(schema, entity))
 
 
 def _schema_of(entity: str) -> str:
@@ -106,7 +111,8 @@ def session_a(journal_path: Path, key: bytes) -> dict:
     jp = JournalPath(journal)
     written = []
     for i, r in enumerate(CASE):
-        rep = wp.write(cue(r.schema, r.entity), r.text.encode("utf-8"), r.schema, now=float(i))
+        rep = wp.write(cue(r.schema, r.entity), r.text.encode("utf-8"), r.schema, now=float(i),
+                       source=address_text(r.schema, r.entity))
         if rep.admitted:
             jp.on_write(rep.entry)
             written.append({"date": r.date, "entity": r.entity, "pointer": rep.entry.pointer})

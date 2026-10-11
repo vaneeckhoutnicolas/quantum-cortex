@@ -53,6 +53,32 @@ def test_the_hash_of_the_record_is_the_flag_off_one_and_the_default_is_on():
     assert LifecycleConfig(sentinel_seed=2, withdraw_at_eviction=True).config_hash() == "4c11b44d47901881"   # row 42's measurement
 
 
+def test_the_withdrawal_reaches_the_sources_a_summary_takes_with_it_through_the_cascade(tmp_path):
+    """Correction of 2026-10-12 (ADR-007, under the amendment of 2026-10-01), found by the third test of
+    ADR-009 B2 on a synthetic journal: when a phase evicted a summary, the store evicted its demoted
+    sources by cascade and the phase withdrew the summary's pattern only; the sources kept theirs in
+    process A while the rebuild of process B skipped them (38 against 26 patterns on this drive). Every
+    entry a phase evicts is withdrawn now, the cascaded sources included, and the two processes agree."""
+    key = generate_key()
+    path = tmp_path / "journal.jsonl"
+    cfg = LifecycleConfig(period_writes=6, demote_k=3, demote_min_cosine=0.85, bytes_setpoint=20_000, withdraw_at_eviction=True)
+    j = Journal(path, key=key)
+    w, jp = WritePath(j, seed=0), JournalPath(j)
+    sch = LifecycleScheduler(j, w, jp, cfg, now=0.0)
+    rng = np.random.default_rng(1)
+    base = rng.standard_normal(64).astype(np.float32); base /= np.linalg.norm(base)
+    for i in range(60):
+        c = base + 0.05 * rng.standard_normal(64).astype(np.float32) if i % 2 == 0 else rng.standard_normal(64).astype(np.float32)
+        sch.write(c / np.linalg.norm(c), f"payload {i} {rng.integers(1_000_000)}".encode(), "note", now=100.0 + i)
+    cascaded = [eid for eid, e in j._entries.items() if e.state == STATE_EVICTED and eid in j.summary_of]
+    assert cascaded, "a summary must have been evicted with its sources, or the test is vacuous"
+    ids = sch.memory.ids()
+    assert not any(x is not None and j._entries[x].state == STATE_EVICTED for x in ids)   # nothing evicted keeps a pattern
+    r = Journal(path, key=key)
+    sch2 = LifecycleScheduler(r, WritePath(r, seed=0), JournalPath(r), cfg)
+    assert len(sch2.memory) == len(sch.memory)                                            # Decision 8 under Decision 11
+
+
 def test_the_memory_withdraws_a_pattern_by_identity_exactly():
     rng = np.random.default_rng(0)
     m = PersistentMemory(dim=16)
@@ -150,3 +176,15 @@ def test_the_probe_reads_in_the_amendments_letters_and_the_control_compares(two_
     assert out["config"]["config_hash_control"] == "3212d4c151c5c862" != out["config"]["config_hash_measurement"]
     assert out["verdict"] == out["readings"]["letter"]
     assert len(wp.summary_lines(out)) == 9
+    # a rerun against an earlier file of the probe (2026-10-12): equal on itself, a named difference on a tampered copy
+    prev = tmp_path / "previous.json"; prev.write_text(json.dumps(out), encoding="utf-8")
+    again = wp.run(two_runs["src"], two_runs["key"], phases=PHASES_TEST, sentinel_seed=rp.SENTINEL_SEED, record_file=rec, compare_file=prev)
+    cmp = again["rerun_against_previous"]
+    assert cmp["equal_number_for_number"] and cmp["differences"] == [] and cmp["previous_file"] == str(prev)
+    assert cmp["control"]["phases_compared"] == PHASES_TEST == cmp["measurement"]["phases_compared"]
+    assert len(wp.summary_lines(again)) == 10 and wp.summary_lines(again)[-1].startswith("rerun against previous.json")
+    tampered = json.loads(json.dumps(out))
+    tampered["measurement"]["process_a"]["level_3_memory"]["patterns"] += 1
+    diff = wp.compare_with_previous_run(again, tampered)
+    assert not diff["equal_number_for_number"] and any(d.startswith("measurement/") and "patterns" in d for d in diff["differences"])
+    assert diff["control"]["reproduced_number_for_number"] and not diff["measurement"]["reproduced_number_for_number"]

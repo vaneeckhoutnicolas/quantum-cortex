@@ -5,7 +5,8 @@ episodic. It lives OUTSIDE the weights and survives the session boundary — the
 thing the H.M. protocol measures. Slice A ships the store and its three laws:
 
   Size law   — an entry is ≤ 1 KB: (cue, pointer, salience, schema_id, timestamps,
-               state). Content is NEVER duplicated into the journal: the payload
+               state; since ADR-009 B2 a second pointer to the sealed text of the
+               address). Content is NEVER duplicated into the journal: the payload
                lives in a content-addressed payload store (cortex_data hashing
                reused) and the entry carries only its hash.
   Read law   — retrieval is never a scan. Reads go through an index keyed by cue
@@ -37,6 +38,19 @@ and relaunch, not within one process. Each component declares its lifecycle
 At rest, log lines and payload files are encrypted per scope with the hub's
 QJE1 framing (AES-256-GCM; `cortex_c2b.crypto`) when a key is given; the key is
 an explicit argument, never read implicitly (key management deferred, hub 010).
+
+The source text (ADR-009, Decision B2, the founder, 2026-10-05; built 2026-10-12):
+every entry written with the text its address was computed from keeps that text,
+sealed like the content, as a payload of its own in the payload store, referenced
+by a second pointer in the entry (`source_pointer`, 16 characters, None when
+absent). The day the encoder changes, the index is recomputed from the sealed
+texts without migrating any journal; the hash address stays valid for
+identifiers. An entry without a source text serialises exactly as before the
+decision (the key is omitted), so the logs, the sizes and the rebuild of every
+journal written earlier do not move; such a journal declares `source_text:
+absent` through `lifecycle_declaration()`. The source payload is released with
+the content at the last reference (the declared loss covers the content, the
+address since Decision 11, and the text of the address).
 
 Written from scratch (our filon). ANN over cues is Slice C's job; Slice A uses
 an exact keyed index so the read law is enforced without a heavy dependency.
@@ -92,6 +106,8 @@ class JournalReadOnly(StorageDegraded):
 
 ENTRY_MAX_BYTES = 1024          # the size law
 CUE_DIM = 64                    # fixed-size cue (matryoshka-truncatable later)
+SOURCE_TEXT_WHAT = ("the text each address was computed from, one sealed payload per entry, released with the content "
+                    "(ADR-009, B2)")        # what the declaration says of the source texts
 
 
 def content_hash(payload: bytes) -> str:
@@ -111,9 +127,19 @@ class Entry:
     t_last_read: float
     state: str = STATE_LIVE
     entry_id: str = ""
+    source_pointer: str | None = None   # content hash of the text the address was computed from (ADR-009 B2); None when absent
+
+    def to_dict(self) -> dict:
+        """The entry as the log writes it. The source pointer is in the dict only when the
+        entry has one: an entry without a source text serialises as it did before Decision
+        B2 (2026-10-12), so the logs and the sizes of earlier journals do not move."""
+        d = asdict(self)
+        if d.get("source_pointer") is None:
+            d.pop("source_pointer", None)
+        return d
 
     def to_json(self) -> str:
-        return json.dumps(asdict(self), separators=(",", ":"))
+        return json.dumps(self.to_dict(), separators=(",", ":"))
 
     def size_bytes(self) -> int:
         return len(self.to_json().encode("utf-8"))
@@ -289,7 +315,8 @@ class Journal:
         self.refused_count = 0
         self.writes_since_last_phase: list[str] = []
         # ---- Slice E state, every item rebuilt from the log on replay ----
-        self._refs: dict[str, set[str]] = {}         # pointer -> non-evicted entry ids referencing it
+        self._refs: dict[str, set[str]] = {}         # pointer -> non-evicted entry ids referencing it (content and source texts alike)
+        self.sourced_entries = 0                     # entries ever written with a source text (ADR-009 B2), alive or not
         self.summary_sources: dict[str, list[str]] = {}   # summary id -> its K source ids
         self.summary_of: dict[str, str] = {}         # source id -> summary id
         self.summary_level: dict[str, int] = {}      # summary id -> hierarchy level (1 = of entries)
@@ -328,10 +355,14 @@ class Journal:
 
     # ---- write ----------------------------------------------------------------
     def write(self, cue, payload: bytes, salience: float, schema_id: str,
-              now: float | None = None, ca3: dict | None = None) -> Entry:
+              now: float | None = None, ca3: dict | None = None,
+              source: bytes | str | None = None) -> Entry:
         """Durable first: payload file, then the log line, then memory. `ca3` (the
         write path's separation meta) rides on the write event so CA3 is rebuilt
-        from one line, never from two that could be split by a failure."""
+        from one line, never from two that could be split by a failure.
+        `source` (ADR-009 B2): the text the cue was computed from, sealed as a
+        payload of its own and referenced by the entry's `source_pointer`; the
+        entry never holds the text. None leaves the entry as before the decision."""
         cue = np.asarray(cue, dtype=np.float32)
         assert cue.shape == (self.cue_dim,), f"cue must be ({self.cue_dim},)"
         now = time.time() if now is None else now
@@ -339,24 +370,36 @@ class Journal:
         if self.mode == MODE_READ_ONLY:
             self._retry_or_refuse()                                       # the disk may be back
         pointer = self._put_payload(payload)                              # content stored once, by hash
+        source_pointer = None
+        if source is not None:
+            source_bytes = source.encode("utf-8") if isinstance(source, str) else bytes(source)
+            source_pointer = self._put_payload(source_bytes)              # the same store, the same seal, the same scope
         entry = Entry(cue=[round(float(x), 4) for x in cue], pointer=pointer,
                       salience=float(salience), schema_id=schema_id,
-                      t_written=now, t_last_read=now, state=STATE_LIVE)
+                      t_written=now, t_last_read=now, state=STATE_LIVE, source_pointer=source_pointer)
         entry.entry_id = _hash_obj({"p": pointer, "t": now, "s": schema_id})
         sz = entry.size_bytes()
         if sz > ENTRY_MAX_BYTES:
             raise ValueError(f"entry violates the size law: {sz} B > {ENTRY_MAX_BYTES} B")
-        ev = {"ev": "write", "entry": asdict(entry)}
+        ev = {"ev": "write", "entry": entry.to_dict()}
         if ca3 is not None:
             ev["ca3"] = dict(ca3)
         self._persist(ev)                                                 # may raise; memory untouched then
         self._entries[entry.entry_id] = entry
         self._by_cue_key.setdefault(self._cue_key(cue), []).append(entry.entry_id)
-        self._refs.setdefault(pointer, set()).add(entry.entry_id)
+        self._hold_refs(entry)
         self.writes_since_last_phase.append(entry.entry_id)
         if ca3 is not None:
             self.ca3_order.append((entry.entry_id, dict(ca3)))
         return entry
+
+    def _hold_refs(self, entry: Entry) -> None:
+        """The entry holds its content and, when it has one, its source text (by identity: the
+        two pointers coincide when the text is the content, as in the model arm)."""
+        self._refs.setdefault(entry.pointer, set()).add(entry.entry_id)
+        if entry.source_pointer is not None:
+            self._refs.setdefault(entry.source_pointer, set()).add(entry.entry_id)
+            self.sourced_entries += 1
 
     def _put_payload(self, payload: bytes) -> str:
         if self.mode == MODE_MEMORY:
@@ -388,6 +431,22 @@ class Journal:
     def get(self, entry_id: str) -> Entry:
         self._reads_touched += 1
         return self._entries[entry_id]
+
+    def source_text(self, entry_id: str) -> bytes | None:
+        """The text the entry's address was computed from, decoded from its sealed payload
+        (ADR-009 B2), or None: absent (the entry was written without one, before the decision
+        or by a writer that has no text, a summary or a sentinel) or gone with the content (an
+        evicted entry never reads)."""
+        e = self._entries[entry_id]
+        if e.source_pointer is None or e.state == STATE_EVICTED or e.source_pointer not in self.payloads:
+            return None
+        return self.payloads.get(e.source_pointer)
+
+    def source_text_counts(self) -> dict:
+        """Over the non-evicted entries: how many carry a source text and how many declare it absent."""
+        alive = [e for e in self._entries.values() if e.state != STATE_EVICTED]
+        present = sum(1 for e in alive if e.source_pointer is not None)
+        return {"present": present, "absent": len(alive) - present}
 
     # ---- lifecycle (RES-17 transitions) --------------------------------------
     def transition(self, entry_id: str, new_state: str) -> Entry:
@@ -454,9 +513,13 @@ class Journal:
 
     def _release_refs(self, entry_id: str) -> None:
         """Reference counting on identity (the pointer), never on similarity.
-        A payload is released when no non-evicted entry (or summary) points to it."""
+        A payload is released when no non-evicted entry (or summary) points to it.
+        The source text goes with the content (ADR-009 B2): the entry's two pointers
+        are released alike, each at its last reference."""
         e = self._entries[entry_id]
         ptrs = [e.pointer] + [self._entries[s].pointer for s in self.summary_sources.get(entry_id, [])]
+        if e.source_pointer is not None and e.source_pointer not in ptrs:
+            ptrs.append(e.source_pointer)
         for p in ptrs:
             holders = self._refs.get(p)
             if holders is None:
@@ -654,10 +717,10 @@ class Journal:
             ev = json.loads(open_line(self._key, raw))                 # a clear line passes, a sealed one needs the key
             if ev["ev"] == "write":
                 d = ev["entry"]
-                e = Entry(**d)
+                e = Entry(**d)                            # a line without `source_pointer` (before B2) replays as absent
                 self._entries[e.entry_id] = e
                 self._by_cue_key.setdefault(self._cue_key(e.cue), []).append(e.entry_id)
-                self._refs.setdefault(e.pointer, set()).add(e.entry_id)
+                self._hold_refs(e)
                 self.writes_since_last_phase.append(e.entry_id)
                 if "ca3" in ev:
                     self.ca3_order.append((e.entry_id, dict(ev["ca3"])))
@@ -704,6 +767,7 @@ def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
                "degraded_reason": journal.degraded_reason if has else None,
                "unpersisted_events": len(journal.spill) if has else 0,
                "plaintext_scope": has and journal.plaintext}
+    counts = journal.source_text_counts() if has else {"present": 0, "absent": 0}
     return {
         "storage": storage,
         "structure": {"what": "entries, states, saliences, links, references, phases",
@@ -712,7 +776,10 @@ def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
         "bytes": {"what": "the payloads (content), one file per pointer",
                   "lifecycle": "content-addressed directory next to the log, released at the last reference",
                   "survives_restart": has and journal.payloads.persistent and durable,
-                  "encrypted_at_rest": has and journal.payloads.sealed},
+                  "encrypted_at_rest": has and journal.payloads.sealed,
+                  # ADR-009 B2: the journal declares, entry by entry, whether the text of the address is kept;
+                  # a journal written before the decision declares every entry absent and is recoded by nobody
+                  "source_text": {"what": SOURCE_TEXT_WHAT, **counts}},
         "index": {"what": "the cue index (buckets) and the demotion aliases",
                   "lifecycle": "recomputed at open from the log, with a declared seed",
                   "survives_restart": durable, "encrypted_at_rest": None},

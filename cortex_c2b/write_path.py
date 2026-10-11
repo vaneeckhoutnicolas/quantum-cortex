@@ -132,7 +132,10 @@ class WritePath:
     def _code(self, cue: np.ndarray) -> np.ndarray:
         return self.dg.separate(cue) if self.dg else cue.astype(np.float32)
 
-    def write(self, cue, payload: bytes, schema_id: str, now: float | None = None) -> WriteReport:
+    def write(self, cue, payload: bytes, schema_id: str, now: float | None = None,
+              source: bytes | str | None = None) -> WriteReport:
+        """`source` (ADR-009 B2): the text the cue was computed from; the store seals it
+        beside the content. The gate reads the cue alone, as before."""
         cue = np.asarray(cue, dtype=np.float32)
         code = self._code(cue)
         recon = self.ca3.reconstruct(code) if self.use_ca3 else None
@@ -141,7 +144,7 @@ class WritePath:
         if surprise < self.thr:
             return WriteReport(admitted=False, surprise=surprise, reason="redundant (below admission threshold)")
         entry = self.j.write(cue, payload, salience=surprise, schema_id=schema_id, now=now,
-                             ca3=self._meta)                          # one line; a failure cannot split it (D9)
+                             ca3=self._meta, source=source)           # one line; a failure cannot split it (D9)
         # store the code of the cue AS JOURNALED (rounded), so a rebuild after a restart
         # produces byte-identical CA3 contents (Decision 8)
         self.ca3.store(self._code(np.asarray(entry.cue, dtype=np.float32)))

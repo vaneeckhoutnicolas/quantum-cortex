@@ -297,8 +297,11 @@ class JournalBridge:
 
     # ---- the organ ---------------------------------------------------------------
     def write(self, text: str, schema: str, now: float, entity: str | None = None) -> WriteReport:
+        """The cue is computed from `text`, so `text` is the source text of the address (ADR-009
+        B2) and the content at once: the two pointers of the entry coincide, the bytes are
+        stored once; under another encoder the address is recomputed from that sealed text."""
         cue = self.cues([list(text.encode("utf-8"))])[0]
-        rep = self.wp.write(cue, text.encode("utf-8"), schema, now=now)
+        rep = self.wp.write(cue, text.encode("utf-8"), schema, now=now, source=text)
         if rep.admitted:
             self.jp.on_write(rep.entry)
             if entity is not None:

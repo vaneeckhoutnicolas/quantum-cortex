@@ -3,7 +3,9 @@
 one record through the gated write path into a journal sealed on disk; session B, in a
 NEW process that knows nothing of session A but the disk, cites it with its pointer and
 abstains on an address never written; a second session A is refused as redundant; nothing
-at rest is plaintext. The blocks are extracted from README.md, so a change to the README
+at rest is plaintext, the text of the address included (ADR-009 B2, 2026-10-12: the record
+and the text its address was computed from are two sealed payloads next to the log). The
+blocks are extracted from README.md, so a change to the README
 that breaks the snippet breaks this test, and a change to the code that breaks the README
 does too. Nothing here is a number of the record."""
 from __future__ import annotations
@@ -57,7 +59,7 @@ def test_readme_compose_blocks_run_as_printed(tmp_path):
 
     journal_dir = tmp_path / "runs" / "my-scope"
     files = [journal_dir / "journal.jsonl"] + sorted((journal_dir / "journal.payloads").iterdir())
-    assert len(files) == 2, files                          # the log and one payload
+    assert len(files) == 3, files                          # the log, the record, and the text of its address (ADR-009 B2)
     for f in files:
         raw = f.read_bytes()
         assert RECORD not in raw and b"originality" not in raw, f"plaintext at rest in {f.name}"

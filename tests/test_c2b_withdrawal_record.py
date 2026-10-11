@@ -135,3 +135,24 @@ def test_the_retained_log_is_the_summary_of_the_file(rid):
     d = _load(rid)
     log = (ROOT / "metrics/mqar/logs" / f"withdrawal-probe-{rid}.log").read_bytes().decode("utf-16").splitlines()
     assert len(log) == 10 and log[:-1] == wp.summary_lines(d) and log[-1].startswith("[record] retained:")
+
+
+@pytest.mark.parametrize("rid", list(FILES))
+def test_no_summary_existed_on_the_three_journals_so_the_cascade_correction_of_2026_10_12_leaves_the_row(rid):
+    """ADR-007, correction of 2026-10-12: the withdrawal did not reach the sources a summary takes with
+    it through the store's cascade. Whether the row 42 measurement could have met that case is read
+    here from the files, not reasoned: the forty phase records of both runs carry the demotion and
+    eviction counts and the number of summaries alive, and the snapshot the state counts. On the three
+    journals no group was ever demoted, no summary ever existed and no entry is demoted at the end, so
+    no eviction cascaded and the correction changes nothing of what these files record."""
+    d = _load(rid)
+    for name in ("control", "measurement"):
+        run = d[name]
+        assert len(run["phases"]) == 40 and all(not p["refused"] for p in run["phases"])
+        assert sum(p["applied"]["demoted_groups"] for p in run["phases"]) == 0
+        assert all(p["summaries"] == 0 for p in run["phases"])
+        assert sum(p["applied"]["evicted"] for p in run["phases"]) == 200
+        snap = run["process_a"]["snapshot"]
+        assert snap["demoted"] == 0 and snap["summaries"] == 0 and snap["evicted"] == 200 and snap["consolidated"] == 20
+        assert run["process_b"]["snapshot"]["demoted"] == 0 and run["process_b"]["snapshot"]["summaries"] == 0
+    assert sum(p["applied"]["withdrawn"] for p in d["measurement"]["phases"]) == 200      # one withdrawal per eviction, none by cascade
