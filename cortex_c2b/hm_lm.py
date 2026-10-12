@@ -261,11 +261,10 @@ def retrieval_probe(model, journal, facts: list[Fact], neg: list[Fact], pointer_
     out = {"probe": "retrieval policy (ADR-003 line 6): dense cosine against expand and sparsify",
            "k": k, "n_facts": len(facts), "n_negctrl": len(neg), "rankings": {}}
     for rank in ("cosine", "fly"):
-        jp = JournalPath(journal, index=CueIndex(seed=seed, rank=rank), seed=seed)
-        for eid, e in journal._entries.items():
-            if e.state != STATE_EVICTED:
-                jp.index.add(eid, np.asarray(e.cue, dtype=np.float32))
+        jp = JournalPath(journal, index=CueIndex(seed=seed, rank=rank), seed=seed)   # the path indexes the journal itself
         bridge = JournalBridge(model, journal, journal_path=jp, k=k, seed=seed, device=device)
+        index_seen = {"rank": jp.index.rank, "n_tables": len(jp.index.planes), "n_bits": int(jp.index.planes[0].shape[1]),
+                      "fly_planes": jp.index.fly_planes is not None, "entries": len(jp.index)}   # read back from the live object
         in_cand = in_topk = 0; ranks = []; margins = []; neg_best = []
         for f in facts:
             cue = bridge.cues([encode_query(f.query)])[0]
@@ -289,6 +288,7 @@ def retrieval_probe(model, journal, facts: list[Fact], neg: list[Fact], pointer_
             neg_best.append(float(sc[0][1]) if sc else float("nan"))
         n = len(facts)
         out["rankings"][rank] = {
+            "index": index_seen,
             "own_in_candidates": in_cand / n, "own_in_top_k": in_topk / n,
             "own_rank": _stats([float(r) for r in ranks]), "own_minus_best_other": _stats(margins),
             "negctrl_best_score": _stats([x for x in neg_best if x == x])}

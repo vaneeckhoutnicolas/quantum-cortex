@@ -51,6 +51,20 @@ def test_ann_read_never_scans():
     assert len(hits) >= 1
 
 
+def test_a_passed_index_is_the_one_the_path_holds_even_when_empty():
+    """Found 2026-10-12 by the committee on the fly's declaration (register Rev108): an empty
+    CueIndex is falsy (it has a length), so `index or CueIndex(...)` silently replaced the index
+    the retrieval probe of row 38 passed by a default cosine index; the row's "fly" ranking was
+    the cosine ranking twice. The path must keep the object it is given."""
+    from cortex_c2b import Journal
+    idx = CueIndex(dim=CUE_DIM, seed=0, rank="fly")
+    assert len(idx) == 0 and not idx                            # the trap: an empty index is falsy
+    jp = JournalPath(Journal(), index=idx, seed=0)
+    assert jp.index is idx and jp.index.rank == "fly" and jp.index.fly_planes is not None
+    jp2 = JournalPath(Journal(), index=None, seed=0)
+    assert jp2.index is not idx and jp2.index.rank == "cosine"
+
+
 def test_ann_finds_a_stored_cue():
     idx = CueIndex(dim=CUE_DIM, seed=0)
     for i in range(500):

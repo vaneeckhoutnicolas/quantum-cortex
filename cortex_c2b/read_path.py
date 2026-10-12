@@ -162,7 +162,9 @@ class JournalPath:
         recomputed at every open from the log; the seed is part of the scope's
         configuration, so two opens build the same buckets)."""
         self.j = journal
-        self.index = index or CueIndex(dim=journal.cue_dim, seed=seed)
+        # `is None`, not `or`: an empty CueIndex is falsy (it has a length), and `or` replaced the index
+        # the retrieval probe of row 38 passed by a default cosine one (found 2026-10-12, register Rev108)
+        self.index = index if index is not None else CueIndex(dim=journal.cue_dim, seed=seed)
         # index everything already in the journal (demoted sources included: a hit on
         # them resolves to their summary through the alias)
         for eid, e in journal._entries.items():

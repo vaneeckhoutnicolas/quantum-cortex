@@ -302,7 +302,17 @@ def test_the_retrieval_probe_separates_a_bucket_miss_from_a_ranking_miss():
     for rank, v in r["rankings"].items():
         assert 0.0 <= v["own_in_top_k"] <= v["own_in_candidates"] <= 1.0, rank   # top k is a subset of the candidates
         assert v["own_rank"] is None or v["own_rank"]["min"] >= 1.0
+        assert v["index"]["rank"] == rank and v["index"]["n_tables"] == 4 and v["index"]["n_bits"] == 10   # read back from the live index
     assert r["reading"]["candidate_misses_cosine"] == round(1 - r["rankings"]["cosine"]["own_in_candidates"], 4)
+    # 2026-10-12 (Rev108): the fly ranking is the fly's, not the cosine twice; its scores are shares of the 51 kept
+    # indices, in [0, 1], and a margin is a difference of two such shares
+    fly = r["rankings"]["fly"]
+    assert fly["index"]["fly_planes"] is True and r["rankings"]["cosine"]["index"]["fly_planes"] is False
+    if fly["negctrl_best_score"] is not None:
+        assert 0.0 <= fly["negctrl_best_score"]["min"] and fly["negctrl_best_score"]["max"] <= 1.0
+    if fly["own_minus_best_other"] is not None:
+        assert -1.0 <= fly["own_minus_best_other"]["min"] and fly["own_minus_best_other"]["max"] <= 1.0
+    assert r["rankings"]["cosine"]["own_in_candidates"] == fly["own_in_candidates"]   # the buckets are the same object under both
 
 
 def test_the_oracle_leaves_the_window_shuffle_untouched_so_policies_are_paired():
