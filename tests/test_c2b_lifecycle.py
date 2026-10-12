@@ -385,8 +385,9 @@ def test_the_journal_survives_a_full_process_restart(tmp_path, sealed):
         assert any(b"works as a" in f.read_bytes() for f in files)
 
     env = {**os.environ, "PYTHONPATH": str(ROOT)}
-    if sealed:
-        env["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()
+    env.pop("QUANTUM_CORTEX_JOURNAL_KEY", None)        # the plaintext scope must not inherit a key from the window: with one there,
+    if sealed:                                        # session B opened the clear journal sealed and declared it so (seen on the
+        env["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()   # founder's machine on 2026-10-12, the probe's key in the window; a flaw of the test)
     cfg_json = json.dumps({k: getattr(cfg, k) for k in cfg.__dataclass_fields__})
     run = subprocess.run([sys.executable, "-c", SESSION_B, str(path), cfg_json],
                          capture_output=True, text=True, cwd=ROOT, env=env, timeout=120)

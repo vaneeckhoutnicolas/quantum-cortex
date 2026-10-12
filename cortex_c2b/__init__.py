@@ -313,6 +313,7 @@ class Journal:
         self.sentinels_recorded: list[tuple[int, str]] = []   # (fact index, entry_id)
         self.phase_count = 0
         self.refused_count = 0
+        self.replay_failed_total = 0                 # the failed replays the phase events carry, summed at replay (2026-10-12)
         self.writes_since_last_phase: list[str] = []
         # ---- Slice E state, every item rebuilt from the log on replay ----
         self._refs: dict[str, set[str]] = {}         # pointer -> non-evicted entry ids referencing it (content and source texts alike)
@@ -540,6 +541,7 @@ class Journal:
         self.phase_count += 1
         if record.get("refused"):
             self.refused_count += 1
+        self.replay_failed_total += int((record.get("applied") or {}).get("replay_failed", 0))
         self.writes_since_last_phase = []
 
     def mark_ca3(self, entry_id: str, meta: dict) -> None:

@@ -221,7 +221,9 @@ class LifecycleScheduler:
         self.j, self.wp, self.jp = journal, write_path, journal_path
         self.cfg = cfg or LifecycleConfig()
         self.memory = memory if memory is not None else PersistentMemory(dim=journal.cue_dim)   # an empty memory is falsy
-        self.replay_failed = 0                       # telemetry only; the log's phase snapshots carry the totals
+        self.replay_failed = journal.replay_failed_total   # resumed from the phase events of the log (correction of 2026-10-12,
+                                                     # found by the coherence tests: it restarted at zero, so a continued journal
+                                                     # wrote a phase event the live one would not have written)
         self.last_phase: dict | None = None
         # ---- Decision 8: a scheduler opened on a journal continues it, it does not restart it
         for eid in journal.consolidated_order:       # the persistent memory, in consolidation order
@@ -407,6 +409,9 @@ class LifecycleScheduler:
     def phase(self, now: float) -> dict:
         """One sleep: plan, check the sentinels on the plan, then apply or refuse."""
         cfg = self.cfg
+        self.writes_since_phase = 0                  # a phase, explicit or on the rhythm, is what the log counts writes since
+                                                     # (correction of 2026-10-12, found by the coherence tests: an explicit phase
+                                                     # left the live counter where it was while the rebuild read it at zero)
         p = self.plan(now)
         recall_before, neg_before = self.sentinel_probe(None)
         recall_after, neg_after = self.sentinel_probe(p)
