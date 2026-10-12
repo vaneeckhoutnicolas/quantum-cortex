@@ -52,6 +52,16 @@ absent` through `lifecycle_declaration()`. The source payload is released with
 the content at the last reference (the declared loss covers the content, the
 address since Decision 11, and the text of the address).
 
+The revision at the same address (ADR-007, amendment of 2026-10-12, validated by
+the founder the same day): same address, different content is a dated revision of
+the existing entry, never a second entry. The entry keeps its identity, state,
+salience, cue and pattern; its pointer moves to the new content; the previous
+pointer joins a dated history (`history(entry_id)`), its bytes held until the
+entry's eviction. One event, `revision`, carries it in the log; the replay
+rebuilds the histories from the events. The identity of an address is the source
+text when both writes carry one (B2), the rounded cue otherwise: identity, never
+similarity (`at_address`).
+
 Written from scratch (our filon). ANN over cues is Slice C's job; Slice A uses
 an exact keyed index so the read law is enforced without a heavy dependency.
 """
@@ -318,6 +328,7 @@ class Journal:
         # ---- Slice E state, every item rebuilt from the log on replay ----
         self._refs: dict[str, set[str]] = {}         # pointer -> non-evicted entry ids referencing it (content and source texts alike)
         self.sourced_entries = 0                     # entries ever written with a source text (ADR-009 B2), alive or not
+        self._versions: dict[str, list[tuple[float, str]]] = {}   # revised entries: every version (t, pointer), oldest first
         self.summary_sources: dict[str, list[str]] = {}   # summary id -> its K source ids
         self.summary_of: dict[str, str] = {}         # source id -> summary id
         self.summary_level: dict[str, int] = {}      # summary id -> hierarchy level (1 = of entries)
@@ -401,6 +412,69 @@ class Journal:
         if entry.source_pointer is not None:
             self._refs.setdefault(entry.source_pointer, set()).add(entry.entry_id)
             self.sourced_entries += 1
+
+    # ---- the revision at the same address (ADR-007, amendment of 2026-10-12) ----------
+    def at_address(self, cue, source: bytes | str | None = None) -> Entry | None:
+        """The alive entry at the same address as this write, or None. Identity, never
+        similarity: the source text when both carry one (ADR-009 B2, stable across
+        encoders), the cue as the journal rounds it (four decimals) otherwise. A summary
+        is never a write's target; an evicted entry holds no address. Not a read: it
+        touches neither `t_last_read` nor the read counter."""
+        sp = None
+        if source is not None:
+            sp = content_hash(source.encode("utf-8") if isinstance(source, str) else bytes(source))
+            for eid in sorted(self._refs.get(sp, ())):
+                e = self._entries[eid]
+                if e.state != STATE_EVICTED and e.source_pointer == sp and e.schema_id != SCHEMA_SUMMARY:
+                    return e
+        c = np.asarray(cue, dtype=np.float32)
+        rounded = [round(float(x), 4) for x in c]
+        for eid in self._by_cue_key.get(self._cue_key(c), []):
+            e = self._entries[eid]
+            if e.state == STATE_EVICTED or e.schema_id == SCHEMA_SUMMARY or e.cue != rounded:
+                continue
+            if sp is not None and e.source_pointer is not None:
+                continue                                  # both carry a text and the texts differ: another address
+            return e
+        return None
+
+    def revise(self, entry_id: str, payload: bytes, now: float | None = None) -> Entry:
+        """Same address, different content: the entry keeps its identity and its pointer moves
+        to the new content; the previous pointer joins the entry's dated history and its bytes
+        stay held until the eviction. Durable first: the payload, then one `revision` event,
+        then memory. Counts as a write for the rhythm (the log's count of writes since the
+        last phase takes it). Refused for an evicted entry, a summary, or the same content."""
+        e = self._entries[entry_id]
+        if e.state == STATE_EVICTED:
+            raise ValueError("an evicted entry is never revised: it holds no address")
+        if e.schema_id == SCHEMA_SUMMARY:
+            raise ValueError("a summary is never revised by a write")
+        if content_hash(payload) == e.pointer:
+            raise ValueError("same address, same content: nothing to revise (a duplicate is refused as redundant)")
+        now = time.time() if now is None else now
+        self._last_now = now
+        if self.mode == MODE_READ_ONLY:
+            self._retry_or_refuse()                                       # the disk may be back
+        new_pointer = self._put_payload(payload)                          # the bytes first, stored once by hash
+        self._persist({"ev": "revision", "entry_id": entry_id, "from": e.pointer, "to": new_pointer, "t": now})
+        self._apply_revision(entry_id, e.pointer, new_pointer, now)
+        return e
+
+    def _apply_revision(self, entry_id: str, old: str, new: str, t: float) -> None:
+        e = self._entries[entry_id]
+        if entry_id not in self._versions:
+            self._versions[entry_id] = [(e.t_written, old)]              # the first version: the write itself
+        self._versions[entry_id].append((t, new))
+        self._refs.setdefault(new, set()).add(entry_id)                   # the past pointer keeps its holder: bytes held
+        e.pointer = new
+        self.writes_since_last_phase.append(entry_id)                     # a revision counts as a write for the rhythm
+
+    def history(self, entry_id: str) -> list[tuple[float, str]]:
+        """The versions of an entry, oldest first, each (time, pointer), the current one last;
+        one element for an entry never revised. Kept for a tombstone too (the bytes of an
+        evicted entry are released, its record of versions is not)."""
+        e = self._entries[entry_id]
+        return list(self._versions.get(entry_id, [(e.t_written, e.pointer)]))
 
     def _put_payload(self, payload: bytes) -> str:
         if self.mode == MODE_MEMORY:
@@ -521,6 +595,9 @@ class Journal:
         ptrs = [e.pointer] + [self._entries[s].pointer for s in self.summary_sources.get(entry_id, [])]
         if e.source_pointer is not None and e.source_pointer not in ptrs:
             ptrs.append(e.source_pointer)
+        for _, p in self._versions.get(entry_id, ()):                    # the history goes with the entry (2026-10-12)
+            if p not in ptrs:
+                ptrs.append(p)
         for p in ptrs:
             holders = self._refs.get(p)
             if holders is None:
@@ -748,6 +825,8 @@ class Journal:
                 self.sentinels_recorded.append((int(ev["i"]), ev["entry_id"]))
             elif ev["ev"] == "storage_restored":
                 self.restorations.append({k: v for k, v in ev.items() if k != "ev"})
+            elif ev["ev"] == "revision":
+                self._apply_revision(ev["entry_id"], ev["from"], ev["to"], float(ev["t"]))
 
 
 def os_readable(path: Path) -> bool:
@@ -772,9 +851,12 @@ def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
     counts = journal.source_text_counts() if has else {"present": 0, "absent": 0}
     return {
         "storage": storage,
-        "structure": {"what": "entries, states, saliences, links, references, phases",
+        "structure": {"what": "entries, states, saliences, links, references, phases, revisions",
                       "lifecycle": "append-only log, replayed at open",
-                      "survives_restart": durable, "encrypted_at_rest": sealed},
+                      "survives_restart": durable, "encrypted_at_rest": sealed,
+                      # ADR-007 amendment 2026-10-12: how many entries were revised and how many past versions they hold
+                      "revisions": {"entries_revised": len(journal._versions) if has else 0,
+                                    "past_versions": sum(len(v) - 1 for v in journal._versions.values()) if has else 0}},
         "bytes": {"what": "the payloads (content), one file per pointer",
                   "lifecycle": "content-addressed directory next to the log, released at the last reference",
                   "survives_restart": has and journal.payloads.persistent and durable,

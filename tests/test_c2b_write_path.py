@@ -79,11 +79,22 @@ def test_ca1_surprise_is_distance():
 
 # --- ablations: each stage changes behaviour as predicted --------------------------
 def test_without_ca1_everything_is_written():
-    wp = WritePath(Journal(), admission_threshold=0.15, use_ca1=False)
+    # Premise changed on 2026-10-12 (ADR-007, revision at the same address). An exact
+    # duplicate (same rounded cue, same content) is now refused by the identity of the
+    # address before any comparator runs, with or without CA1. The ablation is therefore
+    # shown on a near duplicate: a cue displaced by one part in a thousand, which rounds
+    # to a different address, so only the comparator can catch it.
     c = _cue(1)
-    wp.write(c, b"x", "event", now=1.0)
-    r = wp.write(c, b"x", "event", now=2.0)
-    assert r.admitted and len(wp.j) == 2       # no comparator → duplicates are not caught
+    n = (c + 0.001 * np.random.default_rng(99).standard_normal(CUE_DIM)).astype(np.float32)
+    with_ca1 = WritePath(Journal(), admission_threshold=0.15, use_ca1=True)
+    with_ca1.write(c, b"x", "event", now=1.0)
+    r = with_ca1.write(n, b"x", "event", now=2.0)
+    assert not r.admitted and not r.revised and "redundant" in r.reason   # CA1 catches it
+    assert len(with_ca1.j) == 1
+    without = WritePath(Journal(), admission_threshold=0.15, use_ca1=False)
+    without.write(c, b"x", "event", now=1.0)
+    r = without.write(n, b"x", "event", now=2.0)
+    assert r.admitted and len(without.j) == 2  # no comparator → the near duplicate is not caught
 
 
 def test_without_dg_codes_are_raw_cues():

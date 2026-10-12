@@ -271,6 +271,8 @@ class LifecycleScheduler:
         if rep.admitted:
             self.jp.on_write(rep.entry)
             self.on_write(rep.entry, now)
+        elif rep.revised:                                 # ADR-007 amendment 2026-10-12: a revision is a write for the rhythm,
+            self.on_write(rep.entry, now)                 # not a new entry for the index
         return rep
 
     def on_write(self, entry: Entry, now: float) -> dict | None:

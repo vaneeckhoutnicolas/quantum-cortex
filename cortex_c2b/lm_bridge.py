@@ -304,8 +304,8 @@ class JournalBridge:
         rep = self.wp.write(cue, text.encode("utf-8"), schema, now=now, source=text)
         if rep.admitted:
             self.jp.on_write(rep.entry)
-            if entity is not None:
-                self.pointer_of[entity] = rep.entry.pointer
+        if (rep.admitted or rep.revised) and entity is not None:     # a revision moves the entity's pointer to the current version
+            self.pointer_of[entity] = rep.entry.pointer                # (ADR-007 amendment 2026-10-12)
         return rep
 
     def read(self, cue: np.ndarray) -> ReadResult:

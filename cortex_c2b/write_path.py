@@ -34,7 +34,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from cortex_c2b import Journal, Entry, STATE_LIVE, STATE_EVICTED, CUE_DIM
+from cortex_c2b import Journal, Entry, STATE_LIVE, STATE_EVICTED, CUE_DIM, content_hash
 
 
 # ---------------------------------------------------------------------------- #
@@ -102,6 +102,8 @@ class WriteReport:
     surprise: float
     reason: str
     entry: Entry | None = None
+    revised: bool = False       # ADR-007 amendment 2026-10-12: same address, different content, the entry revised in place
+    versions: int = 0           # the number of versions the revised entry now carries
 
 
 class WritePath:
@@ -137,6 +139,17 @@ class WritePath:
         """`source` (ADR-009 B2): the text the cue was computed from; the store seals it
         beside the content. The gate reads the cue alone, as before."""
         cue = np.asarray(cue, dtype=np.float32)
+        # the identity of the address, before the surprise (ADR-007 amendment 2026-10-12): an alive entry at the
+        # same address (the same text when both carry one, the same rounded cue otherwise) is revised when the
+        # content differs and refused as redundant when it is the same; a neighbour is not the same address
+        same = self.j.at_address(cue, source)
+        if same is not None:
+            if content_hash(payload) == same.pointer:
+                return WriteReport(admitted=False, surprise=0.0, reason="redundant (same address, same content)", entry=same)
+            e = self.j.revise(same.entry_id, payload, now=now)
+            n = len(self.j.history(e.entry_id))
+            return WriteReport(admitted=False, surprise=0.0, reason=f"revised (same address, different content): version {n}",
+                               entry=e, revised=True, versions=n)
         code = self._code(cue)
         recon = self.ca3.reconstruct(code) if self.use_ca3 else None
         surprise = ca1_surprise(recon, code) if self.use_ca1 else 1.0   # no comparator → write everything
