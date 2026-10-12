@@ -39,6 +39,16 @@ What changes, declared (the amendment says why):
      an empty notebook before the span) as attribution, not as a condition.
   6. Session B in a new process; a second execution must agree number for
      number (`--agree`); both files retained.
+  7. Arm S', declared 2026-10-08 (the amendment of that date; the founder's
+     decision A6) and built 2026-10-12, before the second execution of the
+     1.7B: the same spans as S, the window attached only where the top mark of
+     the organ's retrieval for the span clears the veto threshold of the run,
+     and absent otherwise; the threshold is read from the training family
+     alone, as the mark oracle reads it (RES-23), never from the protocol's
+     facts; `hm_skill_delta_prime` is reported NEXT TO `hm_skill_delta`, with
+     the share of spans that received a window; the verdict stays on S. The
+     cost on the admitted spans alone (S_adm) comes with a no model comparator,
+     the band of chance subsets of the same size (`admitted_cost_band`).
 
 Nothing here is a claim. The first number comes from the first file.
 """
@@ -61,7 +71,7 @@ from cortex_c2b.hm_protocol import (Fact, generate_facts, _cue_for, _TEMPLATES, 
                                     FLOOR_MARGIN, NEGCTRL_INVALID, N_FACTS, N_NEGCTRL)
 from cortex_c2b.lm_bridge import (build_read_window, parse_contract, LABELS, NEWLINE, TOK_CITE, TOK_ANS,
                                   TOK_UNKNOWN)
-from cortex_c2b.hm_lm import INVALID_CITATION_MAX
+from cortex_c2b.hm_lm import INVALID_CITATION_MAX, best_mark_threshold
 from cortex_c2b.read_path import JournalPath
 from cortex_c2b.write_path import WritePath
 
@@ -321,34 +331,151 @@ def _arm(model, frame: str, jp: JournalPath | None, facts: list[Fact], rng, payl
     return score(kinds, facts, labels_of, pointers_of, payloads, pointer_of, journal_on), transcript
 
 
-def skill_arm(model, frame: str, jp: JournalPath, spans: list[str], rng) -> dict:
+TRAIN_SEED = 100_000           # the training facts family (organ_use), the frame's own; disjoint from the protocol's seeds
+TRAIN_N = 200                  # as the mark oracle reads it (RES-23, `hm_lm.mark_oracle`)
+
+
+def organ_mark_threshold(seed: int, train_seed: int = TRAIN_SEED, train_n: int = TRAIN_N, k: int = K) -> dict:
+    """The veto threshold of a run, read from the training family ALONE, by the
+    organ alone (no model): a scratch journal in memory, `train_n` training facts
+    planted through the gated write path with the organ's own cues (the entity as
+    the address, as session A plants), their never planted negatives read by the
+    same cues; the rule of the mark oracle (RES-23): claim iff the top mark clears
+    the threshold, the threshold the one of best accuracy on the training family.
+    Deterministic from the seeds; the protocol's journal is never read here."""
+    from cortex_c2b.organ_use import training_facts
+    tf, tneg, report = training_facts(train_n, train_seed)
+    journal = Journal()
+    wp, jp = WritePath(journal, seed=seed), JournalPath(journal, seed=seed)
+    pointer_of = {}
+    for i, f in enumerate(tf):
+        rep = wp.write(f.cue, f.statement.encode("utf-8"), f.schema, now=float(i), source=f.address_text)
+        if rep.admitted:
+            jp.on_write(rep.entry); pointer_of[f.entity] = rep.entry.pointer
+    pos, negs = [], []
+    for f in tf:
+        hits = jp.retrieve(f.cue, k=k)
+        if hits:
+            top = max(hits, key=lambda h: h[2])
+            pos.append((float(top[2]), top[0].pointer == pointer_of.get(f.entity)))
+    for f in tneg:
+        hits = jp.retrieve(f.cue, k=k)
+        negs.append(max((float(h[2]) for h in hits), default=0.0))
+    best_thr, best_acc = best_mark_threshold(pos, negs)        # the oracle's rule, the one function (hm_lm)
+    return {"threshold": best_thr, "training_accuracy": best_acc, "training_pairs": len(pos) + len(negs),
+            "n_training_facts": len(tf), "n_training_negatives": len(tneg), "planted": len(pointer_of),
+            "train_seed": train_seed, "generator_hash": report["generator_hash"], "k": k, "index_seed": seed,
+            "min_positive_mark": (min(m for m, _ in pos) if pos else None),
+            "max_negative_mark": (max(negs) if negs else None),
+            "source": "the training family alone, as the mark oracle reads it (RES-23); never the protocol's facts",
+            "cue_convention": "the training family is planted and read by the entity's address cue, as this arm plants "
+                              "and reads (rows 13, 13b); the mark oracle of the cortex's arm reads by the question's "
+                              "text through the checkpoint's encoder, which this arm has not",
+            "rule": "the window is attached to a span iff the organ returns at least one line for the span's cue and "
+                    "the top mark is strictly above the threshold; an empty read never attaches a window",
+            "index_seed_note": "the scratch index is seeded with the run's seed, as the run's own index is",
+            "encoder": "the organ's hash seeded encoder (the entity as the address, rows 13 and 13b)"}
+
+
+BAND_DRAWS = 2000              # the chance subsets drawn for the admitted cost's band (S', the second round of 2026-10-12)
+BAND_SEED = 20261012           # the draw's seed, fixed: the band recomputes from the file alone
+
+
+def admitted_cost_band(detail: list[dict], n_draws: int = BAND_DRAWS, seed: int = BAND_SEED) -> dict | None:
+    """The no model comparator of S_adm (declared 2026-10-12, before any execution).
+    The admitted spans are a chance subset of the spans (their address is the hash
+    of their text), so the question S_adm answers is whether the windows the organ
+    let through cost what any subset of the same size costs. From the per span
+    records alone: `n_draws` subsets of the admitted size drawn at random without
+    replacement (a fixed seed), the relative cost of each (its ON perplexity over
+    its OFF perplexity, minus one, on its own tokens), the central ninety five
+    percent band of those costs and the share of draws at or under the observed
+    S_adm. None when nothing was admitted, or when every span was (no other
+    subset exists). Recomputable from the file by anyone; no model."""
+    m = sum(1 for d in detail if d["admitted"])
+    if m == 0 or m >= len(detail):
+        return None
+    on = np.asarray([d["nll_on"] for d in detail], dtype=np.float64)
+    off = np.asarray([d["nll_off"] for d in detail], dtype=np.float64)
+    tok = np.asarray([d["tokens"] for d in detail], dtype=np.float64)
+    adm = np.asarray([bool(d["admitted"]) for d in detail])
+    observed = float(np.exp(on[adm].sum() / tok[adm].sum()) / np.exp(off[adm].sum() / tok[adm].sum()) - 1.0)
+    rng = np.random.default_rng(seed)
+    costs = np.empty(n_draws, dtype=np.float64)
+    for i in range(n_draws):
+        idx = rng.choice(len(detail), size=m, replace=False)
+        costs[i] = np.exp(on[idx].sum() / tok[idx].sum()) / np.exp(off[idx].sum() / tok[idx].sum()) - 1.0
+    lo, hi = (float(x) for x in np.quantile(costs, [0.025, 0.975]))
+    return {"observed": observed, "band_low": lo, "band_high": hi, "within_band": bool(lo <= observed <= hi),
+            "share_at_or_under": float(np.mean(costs <= observed)), "admitted": int(m), "spans": int(len(detail)),
+            "draws": int(n_draws), "seed": int(seed),
+            "what": "the relative cost (ON over OFF perplexity minus one) of chance subsets of the admitted size, "
+                    "drawn from the per span records; S_adm within the band says the admitted windows cost what "
+                    "any subset of that size costs"}
+
+
+def skill_arm(model, frame: str, jp: JournalPath, spans: list[str], rng, threshold: float) -> dict:
     """Arm S. OFF: the span alone. ON: the notebook block the organ returns for
     the span's own cue, then the span. Diagnostic: the frame's fixed text and an
     empty notebook, then the span. The loss on the span's tokens after its
-    first one, in every arm; perplexity = exp(total nll / total tokens)."""
-    tot = {"off": [0.0, 0], "on": [0.0, 0], "frame": [0.0, 0]}
+    first one, in every arm; perplexity = exp(total nll / total tokens).
+    Arm S' (2026-10-08, built 2026-10-12): the same spans, the block attached only
+    where the top mark of the organ's retrieval for the span clears `threshold`
+    (the run's veto threshold, `organ_mark_threshold`), the span alone otherwise;
+    its loss per span is ON's or OFF's, so S' costs no model call of its own.
+    Reported next to S, never in its place; the verdict reads S."""
+    tot = {"off": [0.0, 0], "on": [0.0, 0], "frame": [0.0, 0], "prime": [0.0, 0]}
+    adm = {"off": [0.0, 0], "on": [0.0, 0]}                      # the admitted spans alone (S' attribution)
     pre_frame = frame_prefix(frame)                             # ends with the notebook header, the block empty
+    with_window, detail = 0, []
     for i, text in enumerate(spans):
         if i % 64 == 0:
             _progress(f"arm S: {i}/{len(spans)} spans")
         hits = jp.retrieve(_cue_for(text), k=K)
         window, _ = build_read_window([(e.pointer, p) for e, p, _ in hits], BUDGET_BYTES, rng)
         block = NOTEBOOK_HEADER + window.decode("utf-8", errors="replace")
+        per = {}
         for name, prefix in (("off", ""), ("on", block), ("frame", pre_frame)):
             s, n = model.nll(prefix, text)
-            tot[name][0] += float(s); tot[name][1] += int(n)
+            per[name] = (float(s), int(n))
+            tot[name][0] += per[name][0]; tot[name][1] += per[name][1]
+        top_mark = max((float(h[2]) for h in hits), default=0.0)
+        admitted = bool(hits) and top_mark > threshold          # the organ's own judgment, the oracle's rule; no line, no window
+        with_window += int(admitted)
+        s, n = per["on"] if admitted else per["off"]
+        tot["prime"][0] += s; tot["prime"][1] += n
+        if admitted:
+            for name in ("off", "on"):
+                adm[name][0] += per[name][0]; adm[name][1] += per[name][1]
+        detail.append({"i": i, "top_mark": top_mark, "lines": len(hits), "admitted": admitted, "tokens": per["off"][1],
+                       "nll_off": per["off"][0], "nll_on": per["on"][0], "nll_frame": per["frame"][0]})
     ppl = {k: (float(np.exp(v[0] / v[1])) if v[1] else None) for k, v in tot.items()}
     delta = max(0.0, (ppl["on"] - ppl["off"]) / ppl["off"]) if ppl["off"] else 0.0
     delta_frame = max(0.0, (ppl["frame"] - ppl["off"]) / ppl["off"]) if ppl["off"] else 0.0
+    delta_prime = max(0.0, (ppl["prime"] - ppl["off"]) / ppl["off"]) if ppl["off"] else 0.0
+    signed_prime = ((ppl["prime"] - ppl["off"]) / ppl["off"]) if ppl["off"] else 0.0
+    band = admitted_cost_band(detail)                            # the no model comparator of S_adm (None if nothing or everything admitted)
+    if adm["off"][1]:                                            # the relative cost on the admitted spans alone, signed
+        ppl_adm_off, ppl_adm_on = (float(np.exp(adm[k][0] / adm[k][1])) for k in ("off", "on"))
+        delta_admitted = (ppl_adm_on - ppl_adm_off) / ppl_adm_off
+    else:
+        delta_admitted = None
     return {"hm_skill_delta": delta, "ppl_on": ppl["on"], "ppl_off": ppl["off"],
-            "hm_skill_delta_frame": delta_frame, "ppl_frame": ppl["frame"], "tokens_scored": tot["off"][1]}
+            "hm_skill_delta_frame": delta_frame, "ppl_frame": ppl["frame"], "tokens_scored": tot["off"][1],
+            "hm_skill_delta_prime": delta_prime, "ppl_prime": ppl["prime"], "hm_skill_delta_prime_signed": signed_prime,
+            "hm_prime_window_share": (with_window / len(spans) if spans else 0.0),
+            "prime_spans_with_window": with_window, "prime_token_share": (adm["off"][1] / tot["off"][1] if tot["off"][1] else 0.0),
+            "hm_skill_delta_admitted": delta_admitted, "veto_threshold_used": float(threshold),
+            "hm_skill_delta_admitted_band": band, "hm_skill_delta_admitted_within_band": (band["within_band"] if band else None),
+            "spans_detail": detail}
 
 
 def probe(model, journal_dir: Path, frame: str | None = None, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
           seed: int = 0, spans: list[str] | None = None, data_note: dict | None = None,
           key: bytes | None = None) -> dict:
     """Session B: nothing of session A but the disk. Reopens the sealed journal,
-    runs the three arms of arm E and arm S, and returns the file's content."""
+    runs the three arms of arm E, arm S and its variant S' (reported next to S;
+    the verdict reads S), and returns the file's content."""
     journal_dir = Path(journal_dir)
     frame = frame or build_frame()
     key = key or _key()
@@ -369,7 +496,9 @@ def probe(model, journal_dir: Path, frame: str | None = None, n_facts: int = N_F
     neg_off, _ = _arm(model, frame, None, neg, rng, journal.payloads, {}, False)
     if spans is None:
         spans, data_note = load_val_spans(seed=seed)
-    skills = skill_arm(model, frame, jp, spans, rng)
+    veto = organ_mark_threshold(seed=seed)                      # the run's veto threshold, the training family alone (S')
+    skills = skill_arm(model, frame, jp, spans, rng, threshold=veto["threshold"])
+    spans_detail = skills.pop("spans_detail")                   # per span: mark, admission, tokens, losses (recomputable S, S')
 
     storage = lifecycle_declaration(journal)["storage"]
     persistent = bool(side.get("durable") and journal.mode == MODE_DURABLE)
@@ -395,6 +524,7 @@ def probe(model, journal_dir: Path, frame: str | None = None, n_facts: int = N_F
         "hm_recall_on": on["recall_strict"], "hm_recall_off": off["recall_strict"],
         "hm_gap": on["recall_strict"] - off["recall_strict"],
         **skills,
+        "veto_threshold": veto,
         "hm_negctrl_rate": negctrl_claims, "hm_negctrl_on": neg_on["attr_hit_any"],
         "hm_negctrl_abstain_on": neg_on["abstain_rate"], "hm_negctrl_abstain_off": neg_off["abstain_rate"],
         "hm_false_abstention_on": on["abstain_rate"], "hm_invalid_citation_on": on["invalid_citation_rate"],
@@ -410,7 +540,10 @@ def probe(model, journal_dir: Path, frame: str | None = None, n_facts: int = N_F
         "attribution": {"encoder": on["retrieval_hit"], "encoder_note": "the organ's number (the entity as the address)",
                         "reader": None, "reader_note": "not observable on an external model",
                         "answer": on["attr_exact_given_valid"]},
-        "skill_arm": {"data": data_note, "n_spans": len(spans)},
+        "skill_arm": {"data": data_note, "n_spans": len(spans), "spans": spans_detail,
+                      "note": "S' is attribution, never a condition: the verdict reads S; 1 + S'_signed = "
+                              "(ppl_prime / ppl_off); the admitted spans' own cost is hm_skill_delta_admitted"},
+        "software": {"python": platform.python_version(), "numpy": np.__version__},
         "session_a": side, "process": "new (nothing of session A but the disk)",
         "answers": {"on": t_on, "off": t_off, "negctrl": t_neg},
         "verdict": ((("PASS" if dissociation else ("INVALID" if not valid else "FAIL"))
@@ -505,18 +638,31 @@ def resolve(name: str) -> str:
 # Agreement of two executions, number for number                                #
 # ---------------------------------------------------------------------------- #
 NUMERIC_KEYS = ("hm_recall_on", "hm_recall_off", "hm_gap", "hm_skill_delta", "ppl_on", "ppl_off", "hm_skill_delta_frame",
-                "ppl_frame", "hm_negctrl_rate", "hm_negctrl_abstain_on", "hm_false_abstention_on",
+                "ppl_frame", "hm_skill_delta_prime", "ppl_prime", "hm_skill_delta_prime_signed", "hm_prime_window_share",
+                "prime_spans_with_window", "prime_token_share", "hm_skill_delta_admitted", "veto_threshold_used",
+                "hm_skill_delta_admitted_within_band",
+                "hm_negctrl_rate", "hm_negctrl_abstain_on", "hm_false_abstention_on",
                 "hm_invalid_citation_on", "hm_valid_citation_on", "hm_attr_exact_given_valid", "hm_retrieval_hit",
                 "hm_guess_rate_off", "hm_malformed_on", "hm_malformed_negctrl", "hm_dissociation_pass", "claimable")
 
 
 def agree(a: dict, b: dict) -> tuple[bool, list[str]]:
-    diffs = [f"{k}: {a.get(k)} != {b.get(k)}" for k in NUMERIC_KEYS if a.get(k) != b.get(k)]
+    """Two executions agree when every number present in BOTH files is equal, the
+    prompt hash and the model revision included. A number present in one file
+    only (S' and its companions, added 2026-10-12, absent from the file of
+    2026-09-17) is not a disagreement: it is a number measured once, named by
+    `measured_once`, and the row says so."""
+    diffs = [f"{k}: {a.get(k)} != {b.get(k)}" for k in NUMERIC_KEYS if k in a and k in b and a[k] != b[k]]
     if a.get("prompt", {}).get("hash") != b.get("prompt", {}).get("hash"):
         diffs.append("prompt hash differs")
     if a.get("model", {}).get("revision") != b.get("model", {}).get("revision"):
         diffs.append("model revision differs")
     return (not diffs), diffs
+
+
+def measured_once(a: dict, b: dict) -> list[str]:
+    """The numbers present in one of the two files only (in NUMERIC_KEYS)."""
+    return [k for k in NUMERIC_KEYS if (k in a) != (k in b)]
 
 
 # ---------------------------------------------------------------------------- #
@@ -557,7 +703,10 @@ def _cli(argv=None):
     if a.agree:
         x, y = (json.loads(Path(f).read_text(encoding="utf-8")) for f in a.agree)
         ok, diffs = agree(x, y)
-        print("agree: number for number" if ok else "DISAGREE:\n  " + "\n  ".join(diffs))
+        once = measured_once(x, y)
+        shared = sum(1 for k in NUMERIC_KEYS if k in x and k in y)
+        print((f"agree: number for number on the {shared} shared numbers" if ok else "DISAGREE:\n  " + "\n  ".join(diffs))
+              + (f"\nmeasured in one execution only (not compared): {', '.join(once)}" if once else ""))
         return
     if a.plant:
         if not a.journal:

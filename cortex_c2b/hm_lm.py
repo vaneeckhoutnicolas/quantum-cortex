@@ -338,6 +338,23 @@ def _stats(xs: list[float]) -> dict | None:
             "q10": float(np.quantile(a, 0.10)), "q50": float(np.quantile(a, 0.50)), "q90": float(np.quantile(a, 0.90))}
 
 
+def best_mark_threshold(pos: list[tuple[float, bool]], negs: list[float]) -> tuple[float, float]:
+    """The mark oracle's rule, in one place for both arms (RES-23; the external
+    arm's S' reads it too, 2026-10-12): claim iff the top mark is STRICTLY above
+    the threshold; among the observed marks, the threshold of best accuracy on the
+    training family (a positive counts when it is claimed and its own line is the
+    top one; a negative counts when it is not claimed); the lowest such threshold
+    when several tie (the candidates are scanned in increasing order and a tie
+    does not move it). Returns (threshold, training accuracy)."""
+    cands = sorted({m for m, _ in pos} | set(negs))
+    best_thr, best_acc = 0.0, -1.0
+    for thr in cands:
+        acc = (sum(1 for m, right in pos if m > thr and right) + sum(1 for m in negs if m <= thr)) / max(1, len(pos) + len(negs))
+        if acc > best_acc:
+            best_thr, best_acc = float(thr), float(acc)
+    return best_thr, best_acc
+
+
 @torch.no_grad()
 def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact], pointer_of: dict[str, str],
                 train_seed: int = 100_000, train_n: int = 200, k: int | None = None) -> dict:
@@ -369,12 +386,7 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
     for f in tneg:
         r = scratch.read(scratch.cues([encode_query(f.query)])[0])
         negs.append(max(r.scores) if r.scores else 0.0)
-    cands = sorted({m for m, _ in pos} | set(negs))
-    best_thr, best_acc = 0.0, -1.0
-    for thr in cands:                                           # claim iff max mark > thr; the best on the training family
-        acc = (sum(1 for m, right in pos if m > thr and right) + sum(1 for m in negs if m <= thr)) / max(1, len(pos) + len(negs))
-        if acc > best_acc:
-            best_thr, best_acc = float(thr), float(acc)
+    best_thr, best_acc = best_mark_threshold(pos, negs)
     def apply(fs, planted: bool):
         claims = strict = 0
         for f in fs:
