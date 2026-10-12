@@ -1,0 +1,57 @@
+{
+  "row": "43",
+  "what": "the revision probe on the organ alone (ADR-007 amendment 2026-10-12, the revision at the same address; declared before any number, validated by the founder at 11:25, built tests first), run by the founder on 2026-10-12 at the four seeds of rows 13b and 13c, n 200, admission threshold 0.15, half of the facts revised and a third of those twice, a second process reading from the disk alone; a key generated for each run and left in its temporary directory, no key of the record, no checkpoint, no training",
+  "command": "python -m cortex_c2b.revision_probe --n 200 --seed <s> --out metrics\\mqar  (s in 0, 1, 2, 3)",
+  "code_commit": "59d96f2",
+  "code_commit_note": "the workshop commit that carries cortex_c2b/revision_probe.py and the mechanism (Rev105), pushed before the run; the four files travel with row 43 in the commit that follows it",
+  "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters; the founder's console printed the hash of the CRLF bytes PowerShell wrote, which is not the committed form",
+  "read_cold": "2026-10-12, 13:00, from the four files sent by the founder, by the instance that keeps the record, before any text: the agreement recomputed from the two processes' fields, the histogram of versions and the plan recomputed and put equal, the seven measures recomputed from the parts, the letter recomputed in the declared order (d), (c), (b), (a); then the probe run again here at each seed and compared to the file number for number, the timestamp apart; row 43 and tests/test_c2b_revision_record.py follow",
+  "files": {
+    "revision-probe-seed0.json": {
+      "seed": 0,
+      "sha256_lf": "4da2c436466803a1",
+      "timestamp_utc": "2026-10-12T10:57:25+00:00",
+      "generator_hash": "a5e22c70a3275ed4",
+      "lifecycle_hash": "2c3b9885efd9213d",
+      "letter": "a"
+    },
+    "revision-probe-seed1.json": {
+      "seed": 1,
+      "sha256_lf": "48cec6c397850c16",
+      "timestamp_utc": "2026-10-12T10:57:33+00:00",
+      "generator_hash": "82bd2ff094d9b030",
+      "lifecycle_hash": "2c3b9885efd9213d",
+      "letter": "a"
+    },
+    "revision-probe-seed2.json": {
+      "seed": 2,
+      "sha256_lf": "9e0908be56771e38",
+      "timestamp_utc": "2026-10-12T10:57:41+00:00",
+      "generator_hash": "80bb909b049846de",
+      "lifecycle_hash": "2c3b9885efd9213d",
+      "letter": "a"
+    },
+    "revision-probe-seed3.json": {
+      "seed": 3,
+      "sha256_lf": "0bfa2f380bcb20c2",
+      "timestamp_utc": "2026-10-12T10:57:48+00:00",
+      "generator_hash": "0c37aac8c10a178f",
+      "lifecycle_hash": "2c3b9885efd9213d",
+      "letter": "a"
+    }
+  },
+  "per_seed_constants": {
+    "n_facts": 200,
+    "admitted": 200,
+    "revised": 100,
+    "revised_twice": 33,
+    "revisions_made": 133,
+    "revisions_refused": 0,
+    "versions_histogram": {"1": 100, "2": 67, "3": 33},
+    "patterns_before": 200,
+    "patterns_after": 200,
+    "measures": {"current_returned": 1.0, "past_returned": 0.0, "unrevised_intact": 1.0, "history_exact": true, "entries_exact": true, "memory_unchanged": true, "agreement": true},
+    "process_b_differences": []
+  },
+  "rerun_here_2026_10_12": "the probe run again at each seed by the instance that keeps the record, on the code of 59d96f2, equal to the founder's file on every field but the timestamp (config, memory, plan, storage, thresholds, measures, both processes, agreement, readings, verdict); the record test repeats this comparison at each run of the suite"
+}

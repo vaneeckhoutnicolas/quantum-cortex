@@ -1,0 +1,820 @@
+{
+  "probe": "revision at the same address (ADR-007 amendment 2026-10-12; the review's point 3, decision A3)",
+  "timestamp_utc": "2026-10-12T10:57:48+00:00",
+  "config": {
+    "n_facts": 200,
+    "seed": 3,
+    "generator_hash": "0c37aac8c10a178f",
+    "admission_threshold": 0.15,
+    "admitted": 200,
+    "revised": 100,
+    "revised_twice": 33,
+    "revisions_made": 133,
+    "revisions_refused": 0,
+    "lifecycle_hash": "2c3b9885efd9213d",
+    "index_seed": 3
+  },
+  "memory": {
+    "patterns_before": 200,
+    "patterns_after": 200
+  },
+  "plan": {
+    "Demo-742b": [
+      "cooper",
+      "tanner"
+    ],
+    "Bame-e866": [
+      "falconer"
+    ],
+    "Rove-f01f": [
+      "luthier"
+    ],
+    "Foma-4b85": [
+      "tanner"
+    ],
+    "Gemo-4ba3": [
+      "cartographer"
+    ],
+    "Lume-23bc": [
+      "milliner",
+      "falconer"
+    ],
+    "Kizu-734d": [
+      "milliner"
+    ],
+    "Fuzu-9f98": [
+      "luthier"
+    ],
+    "Kope-291a": [
+      "cooper",
+      "falconer"
+    ],
+    "Rane-8a30": [
+      "archivist",
+      "glazier"
+    ],
+    "Pavi-f8bc": [
+      "cartographer",
+      "archivist"
+    ],
+    "Lobo-8230": [
+      "milliner"
+    ],
+    "Reze-4e16": [
+      "cooper"
+    ],
+    "Koki-7014": [
+      "archivist"
+    ],
+    "Tusa-dfdb": [
+      "luthier"
+    ],
+    "Nive-6479": [
+      "tanner"
+    ],
+    "Kipa-9b19": [
+      "tanner"
+    ],
+    "Nilu-a253": [
+      "milliner"
+    ],
+    "Kego-8aee": [
+      "glazier",
+      "luthier"
+    ],
+    "Tito-0eef": [
+      "cooper"
+    ],
+    "Fona-e30d": [
+      "luthier"
+    ],
+    "Bavo-df48": [
+      "glazier"
+    ],
+    "Beba-6eda": [
+      "falconer",
+      "milliner"
+    ],
+    "Dosi-24fb": [
+      "tanner"
+    ],
+    "Kuli-c670": [
+      "cartographer"
+    ],
+    "Gina-371d": [
+      "Kalvaria",
+      "Osterhold"
+    ],
+    "Nazi-0553": [
+      "Tornquay",
+      "Sandrelle"
+    ],
+    "Rina-88a7": [
+      "Osterhold"
+    ],
+    "Beni-d2a6": [
+      "Sandrelle"
+    ],
+    "Refi-76a1": [
+      "Ebbelund"
+    ],
+    "Kabo-9efe": [
+      "Ebbelund"
+    ],
+    "Ruko-ab94": [
+      "Ebbelund",
+      "Brenmoor"
+    ],
+    "Fefa-05d3": [
+      "Ebbelund"
+    ],
+    "Tebe-63a9": [
+      "Osterhold",
+      "Brenmoor"
+    ],
+    "Pusu-4e07": [
+      "Ebbelund"
+    ],
+    "Fupa-6a25": [
+      "Tornquay"
+    ],
+    "Dudi-c0f9": [
+      "Tornquay"
+    ],
+    "Gufo-fb0a": [
+      "Brenmoor",
+      "Osterhold"
+    ],
+    "Kumo-62f1": [
+      "Tornquay"
+    ],
+    "Kula-76a9": [
+      "Osterhold",
+      "Marrowick"
+    ],
+    "Bito-6a35": [
+      "Tornquay",
+      "Vilkas"
+    ],
+    "Gesi-97e9": [
+      "Kalvaria",
+      "Brenmoor"
+    ],
+    "Zeme-3173": [
+      "Sandrelle"
+    ],
+    "Mifu-42ae": [
+      "1996"
+    ],
+    "Zuso-5a31": [
+      "1982"
+    ],
+    "Zofo-e808": [
+      "1982"
+    ],
+    "Zona-171f": [
+      "1873"
+    ],
+    "Giti-65d9": [
+      "2003",
+      "1931"
+    ],
+    "Ruti-34ad": [
+      "1967",
+      "1958"
+    ],
+    "Vapa-110c": [
+      "1996",
+      "1904"
+    ],
+    "Basu-c596": [
+      "1931"
+    ],
+    "Vuzi-0b65": [
+      "1996"
+    ],
+    "Datu-9149": [
+      "1931"
+    ],
+    "Dasa-7cf0": [
+      "1958",
+      "1967"
+    ],
+    "Dana-b59c": [
+      "1996"
+    ],
+    "Boge-e50a": [
+      "2003"
+    ],
+    "Zubo-246a": [
+      "2003"
+    ],
+    "Dami-4be6": [
+      "1904"
+    ],
+    "Boge-bee3": [
+      "1996"
+    ],
+    "Nari-ad38": [
+      "1996"
+    ],
+    "Kasi-d72a": [
+      "1904"
+    ],
+    "Tili-26a7": [
+      "1982"
+    ],
+    "Mobe-cb19": [
+      "1982"
+    ],
+    "Sibo-ae17": [
+      "basalt",
+      "cobalt"
+    ],
+    "Fupe-9b88": [
+      "basalt"
+    ],
+    "Fugi-d826": [
+      "pewter",
+      "linen"
+    ],
+    "Rafu-76ac": [
+      "amber",
+      "pewter"
+    ],
+    "Teri-9101": [
+      "cobalt"
+    ],
+    "Faza-b883": [
+      "vellum",
+      "cobalt"
+    ],
+    "Befi-2164": [
+      "amber"
+    ],
+    "Desu-1bd6": [
+      "boxwood"
+    ],
+    "Kamu-269b": [
+      "horn"
+    ],
+    "Sene-a957": [
+      "cobalt",
+      "vellum"
+    ],
+    "Nedi-4f26": [
+      "boxwood"
+    ],
+    "Goke-6e52": [
+      "linen"
+    ],
+    "Bili-a7fa": [
+      "pewter",
+      "horn"
+    ],
+    "Vafu-3df5": [
+      "pewter"
+    ],
+    "Masu-8ffa": [
+      "linen"
+    ],
+    "Mevi-28d5": [
+      "linen",
+      "boxwood"
+    ],
+    "Kibu-2fa5": [
+      "basalt"
+    ],
+    "Deti-fcaa": [
+      "amber"
+    ],
+    "Disi-3145": [
+      "amber"
+    ],
+    "Pupo-8319": [
+      "horn"
+    ],
+    "Pago-4b29": [
+      "cobalt"
+    ],
+    "Moda-a4e2": [
+      "the ferry syndic",
+      "the toll keeper"
+    ],
+    "Paki-dc4b": [
+      "the river warden"
+    ],
+    "Folu-2b5e": [
+      "the toll keeper"
+    ],
+    "Fopa-eac6": [
+      "the toll keeper"
+    ],
+    "Savu-31c2": [
+      "the river warden",
+      "the harbour master"
+    ],
+    "Magu-ae34": [
+      "the river warden",
+      "the harbour master"
+    ],
+    "Lodu-56b4": [
+      "the harbour master",
+      "the abbess"
+    ],
+    "Nimo-357d": [
+      "the river warden",
+      "the choir master"
+    ],
+    "Muki-fd9a": [
+      "the river warden"
+    ],
+    "Balo-7f9c": [
+      "the ferry syndic"
+    ],
+    "Guza-0121": [
+      "the guild council"
+    ],
+    "Fibu-f82b": [
+      "the harbour master",
+      "the guild council"
+    ],
+    "Vila-6947": [
+      "the river warden",
+      "the quarry board"
+    ],
+    "Lere-fb0f": [
+      "the ferry syndic"
+    ],
+    "Kide-5c07": [
+      "the abbess"
+    ],
+    "Gaze-84a7": [
+      "the ferry syndic"
+    ]
+  },
+  "storage": {
+    "mode": "durable",
+    "policy": "stop",
+    "degraded_reason": null,
+    "unpersisted_events": 0,
+    "plaintext_scope": false
+  },
+  "thresholds": {
+    "current_returned": 1.0,
+    "past_returned": 0.0,
+    "unrevised_intact": 1.0,
+    "history_exact": true,
+    "entries_exact": true,
+    "memory_unchanged": true,
+    "agreement": true
+  },
+  "measures": {
+    "current_returned": 1.0,
+    "past_returned": 0.0,
+    "unrevised_intact": 1.0,
+    "history_exact": true,
+    "entries_exact": true,
+    "memory_unchanged": true,
+    "agreement": true
+  },
+  "process_a": {
+    "current_returned": 1.0,
+    "past_returned": 0.0,
+    "unrevised_intact": 1.0,
+    "history_exact": true,
+    "entries_exact": true,
+    "versions": {
+      "Tafe-2cd9": 1,
+      "Demo-742b": 3,
+      "Bame-e866": 2,
+      "Paso-fc45": 1,
+      "Rove-f01f": 2,
+      "Kaka-ea93": 1,
+      "Foma-4b85": 2,
+      "Dori-ee39": 1,
+      "Gemo-4ba3": 2,
+      "Tura-a3de": 1,
+      "Zoku-619d": 1,
+      "Lume-23bc": 3,
+      "Pufe-8866": 1,
+      "Pufo-20b2": 1,
+      "Kizu-734d": 2,
+      "Fuzu-9f98": 2,
+      "Poko-f085": 1,
+      "Defo-3ad7": 1,
+      "Beli-4d9f": 1,
+      "Rafo-8fbd": 1,
+      "Kope-291a": 3,
+      "Rane-8a30": 3,
+      "Pavi-f8bc": 3,
+      "Lobo-8230": 2,
+      "Reze-4e16": 2,
+      "Koki-7014": 2,
+      "Buti-bb0f": 1,
+      "Tusa-dfdb": 2,
+      "Nive-6479": 2,
+      "Kipa-9b19": 2,
+      "Zeko-d112": 1,
+      "Nilu-a253": 2,
+      "Tume-d224": 1,
+      "Kego-8aee": 3,
+      "Tito-0eef": 2,
+      "Fona-e30d": 2,
+      "Bavo-df48": 2,
+      "Beba-6eda": 3,
+      "Dosi-24fb": 2,
+      "Kuli-c670": 2,
+      "Gina-371d": 3,
+      "Nazi-0553": 3,
+      "Zofi-7ade": 1,
+      "Rina-88a7": 2,
+      "Nofo-5c97": 1,
+      "Beni-d2a6": 2,
+      "Dede-3ba1": 1,
+      "Vuva-f62b": 1,
+      "Budi-e446": 1,
+      "Refi-76a1": 2,
+      "Naru-5696": 1,
+      "Niga-e73f": 1,
+      "Kabo-9efe": 2,
+      "Dipe-ef3a": 1,
+      "Nono-472a": 1,
+      "Ruko-ab94": 3,
+      "Line-764e": 1,
+      "Fefa-05d3": 2,
+      "Tebe-63a9": 3,
+      "Miti-3de8": 1,
+      "Pusu-4e07": 2,
+      "Pona-3883": 1,
+      "Fupa-6a25": 2,
+      "Dudi-c0f9": 2,
+      "Resi-1ddb": 1,
+      "Bafe-d17f": 1,
+      "Solo-1b38": 1,
+      "Gufo-fb0a": 3,
+      "Fuze-c0b6": 1,
+      "Kumo-62f1": 2,
+      "Luna-ef85": 1,
+      "Sabu-75a0": 1,
+      "Kula-76a9": 3,
+      "Bito-6a35": 3,
+      "Lofa-b364": 1,
+      "Gesi-97e9": 3,
+      "Zeme-3173": 2,
+      "Pise-4a52": 1,
+      "Futa-c17c": 1,
+      "Mali-a9c8": 1,
+      "Tusu-c6b7": 1,
+      "Gipo-348d": 1,
+      "Mifu-42ae": 2,
+      "Dufo-bc45": 1,
+      "Sabo-2050": 1,
+      "Zuso-5a31": 2,
+      "Zofo-e808": 2,
+      "Zona-171f": 2,
+      "Zomo-4b64": 1,
+      "Ligi-5243": 1,
+      "Gale-bb66": 1,
+      "Kazo-ee33": 1,
+      "Giti-65d9": 3,
+      "Ruti-34ad": 3,
+      "Vapa-110c": 3,
+      "Lome-763b": 1,
+      "Basu-c596": 2,
+      "Gasu-bf62": 1,
+      "Peri-a9d9": 1,
+      "Vuzi-0b65": 2,
+      "Bedu-0a89": 1,
+      "Datu-9149": 2,
+      "Dasa-7cf0": 3,
+      "Dana-b59c": 2,
+      "Tedo-8523": 1,
+      "Boge-e50a": 2,
+      "Zubo-246a": 2,
+      "Dami-4be6": 2,
+      "Sode-dc4f": 1,
+      "Loni-221d": 1,
+      "Lato-014a": 1,
+      "Saza-6664": 1,
+      "Noto-7145": 1,
+      "Boge-bee3": 2,
+      "Nari-ad38": 2,
+      "Kasi-d72a": 2,
+      "Saga-e854": 1,
+      "Tili-26a7": 2,
+      "Dabu-f2e2": 1,
+      "Mobe-cb19": 2,
+      "Pugi-1e7e": 1,
+      "Sibo-ae17": 3,
+      "Fupe-9b88": 2,
+      "Supu-fd77": 1,
+      "Fugi-d826": 3,
+      "Rafu-76ac": 3,
+      "Meda-7c1e": 1,
+      "Teri-9101": 2,
+      "Bimo-310b": 1,
+      "Faza-b883": 3,
+      "Befi-2164": 2,
+      "Gefi-6818": 1,
+      "Desu-1bd6": 2,
+      "Fada-6fa6": 1,
+      "Kizu-9c7d": 1,
+      "Kamu-269b": 2,
+      "Kina-7792": 1,
+      "Bola-6287": 1,
+      "Kile-8116": 1,
+      "Raka-bfc2": 1,
+      "Sene-a957": 3,
+      "Nedi-4f26": 2,
+      "Goke-6e52": 2,
+      "Bili-a7fa": 3,
+      "Kami-100d": 1,
+      "Kido-22d3": 1,
+      "Vafu-3df5": 2,
+      "Bifi-6f3c": 1,
+      "Nenu-602e": 1,
+      "Masu-8ffa": 2,
+      "Mevi-28d5": 3,
+      "Koda-8bde": 1,
+      "Kibu-2fa5": 2,
+      "Deti-fcaa": 2,
+      "Disi-3145": 2,
+      "Vadi-2b0a": 1,
+      "Soti-defa": 1,
+      "Pupo-8319": 2,
+      "Poke-76aa": 1,
+      "Pago-4b29": 2,
+      "Moda-a4e2": 3,
+      "Paki-dc4b": 2,
+      "Folu-2b5e": 2,
+      "Pobo-5cbb": 1,
+      "Fopa-eac6": 2,
+      "Zobe-53cf": 1,
+      "Nige-81a5": 1,
+      "Visa-42ae": 1,
+      "Loza-524f": 1,
+      "Gusu-a1d3": 1,
+      "Zuzu-a35b": 1,
+      "Bovu-65ba": 1,
+      "Savu-31c2": 3,
+      "Magu-ae34": 3,
+      "Lodu-56b4": 3,
+      "Peru-eb9a": 1,
+      "Kemo-2a51": 1,
+      "Kafo-7466": 1,
+      "Nimo-357d": 3,
+      "Dube-b49b": 1,
+      "Muki-fd9a": 2,
+      "Nenu-f95d": 1,
+      "Kipo-409a": 1,
+      "Balo-7f9c": 2,
+      "Fofa-e5fb": 1,
+      "Latu-849c": 1,
+      "Guza-0121": 2,
+      "Fibu-f82b": 3,
+      "Rugi-a334": 1,
+      "Luko-756f": 1,
+      "Fulu-8941": 1,
+      "Vila-6947": 3,
+      "Noke-45f6": 1,
+      "Lere-fb0f": 2,
+      "Bure-efae": 1,
+      "Soda-75cd": 1,
+      "Kazo-76e3": 1,
+      "Kide-5c07": 2,
+      "Gaze-84a7": 2,
+      "Kivo-29f3": 1
+    },
+    "memory_patterns": 200,
+    "revisions_declared": {
+      "entries_revised": 100,
+      "past_versions": 133
+    },
+    "memory_unchanged": true
+  },
+  "process_b": {
+    "current_returned": 1.0,
+    "past_returned": 0.0,
+    "unrevised_intact": 1.0,
+    "history_exact": true,
+    "entries_exact": true,
+    "versions": {
+      "Tafe-2cd9": 1,
+      "Demo-742b": 3,
+      "Bame-e866": 2,
+      "Paso-fc45": 1,
+      "Rove-f01f": 2,
+      "Kaka-ea93": 1,
+      "Foma-4b85": 2,
+      "Dori-ee39": 1,
+      "Gemo-4ba3": 2,
+      "Tura-a3de": 1,
+      "Zoku-619d": 1,
+      "Lume-23bc": 3,
+      "Pufe-8866": 1,
+      "Pufo-20b2": 1,
+      "Kizu-734d": 2,
+      "Fuzu-9f98": 2,
+      "Poko-f085": 1,
+      "Defo-3ad7": 1,
+      "Beli-4d9f": 1,
+      "Rafo-8fbd": 1,
+      "Kope-291a": 3,
+      "Rane-8a30": 3,
+      "Pavi-f8bc": 3,
+      "Lobo-8230": 2,
+      "Reze-4e16": 2,
+      "Koki-7014": 2,
+      "Buti-bb0f": 1,
+      "Tusa-dfdb": 2,
+      "Nive-6479": 2,
+      "Kipa-9b19": 2,
+      "Zeko-d112": 1,
+      "Nilu-a253": 2,
+      "Tume-d224": 1,
+      "Kego-8aee": 3,
+      "Tito-0eef": 2,
+      "Fona-e30d": 2,
+      "Bavo-df48": 2,
+      "Beba-6eda": 3,
+      "Dosi-24fb": 2,
+      "Kuli-c670": 2,
+      "Gina-371d": 3,
+      "Nazi-0553": 3,
+      "Zofi-7ade": 1,
+      "Rina-88a7": 2,
+      "Nofo-5c97": 1,
+      "Beni-d2a6": 2,
+      "Dede-3ba1": 1,
+      "Vuva-f62b": 1,
+      "Budi-e446": 1,
+      "Refi-76a1": 2,
+      "Naru-5696": 1,
+      "Niga-e73f": 1,
+      "Kabo-9efe": 2,
+      "Dipe-ef3a": 1,
+      "Nono-472a": 1,
+      "Ruko-ab94": 3,
+      "Line-764e": 1,
+      "Fefa-05d3": 2,
+      "Tebe-63a9": 3,
+      "Miti-3de8": 1,
+      "Pusu-4e07": 2,
+      "Pona-3883": 1,
+      "Fupa-6a25": 2,
+      "Dudi-c0f9": 2,
+      "Resi-1ddb": 1,
+      "Bafe-d17f": 1,
+      "Solo-1b38": 1,
+      "Gufo-fb0a": 3,
+      "Fuze-c0b6": 1,
+      "Kumo-62f1": 2,
+      "Luna-ef85": 1,
+      "Sabu-75a0": 1,
+      "Kula-76a9": 3,
+      "Bito-6a35": 3,
+      "Lofa-b364": 1,
+      "Gesi-97e9": 3,
+      "Zeme-3173": 2,
+      "Pise-4a52": 1,
+      "Futa-c17c": 1,
+      "Mali-a9c8": 1,
+      "Tusu-c6b7": 1,
+      "Gipo-348d": 1,
+      "Mifu-42ae": 2,
+      "Dufo-bc45": 1,
+      "Sabo-2050": 1,
+      "Zuso-5a31": 2,
+      "Zofo-e808": 2,
+      "Zona-171f": 2,
+      "Zomo-4b64": 1,
+      "Ligi-5243": 1,
+      "Gale-bb66": 1,
+      "Kazo-ee33": 1,
+      "Giti-65d9": 3,
+      "Ruti-34ad": 3,
+      "Vapa-110c": 3,
+      "Lome-763b": 1,
+      "Basu-c596": 2,
+      "Gasu-bf62": 1,
+      "Peri-a9d9": 1,
+      "Vuzi-0b65": 2,
+      "Bedu-0a89": 1,
+      "Datu-9149": 2,
+      "Dasa-7cf0": 3,
+      "Dana-b59c": 2,
+      "Tedo-8523": 1,
+      "Boge-e50a": 2,
+      "Zubo-246a": 2,
+      "Dami-4be6": 2,
+      "Sode-dc4f": 1,
+      "Loni-221d": 1,
+      "Lato-014a": 1,
+      "Saza-6664": 1,
+      "Noto-7145": 1,
+      "Boge-bee3": 2,
+      "Nari-ad38": 2,
+      "Kasi-d72a": 2,
+      "Saga-e854": 1,
+      "Tili-26a7": 2,
+      "Dabu-f2e2": 1,
+      "Mobe-cb19": 2,
+      "Pugi-1e7e": 1,
+      "Sibo-ae17": 3,
+      "Fupe-9b88": 2,
+      "Supu-fd77": 1,
+      "Fugi-d826": 3,
+      "Rafu-76ac": 3,
+      "Meda-7c1e": 1,
+      "Teri-9101": 2,
+      "Bimo-310b": 1,
+      "Faza-b883": 3,
+      "Befi-2164": 2,
+      "Gefi-6818": 1,
+      "Desu-1bd6": 2,
+      "Fada-6fa6": 1,
+      "Kizu-9c7d": 1,
+      "Kamu-269b": 2,
+      "Kina-7792": 1,
+      "Bola-6287": 1,
+      "Kile-8116": 1,
+      "Raka-bfc2": 1,
+      "Sene-a957": 3,
+      "Nedi-4f26": 2,
+      "Goke-6e52": 2,
+      "Bili-a7fa": 3,
+      "Kami-100d": 1,
+      "Kido-22d3": 1,
+      "Vafu-3df5": 2,
+      "Bifi-6f3c": 1,
+      "Nenu-602e": 1,
+      "Masu-8ffa": 2,
+      "Mevi-28d5": 3,
+      "Koda-8bde": 1,
+      "Kibu-2fa5": 2,
+      "Deti-fcaa": 2,
+      "Disi-3145": 2,
+      "Vadi-2b0a": 1,
+      "Soti-defa": 1,
+      "Pupo-8319": 2,
+      "Poke-76aa": 1,
+      "Pago-4b29": 2,
+      "Moda-a4e2": 3,
+      "Paki-dc4b": 2,
+      "Folu-2b5e": 2,
+      "Pobo-5cbb": 1,
+      "Fopa-eac6": 2,
+      "Zobe-53cf": 1,
+      "Nige-81a5": 1,
+      "Visa-42ae": 1,
+      "Loza-524f": 1,
+      "Gusu-a1d3": 1,
+      "Zuzu-a35b": 1,
+      "Bovu-65ba": 1,
+      "Savu-31c2": 3,
+      "Magu-ae34": 3,
+      "Lodu-56b4": 3,
+      "Peru-eb9a": 1,
+      "Kemo-2a51": 1,
+      "Kafo-7466": 1,
+      "Nimo-357d": 3,
+      "Dube-b49b": 1,
+      "Muki-fd9a": 2,
+      "Nenu-f95d": 1,
+      "Kipo-409a": 1,
+      "Balo-7f9c": 2,
+      "Fofa-e5fb": 1,
+      "Latu-849c": 1,
+      "Guza-0121": 2,
+      "Fibu-f82b": 3,
+      "Rugi-a334": 1,
+      "Luko-756f": 1,
+      "Fulu-8941": 1,
+      "Vila-6947": 3,
+      "Noke-45f6": 1,
+      "Lere-fb0f": 2,
+      "Bure-efae": 1,
+      "Soda-75cd": 1,
+      "Kazo-76e3": 1,
+      "Kide-5c07": 2,
+      "Gaze-84a7": 2,
+      "Kivo-29f3": 1
+    },
+    "memory_patterns": 200,
+    "revisions_declared": {
+      "entries_revised": 100,
+      "past_versions": 133
+    },
+    "process": "new (nothing of session A but the disk)",
+    "memory_unchanged": null
+  },
+  "agreement": {
+    "number_for_number": true,
+    "differences": []
+  },
+  "readings": {
+    "letter": "a: every revised entry reads at its current version, none at a past one, the unrevised are intact, the histories and the entry count are exact, the memory is untouched, and the second process agrees: the mechanism holds at the organ's level"
+  },
+  "verdict": "a: every revised entry reads at its current version, none at a past one, the unrevised are intact, the histories and the entry count are exact, the memory is untouched, and the second process agrees: the mechanism holds at the organ's level"
+}
