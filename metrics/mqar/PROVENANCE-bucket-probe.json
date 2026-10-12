@@ -1,0 +1,131 @@
+{
+ "rows": [
+  "44",
+  "45"
+ ],
+ "what": "the bucket probe (ADR-008, amendment of 2026-10-12, evening: the index's buckets under the declared configurations; RES-24, roadmap item 1), run by the founder on 2026-10-12 on the three v9 checkpoints and their sealed journals (seeds 1337, 2024, 7; the journals of rows 40 to 42, opened as copies and hashed unchanged), the questions encoded by each checkpoint's own cue encoder one sequence per forward pass on the laptop's graphics card as row 38's probe did; no training, no checkpoint produced, seconds each",
+ "commands": [
+  "python -m cortex_c2b.bucket_probe --ckpt runs\\journal-n1-v9-seed2\\ckpt.pt --journal runs\\journal-n1-v9-seed2\\journal.jsonl --config configs\\local_journal_v9_seed2.json --seed 0 --index-seed 0 --out metrics\\mqar  (the first run, 19:46 UTC, stopped; the code of fa8f2bd)",
+  "python -m cortex_c2b.bucket_probe --ckpt runs\\journal-n1-v9-seed2\\ckpt.pt --journal runs\\journal-n1-v9-seed2\\journal.jsonl --config configs\\local_journal_v9_seed2.json --seed 0 --index-seed 0 --out metrics\\mqar\\bucket-probe-4cfd6f6e1406-run2.json  (the rerun, 21:07 UTC; the code of dd39b02)",
+  "python -m cortex_c2b.bucket_probe --ckpt C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\ckpt.pt --journal C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9\\journal.jsonl --config configs\\kaggle_t4_journal_v9.json --seed 0 --index-seed 0 --out metrics\\mqar  (21:09 UTC)",
+  "python -m cortex_c2b.bucket_probe --ckpt C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\ckpt.pt --journal C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\journal.jsonl --config configs\\kaggle_t4_journal_v9_seed3.json --seed 0 --index-seed 0 --out metrics\\mqar  (21:10 UTC)"
+ ],
+ "code_commits": {
+  "fa8f2bd": "the build passed through two committee rounds (Rev109): the first run",
+  "dd39b02": "the two conformance corrections after the committee on the stop (Rev110): the rerun and the two other journals"
+ },
+ "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (the committed form); the three files of dd39b02 are written in LF on every platform, so their hash as written equals the committed one and the one the probe printed",
+ "read_cold": "2026-10-12, 23:15, from the three files sent by the founder, by the instance that keeps the record, before any text: the headers checked (run ids, config hashes equal to the ones recomputed here from the config files, the journals' hashes equal to rows 40 to 42's, 200 live entries and 200 planted facts on each, the control equal to the live index and the subset relations holding, the journals unchanged), every aggregate recomputed from the rows (0 differences on the three files), the letter read by read_three in the order (a), (b), (c), the rotation's exclusion of C2a read, the fly ranking read on C0's hits, then row 45 and tests/test_c2b_bucket_probe_record.py; the first run's file read the same way at 21:56 for row 44, and the rerun's file against it (the 250 cues moved by up to 2.3e-6, every C0 signature, count and miss unchanged, the seven scalars on row 38's)",
+ "reading": {
+  "letter": "a",
+  "selected": "C2b",
+  "rotations_failed": 1,
+  "excluded_by_rotation": [
+   "C2a"
+  ],
+  "label": "selected among 10 configurations on the questions of 3 journals, 1 rotation(s) failed; confirmed on the first journal sealed after the adoption (the prospective holdout)"
+ },
+ "files": {
+  "bucket-probe-4cfd6f6e1406-FAILED-precondition.json": {
+   "seed": 2024,
+   "run_id": "4cfd6f6e1406",
+   "config_hash": "d0c0d93ba24555a8",
+   "config_path": "configs\\local_journal_v9_seed2.json",
+   "config_sha256": "7315713b45ed5881",
+   "journal_sha256": "697be97c15d2edf3",
+   "journal_unchanged": true,
+   "sha256_lf": "0fd087804b44e4ba",
+   "timestamp_utc": "2026-10-12T19:46:03+00:00",
+   "code_commit": "fa8f2bd",
+   "code_tree_clean": true,
+   "device": "cpu",
+   "gpu": null,
+   "threads": 8,
+   "versions": {
+    "python": "3.12.10",
+    "numpy": "2.5.3",
+    "torch": "2.6.0+cu124"
+   },
+   "generator_hash": "a5e22c70a3275ed4",
+   "planted_found": 200,
+   "note": "the first run, stopped on its precondition (row 44); C0 alone; the code of fa8f2bd, the encoder on the processor, the questions encoded in batches",
+   "stopped": [
+    "the control does not reproduce row 38 on its journal: negctrl_best_max: 0.5618768930435181 != 0.5618757009506226"
+   ],
+   "sha256_as_written": "3b7c580d211a4971",
+   "written_with": "CRLF at the end of the single line, as Python's write_text wrote on Windows before precision (13); the committed form is LF"
+  },
+  "bucket-probe-4cfd6f6e1406-run2.json": {
+   "seed": 2024,
+   "run_id": "4cfd6f6e1406",
+   "config_hash": "d0c0d93ba24555a8",
+   "config_path": "configs\\local_journal_v9_seed2.json",
+   "config_sha256": "7315713b45ed5881",
+   "journal_sha256": "697be97c15d2edf3",
+   "journal_unchanged": true,
+   "sha256_lf": "1172c8e831ec397e",
+   "timestamp_utc": "2026-10-12T21:07:33+00:00",
+   "code_commit": "dd39b02",
+   "code_tree_clean": true,
+   "device": "cuda",
+   "gpu": "NVIDIA GeForce GTX 1660 Ti",
+   "threads": 8,
+   "versions": {
+    "python": "3.12.10",
+    "numpy": "2.5.3",
+    "torch": "2.6.0+cu124"
+   },
+   "generator_hash": "a5e22c70a3275ed4",
+   "planted_found": 200,
+   "note": "the rerun declared in ADR-008 precision (13); the precondition held, the seven differences to row 38 exactly zero (row 44 completed, row 45)"
+  },
+  "bucket-probe-8ceba5db8d0b.json": {
+   "seed": 1337,
+   "run_id": "8ceba5db8d0b",
+   "config_hash": "36a3dd10bbff84eb",
+   "config_path": "configs\\kaggle_t4_journal_v9.json",
+   "config_sha256": "83a491c3b5a3d3f3",
+   "journal_sha256": "d0d56e5a72fe4cf3",
+   "journal_unchanged": true,
+   "sha256_lf": "05409d0c95e74ff0",
+   "timestamp_utc": "2026-10-12T21:09:00+00:00",
+   "code_commit": "dd39b02",
+   "code_tree_clean": true,
+   "device": "cuda",
+   "gpu": "NVIDIA GeForce GTX 1660 Ti",
+   "threads": 8,
+   "versions": {
+    "python": "3.12.10",
+    "numpy": "2.5.3",
+    "torch": "2.6.0+cu124"
+   },
+   "generator_hash": "a5e22c70a3275ed4",
+   "planted_found": 200,
+   "note": "row 45"
+  },
+  "bucket-probe-2e1dc71913b1.json": {
+   "seed": 7,
+   "run_id": "2e1dc71913b1",
+   "config_hash": "a727d1cb445afa92",
+   "config_path": "configs\\kaggle_t4_journal_v9_seed3.json",
+   "config_sha256": "527a12b41c096135",
+   "journal_sha256": "0e0c1d34438c85c3",
+   "journal_unchanged": true,
+   "sha256_lf": "7d436dd65c6e7bc1",
+   "timestamp_utc": "2026-10-12T21:10:06+00:00",
+   "code_commit": "dd39b02",
+   "code_tree_clean": true,
+   "device": "cuda",
+   "gpu": "NVIDIA GeForce GTX 1660 Ti",
+   "threads": 8,
+   "versions": {
+    "python": "3.12.10",
+    "numpy": "2.5.3",
+    "torch": "2.6.0+cu124"
+   },
+   "generator_hash": "a5e22c70a3275ed4",
+   "planted_found": 200,
+   "note": "row 45"
+  }
+ }
+}
