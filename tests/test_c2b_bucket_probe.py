@@ -25,7 +25,7 @@ import train
 from cortex_c2b import Journal, POLICY_STOP
 from cortex_c2b import bucket_probe as bp
 from cortex_c2b.hm_protocol import generate_facts, N_FACTS, N_NEGCTRL
-from cortex_c2b.lm_bridge import JournalBridge
+from cortex_c2b.lm_bridge import JournalBridge, encode_query
 from cortex_c2b.read_path import CueIndex, fly_planes, fly_tag, CUE_DIM
 
 
@@ -221,6 +221,23 @@ def test_the_file_carries_the_live_parameters_the_questions_the_rows_and_the_que
     assert set(sigs) == set(out["configurations"]) and sigs["C6"] == {} and len(sigs["C0"]) == out["journal"]["entries"]
     assert all(len(s) == 4 for s in sigs["C1"].values()) and all(len(s) == 16 for s in sigs["C2b"].values())
     assert all(len(s) == 1 for s in sigs["C5a8"].values())
+
+
+def test_the_query_cues_are_encoded_one_question_at_a_time_as_row_38_did(probed):
+    """The first run of 2026-10-12 on the seed 2024 journal stopped on its precondition: the questions were
+    encoded in batches of 200 and 50, the float32 kernels differ by batch shape, and the maximum never planted
+    score moved by 1.2e-6. The file's cues must equal the single question encoding of `retrieval_probe`, exactly.
+    This pins the corrected code's path on the fixture and this machine (under the batched code, 20 questions of 20
+    differ here at the ninth digit); it pins nothing about the founder's machine or the trained checkpoint."""
+    out, j, facts, neg, pointer_of = probed
+    cfg, m = tiny()
+    b = JournalBridge(m, j, k=3, budget_bytes=96, seed=0, shuffle_seed=1)
+    for i, f in enumerate(facts):
+        single = [float("%.9g" % x) for x in b.cues([encode_query(f.query)])[0]]
+        assert out["query_cues"]["questions"][i] == single, i
+    for j_, f in enumerate(neg):
+        single = [float("%.9g" % x) for x in b.cues([encode_query(f.query)])[0]]
+        assert out["query_cues"]["never_planted"][j_] == single, j_
 
 
 def test_every_candidate_set_and_cost_recompute_from_the_file_alone(probed):
@@ -500,6 +517,7 @@ def sealed_fixture(tmp_path_factory):
 def test_one_run_end_to_end_writes_the_file_the_record_test_reads_and_refuses_a_second_run(sealed_fixture, monkeypatch, capsys):
     d, key, n_planted = sealed_fixture
     monkeypatch.setenv("QUANTUM_CORTEX_JOURNAL_KEY", key.hex())
+    monkeypatch.setattr(bp, "_git_state", lambda: ("test0000", True))      # a fixture run is not a file of the record: the tree's state is not its matter
     sha_before = hashlib.sha256((d / "journal.jsonl").read_bytes()).hexdigest()
     bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--out", str(d / "out")])
     printed = capsys.readouterr().out
@@ -513,7 +531,10 @@ def test_one_run_end_to_end_writes_the_file_the_record_test_reads_and_refuses_a_
     assert out["journal"]["unchanged"] is True and out["journal"]["payloads_before"] == out["journal"]["payloads_after"]
     assert out["journal"]["payloads_before"]["n_payload_files"] == n_planted and out["journal"]["opened"].startswith("a copy")
     assert sorted(q.name for q in (d / "journal.payloads").iterdir()) == sorted(q.name for q in (d / "journal.payloads").iterdir())
-    assert out["code_tree_clean"] in (True, False, None) and "code_commit" in out
+    assert out["code_tree_clean"] is True and out["code_commit"] == "test0000"
+    assert out["device"]["cuda_available"] is torch.cuda.is_available()                         # the encoder where row 38's probe ran it
+    assert out["device"]["device"] == ("cuda" if torch.cuda.is_available() else "cpu") and isinstance(out["device"]["parallel_info"], str)
+    assert (out["device"]["gpu"] is None) == (not torch.cuda.is_available())
     assert out["journal"]["entries"] == n_planted == out["generator"]["planted_found"] and out["journal"]["states"] == {"live": n_planted}
     assert out["precondition_row38"] == {"applies": False} and "stopped" not in out
     assert out["k"] == 4 and out["n_facts"] == N_FACTS and out["n_negctrl"] == N_NEGCTRL and out["facts_seed"] == 0 and out["index_seed"] == 0
@@ -540,6 +561,20 @@ def test_one_run_end_to_end_writes_the_file_the_record_test_reads_and_refuses_a_
         bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--out", str(d / "out4")])
     assert not (d / "out3").exists() and not (d / "out4").exists()
     assert hashlib.sha256((d / "journal.jsonl").read_bytes()).hexdigest() == sha_before
+    monkeypatch.setenv("QUANTUM_CORTEX_JOURNAL_KEY", key.hex())
+    monkeypatch.setattr(bp, "_git_state", lambda: ("abc1234", False))      # git answers: a modified tracked file
+    with pytest.raises(SystemExit, match="not clean"):
+        bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--out", str(d / "out5")])
+    assert not (d / "out5").exists()
+    monkeypatch.setattr(bp, "_git_state", lambda: (None, None))            # git absent: recorded as unknown, the record test refuses such a file
+    bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--out", str(d / "out7.json")])
+    assert json.loads((d / "out7.json").read_text(encoding="utf-8"))["code_commit"] is None
+    monkeypatch.setattr(bp, "_git_state", lambda: ("test0000", True))
+    bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--index-seed", "1", "--out", str(d / "out6")])
+    assert (d / "out6" / "bucket-probe-e2e000000000-index1.json").exists()                          # another index seed is in the name
+    out1 = json.loads((d / "out6" / "bucket-probe-e2e000000000-index1.json").read_text(encoding="utf-8"))
+    assert out1["index_seed"] == 1 and out1["control_matches_live_index"] is True and out1["configurations"]["C0"]["planes_sha256"] != out["configurations"]["C0"]["planes_sha256"]
+    assert path.read_bytes().endswith(b"}\n") and not path.read_bytes().endswith(b"\r\n")          # LF, whatever the platform
 
 
 def test_a_run_that_stops_retains_c0_alone_in_its_failure_file(sealed_fixture, monkeypatch, tmp_path):
@@ -547,6 +582,7 @@ def test_a_run_that_stops_retains_c0_alone_in_its_failure_file(sealed_fixture, m
     file carries the header, the checks and C0; no other configuration's numbers are retained."""
     d, key, n_planted = sealed_fixture
     monkeypatch.setenv("QUANTUM_CORTEX_JOURNAL_KEY", key.hex())
+    monkeypatch.setattr(bp, "_git_state", lambda: ("test0000", True))
     real = bp.probe_journal
 
     def broken(*args, **kw):

@@ -248,15 +248,20 @@ def probe_journal(model, journal: Journal, facts, neg, pointer_of: dict[str, str
     live = CueIndex(dim=journal.cue_dim, seed=index_seed)
     jp = JournalPath(journal, index=live, seed=index_seed)                  # the path indexes the journal (alive and aliased)
     assert jp.index is live
-    bridge = JournalBridge(model, journal, journal_path=jp, k=k, seed=index_seed, device=device)
+    # the bridge's seed is the journal's separation seed (0 for every journal of the record; another seed is refused by
+    # the CA3 rebuild); the index seed is the probe's own variable and reaches the indexes alone
+    bridge = JournalBridge(model, journal, journal_path=jp, k=k, seed=0, device=device)
     vecs = {eid: np.asarray(v, dtype=np.float32) for eid, v in live.vecs.items()}
     pointer_of_id = {eid: jp._resolve(eid)[1] for eid in vecs}
     id_of_pointer: dict[str, str] = {}
     for eid, ptr in pointer_of_id.items():
         id_of_pointer.setdefault(ptr, eid)
     with torch.no_grad():
-        q_cues = bridge.cues([encode_query(f.query) for f in facts])
-        n_cues = bridge.cues([encode_query(f.query) for f in neg])
+        # one question per forward pass, as row 38's probe encoded them (`retrieval_probe`): the first run of
+        # 2026-10-12 encoded them in batches of 200 and 50 and the float32 kernels then differ by batch shape,
+        # which moved the maximum never planted score by 1.2e-6 and stopped the probe on its precondition
+        q_cues = np.stack([bridge.cues([encode_query(f.query)])[0] for f in facts]) if facts else np.zeros((0, journal.cue_dim), np.float32)
+        n_cues = np.stack([bridge.cues([encode_query(f.query)])[0] for f in neg]) if neg else np.zeros((0, journal.cue_dim), np.float32)
     names = [c["name"] for c in (configs or CONFIGS)] + [REFERENCE["name"]]
     indexes = {n: BucketIndex(vecs, config(n), index_seed=index_seed, dim=journal.cue_dim) for n in names}
     all_ids = sorted(vecs)
@@ -522,7 +527,31 @@ def check_row38(summary: dict, row38: dict, k: int | None = None, n_facts: int |
     return (not diffs), diffs
 
 
+def row38_values(summary: dict, row38: dict) -> dict:
+    """The seven scalars side by side with their differences, written on pass as on fail (the committee's
+    precision of 2026-10-12: a difference within the tolerance is recorded, not read)."""
+    c = row38["rankings"]["cosine"]
+    expected = {"candidate_recall": c["own_in_candidates"], "top_k_recall": c["own_in_top_k"],
+                "n_in_candidates": c["own_rank"]["n"], "n_margins": c["own_minus_best_other"]["n"],
+                "margin_mean": c["own_minus_best_other"]["mean"], "n_negctrl_scored": c["negctrl_best_score"]["n"],
+                "negctrl_best_max": c["negctrl_best_score"]["max"]}
+    return {key: {"probe": summary.get(key), "row38": e,
+                  "difference": (summary.get(key) - e if summary.get(key) is not None else None)} for key, e in expected.items()}
+
+
 # ---- the command line -----------------------------------------------------------------------------
+def _git_state() -> tuple[str | None, bool | None]:
+    """The short commit of the repository's HEAD and whether its tracked tree is clean; (None, None) when git does
+    not answer. The tests of the probe replace this function (a fixture run is not a file of the record)."""
+    import subprocess
+    try:
+        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=10).stdout.strip() or None
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=10).stdout.strip()
+        return commit, ((dirty == "") if commit else None)
+    except Exception:
+        return None, None
+
+
 def summary_lines(out: dict) -> list[str]:
     lines = [f"bucket probe  entries {out['journal']['entries']}  k {out['k']}  index seed {out['index_seed']}  "
              f"control matches live index {out['control_matches_live_index']}  subset relations {all(out['subset_relations'].values())}"]
@@ -569,14 +598,17 @@ def _cli(argv=None):
     row38_path = REPO_ROOT / "metrics/mqar/retrieval-probe-4cfd6f6e1406.json"
     row38 = json.loads(row38_path.read_text(encoding="utf-8"))                  # read before anything runs
     import shutil
-    import subprocess
     import tempfile
     import torch
     import train
     cfg = train.load_config(a.config)
     if cfg.journal_k != row38["k"]:
         raise SystemExit(f"bucket probe: the config's journal_k is {cfg.journal_k}; the declared top k is row 38's, {row38['k']}")
-    device = torch.device("cpu")
+    # the cue encoder runs where row 38's probe ran it (`hm_lm --retrieval-probe`: cuda when available, else the
+    # processor); the second run's correction of 2026-10-12: the first run forced the processor and the
+    # precondition's seventh scalar differed from row 38's by twenty float32 ulps. Everything else is numpy.
+    cuda_available = bool(torch.cuda.is_available())
+    device = torch.device("cuda" if cuda_available else "cpu")
     ck = torch.load(a.ckpt, map_location=device, weights_only=False)
     run_id = ck.get("run_id")
     if not run_id:
@@ -588,23 +620,21 @@ def _cli(argv=None):
     model = train.VanillaGPT(cfg).to(device)
     model.load_state_dict(ck["model"]); model.eval()
     if out_path.suffix != ".json":
-        out_path = out_path / f"bucket-probe-{run_id}.json"
+        out_path = out_path / (f"bucket-probe-{run_id}.json" if a.index_seed == 0 else f"bucket-probe-{run_id}-index{a.index_seed}.json")
         failed_path = never_overwritten(out_path)
 
     def tree_hash(log: Path, payloads: Path) -> dict:
-        """The log's sha256 and the sha256 of the payload directory's sorted listing (name, size): what 'nothing is
+        """The log's sha256 and one sha256 over the payload files' names and bytes, in name order: what 'nothing is
         written' is checked against, before and after the run."""
-        listing = "\n".join(f"{q.name} {q.stat().st_size}" for q in sorted(payloads.iterdir()))
-        return {"log": hashlib.sha256(log.read_bytes()).hexdigest()[:16],
-                "payloads": hashlib.sha256(listing.encode("utf-8")).hexdigest()[:16], "n_payload_files": len(listing.splitlines())}
+        h = hashlib.sha256(); n = 0
+        for q in sorted(payloads.iterdir()):
+            h.update(q.name.encode("utf-8")); h.update(q.read_bytes()); n += 1
+        return {"log": hashlib.sha256(log.read_bytes()).hexdigest()[:16], "payloads": h.hexdigest()[:16], "n_payload_files": n}
 
     before = tree_hash(jpath, payload_dir)
-    try:
-        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=10).stdout.strip() or None
-        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=10).stdout.strip()
-        tree_clean = (dirty == "") if commit else None
-    except Exception:
-        commit, tree_clean = None, None
+    commit, tree_clean = _git_state()
+    if tree_clean is False:                                                # a file of the record names the code that ran
+        raise SystemExit("bucket probe: the tracked tree is not clean; commit the code that runs, then run (the record test refuses a file without its commit)")
     facts, gen_hash = generate_facts(a.n_facts, 0)
     neg, _ = generate_facts(a.n_negctrl, 10_000)
     # the journal of the record is never opened in place: the open of a journal probes its log for writability and
@@ -628,7 +658,10 @@ def _cli(argv=None):
                            "sha256_before": before["log"], "sha256_after": after["log"],
                            "payloads_before": before, "payloads_after": after, "unchanged": before == after, "states": states})
     out["generator"] = {"config_hash": gen_hash, "n_facts": a.n_facts, "n_negctrl": a.n_negctrl, "planted_found": len(pointer_of)}
-    out["device"] = {"device": str(device), "hardware": platform.processor(), "threads": torch.get_num_threads()}
+    out["device"] = {"device": str(device), "cuda_available": cuda_available,
+                     "gpu": (torch.cuda.get_device_name(0) if cuda_available else None),
+                     "hardware": platform.processor(), "threads": torch.get_num_threads(),
+                     "parallel_info": torch.__config__.parallel_info()}
     out["code_commit"] = commit
     out["code_tree_clean"] = tree_clean
     out["precondition_row38"] = {"applies": run_id == ROW38_RUN_ID}
@@ -641,7 +674,8 @@ def _cli(argv=None):
         stop.append("a declared subset relation fails: " + ", ".join(k for k, v in out["subset_relations"].items() if not v))
     if run_id == ROW38_RUN_ID:
         ok, diffs = check_row38(out["aggregates"]["C0"], row38, k=cfg.journal_k, n_facts=a.n_facts, n_negctrl=a.n_negctrl)
-        out["precondition_row38"].update({"ok": ok, "differences": diffs, "tolerance": ROW38_TOLERANCE})
+        out["precondition_row38"].update({"ok": ok, "differences": diffs, "tolerance": ROW38_TOLERANCE,
+                                          "values": row38_values(out["aggregates"]["C0"], row38)})   # written on pass as on fail, read nowhere
         if not ok:
             stop.append("the control does not reproduce row 38 on its journal: " + "; ".join(diffs))
     if stop:
@@ -650,10 +684,10 @@ def _cli(argv=None):
             out[section] = {n: v for n, v in out[section].items() if n == "C0"}
         out["configurations_not_retained"] = [c["name"] for c in CONFIGS if c["name"] != "C0"] + [REFERENCE["name"]]
         failed_path.parent.mkdir(parents=True, exist_ok=True)
-        failed_path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False) + "\n", encoding="utf-8")
+        failed_path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False) + "\n", encoding="utf-8", newline="\n")
         raise SystemExit("bucket probe: stopped before any configuration is read: " + " | ".join(stop) + f"  (retained: {failed_path}, C0 alone)")
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False) + "\n", encoding="utf-8")   # compact: the rows are many
+    out_path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False) + "\n", encoding="utf-8", newline="\n")   # compact, LF
     for line in summary_lines(out):
         print(line)
     print(f"[record] retained: {out_path}  sha256 {hashlib.sha256(out_path.read_bytes()).hexdigest()[:16]}")
