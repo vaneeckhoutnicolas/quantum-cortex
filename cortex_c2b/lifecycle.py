@@ -110,12 +110,17 @@ class LifecycleConfig:
     withdraw_at_eviction: bool = True    # ADR-007 amendment 2026-10-01: an eviction withdraws the entry's pattern
                                          # from the persistent memory. Off until the withdrawal probe was read; on by
                                          # default since Decision 11 (2026-10-02, row 42: reading (b1) on three journals)
+    index_tables: int = 4                # ADR-008 amendment 2026-10-13: the index geometry the scheduler reads (its demotion
+    index_signature: str = "collapsed"   # neighbourhood is the index's candidates, its latency pressure the index's touched
+                                         # percentile); transparent in the hash at the legacy values, named at the adopted ones
 
     def config_hash(self) -> str:
         d = asdict(self)
         if not d.get("withdraw_at_eviction"):
             d.pop("withdraw_at_eviction", None)   # the flag enters the hash only when on: the files of rows 36 to 41, produced
                                                   # with it off, keep their hash under withdraw_at_eviction=False
+        if (d.get("index_tables"), d.get("index_signature")) == (4, "collapsed"):
+            d.pop("index_tables", None); d.pop("index_signature", None)   # the legacy geometry leaves every recorded phase hash as it is
         return _hash_obj(d)
 
 
@@ -220,6 +225,11 @@ class LifecycleScheduler:
                  now: float = 0.0):
         self.j, self.wp, self.jp = journal, write_path, journal_path
         self.cfg = cfg or LifecycleConfig()
+        live = journal_path.index.geometry()
+        if (int(self.cfg.index_tables), self.cfg.index_signature) != (live["n_tables"], live["signature"]):
+            raise ValueError(f"lifecycle: the configuration names the index geometry {self.cfg.index_tables} tables, "
+                             f"{self.cfg.index_signature!r}, the path's index is {live['n_tables']} tables, {live['signature']!r}; "
+                             "the scheduler reads the index and must say which (ADR-008, 2026-10-13)")
         self.memory = memory if memory is not None else PersistentMemory(dim=journal.cue_dim)   # an empty memory is falsy
         self.replay_failed = journal.replay_failed_total   # resumed from the phase events of the log (correction of 2026-10-12,
                                                      # found by the coherence tests: it restarted at zero, so a continued journal
@@ -508,6 +518,7 @@ class LifecycleScheduler:
                 "disk_free": pr["disk_free"], "pressure_disk": round(pr["pressure_disk"], 4),
                 "storage_mode": self.j.mode, "unpersisted_events": len(self.j.spill),
                 "scope_hash": self.j.scope_config_hash(),
+                "index_geometry": {k: v for k, v in self.jp.index.geometry().items() if k != "planes_sha256"},   # ADR-008, 2026-10-13
                 "pressure_bytes": round(pr["pressure_bytes"], 4),
                 "pressure_latency": round(pr["pressure_latency"], 4),
                 "live": snap[STATE_LIVE], "consolidated": snap[STATE_CONSOLIDATED],

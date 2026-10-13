@@ -521,6 +521,8 @@ def probe(model, journal_dir: Path, frame: str | None = None, n_facts: int = N_F
                       "admitted": side.get("admitted"), "planted_found": len(pointer_of)},
         "window": {"k": K, "budget_bytes": BUDGET_BYTES, "shuffle_seed": seed + 1,
                    "cue": "the organ's hash seeded encoder, the entity as the address (rows 13, 13b)"},
+        "index": {"record": journal.index_record(), "record_source": journal.index_record_source(),      # ADR-008, 2026-10-13: the geometry
+                  "live": jp.index.geometry(), "overridden": bool(jp.index_overridden)},                  # from the live object, in every file
         "hm_recall_on": on["recall_strict"], "hm_recall_off": off["recall_strict"],
         "hm_gap": on["recall_strict"] - off["recall_strict"],
         **skills,

@@ -248,6 +248,10 @@ def probe_journal(model, journal: Journal, facts, neg, pointer_of: dict[str, str
     live = CueIndex(dim=journal.cue_dim, seed=index_seed)
     jp = JournalPath(journal, index=live, seed=index_seed)                  # the path indexes the journal (alive and aliased)
     assert jp.index is live
+    # ADR-008, 2026-10-13: the probe is a declared reader; the file records the journal's geometry beside the control's
+    # (at index seed 0 on a legacy journal they agree; at seeds 1 and 2 the control is an overriding reader, by design)
+    index_block = {"record": journal.index_record(), "record_source": journal.index_record_source(),
+                   "control_live": live.geometry(), "overridden": bool(jp.index_overridden)}
     # the bridge's seed is the journal's separation seed (0 for every journal of the record; another seed is refused by
     # the CA3 rebuild); the index seed is the probe's own variable and reaches the indexes alone
     bridge = JournalBridge(model, journal, journal_path=jp, k=k, seed=0, device=device)
@@ -344,6 +348,7 @@ def probe_journal(model, journal: Journal, facts, neg, pointer_of: dict[str, str
             "configurations": {n: idx.describe() for n, idx in indexes.items()},
             "control_matches_live_index": control_ok, "subset_relations": subset,
             "journal": {"entries": len(vecs), "aliases": len(live.alias), "duplicate_pointers": duplicates},
+            "index": index_block,
             "questions": questions, "entry_signatures": entry_signatures,
             "query_cues": {"questions": [[float("%.9g" % x) for x in q] for q in q_cues],          # nine significant digits: float32 exactly
                            "never_planted": [[float("%.9g" % x) for x in q] for q in n_cues]},
@@ -664,7 +669,10 @@ def _cli(argv=None):
                      "parallel_info": torch.__config__.parallel_info()}
     out["code_commit"] = commit
     out["code_tree_clean"] = tree_clean
-    out["precondition_row38"] = {"applies": run_id == ROW38_RUN_ID}
+    # the precondition against row 38 holds at the live index's draw alone: row 38 read the seed 0 index, and the replication
+    # draws of the adoption (index seeds 1 and 2; ADR-008, 2026-10-13, (ii)) build another control by design
+    applies = (run_id == ROW38_RUN_ID and a.index_seed == 0)
+    out["precondition_row38"] = {"applies": applies}
     stop = []
     if out["journal"]["entries"] == 0 or len(pointer_of) == 0:
         stop.append(f"the journal holds {out['journal']['entries']} indexed entries and {len(pointer_of)} planted facts of the protocol; not a journal of the record")
@@ -672,7 +680,7 @@ def _cli(argv=None):
         stop.append("the probe's control is not the live index's candidate set")
     if not all(out["subset_relations"].values()):
         stop.append("a declared subset relation fails: " + ", ".join(k for k, v in out["subset_relations"].items() if not v))
-    if run_id == ROW38_RUN_ID:
+    if applies:
         ok, diffs = check_row38(out["aggregates"]["C0"], row38, k=cfg.journal_k, n_facts=a.n_facts, n_negctrl=a.n_negctrl)
         out["precondition_row38"].update({"ok": ok, "differences": diffs, "tolerance": ROW38_TOLERANCE,
                                           "values": row38_values(out["aggregates"]["C0"], row38)})   # written on pass as on fail, read nowhere

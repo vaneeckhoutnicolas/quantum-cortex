@@ -574,7 +574,19 @@ def test_one_run_end_to_end_writes_the_file_the_record_test_reads_and_refuses_a_
     assert (d / "out6" / "bucket-probe-e2e000000000-index1.json").exists()                          # another index seed is in the name
     out1 = json.loads((d / "out6" / "bucket-probe-e2e000000000-index1.json").read_text(encoding="utf-8"))
     assert out1["index_seed"] == 1 and out1["control_matches_live_index"] is True and out1["configurations"]["C0"]["planes_sha256"] != out["configurations"]["C0"]["planes_sha256"]
+    assert out1["index"]["overridden"] is True and out1["index"]["record"]["signature"] == "collapsed" and out1["index"]["record"]["seed"] == 0   # a declared reader on a legacy journal (2026-10-13)
+    assert out["index"]["overridden"] is False and out["index"]["control_live"]["planes_sha256"] == out["configurations"]["C0"]["planes_sha256"]
     assert path.read_bytes().endswith(b"}\n") and not path.read_bytes().endswith(b"\r\n")          # LF, whatever the platform
+    # the precondition against row 38 applies to row 38's checkpoint at the live index's draw alone: the replication draws of the
+    # adoption (index seeds 1 and 2) build another control by design and are not read against it (ADR-008, 2026-10-13)
+    monkeypatch.setattr(bp, "ROW38_RUN_ID", "e2e000000000")
+    bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--index-seed", "2", "--out", str(d / "out8")])
+    out2 = json.loads((d / "out8" / "bucket-probe-e2e000000000-index2.json").read_text(encoding="utf-8"))
+    assert out2["precondition_row38"] == {"applies": False} and "stopped" not in out2
+    with pytest.raises(SystemExit, match="row 38"):                                                 # at index seed 0 it applies, and this fixture is not row 38's journal
+        bp._cli(["--ckpt", str(d / "ckpt.pt"), "--journal", str(d / "journal.jsonl"), "--config", str(d / "tiny.json"), "--index-seed", "0", "--out", str(d / "out9.json")])
+    assert json.loads((d / "out9-FAILED-precondition.json").read_text(encoding="utf-8"))["precondition_row38"]["applies"] is True
+    monkeypatch.setattr(bp, "ROW38_RUN_ID", "4cfd6f6e1406")
 
 
 def test_a_run_that_stops_retains_c0_alone_in_its_failure_file(sealed_fixture, monkeypatch, tmp_path):

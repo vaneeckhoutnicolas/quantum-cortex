@@ -6,11 +6,13 @@
   - the journal wins a span it holds and loses one it does not.
 """
 import numpy as np
+import pytest
 
 from cortex_c2 import RouterV1, PATH_CONTROL, PATH_HOPFIELD, PATH_NAMES
 from cortex_c2b import Journal, CUE_DIM, STATE_EVICTED
 from cortex_c2b.write_path import WritePath
-from cortex_c2b.read_path import (JournalPath, CueIndex, PATH_JOURNAL, path_scores_with_journal)
+from cortex_c2b.read_path import (JournalPath, CueIndex, PATH_JOURNAL, path_scores_with_journal, LEGACY_GEOMETRY,
+                                  ADOPTED_GEOMETRY)
 
 
 def _cue(seed):
@@ -40,8 +42,11 @@ def test_journal_off_is_just_the_three_path_router():
 
 
 # --- the ANN read never scans --------------------------------------------------------
-def test_ann_read_never_scans():
-    idx = CueIndex(dim=CUE_DIM, seed=0)
+@pytest.mark.parametrize("geometry", [LEGACY_GEOMETRY, ADOPTED_GEOMETRY])
+def test_ann_read_never_scans(geometry):
+    """The read law, under both declared geometries since the adoption of C2b (ADR-008, 2026-10-13): the test the
+    amendment names and moves. A query touches fewer than a fifth of 3 000 Gaussian cues."""
+    idx = CueIndex(dim=CUE_DIM, n_tables=geometry["n_tables"], n_bits=geometry["n_bits"], seed=geometry["seed"], signature=geometry["signature"])
     N = 3000
     for i in range(N):
         idx.add(f"e{i}", _cue(i))

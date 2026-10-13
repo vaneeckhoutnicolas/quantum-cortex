@@ -31,6 +31,9 @@ from the disk alone -- the strict version runs session B in another process
 """
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import math
 
 import numpy as np
@@ -164,9 +167,13 @@ def generate(model, prefix: list[int], window_tokens=None, window_mask=None, gat
 
 
 def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, window_len: int,
-           pointer_of: dict[str, str], policy: str = "plain", veto_threshold: float | None = None) -> dict:
+           pointer_of: dict[str, str], policy: str = "plain", veto_threshold: float | None = None,
+           record_index: bool = False) -> dict:
     """One arm over a fact list. `pointer_of`: entity -> pointer for planted facts
-    (empty for the negative control)."""
+    (empty for the negative control). `record_index` (ADR-008, 2026-10-13): every answer of
+    an arm with the journal open also carries the live cost of its read (the index's
+    `touched` increment), the index's signatures of the query under the live geometry and
+    the query's cue, so that a live miss is attributable against the probe's files."""
     n = max(1, len(facts))
     strict = abstain = invalid = valid = attr_ok = guess = attr_by_chance = hit = 0
     masses = []
@@ -178,7 +185,9 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
         read = None
         if journal_on:
             cue = bridge.cues([query])[0]
+            touched_before = bridge.jp.index.touched
             read = bridge.read(cue)
+            touched = bridge.jp.index.touched - touched_before
             if read.scores:
                 own_p = pointer_of.get(f.entity) if pointer_of else None
                 others = [sc for pt, sc in zip(read.pointers, read.scores) if pt != own_p]
@@ -208,6 +217,25 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
         rec = {"entity": f.entity, "schema": f.schema, "attr": f.attr, "kind": kind,
                "label": (chr(label) if isinstance(label, int) else label) if label is not None else None, "answered": attr,
                "outcome": None, "own_in_window": (own_p in read.pointers) if (read is not None and own_p) else None}
+        if journal_on and record_index:
+            idx = bridge.jp.index
+            rec["touched"] = int(touched)
+            rec["signatures_query"] = [int(idx._sig(cue, t)) for t in range(idx.n_tables)]
+            rec["cue"] = [float(x) for x in cue]
+            # the attribution the cells demand (committee of 2026-10-13): the window's lines with their labels and marks, the
+            # pointer cited, whether the own line was among the candidates the buckets proposed and its rank among them by cosine
+            rec["window"] = [{"label": chr(b), "pointer": p, "mark": float(read.scores[read.pointers.index(p)]) if p in read.pointers else None}
+                             for b, p in sorted(labels.items())]
+            rec["cited_pointer"] = labels.get(label) if kind == "cite" else None
+            own_ids = [eid for eid, e in bridge.j._entries.items() if own_p is not None and e.pointer == own_p]
+            cands = idx.candidates(cue)                                   # not counted in `touched` (the read's own query was)
+            rec["own_in_candidates"] = (any(eid in cands for eid in own_ids) if own_ids else None)
+            if rec["own_in_candidates"]:
+                qn = float(np.linalg.norm(cue)) + 1e-8
+                ranked = sorted(cands, key=lambda eid: -float(cue @ idx.vecs[eid] / (qn * (float(np.linalg.norm(idx.vecs[eid])) + 1e-8))))
+                rec["own_rank"] = 1 + min(ranked.index(eid) for eid in own_ids if eid in ranked)
+            else:
+                rec["own_rank"] = None
         if read is not None and read.scores:
             marks_by_pointer = dict(zip(read.pointers, [float(x) for x in read.scores]))
             rec["mark_own"] = marks_by_pointer.get(own_p) if own_p else None
@@ -264,7 +292,10 @@ def retrieval_probe(model, journal, facts: list[Fact], neg: list[Fact], pointer_
         jp = JournalPath(journal, index=CueIndex(seed=seed, rank=rank), seed=seed)   # the path indexes the journal itself
         bridge = JournalBridge(model, journal, journal_path=jp, k=k, seed=seed, device=device)
         index_seen = {"rank": jp.index.rank, "n_tables": len(jp.index.planes), "n_bits": int(jp.index.planes[0].shape[1]),
-                      "fly_planes": jp.index.fly_planes is not None, "entries": len(jp.index)}   # read back from the live object
+                      "fly_planes": jp.index.fly_planes is not None, "entries": len(jp.index),   # read back from the live object
+                      **{k2: v for k2, v in jp.index.geometry().items() if k2 not in ("n_tables", "n_bits")},   # ADR-008, 2026-10-13: the
+                      "record": journal.index_record(), "record_source": journal.index_record_source(),      # geometry, the journal's record,
+                      "overridden": bool(jp.index_overridden)}                                                # whether this reader overrides it
         in_cand = in_topk = 0; ranks = []; margins = []; neg_best = []
         for f in facts:
             cue = bridge.cues([encode_query(f.query)])[0]
@@ -299,12 +330,16 @@ def retrieval_probe(model, journal, facts: list[Fact], neg: list[Fact], pointer_
     return out
 
 
-def replay_policy(answers_file: dict, policy: str, threshold: float | None = None) -> dict:
-    """Post hoc: apply an organ side policy to the answers a session B kept (Rev66 files), with
-    the oracle's threshold of that file. The rates it returns are what the live policy would
-    have produced on the same checkpoint and reads, because both use `policy_outcome`;
-    a replay on the seed the policy was conceived on is a post hoc reading, never a result."""
-    thr = answers_file["hm_mark_oracle"]["threshold"] if threshold is None else float(threshold)   # a sweep reads the sensitivity
+def replay_outcomes(answers_file: dict, policy: str, threshold: float | None = None) -> dict:
+    """Post hoc, per question: the outcome an organ side policy gives to each answer a session B kept, on the three
+    arms (the off arm has no window, so a citation there is vetoed to an abstention, as live); the lists the control
+    replay of the adoption compares its live outcomes with when the legacy file is the plain one (ADR-008, 2026-10-13).
+    The veto decision is `policy_outcome`, the one function live and replay share; the outcome after a surviving
+    citation is the replay's own mapping (strict when the cited line is the own one, invalid otherwise), exact when no
+    other line survives the veto: a citation of another line whose mark clears the threshold is read live from that
+    line's statement (valid, or strict when its value is the expected one) and cannot be read from a plain answers
+    file; `not_comparable_by_replay` names those questions (committee of 2026-10-13; none on the record's files)."""
+    thr = answers_file["hm_mark_oracle"]["threshold"] if threshold is None else float(threshold)
     def outcome(a):
         kind, label = a["kind"], a.get("label")
         labels = {label: "cited"} if (kind == "cite" and a.get("mark_cited") is not None) else {}
@@ -321,8 +356,31 @@ def replay_policy(answers_file: dict, policy: str, threshold: float | None = Non
         if policy == "mark-veto" and o != "abstain":
             return a["outcome"]                                    # the model's own outcome stands when not vetoed
         return o
-    on = [outcome(a) for a in answers_file["answers"]["on"]]; n = len(on)
-    neg = [outcome(a) for a in answers_file["answers"]["negctrl"]]
+    return {arm: [outcome(a) for a in answers_file["answers"][arm]] for arm in ("on", "off", "negctrl") if arm in answers_file["answers"]}
+
+
+def not_comparable_by_replay(answers_file: dict, threshold: float) -> dict:
+    """The questions of a plain answers file whose live outcome under an organ side policy the replay cannot give: a
+    citation of a line that is not the own one (or any line, on the never planted arm) with a mark at or above the
+    threshold. Expected empty on the record's files (checked by the committee of 2026-10-13: closest 0.5976 against
+    0.6122 on seed 2024)."""
+    out = {}
+    for arm in ("on", "negctrl"):
+        out[arm] = [i for i, a in enumerate(answers_file["answers"].get(arm, []))
+                    if a.get("kind") == "cite" and a.get("mark_cited") is not None and a["mark_cited"] >= threshold
+                    and not a.get("cited_pointer_is_own")]
+    return out
+
+
+def replay_policy(answers_file: dict, policy: str, threshold: float | None = None) -> dict:
+    """Post hoc: apply an organ side policy to the answers a session B kept (Rev66 files), with
+    the oracle's threshold of that file. The rates it returns are what the live policy would
+    have produced on the same checkpoint and reads, because both use `policy_outcome`;
+    a replay on the seed the policy was conceived on is a post hoc reading, never a result."""
+    thr = answers_file["hm_mark_oracle"]["threshold"] if threshold is None else float(threshold)   # a sweep reads the sensitivity
+    outs = replay_outcomes(answers_file, policy, thr)
+    on = outs["on"]; n = len(on)
+    neg = outs["negctrl"]
     strict, valid, invalid, abst = on.count("strict"), on.count("strict") + on.count("valid"), on.count("invalid"), on.count("abstain")
     negc = sum(1 for o in neg if o != "abstain")
     return {"policy": policy, "post_hoc": True, "threshold": thr, "hm_recall_on": strict / n, "hm_valid_citation_on": valid / n,
@@ -357,7 +415,7 @@ def best_mark_threshold(pos: list[tuple[float, bool]], negs: list[float]) -> tup
 
 @torch.no_grad()
 def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact], pointer_of: dict[str, str],
-                train_seed: int = 100_000, train_n: int = 200, k: int | None = None) -> dict:
+                train_seed: int = 100_000, train_n: int = 200, k: int | None = None, threshold_geometry: dict | None = None) -> dict:
     """RES-23, declared before v9 ran: the ceiling the organ's marks allow, with no
     model output. A rule: cite the line with the highest mark when that mark clears
     a threshold, else abstain. The threshold is read from the training facts family
@@ -372,8 +430,11 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
     rng_state = bridge.rng.bit_generator.state          # the oracle reads through the bridge and must leave no trace:
     tf, tneg, _ = training_facts(train_n, train_seed)   # its reads would otherwise advance the window shuffle and make
                                                         # two policies see different windows (found and fixed 2026-09-20)
+    # `threshold_geometry` (ADR-008, 2026-10-13): the geometry of the scratch journal the threshold is read on; None is the
+    # code's default, legacy, whatever index the live bridge holds, so a replay under the adopted geometry keeps the legacy
+    # threshold as declared ("the same checkpoint, journal, shuffle seed, k, budget and threshold"); recorded below
     scratch = JournalBridge(model, Journal(), k=k, budget_bytes=bridge.budget, seed=0, shuffle_seed=1,
-                            device=bridge.device, mark=bridge.mark)
+                            device=bridge.device, mark=bridge.mark, index_geometry=threshold_geometry)
     plant_pool(scratch, tf)
     pos, negs = [], []
     for f in tf:
@@ -408,7 +469,10 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
     return {"oracle": "mark oracle (RES-23): cite the highest marked line above a threshold read from the training family",
             "threshold": best_thr, "training_accuracy": best_acc, "training_pairs": len(pos) + len(negs),
             "recall_on_strict": on_strict, "claims_on": on_claims, "negctrl_claims": neg_claims,
-            "gap": gap, "passes_without_skill_arm": bool(passes), "encoder": "this checkpoint's own cue encoder"}
+            "gap": gap, "passes_without_skill_arm": bool(passes), "encoder": "this checkpoint's own cue encoder",
+            # the oracle's recall and claims above are the live bridge's; the threshold's reads are the scratch journal's
+            "threshold_index_geometry": {k2: v for k2, v in scratch.jp.index.geometry().items() if k2 != "planes_sha256"},
+            "live_index_geometry": {k2: v for k2, v in bridge.jp.index.geometry().items() if k2 != "planes_sha256"}}
 
 
 @torch.no_grad()
@@ -430,7 +494,7 @@ def skill_delta(model, bridge: JournalBridge, val_batches: list[tuple[torch.Tens
 
 def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: int = 0,
               k: int = 4, budget: int = 256, window_len: int = 256, val_batches=None,
-              on_disk: bool = False, reopen: bool = True, mark: bool = False) -> dict:
+              on_disk: bool = False, reopen: bool = True, mark: bool = False, index_geometry: dict | None = None) -> dict:
     """`journal_factory()` returns the run's journal (a fresh one on the first
     call; the same on-disk scope reopened on the second). Session A plants the
     frozen protocol's facts through the model's cues; session B reopens the
@@ -444,7 +508,8 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
 
     # --- session A: plant through the NORMAL gated path, cues from the model ---
     journal = journal_factory()
-    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, device=device, mark=mark)
+    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, device=device, mark=mark,
+                           index_geometry=index_geometry)                       # the run's geometry, stamped in a fresh journal (2026-10-13)
     admitted = 0
     for i, f in enumerate(facts):
         admitted += int(bridge.write(f.statement, f.schema, now=float(i), entity=f.entity).admitted)
@@ -456,7 +521,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
         del bridge
         journal = journal_factory()
     bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
-                           mark=mark)
+                           mark=mark, index_geometry=index_geometry)
     storage = lifecycle_declaration(journal)["storage"]
     persistent = bool(on_disk and reopen and durable_a and journal.mode == MODE_DURABLE)
 
@@ -497,6 +562,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
                     "plaintext_scope": storage["plaintext_scope"]},
         "attribution": {"encoder": on["retrieval_hit"], "reader": on["attention_mass"],
                         "answer": on["attr_exact_given_valid"]},
+        "index": {"record": journal.index_record(), "live": bridge.jp.index.geometry(), "overridden": bridge.jp.index_overridden},
         "verdict": (("PASS" if dissociation else ("INVALID" if not valid else "FAIL"))
                     + " -- LM arm, cite-or-abstain contract"
                     + ("" if persistent else " -- persistent: false, not claimable")),
@@ -685,65 +751,263 @@ def _verdict(on: dict, off: dict, neg_on: dict, floor: float) -> dict:
             "verdict_without_skill_arm": ("PASS" if four else ("INVALID" if not valid else "FAIL")) + " -- the skill delta is the in process arm's"}
 
 
+CONTROL_THRESHOLD_TOLERANCE = 1e-6      # the reproduction tolerance on the oracle's threshold: the bucket probe's declared tolerance on
+                                        # row 38's scalars (ADR-008, precision (7)); two legacy session B files of one checkpoint differ
+                                        # on the threshold by 1.2e-7 and 2.4e-7 with every outcome equal, so an exact precondition would
+                                        # stop a control that reproduces the record; a difference within it is reproduction
+CONTROL_THRESHOLD_STOP = 1e-3      # the bound at or above which a threshold difference stops the control (the founder's choice of
+                                        # 2026-10-13, see the amendment's built paragraph); None: the threshold never stops, the exact
+                                        # outcomes and counts alone do; the smallest margin of any recorded mark to a threshold on the
+                                        # record's files is 5.0e-3 (committee of 2026-10-13), under which no declared count can move
+CONTROL_COUNT_KEYS = ("hm_recall_on", "hm_recall_off", "hm_false_abstention_on", "hm_invalid_citation_on", "hm_valid_citation_on",
+                      "hm_retrieval_hit", "hm_negctrl_rate", "hm_negctrl_abstain_on")
+CONTROL_REPLAY_COUNT_KEYS = ("hm_recall_on", "hm_valid_citation_on", "hm_invalid_citation_on", "hm_false_abstention_on", "hm_negctrl_rate")
+
+
+def parse_index_argument(text: str) -> dict:
+    """`--index 16,exact`: the declared probe variable of the adoption's replays (ADR-008, 2026-10-13), `<tables>,<signature>`
+    with the signature collapsed or exact; ten bits, as every index to date."""
+    from cortex_c2b.read_path import SIGNATURES
+    parts = [x.strip() for x in str(text).split(",")]
+    if len(parts) != 2 or not parts[0].isdigit() or int(parts[0]) < 1 or parts[1] not in SIGNATURES:
+        raise ValueError(f"--index is `<tables>,<signature>` with the signature one of {SIGNATURES} (as `16,exact`), got {text!r}")
+    return {"n_tables": int(parts[0]), "n_bits": 10, "signature": parts[1]}
+
+
+def session_b_file_name(run_id: str, policy: str, index_argument: dict | None, control: bool) -> str:
+    """The file's name says what it is: `-control` for the replay under the recorded geometry read against a legacy
+    file, `-index<tables><signature>` for a replay under a declared index, nothing for the files of every row to date;
+    then the policy's suffix as before."""
+    suffix = "" if policy == "plain" else "-" + policy.replace("+", "-")
+    what = "-control" if control else (f"-index{index_argument['n_tables']}{index_argument['signature']}" if index_argument else "")
+    return f"hm-lm-{run_id}-session-b{what}{suffix}.json"
+
+
+def _min_margin(live: dict, thr: float) -> float | None:
+    """The smallest distance between any decision relevant recorded mark (the marks cited, the windows' maxima) and the
+    threshold: what a threshold drift must exceed before any outcome or count could move."""
+    ms = []
+    for arm in ("on", "negctrl"):
+        for a in live["answers"][arm]:
+            for k in ("mark_cited", "mark_max"):
+                if a.get(k) is not None:
+                    ms.append(abs(float(a[k]) - float(thr)))
+    return min(ms) if ms else None
+
+
+def _compare_with_control(live: dict, legacy: dict, policy: str, against) -> dict:
+    """The control replay of the adoption (ADR-008, 2026-10-13, (0)): the live per question outcomes and counts against a
+    legacy session B file of the same checkpoint, exactly; the oracle's threshold compared at the declared tolerance and
+    stop bound. When the legacy file is the plain one and the policy is an organ side one (seed 1337: no live legacy file
+    under the policy on the seed that conceived it), the legacy outcomes are the post hoc replay's (`replay_outcomes`),
+    computed under the legacy file's threshold and under the live one, so that a difference present under one threshold
+    only is the threshold's and not the machine's; the questions the replay cannot classify are named and left out."""
+    import hashlib
+    diffs = []
+    if legacy.get("checkpoint", {}).get("run_id") != live["checkpoint"]["run_id"]:
+        raise ValueError(f"control: the legacy file is of run id {legacy.get('checkpoint', {}).get('run_id')!r}, this replay of {live['checkpoint']['run_id']!r}")
+    if legacy.get("generator", {}).get("seed", 0) != live["generator"]["seed"]:
+        raise ValueError("control: the legacy file's facts seed differs from this replay's")
+    if not isinstance(legacy.get("answers"), dict) or not all(arm in legacy["answers"] for arm in ("on", "off", "negctrl")):
+        raise ValueError("control: the legacy file carries no per question answers; a file of 2026-09-20 or later with `answers` is needed")
+    if live["index"]["overridden"]:
+        raise ValueError("control: a control replay reads the journal's recorded geometry; an explicit --index is not a control")
+    legacy_policy = legacy.get("policy") or "plain"
+    thr_legacy = (legacy.get("hm_mark_oracle") or {}).get("threshold")
+    thr_live = live["hm_mark_oracle"]["threshold"]
+    excluded = {"on": [], "negctrl": []}
+    legacy_out_at_live_thr = None
+    if legacy_policy == policy:
+        legacy_out = {arm: [a["outcome"] for a in legacy["answers"][arm]] for arm in ("on", "off", "negctrl")}
+        compared_as = "the legacy file's own outcomes"
+    elif legacy_policy == "plain" and policy in ("mark-veto", "mark-veto+value"):
+        legacy_out = replay_outcomes(legacy, policy)
+        legacy_out_at_live_thr = replay_outcomes(legacy, policy, threshold=thr_live)
+        excluded = not_comparable_by_replay(legacy, float(thr_live))
+        compared_as = (f"the post hoc replay of the legacy plain answers under {policy} (`replay_outcomes`: the veto decision is the one "
+                       "function live and replay share; the outcome after a surviving citation is the replay's mapping, exact when no other "
+                       "line survives the veto); computed under the legacy file's threshold and under the live one")
+    else:
+        raise ValueError(f"control: a legacy file under {legacy_policy!r} cannot be compared with a replay under {policy!r}")
+    outcomes_equal, threshold_only = {}, {}
+    for arm in ("on", "off", "negctrl"):
+        mine = [a["outcome"] for a in live["answers"][arm]]
+        theirs = legacy_out.get(arm)
+        if theirs is None or len(mine) != len(theirs):
+            outcomes_equal[arm] = False
+            diffs.append(f"{arm}: {len(mine)} live answers against {len(theirs) if theirs is not None else 'no'} legacy ones")
+            continue
+        ents_mine = [a["entity"] for a in live["answers"][arm]]; ents_theirs = [a["entity"] for a in legacy["answers"][arm]]
+        if ents_mine != ents_theirs:
+            outcomes_equal[arm] = False
+            diffs.append(f"{arm}: the questions are not the same in the same order")
+            continue
+        skip = set(excluded.get(arm, []))
+        bad = [i for i, (x, y) in enumerate(zip(mine, theirs)) if x != y and i not in skip]
+        if legacy_out_at_live_thr is not None:
+            alt = legacy_out_at_live_thr[arm]
+            threshold_only[arm] = [i for i in bad if mine[i] == alt[i]]        # equal under the live threshold: the threshold's, not the machine's
+            bad = [i for i in bad if i not in threshold_only[arm]]
+        outcomes_equal[arm] = not bad
+        for i in bad[:50]:
+            diffs.append(f"{arm}: question {i} ({ents_mine[i]}) live {mine[i]} against legacy {theirs[i]}")
+        if len(bad) > 50:
+            diffs.append(f"{arm}: {len(bad) - 50} more differences")
+    counts = {}
+    if legacy_policy == policy:
+        for k in CONTROL_COUNT_KEYS:
+            lv, mv = legacy.get(k), live.get(k)
+            counts[k] = {"legacy": lv, "live": mv, "equal": (lv == mv)}
+            if lv != mv:
+                diffs.append(f"count {k}: live {mv} against legacy {lv}")
+    else:
+        rates = replay_policy(legacy, policy)
+        rates_live_thr = replay_policy(legacy, policy, threshold=thr_live)
+        for k in CONTROL_REPLAY_COUNT_KEYS + ("hm_retrieval_hit",):
+            lv = rates[k] if k in rates else legacy.get(k)                      # the retrieval hit does not depend on the policy
+            mv = live.get(k)
+            counts[k] = {"legacy": lv, "live": mv, "equal": (lv == mv), "legacy_is": "the post hoc replay's rate" if k in rates else "the legacy file's"}
+            if lv != mv and not (k in rates_live_thr and rates_live_thr[k] == mv):
+                diffs.append(f"count {k}: live {mv} against the replayed legacy {lv}")
+            elif lv != mv:
+                counts[k]["equal_under_live_threshold"] = True
+    d_thr = (None if thr_legacy is None else float(thr_live) - float(thr_legacy))
+    within = (d_thr is not None and abs(d_thr) <= CONTROL_THRESHOLD_TOLERANCE)
+    stops = (d_thr is None) or (CONTROL_THRESHOLD_STOP is not None and abs(d_thr) >= CONTROL_THRESHOLD_STOP)
+    if stops:
+        diffs.append(f"the oracle's threshold: live {thr_live} against legacy {thr_legacy} (difference {d_thr}, stop bound {CONTROL_THRESHOLD_STOP})")
+    if any(threshold_only.values()):
+        diffs_thr = {arm: v for arm, v in threshold_only.items() if v}
+        diffs.append(f"outcomes equal under the live threshold and not under the legacy one (the threshold's difference, not the machine's): {diffs_thr}")
+    return {"against": str(against), "against_sha256": hashlib.sha256(Path(against).read_bytes().replace(b"\r\n", b"\n")).hexdigest()[:16],
+            "legacy_policy": legacy_policy, "policy": policy, "compared_as": compared_as,
+            "outcomes_equal": outcomes_equal, "counts": counts, "not_comparable_by_replay": excluded,
+            "outcomes_differing_by_threshold_only": threshold_only,
+            "threshold": {"legacy": thr_legacy, "live": thr_live, "difference": d_thr, "tolerance": CONTROL_THRESHOLD_TOLERANCE,
+                          "within_tolerance": within, "stop_bound": CONTROL_THRESHOLD_STOP, "stops": stops,
+                          "min_margin_live": _min_margin(live, thr_live)},
+            "ok": not diffs, "differences": diffs}
+
+
 def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
                         seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256,
-                        train_pool_seed: int | None = None, train_pool_n: int = 200, policy: str = "plain") -> dict:
+                        train_pool_seed: int | None = None, train_pool_n: int = 200, policy: str = "plain",
+                        index_override: dict | None = None, control_against=None) -> dict:
     """Reopen everything from the disk alone and probe. The planted facts are found
     by content addressing (a statement's pointer is the hash of its bytes), so no
-    state of session A is needed beyond the journal file and the checkpoint."""
+    state of session A is needed beyond the journal file and the checkpoint.
+
+    Since ADR-008's amendment of 2026-10-13: the configuration must hash to the checkpoint's
+    (fail closed); the journal of the record is opened as a copy in a temporary directory and
+    its log and payload store are hashed before and after; the file records the geometry of
+    the live index, the journal's record of it, the configuration's pair and whether an
+    explicit `--index` (`index_override`) overrode them, the device, the versions, the code
+    commit, and per question the live cost, the query's signatures and its cue; with
+    `control_against`, a legacy session B file of the same checkpoint, the per question
+    outcomes and the counts are compared exactly and the file says `stopped` when one differs."""
     import train
-    from cortex_c2b import content_hash
+    from datetime import datetime, timezone
+    from cortex_c2b import content_hash, record_tools
     from cortex_c2b.crypto import key_from_env
+    from cortex_c2b.read_path import CueIndex, JournalPath
     device = torch.device("cpu")
     model = train.VanillaGPT(cfg).to(device)
     ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    if not ck.get("config_hash"):
+        raise ValueError("session B: the checkpoint carries no config hash; the config cannot be checked as the run's (ADR-008, 2026-10-13)")
+    if train.config_hash(cfg) != ck["config_hash"]:
+        raise ValueError(f"session B: the config hashes to {train.config_hash(cfg)}, the checkpoint was trained under {ck['config_hash']}; not the run's config")
     model.load_state_dict(ck["model"]); model.eval()
-    journal = Journal(journal_path, key=key_from_env(), policy=POLICY_STOP)
-    mark = bool(getattr(cfg, "journal_familiarity_mark", False))
-    bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
-                           mark=mark)
-    facts, gen_hash = generate_facts(n_facts, seed)
-    neg, _ = generate_facts(n_negctrl, seed + 10_000)
-    pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
-                  if content_hash(f.statement.encode("utf-8")) in journal.payloads}
-    thr = mark_oracle(model, bridge, facts, neg, pointer_of)["threshold"] if policy.startswith("mark-veto") else None
-    on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy, veto_threshold=thr)
-    off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy, veto_threshold=thr)
-    neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy, veto_threshold=thr)
-    storage = lifecycle_declaration(journal)["storage"]
-    # the memorisation probe (run dc34fcf000aa): the same contract on entities the model SAW during training
-    # (the first training pool), planted into a memory scope; a model that reads its window scores alike on
-    # seen and unseen entities, a model that memorised entity -> attribute scores far higher on the seen ones
-    train_probe = None
-    if train_pool_seed is not None:
-        from cortex_c2b.organ_use import training_facts, plant_pool
-        tf, _, _ = training_facts(train_pool_n, seed=train_pool_seed)
-        jb2 = JournalBridge(model, Journal(), k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 2, device=device)
-        plant_pool(jb2, tf)
-        tp = _probe(model, jb2, tf, True, window_len, dict(jb2.pointer_of), policy=policy)
-        train_probe = {"seed": train_pool_seed, "n": len(tf), "recall_strict": tp["recall_strict"],
-                       "valid_citation": tp["valid_citation_rate"], "invalid_citation": tp["invalid_citation_rate"],
-                       "abstain_rate": tp["abstain_rate"], "retrieval_hit": tp["retrieval_hit"]}
-    chance = float(np.mean([1.0 / len(_ATTRS[s]) for s in SCHEMAS])); floor = chance + FLOOR_MARGIN
-    verdict_fields = _verdict(on, off, neg_on, floor)
-    oracle = mark_oracle(model, bridge, facts, neg, pointer_of)
-    return {"benchmark": "hm_protocol_lm_session_b_new_process", "policy": policy, **verdict_fields,
-            "hm_marks": {"on": on["marks"], "negctrl": neg_on["marks"], "written_in_window": mark},
-            "hm_mark_oracle": oracle,
-            "answers": {"on": on["answers"], "off": off["answers"], "negctrl": neg_on["answers"]},
-            "training_pool_probe": train_probe,
-            "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
-                           "step": ck.get("step")},
-            "journal": {"path": str(journal_path), "entries": len(journal), "mode": storage["mode"],
-                        "policy": storage["policy"], "planted_found": len(pointer_of)},
-            "generator": {"config_hash": gen_hash, "n_facts": n_facts, "n_negctrl": n_negctrl, "seed": seed},
-            "hm_recall_on": on["recall_strict"], "hm_recall_off": off["recall_strict"],
-            "hm_false_abstention_on": on["abstain_rate"], "hm_invalid_citation_on": on["invalid_citation_rate"],
-            "hm_valid_citation_on": on["valid_citation_rate"], "hm_attr_exact_given_valid": on["attr_exact_given_valid"],
-            "hm_retrieval_hit": on["retrieval_hit"], "hm_attention_mass": on["attention_mass"],
-            "hm_negctrl_rate": neg_on["guess_rate"], "hm_negctrl_abstain_on": neg_on["abstain_rate"],
-            "hm_match_acc_on": on["match_acc"], "hm_match_acc_negctrl": neg_on["match_acc"],
-            "persistent": storage["mode"] == MODE_DURABLE, "process": "new (nothing of session A but the disk)"}
+    config_geometry = train.index_geometry_of(cfg)
+    jpath = Path(journal_path)
+    before = record_tools.tree_hash(jpath, record_tools.payload_dir_of(jpath)) if jpath.is_file() else None
+    commit, tree_clean = record_tools.git_state()
+    started = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    with record_tools.opened_copy(jpath, key_from_env(), prefix="session-b-") as (journal, _copy):
+        mark = bool(getattr(cfg, "journal_familiarity_mark", False))
+        if index_override is not None:                                       # the declared probe variable: an explicit index, kept whatever the record
+            live_index = CueIndex(dim=journal.cue_dim, n_bits=index_override["n_bits"], n_tables=index_override["n_tables"],
+                                  seed=seed, signature=index_override["signature"])
+            jp = JournalPath(journal, index=live_index)
+            bridge = JournalBridge(model, journal, journal_path=jp, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1,
+                                   device=device, mark=mark)
+        else:
+            bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
+                                   mark=mark, index_geometry=config_geometry)
+        index_block = {"record": journal.index_record(), "record_source": journal.index_record_source(),
+                       "live": bridge.jp.index.geometry(), "overridden": bool(bridge.jp.index_overridden),
+                       "config": {"n_tables": int(cfg.journal_index_tables), "signature": str(cfg.journal_index_signature)},
+                       "argument": (dict(index_override) if index_override is not None else None)}
+        if control_against is not None and index_block["overridden"]:
+            raise ValueError("control: a control replay reads the journal's recorded geometry; an explicit --index is not a control (drop one of the two)")
+        facts, gen_hash = generate_facts(n_facts, seed)
+        neg, _ = generate_facts(n_negctrl, seed + 10_000)
+        pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
+                      if content_hash(f.statement.encode("utf-8")) in journal.payloads}
+        oracle = mark_oracle(model, bridge, facts, neg, pointer_of)        # once: the veto's threshold is the one the file records
+        thr = oracle["threshold"] if policy.startswith("mark-veto") else None
+        on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy, veto_threshold=thr, record_index=True)
+        off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy, veto_threshold=thr)
+        neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy, veto_threshold=thr, record_index=True)
+        storage = lifecycle_declaration(journal)["storage"]
+        # the memorisation probe (run dc34fcf000aa): the same contract on entities the model SAW during training
+        # (the first training pool), planted into a memory scope; a model that reads its window scores alike on
+        # seen and unseen entities, a model that memorised entity -> attribute scores far higher on the seen ones
+        train_probe = None
+        if train_pool_seed is not None:
+            from cortex_c2b.organ_use import training_facts, plant_pool
+            tf, _, _ = training_facts(train_pool_n, seed=train_pool_seed)
+            probe_geometry = (dict(index_override) if index_override is not None else config_geometry)   # the live geometry, override included
+            jb2 = JournalBridge(model, Journal(), k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 2, device=device,
+                                index_geometry=probe_geometry)
+            plant_pool(jb2, tf)
+            tp = _probe(model, jb2, tf, True, window_len, dict(jb2.pointer_of), policy=policy)
+            train_probe = {"seed": train_pool_seed, "n": len(tf), "recall_strict": tp["recall_strict"],
+                           "valid_citation": tp["valid_citation_rate"], "invalid_citation": tp["invalid_citation_rate"],
+                           "abstain_rate": tp["abstain_rate"], "retrieval_hit": tp["retrieval_hit"],
+                           "index_geometry": {k2: v for k2, v in jb2.jp.index.geometry().items() if k2 != "planes_sha256"}}
+        chance = float(np.mean([1.0 / len(_ATTRS[s]) for s in SCHEMAS])); floor = chance + FLOOR_MARGIN
+        verdict_fields = _verdict(on, off, neg_on, floor)
+        entries, states = len(journal), {s: sum(1 for e in journal._entries.values() if e.state == s) for s in sorted({e.state for e in journal._entries.values()})}
+    after = record_tools.tree_hash(jpath, record_tools.payload_dir_of(jpath)) if jpath.is_file() else None
+
+    def cost(arm: dict) -> dict:
+        xs = [a["touched"] for a in arm["answers"] if "touched" in a]
+        return {"n": len(xs), "sum": int(sum(xs)), "mean": (float(np.mean(xs)) if xs else None),
+                "p95": (float(np.percentile(xs, 95)) if xs else None), "max": (int(max(xs)) if xs else None)}
+
+    out = {"benchmark": "hm_protocol_lm_session_b_new_process", "policy": policy, **verdict_fields,
+           "hm_marks": {"on": on["marks"], "negctrl": neg_on["marks"], "written_in_window": mark},
+           "hm_mark_oracle": oracle,
+           "answers": {"on": on["answers"], "off": off["answers"], "negctrl": neg_on["answers"]},
+           "cost": {"on": cost(on), "negctrl": cost(neg_on)},                   # the live cost: the index's touched counter per query
+           "index": index_block,
+           "training_pool_probe": train_probe,
+           "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
+                          "step": ck.get("step")},
+           "journal": {"path": str(journal_path), "entries": entries, "mode": storage["mode"],
+                       "policy": storage["policy"], "planted_found": len(pointer_of), "states": states,
+                       "opened": "a copy in a temporary directory, deleted after the run",
+                       "sha256_before": (before["log"] if before else None), "sha256_after": (after["log"] if after else None),
+                       "payloads_before": before, "payloads_after": after, "unchanged": (before == after)},
+           "generator": {"config_hash": gen_hash, "n_facts": n_facts, "n_negctrl": n_negctrl, "seed": seed},
+           "thresholds": {"delta": DELTA, "negctrl_invalid": NEGCTRL_INVALID, "invalid_citation_max": INVALID_CITATION_MAX, "floor": floor},
+           "hm_recall_on": on["recall_strict"], "hm_recall_off": off["recall_strict"],
+           "hm_false_abstention_on": on["abstain_rate"], "hm_invalid_citation_on": on["invalid_citation_rate"],
+           "hm_valid_citation_on": on["valid_citation_rate"], "hm_attr_exact_given_valid": on["attr_exact_given_valid"],
+           "hm_retrieval_hit": on["retrieval_hit"], "hm_attention_mass": on["attention_mass"],
+           "hm_negctrl_rate": neg_on["guess_rate"], "hm_negctrl_abstain_on": neg_on["abstain_rate"],
+           "hm_match_acc_on": on["match_acc"], "hm_match_acc_negctrl": neg_on["match_acc"],
+           "persistent": storage["mode"] == MODE_DURABLE, "process": "new (nothing of session A but the disk)",
+           "device": record_tools.device_info(device), "versions": record_tools.versions(),
+           "code_commit": commit, "code_tree_clean": tree_clean, "timestamp_utc": started}
+    if control_against is not None:
+        legacy = json.loads(Path(control_against).read_text(encoding="utf-8"))
+        out["control"] = _compare_with_control(out, legacy, policy, control_against)
+        if not out["control"]["ok"]:
+            out["stopped"] = ["the control replay does not reproduce the legacy file: " + "; ".join(out["control"]["differences"][:8])
+                              + (" ..." if len(out["control"]["differences"]) > 8 else "")]
+    return out
 
 
 
@@ -888,10 +1152,11 @@ def extraction_probe_from_disk(ckpt_path, journal_path, cfg, domain_b_seed: int,
             "persistent": storage["mode"] == MODE_DURABLE,
             "process": "new (nothing of session A but the disk); domain B planted, reopened from its disk and deleted in this process"}
 
-def _cli():
-    import argparse, json
-    from pathlib import Path
+def _cli(argv=None):
+    import argparse
+    import hashlib
     import train
+    from cortex_c2b import record_tools
     ap = argparse.ArgumentParser(description="the H.M. protocol's LM arm, session B in a new process")
     ap.add_argument("--session-b", action="store_true")
     ap.add_argument("--retrieval-probe", action="store_true", help="ADR-008 amendment 2026-09-19: the retrieval policy probe on a checkpoint and its sealed journal (no generation, no training)")
@@ -911,7 +1176,9 @@ def _cli():
                     help="also probe the contract on the run's FIRST training pool (entities seen in training): memorisation evidence")
     ap.add_argument("--policy", default="plain", choices=list(POLICIES),
                     help="decode policy: plain | head | head+pointer (ADR-008 amendment 2026-09-14) | mark-veto | mark-veto+value (amendment 2026-09-18)")
-    args = ap.parse_args()
+    ap.add_argument("--index", default=None, help="ADR-008 amendment 2026-10-13: with --session-b, an explicit index geometry `<tables>,<signature>` (as `16,exact`) that wins over the configuration; the file records both and `index.overridden`")
+    ap.add_argument("--control-against", default=None, help="ADR-008 amendment 2026-10-13: with --session-b, a legacy session B file of the same checkpoint; the per question outcomes and the counts must reproduce it exactly, else the run stops and retains `<out>-FAILED-control.json`")
+    args = ap.parse_args(argv)
     if not (args.session_b or args.shape_probe or args.representation_probe or args.retrieval_probe or args.extraction_probe):
         if args.replay:
             r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy, threshold=args.threshold)
@@ -979,16 +1246,57 @@ def _cli():
         print(f"retained: {out}")
         print(json.dumps(r, indent=2))
         return
-    r = session_b_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl,
-                            seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
-                            train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),
-                            train_pool_n=cfg.journal_pool_facts, policy=args.policy)
-    suffix = "" if args.policy == "plain" else "-" + args.policy.replace("+", "-")
-    out = Path(args.out) if args.out else Path("metrics/mqar") / f"hm-lm-{r['checkpoint']['run_id']}-session-b{suffix}.json"
+    # ---- session B (ADR-008 amendment 2026-10-13: the configuration checked against the checkpoint, the journal opened as a
+    # copy and hashed, the geometry recorded, `--index` and `--control-against`; a file of the record is never overwritten)
+    try:
+        index_override = parse_index_argument(args.index) if args.index else None
+    except ValueError as e:
+        raise SystemExit(f"session B: {e}")
+    commit, tree_clean = record_tools.git_state()
+    if commit is None or tree_clean is not True:                             # a file of the record names the code that ran
+        raise SystemExit("session B: the code's commit is unknown or the tracked tree is not clean; commit the code that runs, then run "
+                         "(the record test refuses a file without its commit)")
+    out = Path(args.out) if args.out else None
+
+    def never_overwritten(path: Path) -> None:
+        for q in (path, path.with_name(path.stem + "-FAILED-control.json")):
+            if q.exists():
+                raise SystemExit(f"session B: {q} exists; a file of the record is never overwritten, give another --out")
+
+    if out is not None and out.suffix == ".json":
+        never_overwritten(out)
+    else:                                                                     # the default name needs the run id: read before the minutes of replay
+        ck_head = torch.load(args.ckpt, map_location="cpu", weights_only=False)
+        if not ck_head.get("run_id"):
+            raise SystemExit("session B: the checkpoint carries no run id; the file would be nameless")
+        name = session_b_file_name(ck_head["run_id"], args.policy, index_override, control=args.control_against is not None)
+        out = (out if out is not None else Path("metrics/mqar")) / name
+        never_overwritten(out)
+        del ck_head
+    try:
+        r = session_b_from_disk(args.ckpt, args.journal, cfg, n_facts=args.n_facts, n_negctrl=args.n_negctrl,
+                                seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
+                                train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),
+                                train_pool_n=cfg.journal_pool_facts, policy=args.policy, index_override=index_override,
+                                control_against=args.control_against)
+    except ValueError as e:
+        raise SystemExit(f"session B: {e}")
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(r, indent=2) + "\n", encoding="utf-8")
-    print(f"retained: {out}")
-    print(json.dumps(r, indent=2))
+    if r.get("stopped"):
+        failed = out.with_name(out.stem + "-FAILED-control.json")
+        failed.write_text(json.dumps(r, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
+        raise SystemExit("session B: stopped, the control does not reproduce the legacy file: " + " | ".join(r["stopped"]) + f"  (retained: {failed})")
+    out.write_text(json.dumps(r, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")   # LF, as the record's files
+    print(f"retained: {out}  sha256 {hashlib.sha256(out.read_bytes()).hexdigest()[:16]}")
+    short = {k: r[k] for k in ("policy", "hm_recall_on", "hm_recall_off", "hm_gap", "hm_invalid_citation_on", "hm_valid_citation_on",
+                               "hm_false_abstention_on", "hm_negctrl_rate", "hm_retrieval_hit", "gate_conditions_without_skill_arm",
+                               "verdict_without_skill_arm", "code_commit")}
+    short["index"] = {"live": r["index"]["live"], "overridden": r["index"]["overridden"]}
+    short["cost"] = r["cost"]; short["journal_unchanged"] = r["journal"]["unchanged"]
+    short["hm_mark_oracle_threshold"] = r["hm_mark_oracle"]["threshold"]
+    if "control" in r:
+        short["control"] = {k2: r["control"][k2] for k2 in ("ok", "compared_as", "outcomes_equal", "threshold")}
+    print(json.dumps(short, indent=2))
 
 
 if __name__ == "__main__":

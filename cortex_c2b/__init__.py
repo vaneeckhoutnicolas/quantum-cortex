@@ -116,6 +116,10 @@ class JournalReadOnly(StorageDegraded):
 
 ENTRY_MAX_BYTES = 1024          # the size law
 CUE_DIM = 64                    # fixed-size cue (matryoshka-truncatable later)
+# the index geometry a write event is stamped with (ADR-008, amendment of 2026-10-13); the legacy values are the live
+# index's of every run to date, and a journal whose write events carry no stamp is read under them
+INDEX_GEOMETRY_KEYS = ("n_tables", "n_bits", "signature", "seed")
+LEGACY_INDEX_GEOMETRY = {"n_tables": 4, "n_bits": 10, "signature": "collapsed", "seed": 0}
 SOURCE_TEXT_WHAT = ("the text each address was computed from, one sealed payload per entry, released with the content "
                     "(ADR-009, B2)")        # what the declaration says of the source texts
 
@@ -288,10 +292,21 @@ class Journal:
                  key: bytes | None = None, payload_dir: str | Path | None = None,
                  plaintext: bool = False, policy: str = POLICY_READ_ONLY,
                  disk_free_floor_bytes: int | None = None, spill_max_events: int = 10_000,
-                 disk_check_every: int = 16):
+                 disk_check_every: int = 16, index_geometry: dict | None = None):
         if policy not in POLICIES:
             raise ValueError(f"policy must be one of {POLICIES}, got {policy!r}")
         self.cue_dim = cue_dim
+        # ---- the index geometry (ADR-008, amendment of 2026-10-13): what the write events are stamped with ----
+        # `index_geometry`: given at construction (a configuration's), or set by the first `JournalPath` that attaches
+        # to a journal that has none; `_index_record`: the first stamp replayed from the log (None until a write event
+        # is seen; the legacy geometry when the first write event carries no stamp, every journal of the record to date)
+        self.index_geometry: dict | None = None
+        if index_geometry is not None:
+            from cortex_c2b.read_path import validate_geometry
+            self.index_geometry = validate_geometry(index_geometry, "index geometry given at open")
+        self._index_record: dict | None = None
+        self._index_stamped: bool | None = None       # whether the first write event carried a stamp (None: no write event yet)
+        self._index_writes = 0
         self._path = Path(path) if path else None
         if self._path is not None and key is None and not plaintext:
             raise ValueError("an on-disk journal is sealed by default (ADR-007 D8): pass key=<32 bytes>, "
@@ -348,10 +363,64 @@ class Journal:
         if self._path and self._path.exists():
             self._replay()
             self._collect_orphans()
+        self._check_index_geometry_against_record()                        # a configuration given at open must be the record's
+        if self.index_geometry is None and self._index_record is not None:
+            self.index_geometry = dict(self._index_record)                 # a continued journal stamps what it records, whoever writes
+
+    # ---- the index geometry (ADR-008, 2026-10-13) --------------------------------------
+    def index_record(self) -> dict | None:
+        """The geometry the journal was written under: the first write event's stamp; the legacy geometry
+        (four tables of ten bits, the collapsed signature, seed 0) when the journal holds write events and
+        none is stamped (every journal of the record to date); None when nothing was written yet."""
+        if self._index_record is not None:
+            return dict(self._index_record)
+        if self._index_writes:
+            return dict(LEGACY_INDEX_GEOMETRY)
+        return None
+
+    def index_record_source(self) -> str | None:
+        """How the record came: "stamp" (the first write event carries one), "legacy_by_default" (write events
+        without a stamp: a journal written before 2026-10-13), None (no write event yet)."""
+        if self._index_stamped is None:
+            return None
+        return "stamp" if self._index_stamped else "legacy_by_default"
+
+    def _see_index_stamp(self, stamp: dict | None, count: bool = True) -> None:
+        """At replay and at write: the first write event fixes the record (its stamp, or legacy when it has
+        none); a later write event under another geometry refuses the open, as a journal written under
+        another separation is refused (Decision 8). With `count` false the stamp is only checked (before a
+        write reaches the disk, so that no conflicting line is ever written)."""
+        if stamp is not None:
+            from cortex_c2b.read_path import validate_geometry
+            g = validate_geometry(stamp, "index stamp on a write event")
+        else:
+            g = dict(LEGACY_INDEX_GEOMETRY)
+        if self._index_writes == 0:
+            if count:
+                self._index_record = g
+                self._index_stamped = stamp is not None
+        elif any(g.get(k) != self._index_record.get(k) for k in INDEX_GEOMETRY_KEYS) or (
+                g.get("planes_sha256") is not None and self._index_record.get("planes_sha256") is not None
+                and g["planes_sha256"] != self._index_record["planes_sha256"]):
+            raise ValueError("journal written under two index geometries: "
+                             f"{ {k: self._index_record.get(k) for k in INDEX_GEOMETRY_KEYS + ('planes_sha256',)} } then "
+                             f"{ {k: g.get(k) for k in INDEX_GEOMETRY_KEYS + ('planes_sha256',)} }; refused (ADR-008, 2026-10-13)")
+        if count:
+            self._index_writes += 1
+
+    def _check_index_geometry_against_record(self) -> None:
+        rec = self.index_record()
+        if rec is not None and self.index_geometry is not None and any(
+                rec.get(k) != self.index_geometry.get(k) for k in INDEX_GEOMETRY_KEYS):
+            raise ValueError("index geometry: the journal records "
+                             f"{ {k: rec.get(k) for k in INDEX_GEOMETRY_KEYS} }, this open asks "
+                             f"{ {k: self.index_geometry.get(k) for k in INDEX_GEOMETRY_KEYS} }; refused (ADR-008, 2026-10-13)")
 
     # ---- scope configuration -----------------------------------------------------
     def scope_config_hash(self) -> str:
-        """Whatever changes the journal's behaviour on disk is in the hash (Decision 9)."""
+        """Whatever changes the journal's behaviour on disk is in the hash (Decision 9). The index geometry is
+        not in it: the scope hash is written into every phase event, and a journal of the record continued under
+        the new code would otherwise carry two (ADR-008, 2026-10-13)."""
         return _hash_obj({"policy": self.policy, "sealed": self._key is not None, "plaintext": self.plaintext,
                           "disk_free_floor_bytes": self.disk_free_floor_bytes,
                           "spill_max_events": self.spill_max_events, "cue_dim": self.cue_dim,
@@ -396,7 +465,11 @@ class Journal:
         ev = {"ev": "write", "entry": entry.to_dict()}
         if ca3 is not None:
             ev["ca3"] = dict(ca3)
+        if self.index_geometry is not None:                               # the index geometry rides on the same line (ADR-008, 2026-10-13)
+            ev["index"] = dict(self.index_geometry)
+        self._see_index_stamp(ev.get("index"), count=False)               # checked before the disk: no conflicting line is ever written
         self._persist(ev)                                                 # may raise; memory untouched then
+        self._see_index_stamp(ev.get("index"))
         self._entries[entry.entry_id] = entry
         self._by_cue_key.setdefault(self._cue_key(cue), []).append(entry.entry_id)
         self._hold_refs(entry)
@@ -803,6 +876,7 @@ class Journal:
                 self.writes_since_last_phase.append(e.entry_id)
                 if "ca3" in ev:
                     self.ca3_order.append((e.entry_id, dict(ev["ca3"])))
+                self._see_index_stamp(ev.get("index"))                    # the first stamp kept, a later different one refused
             elif ev["ev"] == "transition":
                 self._entries[ev["entry_id"]].state = ev["to"]
                 if ev["to"] == STATE_CONSOLIDATED:

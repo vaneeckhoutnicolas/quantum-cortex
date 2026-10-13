@@ -257,18 +257,22 @@ class JournalBridge:
 
     def __init__(self, model, journal: Journal, write_path: WritePath | None = None,
                  journal_path: JournalPath | None = None, k: int = 4, budget_bytes: int = 256,
-                 seed: int = 0, shuffle_seed: int | None = None, device=None, mark: bool = False):
+                 seed: int = 0, shuffle_seed: int | None = None, device=None, mark: bool = False,
+                 index_geometry: dict | None = None):
         """`seed` is the scope's separation seed (DG) and the index seed -- it must
         be the same at every open of a journal (Decision 8: a journal written under
         another separation is refused). `shuffle_seed` only drives the order of
-        the read window and may differ between sessions."""
+        the read window and may differ between sessions. `index_geometry` (ADR-008,
+        2026-10-13): the run's configuration's `n_tables` and `signature`
+        (`train.index_geometry_of`); None leaves the journal's record, or the legacy
+        geometry on a fresh journal, to decide (the defaults do not move)."""
         self.model = model
         self.j = journal
         if model.cue_encoder is None or model.cue_encoder.proj.out_features != journal.cue_dim:
             raise ValueError("the model's cue encoder must produce the journal's cue dimension "
                              f"({journal.cue_dim}); set journal_cue_dim accordingly")
         self.wp = write_path or WritePath(journal, seed=seed)
-        self.jp = journal_path or JournalPath(journal, seed=seed)
+        self.jp = journal_path if journal_path is not None else JournalPath(journal, seed=seed, geometry=index_geometry)
         self.k, self.budget = k, budget_bytes
         self.mark = mark                                        # RES-23: the organ's similarity in every window line
         self.rng = np.random.default_rng(seed if shuffle_seed is None else shuffle_seed)

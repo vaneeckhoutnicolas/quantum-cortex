@@ -303,6 +303,8 @@ def test_the_retrieval_probe_separates_a_bucket_miss_from_a_ranking_miss():
         assert 0.0 <= v["own_in_top_k"] <= v["own_in_candidates"] <= 1.0, rank   # top k is a subset of the candidates
         assert v["own_rank"] is None or v["own_rank"]["min"] >= 1.0
         assert v["index"]["rank"] == rank and v["index"]["n_tables"] == 4 and v["index"]["n_bits"] == 10   # read back from the live index
+        assert v["index"]["signature"] == "collapsed" and v["index"]["seed"] == 0 and v["index"]["planes_sha256"] == "680896ab07072738"   # 2026-10-13: the geometry
+        assert v["index"]["overridden"] is False and v["index"]["record"]["signature"] == "collapsed"                                       # and the journal's record
     assert r["reading"]["candidate_misses_cosine"] == round(1 - r["rankings"]["cosine"]["own_in_candidates"], 4)
     # 2026-10-12 (Rev108): the fly ranking is the fly's, not the cosine twice; its scores are shares of the 51 kept
     # indices, in [0, 1], and a margin is a difference of two such shares

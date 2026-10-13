@@ -134,6 +134,10 @@ def test_a_perfect_reader_passes_persistent_and_claimable(tmp_path):
     assert r["verdict"].startswith("PASS") and r["process"].startswith("new")
     assert r["prompt"]["hash"] == ea.frame_hash(ea.build_frame())
     assert len(r["answers"]["on"]) == 25 and r["answers"]["on"][0]["kind"] == "cite"
+    # ADR-008, 2026-10-13: the file records the index geometry from the live object and the journal's record (the planted journal
+    # of this arm is written through a path, so it is stamped legacy; the journal of 2026-09-17 reads legacy by default)
+    assert r["index"]["live"]["signature"] == "collapsed" and r["index"]["live"]["n_tables"] == 4 and r["index"]["live"]["planes_sha256"] == "680896ab07072738"
+    assert r["index"]["overridden"] is False and r["index"]["record"]["signature"] == "collapsed" and r["index"]["record_source"] == "stamp"
 
 
 def test_a_constant_citation_is_invalid_on_the_negative_control(tmp_path):

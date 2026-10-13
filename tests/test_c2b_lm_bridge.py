@@ -268,17 +268,21 @@ def test_session_b_in_a_new_process_reproduces_the_in_process_probe(tmp_path):
     r_a = run_hm_lm(m, lambda: Journal(jpath, key=key, policy=POLICY_STOP), n_facts=12, n_negctrl=6,
                     k=3, budget=96, window_len=96, on_disk=True)
     ck = tmp_path / "ckpt.pt"
-    torch.save({"model": m.state_dict(), "run_id": "tiny", "config_hash": "x", "step": 0}, ck)
+    torch.save({"model": m.state_dict(), "run_id": "tiny", "config_hash": train.config_hash(cfg), "step": 0}, ck)   # session B checks it (2026-10-13)
     cfg_path = tmp_path / "cfg.json"
     cfg_path.write_text(json.dumps({k: getattr(cfg, k) for k in cfg.__dataclass_fields__}), encoding="utf-8")
     env = {**os.environ, "QUANTUM_CORTEX_JOURNAL_KEY": key.hex(), "PYTHONPATH": str(ROOT)}
     out = tmp_path / "session-b.json"
-    run = subprocess.run([sys.executable, "-m", "cortex_c2b.hm_lm", "--session-b", "--ckpt", str(ck), "--journal", str(jpath),
-                          "--config", str(cfg_path), "--out", str(out), "--n-facts", "12", "--n-negctrl", "6"],
-                         capture_output=True, text=True, cwd=ROOT, env=env, timeout=300)
+    # a new process, through the command line; the code's commit is replaced in that process as the bucket probe's tests do
+    # (a fixture run is not a file of the record, and the command line refuses a run without a clean committed tree since 2026-10-13)
+    argv = ["--session-b", "--ckpt", str(ck), "--journal", str(jpath), "--config", str(cfg_path), "--out", str(out), "--n-facts", "12", "--n-negctrl", "6"]
+    code = ("import sys; sys.path.insert(0, %r); from cortex_c2b import record_tools, hm_lm; "
+            "record_tools.git_state = lambda: ('test0000', True); hm_lm._cli(%r)" % (str(ROOT), argv))
+    run = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=ROOT, env=env, timeout=300)
     assert run.returncode == 0, run.stderr
     r_b = json.loads(out.read_text())
     assert r_b["journal"]["mode"] == "durable" and r_b["journal"]["planted_found"] == r_a["generator"]["admitted"]
+    assert r_b["code_commit"] == "test0000" and r_b["journal"]["unchanged"] is True and r_b["index"]["overridden"] is False
     for k in ("hm_recall_on", "hm_recall_off", "hm_false_abstention_on", "hm_invalid_citation_on", "hm_retrieval_hit"):
         assert r_b[k] == r_a[k], (k, r_b[k], r_a[k])
     assert r_b["persistent"] is True
@@ -301,7 +305,7 @@ def test_session_b_probe_on_the_training_pool_reports_memorisation_evidence(tmp_
     cfg, m = tiny(seed=10); m.eval()
     key = generate_key(); jpath = tmp_path / "journal.jsonl"
     run_hm_lm(m, lambda: Journal(jpath, key=key, policy=POLICY_STOP), n_facts=8, n_negctrl=4, k=3, budget=96, window_len=96, on_disk=True)
-    ck = tmp_path / "ckpt.pt"; torch.save({"model": m.state_dict(), "run_id": "tiny"}, ck)
+    ck = tmp_path / "ckpt.pt"; torch.save({"model": m.state_dict(), "run_id": "tiny", "config_hash": train.config_hash(cfg)}, ck)
     os.environ["QUANTUM_CORTEX_JOURNAL_KEY"] = key.hex()
     try:
         r = session_b_from_disk(ck, jpath, cfg, n_facts=8, n_negctrl=4, k=3, budget=96, window_len=96,
