@@ -1,0 +1,145 @@
+{
+ "row": "47",
+ "cell": "H1 S1 M+",
+ "what": "the adoption of C2b as the organ's index geometry, measured (ADR-008, amendment of 2026-10-13, validated by the founder at 10:09 and its built paragraph's precisions at 14:03): six control replays under the legacy geometry read against the legacy session B files of rows 36, 37 and 39, six replays under the adopted geometry (`--index 16,exact`), six bucket probe draws at index seeds 1 and 2, run by the founder on 2026-10-13 on the three v9 checkpoints and their sealed journals (seeds 1337, 2024, 7; the journals of rows 40 to 45, opened as copies and hashed unchanged); the code of 58a4eda (zip 43)",
+ "commands": [
+  "python -m cortex_c2b.hm_lm --session-b --ckpt <ckpt> --journal <journal> --config <config> --seed 0 --policy plain --control-against <legacy plain file> --out metrics\\mqar  (per checkpoint; then --policy mark-veto+value against the legacy veto file, or for seed 1337 against the same plain answers file through the post hoc replay)",
+  "python -m cortex_c2b.hm_lm --session-b --ckpt <ckpt> --journal <journal> --config <config> --seed 0 --policy plain --index 16,exact --out metrics\\mqar  (per checkpoint; then --policy mark-veto+value)",
+  "python -m cortex_c2b.bucket_probe --ckpt <ckpt> --journal <journal> --config <config> --seed 0 --index-seed 1 --out metrics\\mqar  (per checkpoint; then --index-seed 2)",
+  "the checkpoints, journals and configurations are those of PROVENANCE-bucket-probe.json: runs\\journal-n1-v9-seed2 with configs\\local_journal_v9_seed2.json (2024); C:\\kaggle-out\\v9\\runs-keep\\journal-n1-v9 with configs\\kaggle_t4_journal_v9.json (1337); C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3 with configs\\kaggle_t4_journal_v9_seed3.json (7)"
+ ],
+ "legacy_files_compared": {
+  "8ceba5db8d0b": {
+   "plain": "hm-lm-8ceba5db8d0b-session-b-answers.json",
+   "mark-veto+value": "hm-lm-8ceba5db8d0b-session-b-answers.json (through the post hoc replay, `replay_outcomes`)"
+  },
+  "4cfd6f6e1406": {
+   "plain": "hm-lm-4cfd6f6e1406-session-b.json",
+   "mark-veto+value": "hm-lm-4cfd6f6e1406-session-b-mark-veto-value.json"
+  },
+  "2e1dc71913b1": {
+   "plain": "hm-lm-2e1dc71913b1-session-b-answers.json (the file of the veto session; the earlier plain file's outcomes are equal on every question)",
+   "mark-veto+value": "hm-lm-2e1dc71913b1-session-b-answers-mark-veto-value.json"
+  }
+ },
+ "order_run": "the six controls first (12:39 to 13:15 UTC), then the six replays under the adopted geometry (13:17 to 14:26 UTC), then the six draws (14:33 to 14:40 UTC); no stop; session B on the processor (8 threads), the probe on the card, as row 45",
+ "read_cold": "2026-10-13, 16:45, from the eighteen files sent by the founder, by the instance that keeps the record, before any text: the headers checked (run ids, configuration hashes recomputed from the config files, the journals' hashes equal to rows 40 to 42's and unchanged, 200 entries and 200 planted facts on each, the geometries from the live objects, the commit), the six controls' exact reproduction, then `adoption_reading.read_adoption` on the twelve session B files and `read_draws` on the six probe files, in the order H, S, M, then the draws",
+ "reading": {
+  "H": "H1: the own line in the live window on 600 of 600 under the adopted geometry (187, 187, 189 under the legacy one; gains 13, 13, 11, the control's misses of row 45; no loss); the live signatures equal to row 45's C2b signatures on 600 of 600 for a cue drift of at most 2.4e-6 between the card and the processor",
+  "S": "S1: the four frozen conditions hold under mark-veto+value on seeds 2024 and 7 (and on 1337, reported): strict recall 0.95 and 0.91 (0.96), invalid citations 0.0, claims on never planted entities 0.0, the off arm 0.0; the never planted windows at or above the oracle's threshold 4, 1, 3 of 50, the probe's bound; the model alone INVALID under both geometries",
+  "M": "M+: on the 400 questions of seeds 2024 and 7 under mark-veto+value, 48 discordant pairs in favour of the adopted geometry against 23, exact two sided binomial p 0.0041; per seed 28 against 7 (p 0.0005) and 20 against 16 (p 0.62); seed 1337 reported 23 against 6; under plain, reported, 60 against 42, p 0.092, M0",
+  "draws": "six clean draws of six (C2b at 1.000 and admissible on each journal at index seeds 1 and 2), the expected outcome written before the run (chance 0.937); they establish no recall for another draw (the per draw miss chance bounded at 0.78); seed 0 stays the declared draw",
+  "consequence": "the adoption stands; the system's numbers under the adopted geometry are the new rows' numbers, rows 36, 37 and 39 keep theirs and say so; M+ is a paired result on the live seeds' questions, carried by seed 2024 (seed 7 near equality), claimed at the singular until the holdout"
+ },
+ "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (the committed form); the eighteen files are written in LF by the instruments, so their hash as written equals the committed one and the one the instrument printed",
+ "files": {
+  "hm-lm-8ceba5db8d0b-session-b-control.json": {
+   "sha256_lf": "3202a4e30adc5578",
+   "timestamp_utc": "2026-10-13T12:53:30+00:00",
+   "code_commit": "58a4eda",
+   "what": "the control replay under the legacy geometry, read against the legacy file"
+  },
+  "hm-lm-8ceba5db8d0b-session-b-control-mark-veto-value.json": {
+   "sha256_lf": "3ff319c75e6ae1a4",
+   "timestamp_utc": "2026-10-13T13:09:57+00:00",
+   "code_commit": "58a4eda",
+   "what": "the control replay under the legacy geometry, read against the legacy file"
+  },
+  "hm-lm-8ceba5db8d0b-session-b-index16exact.json": {
+   "sha256_lf": "5bc5556495edbbe9",
+   "timestamp_utc": "2026-10-13T13:39:13+00:00",
+   "code_commit": "58a4eda",
+   "what": "the replay under the adopted geometry (--index 16,exact)"
+  },
+  "hm-lm-8ceba5db8d0b-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "77b752334c6187ad",
+   "timestamp_utc": "2026-10-13T13:50:33+00:00",
+   "code_commit": "58a4eda",
+   "what": "the replay under the adopted geometry (--index 16,exact)"
+  },
+  "hm-lm-4cfd6f6e1406-session-b-control.json": {
+   "sha256_lf": "53cda7dbf574d246",
+   "timestamp_utc": "2026-10-13T12:39:33+00:00",
+   "code_commit": "58a4eda",
+   "what": "the control replay under the legacy geometry, read against the legacy file"
+  },
+  "hm-lm-4cfd6f6e1406-session-b-control-mark-veto-value.json": {
+   "sha256_lf": "8319c57ee540ad0c",
+   "timestamp_utc": "2026-10-13T12:42:10+00:00",
+   "code_commit": "58a4eda",
+   "what": "the control replay under the legacy geometry, read against the legacy file"
+  },
+  "hm-lm-4cfd6f6e1406-session-b-index16exact.json": {
+   "sha256_lf": "25ffc5930b31f16d",
+   "timestamp_utc": "2026-10-13T13:17:24+00:00",
+   "code_commit": "58a4eda",
+   "what": "the replay under the adopted geometry (--index 16,exact)"
+  },
+  "hm-lm-4cfd6f6e1406-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "4adfb0d4965e07e0",
+   "timestamp_utc": "2026-10-13T13:30:13+00:00",
+   "code_commit": "58a4eda",
+   "what": "the replay under the adopted geometry (--index 16,exact)"
+  },
+  "hm-lm-2e1dc71913b1-session-b-control.json": {
+   "sha256_lf": "c4d3a9a11b9f3447",
+   "timestamp_utc": "2026-10-13T13:11:41+00:00",
+   "code_commit": "58a4eda",
+   "what": "the control replay under the legacy geometry, read against the legacy file"
+  },
+  "hm-lm-2e1dc71913b1-session-b-control-mark-veto-value.json": {
+   "sha256_lf": "2c732d00ec0ef080",
+   "timestamp_utc": "2026-10-13T13:15:36+00:00",
+   "code_commit": "58a4eda",
+   "what": "the control replay under the legacy geometry, read against the legacy file"
+  },
+  "hm-lm-2e1dc71913b1-session-b-index16exact.json": {
+   "sha256_lf": "49b3eacbecb58bc8",
+   "timestamp_utc": "2026-10-13T13:53:04+00:00",
+   "code_commit": "58a4eda",
+   "what": "the replay under the adopted geometry (--index 16,exact)"
+  },
+  "hm-lm-2e1dc71913b1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "db481b5b5457b72f",
+   "timestamp_utc": "2026-10-13T14:26:52+00:00",
+   "code_commit": "58a4eda",
+   "what": "the replay under the adopted geometry (--index 16,exact)"
+  },
+  "bucket-probe-8ceba5db8d0b-index1.json": {
+   "sha256_lf": "b8637674bae27959",
+   "timestamp_utc": "2026-10-13T14:36:14+00:00",
+   "code_commit": "58a4eda",
+   "what": "the bucket probe at index seed 1"
+  },
+  "bucket-probe-8ceba5db8d0b-index2.json": {
+   "sha256_lf": "99e59f20bb42210a",
+   "timestamp_utc": "2026-10-13T14:38:34+00:00",
+   "code_commit": "58a4eda",
+   "what": "the bucket probe at index seed 2"
+  },
+  "bucket-probe-4cfd6f6e1406-index1.json": {
+   "sha256_lf": "87006aa4cf58abf4",
+   "timestamp_utc": "2026-10-13T14:33:43+00:00",
+   "code_commit": "58a4eda",
+   "what": "the bucket probe at index seed 1"
+  },
+  "bucket-probe-4cfd6f6e1406-index2.json": {
+   "sha256_lf": "29da7f21909a35a7",
+   "timestamp_utc": "2026-10-13T14:34:26+00:00",
+   "code_commit": "58a4eda",
+   "what": "the bucket probe at index seed 2"
+  },
+  "bucket-probe-2e1dc71913b1-index1.json": {
+   "sha256_lf": "0fb1bbab6145ee01",
+   "timestamp_utc": "2026-10-13T14:39:04+00:00",
+   "code_commit": "58a4eda",
+   "what": "the bucket probe at index seed 1"
+  },
+  "bucket-probe-2e1dc71913b1-index2.json": {
+   "sha256_lf": "41402d4eeb5a0ce5",
+   "timestamp_utc": "2026-10-13T14:40:38+00:00",
+   "code_commit": "58a4eda",
+   "what": "the bucket probe at index seed 2"
+  }
+ }
+}
