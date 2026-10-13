@@ -1,0 +1,7238 @@
+{
+  "benchmark": "hm_protocol_lm_external",
+  "spec": "docs/benchmarks/hm-protocol.md (frozen thresholds; LM arm amendment 2026-09-12); ADR-008 amendment 2026-09-16 (the external model arm, declared before any measurement)",
+  "timestamp_utc": "2026-10-13T03:09:50.599324+00:00",
+  "model": {
+    "name": "Qwen/Qwen3-1.7B",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "dtype": "bf16",
+    "template": "chat",
+    "thinking": false,
+    "tokenizer": "Qwen2Tokenizer",
+    "vocab_size": 151669,
+    "device": "cpu",
+    "hardware": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "versions": {
+      "transformers": "5.17.0",
+      "torch": "2.6.0+cu124"
+    },
+    "chat_template_sha256_16": "a55ee1b1660128b7"
+  },
+  "prompt": {
+    "hash": "7fda43aced410d65",
+    "file": "docs/benchmarks/external-arm-prompt-7fda43aced410d65.txt",
+    "examples_seed": 100000,
+    "decoding": "greedy",
+    "max_new_tokens": 32
+  },
+  "thresholds": {
+    "delta": 0.5,
+    "epsilon_s": 0.01,
+    "floor": 0.175,
+    "chance": 0.125,
+    "negctrl_invalid": 0.1,
+    "invalid_citation_max": 0.01
+  },
+  "generator": {
+    "config_hash": "a5e22c70a3275ed4",
+    "n_facts": 200,
+    "n_negctrl": 50,
+    "seed": 0,
+    "admitted": 200,
+    "planted_found": 200
+  },
+  "window": {
+    "k": 4,
+    "budget_bytes": 256,
+    "shuffle_seed": 1,
+    "cue": "the organ's hash seeded encoder, the entity as the address (rows 13, 13b)"
+  },
+  "hm_recall_on": 0.73,
+  "hm_recall_off": 0.0,
+  "hm_gap": 0.73,
+  "hm_skill_delta": 0.18686101600240324,
+  "ppl_on": 24.524043397634383,
+  "ppl_off": 20.66294457984348,
+  "hm_skill_delta_frame": 0.4897301782719774,
+  "ppl_frame": 30.782212112554216,
+  "tokens_scored": 58443,
+  "hm_skill_delta_prime": 0.010172495768435067,
+  "ppl_prime": 20.873138296145346,
+  "hm_skill_delta_prime_signed": 0.010172495768435067,
+  "hm_prime_window_share": 0.05078125,
+  "prime_spans_with_window": 13,
+  "prime_token_share": 0.05552418595896857,
+  "hm_skill_delta_admitted": 0.1999534943865297,
+  "veto_threshold_used": 0.3389076888561249,
+  "hm_skill_delta_admitted_band": {
+    "observed": 0.19995349438652976,
+    "band_low": 0.1339194534527392,
+    "band_high": 0.24603011320477966,
+    "within_band": true,
+    "share_at_or_under": 0.6905,
+    "admitted": 13,
+    "spans": 256,
+    "draws": 2000,
+    "seed": 20261012,
+    "what": "the relative cost (ON over OFF perplexity minus one) of chance subsets of the admitted size, drawn from the per span records; S_adm within the band says the admitted windows cost what any subset of that size costs"
+  },
+  "hm_skill_delta_admitted_within_band": true,
+  "veto_threshold": {
+    "threshold": 0.3389076888561249,
+    "training_accuracy": 1.0,
+    "training_pairs": 250,
+    "n_training_facts": 200,
+    "n_training_negatives": 50,
+    "planted": 200,
+    "train_seed": 100000,
+    "generator_hash": "438e093d9fe711a0",
+    "k": 4,
+    "index_seed": 0,
+    "min_positive_mark": 0.9999998807907104,
+    "max_negative_mark": 0.3389076888561249,
+    "source": "the training family alone, as the mark oracle reads it (RES-23); never the protocol's facts",
+    "cue_convention": "the training family is planted and read by the entity's address cue, as this arm plants and reads (rows 13, 13b); the mark oracle of the cortex's arm reads by the question's text through the checkpoint's encoder, which this arm has not",
+    "rule": "the window is attached to a span iff the organ returns at least one line for the span's cue and the top mark is strictly above the threshold; an empty read never attaches a window",
+    "index_seed_note": "the scratch index is seeded with the run's seed, as the run's own index is",
+    "encoder": "the organ's hash seeded encoder (the entity as the address, rows 13 and 13b)"
+  },
+  "hm_negctrl_rate": 0.0,
+  "hm_negctrl_on": 0.0,
+  "hm_negctrl_abstain_on": 1.0,
+  "hm_negctrl_abstain_off": 0.92,
+  "hm_false_abstention_on": 0.0,
+  "hm_invalid_citation_on": 0.005,
+  "hm_valid_citation_on": 0.995,
+  "hm_attr_exact_given_valid": 0.7336683417085427,
+  "hm_retrieval_hit": 1.0,
+  "hm_attention_mass": null,
+  "hm_guess_rate_off": 0.07,
+  "hm_attr_hit_off_by_chance": 0.0,
+  "hm_malformed_on": 0.005,
+  "hm_malformed_off": 0.06,
+  "hm_malformed_negctrl": 0.0,
+  "run_valid": true,
+  "hm_dissociation_pass": 0,
+  "persistent": true,
+  "claimable": 0,
+  "storage": {
+    "on_disk": true,
+    "mode": "durable",
+    "policy": "stop",
+    "plaintext_scope": false
+  },
+  "attribution": {
+    "encoder": 1.0,
+    "encoder_note": "the organ's number (the entity as the address)",
+    "reader": null,
+    "reader_note": "not observable on an external model",
+    "answer": 0.7336683417085427
+  },
+  "skill_arm": {
+    "data": {
+      "path": "C:\\git\\quantum-cortex\\data\\fineweb_edu_bytes.bin",
+      "n_bytes": 600000000,
+      "val_fraction": 0.01,
+      "n_spans": 256,
+      "span_bytes": 1024,
+      "seed": 0,
+      "provenance_content_sha": null
+    },
+    "n_spans": 256,
+    "spans": [
+      {
+        "i": 0,
+        "top_mark": 0.14029181003570557,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 663.837646484375,
+        "nll_on": 704.231689453125,
+        "nll_frame": 712.224853515625
+      },
+      {
+        "i": 1,
+        "top_mark": 0.30762606859207153,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 394,
+        "nll_off": 855.5636596679688,
+        "nll_on": 885.697998046875,
+        "nll_frame": 961.733642578125
+      },
+      {
+        "i": 2,
+        "top_mark": 0.05341493710875511,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 216,
+        "nll_off": 677.2891845703125,
+        "nll_on": 705.30224609375,
+        "nll_frame": 789.0604248046875
+      },
+      {
+        "i": 3,
+        "top_mark": 0.11560258269309998,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 383,
+        "nll_off": 874.7977294921875,
+        "nll_on": 976.6720581054688,
+        "nll_frame": 1058.913330078125
+      },
+      {
+        "i": 4,
+        "top_mark": 0.4361540675163269,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 251,
+        "nll_off": 865.9979248046875,
+        "nll_on": 930.6830444335938,
+        "nll_frame": 991.2634887695312
+      },
+      {
+        "i": 5,
+        "top_mark": 0.020510246977210045,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 201,
+        "nll_off": 605.8905029296875,
+        "nll_on": 655.7131958007812,
+        "nll_frame": 704.939208984375
+      },
+      {
+        "i": 6,
+        "top_mark": 0.17525716125965118,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 205,
+        "nll_off": 683.5094604492188,
+        "nll_on": 703.7156982421875,
+        "nll_frame": 741.2592163085938
+      },
+      {
+        "i": 7,
+        "top_mark": 0.23328635096549988,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 346,
+        "nll_off": 852.7554931640625,
+        "nll_on": 949.3373413085938,
+        "nll_frame": 1009.8792724609375
+      },
+      {
+        "i": 8,
+        "top_mark": 0.1896996796131134,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 196,
+        "nll_off": 677.439208984375,
+        "nll_on": 698.4481201171875,
+        "nll_frame": 760.677001953125
+      },
+      {
+        "i": 9,
+        "top_mark": 0.2175332009792328,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 250,
+        "nll_off": 625.67431640625,
+        "nll_on": 676.5193481445312,
+        "nll_frame": 765.2705078125
+      },
+      {
+        "i": 10,
+        "top_mark": 0.24800318479537964,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 232,
+        "nll_off": 758.8076171875,
+        "nll_on": 806.39990234375,
+        "nll_frame": 857.287841796875
+      },
+      {
+        "i": 11,
+        "top_mark": -0.0451553650200367,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 243,
+        "nll_off": 733.394287109375,
+        "nll_on": 862.4879150390625,
+        "nll_frame": 876.74951171875
+      },
+      {
+        "i": 12,
+        "top_mark": 0.2581770122051239,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 241,
+        "nll_off": 826.171875,
+        "nll_on": 886.3235473632812,
+        "nll_frame": 971.6356811523438
+      },
+      {
+        "i": 13,
+        "top_mark": 0.17004981637001038,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 652.5795288085938,
+        "nll_on": 667.9418334960938,
+        "nll_frame": 709.6369018554688
+      },
+      {
+        "i": 14,
+        "top_mark": 0.30142271518707275,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 255,
+        "nll_off": 867.6920166015625,
+        "nll_on": 913.6909790039062,
+        "nll_frame": 961.0048217773438
+      },
+      {
+        "i": 15,
+        "top_mark": 0.07337625324726105,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 173,
+        "nll_off": 691.2633666992188,
+        "nll_on": 730.6974487304688,
+        "nll_frame": 766.0202026367188
+      },
+      {
+        "i": 16,
+        "top_mark": -0.08762796968221664,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 352,
+        "nll_off": 750.008056640625,
+        "nll_on": 755.9618530273438,
+        "nll_frame": 828.8997192382812
+      },
+      {
+        "i": 17,
+        "top_mark": 0.19866342842578888,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 617.1656494140625,
+        "nll_on": 648.9782104492188,
+        "nll_frame": 689.8706665039062
+      },
+      {
+        "i": 18,
+        "top_mark": 0.10326685756444931,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 253,
+        "nll_off": 1008.7830810546875,
+        "nll_on": 1041.0079345703125,
+        "nll_frame": 1100.607177734375
+      },
+      {
+        "i": 19,
+        "top_mark": 0.24558646976947784,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 239,
+        "nll_off": 765.3859252929688,
+        "nll_on": 806.9891357421875,
+        "nll_frame": 851.95166015625
+      },
+      {
+        "i": 20,
+        "top_mark": 0.39901700615882874,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 269,
+        "nll_off": 780.6871337890625,
+        "nll_on": 845.5949096679688,
+        "nll_frame": 912.880126953125
+      },
+      {
+        "i": 21,
+        "top_mark": -0.056949254125356674,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 210,
+        "nll_off": 665.7047729492188,
+        "nll_on": 678.4556274414062,
+        "nll_frame": 734.8594970703125
+      },
+      {
+        "i": 22,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 195,
+        "nll_off": 641.630859375,
+        "nll_on": 651.269287109375,
+        "nll_frame": 715.25830078125
+      },
+      {
+        "i": 23,
+        "top_mark": 0.13579146564006805,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 206,
+        "nll_off": 617.2276611328125,
+        "nll_on": 637.6511840820312,
+        "nll_frame": 697.44287109375
+      },
+      {
+        "i": 24,
+        "top_mark": 0.2983546555042267,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 233,
+        "nll_off": 677.76171875,
+        "nll_on": 692.0805053710938,
+        "nll_frame": 755.1239013671875
+      },
+      {
+        "i": 25,
+        "top_mark": 0.10026871412992477,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 753.0108032226562,
+        "nll_on": 774.0048217773438,
+        "nll_frame": 845.9847412109375
+      },
+      {
+        "i": 26,
+        "top_mark": 0.3890698552131653,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 225,
+        "nll_off": 854.4859008789062,
+        "nll_on": 910.5241088867188,
+        "nll_frame": 1001.5966186523438
+      },
+      {
+        "i": 27,
+        "top_mark": 0.31484347581863403,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 213,
+        "nll_off": 622.596923828125,
+        "nll_on": 664.8126220703125,
+        "nll_frame": 716.7698364257812
+      },
+      {
+        "i": 28,
+        "top_mark": 0.1387759894132614,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 251,
+        "nll_off": 798.25390625,
+        "nll_on": 838.3889770507812,
+        "nll_frame": 871.6783447265625
+      },
+      {
+        "i": 29,
+        "top_mark": 0.10861444473266602,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 195,
+        "nll_off": 673.850830078125,
+        "nll_on": 718.1126708984375,
+        "nll_frame": 742.72412109375
+      },
+      {
+        "i": 30,
+        "top_mark": 0.22466467320919037,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 190,
+        "nll_off": 636.5045166015625,
+        "nll_on": 658.322998046875,
+        "nll_frame": 711.1248168945312
+      },
+      {
+        "i": 31,
+        "top_mark": 0.1366923600435257,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 225,
+        "nll_off": 787.506591796875,
+        "nll_on": 834.0252685546875,
+        "nll_frame": 931.8814697265625
+      },
+      {
+        "i": 32,
+        "top_mark": 0.1871345490217209,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 585.2164306640625,
+        "nll_on": 611.6004638671875,
+        "nll_frame": 690.0908203125
+      },
+      {
+        "i": 33,
+        "top_mark": 0.24126380681991577,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 222,
+        "nll_off": 849.8226318359375,
+        "nll_on": 889.4619750976562,
+        "nll_frame": 949.3579711914062
+      },
+      {
+        "i": 34,
+        "top_mark": 0.279072642326355,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 231,
+        "nll_off": 936.1243896484375,
+        "nll_on": 956.6158447265625,
+        "nll_frame": 1029.4168701171875
+      },
+      {
+        "i": 35,
+        "top_mark": 0.3359510898590088,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 209,
+        "nll_off": 687.4006958007812,
+        "nll_on": 716.4266967773438,
+        "nll_frame": 759.56640625
+      },
+      {
+        "i": 36,
+        "top_mark": 0.3215346336364746,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 230,
+        "nll_off": 628.03125,
+        "nll_on": 679.3452758789062,
+        "nll_frame": 690.2882690429688
+      },
+      {
+        "i": 37,
+        "top_mark": -0.28102025389671326,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 194,
+        "nll_off": 579.3944091796875,
+        "nll_on": 611.9082641601562,
+        "nll_frame": 646.410400390625
+      },
+      {
+        "i": 38,
+        "top_mark": 0.12568940222263336,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 657.9012451171875,
+        "nll_on": 687.0464477539062,
+        "nll_frame": 750.261474609375
+      },
+      {
+        "i": 39,
+        "top_mark": 0.18590527772903442,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 210,
+        "nll_off": 516.4844360351562,
+        "nll_on": 537.4497680664062,
+        "nll_frame": 585.5228271484375
+      },
+      {
+        "i": 40,
+        "top_mark": 0.21577811241149902,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 621.81396484375,
+        "nll_on": 650.0074462890625,
+        "nll_frame": 691.845703125
+      },
+      {
+        "i": 41,
+        "top_mark": 0.2543196976184845,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 258,
+        "nll_off": 735.0569458007812,
+        "nll_on": 764.6544189453125,
+        "nll_frame": 836.74462890625
+      },
+      {
+        "i": 42,
+        "top_mark": 0.21210803091526031,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 236,
+        "nll_off": 684.9370727539062,
+        "nll_on": 746.665771484375,
+        "nll_frame": 792.1421508789062
+      },
+      {
+        "i": 43,
+        "top_mark": 0.27350854873657227,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 204,
+        "nll_off": 725.03662109375,
+        "nll_on": 772.8005981445312,
+        "nll_frame": 822.5491333007812
+      },
+      {
+        "i": 44,
+        "top_mark": 0.2634592056274414,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 277,
+        "nll_off": 745.7736206054688,
+        "nll_on": 793.8026123046875,
+        "nll_frame": 889.1485595703125
+      },
+      {
+        "i": 45,
+        "top_mark": 0.3239409327507019,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 197,
+        "nll_off": 549.2392578125,
+        "nll_on": 601.2408447265625,
+        "nll_frame": 636.4694213867188
+      },
+      {
+        "i": 46,
+        "top_mark": 0.3419995903968811,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 188,
+        "nll_off": 530.0956420898438,
+        "nll_on": 566.4610595703125,
+        "nll_frame": 643.026611328125
+      },
+      {
+        "i": 47,
+        "top_mark": 0.17255328595638275,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 201,
+        "nll_off": 592.4420166015625,
+        "nll_on": 604.1275024414062,
+        "nll_frame": 670.9091796875
+      },
+      {
+        "i": 48,
+        "top_mark": 0.18581879138946533,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 208,
+        "nll_off": 730.651123046875,
+        "nll_on": 749.4880981445312,
+        "nll_frame": 784.265625
+      },
+      {
+        "i": 49,
+        "top_mark": 0.2117830514907837,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 208,
+        "nll_off": 686.259765625,
+        "nll_on": 711.2265014648438,
+        "nll_frame": 727.1094360351562
+      },
+      {
+        "i": 50,
+        "top_mark": 0.14063741266727448,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 248,
+        "nll_off": 763.4296264648438,
+        "nll_on": 793.0718994140625,
+        "nll_frame": 833.4929809570312
+      },
+      {
+        "i": 51,
+        "top_mark": 0.1859845519065857,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 206,
+        "nll_off": 705.671875,
+        "nll_on": 706.3137817382812,
+        "nll_frame": 739.177978515625
+      },
+      {
+        "i": 52,
+        "top_mark": 0.16133596003055573,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 180,
+        "nll_off": 565.3226318359375,
+        "nll_on": 605.229736328125,
+        "nll_frame": 651.7438354492188
+      },
+      {
+        "i": 53,
+        "top_mark": 0.3049958348274231,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 197,
+        "nll_off": 671.6233520507812,
+        "nll_on": 715.109130859375,
+        "nll_frame": 741.5039672851562
+      },
+      {
+        "i": 54,
+        "top_mark": 0.22064261138439178,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 219,
+        "nll_off": 739.6911010742188,
+        "nll_on": 770.0870971679688,
+        "nll_frame": 825.8086547851562
+      },
+      {
+        "i": 55,
+        "top_mark": 0.09690791368484497,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 220,
+        "nll_off": 657.0477294921875,
+        "nll_on": 688.5198974609375,
+        "nll_frame": 785.279296875
+      },
+      {
+        "i": 56,
+        "top_mark": 0.014846952632069588,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 195,
+        "nll_off": 642.24560546875,
+        "nll_on": 661.07373046875,
+        "nll_frame": 706.61572265625
+      },
+      {
+        "i": 57,
+        "top_mark": 0.020820675417780876,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 175,
+        "nll_off": 637.333251953125,
+        "nll_on": 646.3894653320312,
+        "nll_frame": 677.3259887695312
+      },
+      {
+        "i": 58,
+        "top_mark": 0.24675315618515015,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 227,
+        "nll_off": 649.0679931640625,
+        "nll_on": 684.0426025390625,
+        "nll_frame": 752.072021484375
+      },
+      {
+        "i": 59,
+        "top_mark": 0.27646175026893616,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 177,
+        "nll_off": 665.112060546875,
+        "nll_on": 675.1619873046875,
+        "nll_frame": 695.9912719726562
+      },
+      {
+        "i": 60,
+        "top_mark": 0.25542888045310974,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 732.3779296875,
+        "nll_on": 760.0962524414062,
+        "nll_frame": 809.459716796875
+      },
+      {
+        "i": 61,
+        "top_mark": 0.19873322546482086,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 226,
+        "nll_off": 829.18701171875,
+        "nll_on": 881.0050659179688,
+        "nll_frame": 928.1227416992188
+      },
+      {
+        "i": 62,
+        "top_mark": 0.31487637758255005,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 236,
+        "nll_off": 757.6551513671875,
+        "nll_on": 820.2207641601562,
+        "nll_frame": 867.7152709960938
+      },
+      {
+        "i": 63,
+        "top_mark": 0.18390336632728577,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 217,
+        "nll_off": 564.0726318359375,
+        "nll_on": 582.730224609375,
+        "nll_frame": 610.7744750976562
+      },
+      {
+        "i": 64,
+        "top_mark": 0.07392574101686478,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 285,
+        "nll_off": 628.0371704101562,
+        "nll_on": 653.6709594726562,
+        "nll_frame": 696.3692016601562
+      },
+      {
+        "i": 65,
+        "top_mark": 0.21317362785339355,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 563.3948364257812,
+        "nll_on": 593.7717895507812,
+        "nll_frame": 631.5050659179688
+      },
+      {
+        "i": 66,
+        "top_mark": 0.18684536218643188,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 260,
+        "nll_off": 677.1036376953125,
+        "nll_on": 718.1656494140625,
+        "nll_frame": 773.257080078125
+      },
+      {
+        "i": 67,
+        "top_mark": 0.15152327716350555,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 224,
+        "nll_off": 735.898681640625,
+        "nll_on": 798.169189453125,
+        "nll_frame": 839.8538818359375
+      },
+      {
+        "i": 68,
+        "top_mark": 0.17015406489372253,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 191,
+        "nll_off": 561.1116943359375,
+        "nll_on": 567.5951538085938,
+        "nll_frame": 625.2127685546875
+      },
+      {
+        "i": 69,
+        "top_mark": 0.288597971200943,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 189,
+        "nll_off": 627.0458984375,
+        "nll_on": 676.3072509765625,
+        "nll_frame": 693.7919921875
+      },
+      {
+        "i": 70,
+        "top_mark": 0.17293284833431244,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 767.885498046875,
+        "nll_on": 835.6216430664062,
+        "nll_frame": 870.8934936523438
+      },
+      {
+        "i": 71,
+        "top_mark": 0.04667240008711815,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 203,
+        "nll_off": 640.3639526367188,
+        "nll_on": 688.5868530273438,
+        "nll_frame": 729.390869140625
+      },
+      {
+        "i": 72,
+        "top_mark": 0.1393883228302002,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 173,
+        "nll_off": 640.4891967773438,
+        "nll_on": 673.209716796875,
+        "nll_frame": 710.1563720703125
+      },
+      {
+        "i": 73,
+        "top_mark": 0.17650718986988068,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 191,
+        "nll_off": 558.1483154296875,
+        "nll_on": 569.4819946289062,
+        "nll_frame": 597.0181274414062
+      },
+      {
+        "i": 74,
+        "top_mark": 0.2717956602573395,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 342,
+        "nll_off": 980.8558349609375,
+        "nll_on": 1051.2408447265625,
+        "nll_frame": 1086.60595703125
+      },
+      {
+        "i": 75,
+        "top_mark": 0.22219111025333405,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 226,
+        "nll_off": 656.8203735351562,
+        "nll_on": 705.0748291015625,
+        "nll_frame": 767.7200927734375
+      },
+      {
+        "i": 76,
+        "top_mark": 0.1994018852710724,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 203,
+        "nll_off": 712.4654541015625,
+        "nll_on": 761.9826049804688,
+        "nll_frame": 832.72998046875
+      },
+      {
+        "i": 77,
+        "top_mark": 0.19494828581809998,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 192,
+        "nll_off": 588.7120361328125,
+        "nll_on": 614.7789306640625,
+        "nll_frame": 649.7744750976562
+      },
+      {
+        "i": 78,
+        "top_mark": 0.21689653396606445,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 830.0862426757812,
+        "nll_on": 871.6036376953125,
+        "nll_frame": 925.7154541015625
+      },
+      {
+        "i": 79,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 235,
+        "nll_off": 846.008056640625,
+        "nll_on": 863.9956665039062,
+        "nll_frame": 1008.9549560546875
+      },
+      {
+        "i": 80,
+        "top_mark": 0.31320804357528687,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 183,
+        "nll_off": 600.4357299804688,
+        "nll_on": 632.302490234375,
+        "nll_frame": 673.01318359375
+      },
+      {
+        "i": 81,
+        "top_mark": 0.18247833847999573,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 195,
+        "nll_off": 635.2843017578125,
+        "nll_on": 638.281005859375,
+        "nll_frame": 679.67626953125
+      },
+      {
+        "i": 82,
+        "top_mark": -0.04122112691402435,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 223,
+        "nll_off": 648.3070068359375,
+        "nll_on": 659.2234497070312,
+        "nll_frame": 726.1110229492188
+      },
+      {
+        "i": 83,
+        "top_mark": 0.28311339020729065,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 260,
+        "nll_off": 761.8930053710938,
+        "nll_on": 827.2471923828125,
+        "nll_frame": 881.211669921875
+      },
+      {
+        "i": 84,
+        "top_mark": 0.23867665231227875,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 220,
+        "nll_off": 447.71246337890625,
+        "nll_on": 497.6522216796875,
+        "nll_frame": 542.3450927734375
+      },
+      {
+        "i": 85,
+        "top_mark": 0.2380162626504898,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 221,
+        "nll_off": 489.4058837890625,
+        "nll_on": 537.1524047851562,
+        "nll_frame": 569.0733032226562
+      },
+      {
+        "i": 86,
+        "top_mark": 0.10134662687778473,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 241,
+        "nll_off": 556.9381103515625,
+        "nll_on": 588.4182739257812,
+        "nll_frame": 648.2119140625
+      },
+      {
+        "i": 87,
+        "top_mark": 0.11945503950119019,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 196,
+        "nll_off": 607.236328125,
+        "nll_on": 671.2276611328125,
+        "nll_frame": 719.3663940429688
+      },
+      {
+        "i": 88,
+        "top_mark": 0.3276492655277252,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 217,
+        "nll_off": 677.2680053710938,
+        "nll_on": 703.3406372070312,
+        "nll_frame": 714.7958984375
+      },
+      {
+        "i": 89,
+        "top_mark": 0.150705948472023,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 211,
+        "nll_off": 584.174072265625,
+        "nll_on": 631.8544921875,
+        "nll_frame": 689.9014892578125
+      },
+      {
+        "i": 90,
+        "top_mark": 0.02145085670053959,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 226,
+        "nll_off": 406.9598388671875,
+        "nll_on": 475.0453796386719,
+        "nll_frame": 530.7383422851562
+      },
+      {
+        "i": 91,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 194,
+        "nll_off": 501.199462890625,
+        "nll_on": 507.5505065917969,
+        "nll_frame": 541.1832275390625
+      },
+      {
+        "i": 92,
+        "top_mark": 0.21505653858184814,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 230,
+        "nll_off": 911.384033203125,
+        "nll_on": 941.6055297851562,
+        "nll_frame": 979.0894775390625
+      },
+      {
+        "i": 93,
+        "top_mark": 0.24753832817077637,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 431,
+        "nll_off": 860.687744140625,
+        "nll_on": 926.4534301757812,
+        "nll_frame": 1022.9966430664062
+      },
+      {
+        "i": 94,
+        "top_mark": 0.058695971965789795,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 223,
+        "nll_off": 650.5117797851562,
+        "nll_on": 671.3212890625,
+        "nll_frame": 720.7821044921875
+      },
+      {
+        "i": 95,
+        "top_mark": 0.22790475189685822,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 509.093505859375,
+        "nll_on": 579.6736450195312,
+        "nll_frame": 618.1023559570312
+      },
+      {
+        "i": 96,
+        "top_mark": 0.28980541229248047,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 237,
+        "nll_off": 908.9573974609375,
+        "nll_on": 976.1339721679688,
+        "nll_frame": 1034.9754638671875
+      },
+      {
+        "i": 97,
+        "top_mark": 0.2259368896484375,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 198,
+        "nll_off": 559.3489990234375,
+        "nll_on": 589.0861206054688,
+        "nll_frame": 641.803955078125
+      },
+      {
+        "i": 98,
+        "top_mark": 0.13017652928829193,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 230,
+        "nll_off": 678.2135009765625,
+        "nll_on": 693.7053833007812,
+        "nll_frame": 783.7012939453125
+      },
+      {
+        "i": 99,
+        "top_mark": 0.2439083456993103,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 266,
+        "nll_off": 732.4255981445312,
+        "nll_on": 778.2991333007812,
+        "nll_frame": 824.4883422851562
+      },
+      {
+        "i": 100,
+        "top_mark": 0.24787914752960205,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 227,
+        "nll_off": 617.98828125,
+        "nll_on": 677.2576904296875,
+        "nll_frame": 761.7186889648438
+      },
+      {
+        "i": 101,
+        "top_mark": 0.11558195948600769,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 190,
+        "nll_off": 465.10760498046875,
+        "nll_on": 516.2162475585938,
+        "nll_frame": 549.1361694335938
+      },
+      {
+        "i": 102,
+        "top_mark": 0.24324487149715424,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 289,
+        "nll_off": 716.2474365234375,
+        "nll_on": 779.4676513671875,
+        "nll_frame": 816.1757202148438
+      },
+      {
+        "i": 103,
+        "top_mark": 0.11480078846216202,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 588.1245727539062,
+        "nll_on": 584.0839233398438,
+        "nll_frame": 632.0521850585938
+      },
+      {
+        "i": 104,
+        "top_mark": 0.34305667877197266,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 232,
+        "nll_off": 674.5245361328125,
+        "nll_on": 721.133056640625,
+        "nll_frame": 762.71435546875
+      },
+      {
+        "i": 105,
+        "top_mark": 0.058022622019052505,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 257,
+        "nll_off": 563.8753051757812,
+        "nll_on": 597.3783569335938,
+        "nll_frame": 658.0936889648438
+      },
+      {
+        "i": 106,
+        "top_mark": 0.1917446106672287,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 184,
+        "nll_off": 518.5822143554688,
+        "nll_on": 551.0809326171875,
+        "nll_frame": 569.0785522460938
+      },
+      {
+        "i": 107,
+        "top_mark": 0.19809627532958984,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 196,
+        "nll_off": 572.4201049804688,
+        "nll_on": 618.6397705078125,
+        "nll_frame": 674.8638305664062
+      },
+      {
+        "i": 108,
+        "top_mark": -0.04529294744133949,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 253,
+        "nll_off": 784.4591674804688,
+        "nll_on": 826.3123168945312,
+        "nll_frame": 892.474853515625
+      },
+      {
+        "i": 109,
+        "top_mark": 0.07495129853487015,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 227,
+        "nll_off": 631.181640625,
+        "nll_on": 660.840087890625,
+        "nll_frame": 718.8624267578125
+      },
+      {
+        "i": 110,
+        "top_mark": 0.2169891744852066,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 164,
+        "nll_off": 500.0816650390625,
+        "nll_on": 538.8135986328125,
+        "nll_frame": 547.4495239257812
+      },
+      {
+        "i": 111,
+        "top_mark": 0.07430161535739899,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 375,
+        "nll_off": 717.8733520507812,
+        "nll_on": 772.7562255859375,
+        "nll_frame": 866.3099975585938
+      },
+      {
+        "i": 112,
+        "top_mark": 0.22791606187820435,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 221,
+        "nll_off": 783.5607299804688,
+        "nll_on": 826.1415405273438,
+        "nll_frame": 889.3018188476562
+      },
+      {
+        "i": 113,
+        "top_mark": 0.20861400663852692,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 216,
+        "nll_off": 828.6859741210938,
+        "nll_on": 866.80419921875,
+        "nll_frame": 916.682861328125
+      },
+      {
+        "i": 114,
+        "top_mark": 0.20990131795406342,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 650.1243286132812,
+        "nll_on": 646.1884765625,
+        "nll_frame": 711.126220703125
+      },
+      {
+        "i": 115,
+        "top_mark": 0.1527116894721985,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 265,
+        "nll_off": 863.987548828125,
+        "nll_on": 913.3400268554688,
+        "nll_frame": 946.9614868164062
+      },
+      {
+        "i": 116,
+        "top_mark": 0.19190514087677002,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 249,
+        "nll_off": 1048.09375,
+        "nll_on": 1061.9847412109375,
+        "nll_frame": 1129.192626953125
+      },
+      {
+        "i": 117,
+        "top_mark": 0.1477746069431305,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 237,
+        "nll_off": 654.8304443359375,
+        "nll_on": 703.90087890625,
+        "nll_frame": 725.234375
+      },
+      {
+        "i": 118,
+        "top_mark": 0.15493732690811157,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 212,
+        "nll_off": 565.248046875,
+        "nll_on": 620.0487670898438,
+        "nll_frame": 675.7728881835938
+      },
+      {
+        "i": 119,
+        "top_mark": -0.10728194564580917,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 250,
+        "nll_off": 615.06640625,
+        "nll_on": 656.3742065429688,
+        "nll_frame": 712.8562622070312
+      },
+      {
+        "i": 120,
+        "top_mark": 0.17198121547698975,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 228,
+        "nll_off": 658.2610473632812,
+        "nll_on": 734.7134399414062,
+        "nll_frame": 798.83984375
+      },
+      {
+        "i": 121,
+        "top_mark": 0.2451399564743042,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 215,
+        "nll_off": 712.228515625,
+        "nll_on": 786.621826171875,
+        "nll_frame": 840.738037109375
+      },
+      {
+        "i": 122,
+        "top_mark": 0.17452393472194672,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 267,
+        "nll_off": 738.2543334960938,
+        "nll_on": 802.987548828125,
+        "nll_frame": 851.8407592773438
+      },
+      {
+        "i": 123,
+        "top_mark": 0.20603710412979126,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 195,
+        "nll_off": 666.330810546875,
+        "nll_on": 729.010009765625,
+        "nll_frame": 788.044921875
+      },
+      {
+        "i": 124,
+        "top_mark": 0.3572741746902466,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 233,
+        "nll_off": 803.7994995117188,
+        "nll_on": 863.4927978515625,
+        "nll_frame": 900.6845703125
+      },
+      {
+        "i": 125,
+        "top_mark": 0.27229443192481995,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 226,
+        "nll_off": 613.003662109375,
+        "nll_on": 646.8225708007812,
+        "nll_frame": 702.2142944335938
+      },
+      {
+        "i": 126,
+        "top_mark": 0.33492276072502136,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 213,
+        "nll_off": 677.6812133789062,
+        "nll_on": 711.91357421875,
+        "nll_frame": 783.7249145507812
+      },
+      {
+        "i": 127,
+        "top_mark": 0.08232451230287552,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 219,
+        "nll_off": 558.196533203125,
+        "nll_on": 582.0137329101562,
+        "nll_frame": 626.1232299804688
+      },
+      {
+        "i": 128,
+        "top_mark": 0.13500666618347168,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 234,
+        "nll_off": 637.8703002929688,
+        "nll_on": 698.2877197265625,
+        "nll_frame": 753.2433471679688
+      },
+      {
+        "i": 129,
+        "top_mark": 0.018279002979397774,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 174,
+        "nll_off": 667.671875,
+        "nll_on": 703.1510620117188,
+        "nll_frame": 738.1531982421875
+      },
+      {
+        "i": 130,
+        "top_mark": 0.12197120487689972,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 187,
+        "nll_off": 592.4225463867188,
+        "nll_on": 619.9014282226562,
+        "nll_frame": 663.770263671875
+      },
+      {
+        "i": 131,
+        "top_mark": 0.1392749398946762,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 243,
+        "nll_off": 511.38885498046875,
+        "nll_on": 557.1692504882812,
+        "nll_frame": 613.2442626953125
+      },
+      {
+        "i": 132,
+        "top_mark": 0.2174442857503891,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 197,
+        "nll_off": 660.2296752929688,
+        "nll_on": 700.64697265625,
+        "nll_frame": 713.40478515625
+      },
+      {
+        "i": 133,
+        "top_mark": 0.13019625842571259,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 229,
+        "nll_off": 617.7142944335938,
+        "nll_on": 707.366943359375,
+        "nll_frame": 725.8838500976562
+      },
+      {
+        "i": 134,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 241,
+        "nll_off": 573.97900390625,
+        "nll_on": 598.304443359375,
+        "nll_frame": 692.6596069335938
+      },
+      {
+        "i": 135,
+        "top_mark": 0.12882466614246368,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 206,
+        "nll_off": 536.5100708007812,
+        "nll_on": 571.5869140625,
+        "nll_frame": 623.3950805664062
+      },
+      {
+        "i": 136,
+        "top_mark": -0.00826999545097351,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 218,
+        "nll_off": 710.8623046875,
+        "nll_on": 734.2843627929688,
+        "nll_frame": 779.4003295898438
+      },
+      {
+        "i": 137,
+        "top_mark": 0.2026967853307724,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 594.388916015625,
+        "nll_on": 608.209228515625,
+        "nll_frame": 665.15673828125
+      },
+      {
+        "i": 138,
+        "top_mark": 0.22386008501052856,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 224,
+        "nll_off": 796.6834106445312,
+        "nll_on": 872.9015502929688,
+        "nll_frame": 934.458251953125
+      },
+      {
+        "i": 139,
+        "top_mark": 0.33103349804878235,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 227,
+        "nll_off": 705.8651733398438,
+        "nll_on": 703.6241455078125,
+        "nll_frame": 750.124267578125
+      },
+      {
+        "i": 140,
+        "top_mark": 0.2717258930206299,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 223,
+        "nll_off": 778.0953369140625,
+        "nll_on": 836.545166015625,
+        "nll_frame": 909.8359375
+      },
+      {
+        "i": 141,
+        "top_mark": 0.08457790315151215,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 291,
+        "nll_off": 823.4693603515625,
+        "nll_on": 836.6542358398438,
+        "nll_frame": 958.55908203125
+      },
+      {
+        "i": 142,
+        "top_mark": 0.37977030873298645,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 229,
+        "nll_off": 604.6589965820312,
+        "nll_on": 629.2357788085938,
+        "nll_frame": 647.0075073242188
+      },
+      {
+        "i": 143,
+        "top_mark": 0.03049226477742195,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 204,
+        "nll_off": 491.46630859375,
+        "nll_on": 546.7970581054688,
+        "nll_frame": 586.2335815429688
+      },
+      {
+        "i": 144,
+        "top_mark": 0.0999562218785286,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 279,
+        "nll_off": 761.2138671875,
+        "nll_on": 786.2138061523438,
+        "nll_frame": 825.4835815429688
+      },
+      {
+        "i": 145,
+        "top_mark": 0.29706329107284546,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 219,
+        "nll_off": 740.8602294921875,
+        "nll_on": 785.2967529296875,
+        "nll_frame": 841.0350341796875
+      },
+      {
+        "i": 146,
+        "top_mark": 0.2862463891506195,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 181,
+        "nll_off": 577.1001586914062,
+        "nll_on": 611.537841796875,
+        "nll_frame": 648.645751953125
+      },
+      {
+        "i": 147,
+        "top_mark": 0.10276934504508972,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 181,
+        "nll_off": 570.2877197265625,
+        "nll_on": 614.8194580078125,
+        "nll_frame": 644.7349243164062
+      },
+      {
+        "i": 148,
+        "top_mark": 0.1320289522409439,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 757.70849609375,
+        "nll_on": 808.7075805664062,
+        "nll_frame": 834.0447998046875
+      },
+      {
+        "i": 149,
+        "top_mark": 0.40680965781211853,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 323,
+        "nll_off": 837.9200439453125,
+        "nll_on": 869.7897338867188,
+        "nll_frame": 938.4944458007812
+      },
+      {
+        "i": 150,
+        "top_mark": 0.18843455612659454,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 220,
+        "nll_off": 503.959228515625,
+        "nll_on": 575.9796142578125,
+        "nll_frame": 651.4008178710938
+      },
+      {
+        "i": 151,
+        "top_mark": 0.2866430878639221,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 194,
+        "nll_off": 516.058349609375,
+        "nll_on": 557.0576171875,
+        "nll_frame": 562.4310302734375
+      },
+      {
+        "i": 152,
+        "top_mark": 0.20753397047519684,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 225,
+        "nll_off": 782.1348266601562,
+        "nll_on": 832.4708862304688,
+        "nll_frame": 910.9739990234375
+      },
+      {
+        "i": 153,
+        "top_mark": -0.12218409031629562,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 237,
+        "nll_off": 663.2886352539062,
+        "nll_on": 691.53076171875,
+        "nll_frame": 782.341796875
+      },
+      {
+        "i": 154,
+        "top_mark": 0.2720594108104706,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 194,
+        "nll_off": 676.7821655273438,
+        "nll_on": 708.095947265625,
+        "nll_frame": 761.6847534179688
+      },
+      {
+        "i": 155,
+        "top_mark": -0.022238686680793762,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 221,
+        "nll_off": 648.6038818359375,
+        "nll_on": 683.3596801757812,
+        "nll_frame": 710.5332641601562
+      },
+      {
+        "i": 156,
+        "top_mark": 0.26815369725227356,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 218,
+        "nll_off": 750.424072265625,
+        "nll_on": 793.0602416992188,
+        "nll_frame": 822.509765625
+      },
+      {
+        "i": 157,
+        "top_mark": 0.1629725694656372,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 346,
+        "nll_off": 799.0169677734375,
+        "nll_on": 854.3404541015625,
+        "nll_frame": 940.3997802734375
+      },
+      {
+        "i": 158,
+        "top_mark": 0.09538556635379791,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 197,
+        "nll_off": 552.1782836914062,
+        "nll_on": 556.88134765625,
+        "nll_frame": 588.9177856445312
+      },
+      {
+        "i": 159,
+        "top_mark": 0.26925578713417053,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 569.4229125976562,
+        "nll_on": 611.4656982421875,
+        "nll_frame": 659.065673828125
+      },
+      {
+        "i": 160,
+        "top_mark": -0.006787699647247791,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 189,
+        "nll_off": 784.180908203125,
+        "nll_on": 822.1426391601562,
+        "nll_frame": 856.4014282226562
+      },
+      {
+        "i": 161,
+        "top_mark": 0.23610621690750122,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 217,
+        "nll_off": 618.5930786132812,
+        "nll_on": 678.8982543945312,
+        "nll_frame": 718.9317016601562
+      },
+      {
+        "i": 162,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 212,
+        "nll_off": 674.6746826171875,
+        "nll_on": 688.0897216796875,
+        "nll_frame": 743.9451904296875
+      },
+      {
+        "i": 163,
+        "top_mark": 0.18152658641338348,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 245,
+        "nll_off": 727.8084716796875,
+        "nll_on": 771.532470703125,
+        "nll_frame": 800.7571411132812
+      },
+      {
+        "i": 164,
+        "top_mark": 0.053943417966365814,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 210,
+        "nll_off": 622.7762451171875,
+        "nll_on": 666.8851318359375,
+        "nll_frame": 718.041015625
+      },
+      {
+        "i": 165,
+        "top_mark": 0.25914084911346436,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 267,
+        "nll_off": 668.2658081054688,
+        "nll_on": 697.6610107421875,
+        "nll_frame": 772.8391723632812
+      },
+      {
+        "i": 166,
+        "top_mark": 0.2809067964553833,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 213,
+        "nll_off": 480.1648864746094,
+        "nll_on": 507.10870361328125,
+        "nll_frame": 557.0443725585938
+      },
+      {
+        "i": 167,
+        "top_mark": 0.21328020095825195,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 208,
+        "nll_off": 705.2974853515625,
+        "nll_on": 753.631103515625,
+        "nll_frame": 800.209228515625
+      },
+      {
+        "i": 168,
+        "top_mark": 0.23264111578464508,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 229,
+        "nll_off": 740.7238159179688,
+        "nll_on": 766.1370849609375,
+        "nll_frame": 817.912109375
+      },
+      {
+        "i": 169,
+        "top_mark": 0.22835205495357513,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 220,
+        "nll_off": 538.7841186523438,
+        "nll_on": 545.5965576171875,
+        "nll_frame": 591.6818237304688
+      },
+      {
+        "i": 170,
+        "top_mark": 0.23684009909629822,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 256,
+        "nll_off": 565.2283325195312,
+        "nll_on": 593.5491333007812,
+        "nll_frame": 739.1686401367188
+      },
+      {
+        "i": 171,
+        "top_mark": 0.1394200474023819,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 187,
+        "nll_off": 622.0956420898438,
+        "nll_on": 647.7196044921875,
+        "nll_frame": 674.2899169921875
+      },
+      {
+        "i": 172,
+        "top_mark": 0.24633683264255524,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 217,
+        "nll_off": 803.8206787109375,
+        "nll_on": 806.5314331054688,
+        "nll_frame": 859.0635986328125
+      },
+      {
+        "i": 173,
+        "top_mark": 0.26402390003204346,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 706.2805786132812,
+        "nll_on": 738.9359741210938,
+        "nll_frame": 775.419921875
+      },
+      {
+        "i": 174,
+        "top_mark": 0.16059568524360657,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 223,
+        "nll_off": 755.1585083007812,
+        "nll_on": 775.216796875,
+        "nll_frame": 858.7915649414062
+      },
+      {
+        "i": 175,
+        "top_mark": 0.21761554479599,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 269,
+        "nll_off": 677.827392578125,
+        "nll_on": 755.7675170898438,
+        "nll_frame": 807.1573486328125
+      },
+      {
+        "i": 176,
+        "top_mark": 0.26513105630874634,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 428.57861328125,
+        "nll_on": 454.36126708984375,
+        "nll_frame": 497.76666259765625
+      },
+      {
+        "i": 177,
+        "top_mark": 0.1130073145031929,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 215,
+        "nll_off": 697.3963012695312,
+        "nll_on": 733.14794921875,
+        "nll_frame": 782.7462158203125
+      },
+      {
+        "i": 178,
+        "top_mark": 0.20827315747737885,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 196,
+        "nll_off": 721.3546142578125,
+        "nll_on": 764.83203125,
+        "nll_frame": 811.8427124023438
+      },
+      {
+        "i": 179,
+        "top_mark": -0.03075341321527958,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 216,
+        "nll_off": 751.8687133789062,
+        "nll_on": 766.1619873046875,
+        "nll_frame": 808.8850708007812
+      },
+      {
+        "i": 180,
+        "top_mark": 0.19911468029022217,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 228,
+        "nll_off": 403.216796875,
+        "nll_on": 428.0233459472656,
+        "nll_frame": 466.715087890625
+      },
+      {
+        "i": 181,
+        "top_mark": 0.30009186267852783,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 210,
+        "nll_off": 691.0541381835938,
+        "nll_on": 708.70751953125,
+        "nll_frame": 785.21728515625
+      },
+      {
+        "i": 182,
+        "top_mark": 0.3223927915096283,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 247,
+        "nll_off": 880.1873779296875,
+        "nll_on": 940.2386474609375,
+        "nll_frame": 1001.4501342773438
+      },
+      {
+        "i": 183,
+        "top_mark": 0.3539419174194336,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 228,
+        "nll_off": 908.569580078125,
+        "nll_on": 932.338623046875,
+        "nll_frame": 1015.895263671875
+      },
+      {
+        "i": 184,
+        "top_mark": 0.32860520482063293,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 194,
+        "nll_off": 852.1010131835938,
+        "nll_on": 864.9327392578125,
+        "nll_frame": 920.314697265625
+      },
+      {
+        "i": 185,
+        "top_mark": 0.2431691437959671,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 297,
+        "nll_off": 900.6720581054688,
+        "nll_on": 996.27587890625,
+        "nll_frame": 1071.0538330078125
+      },
+      {
+        "i": 186,
+        "top_mark": 0.2962377965450287,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 314,
+        "nll_off": 891.4352416992188,
+        "nll_on": 916.28857421875,
+        "nll_frame": 970.8095703125
+      },
+      {
+        "i": 187,
+        "top_mark": 0.06082605570554733,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 192,
+        "nll_off": 544.7725219726562,
+        "nll_on": 566.8148803710938,
+        "nll_frame": 592.9562377929688
+      },
+      {
+        "i": 188,
+        "top_mark": 0.41506800055503845,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 200,
+        "nll_off": 624.2669677734375,
+        "nll_on": 653.4693603515625,
+        "nll_frame": 671.6669921875
+      },
+      {
+        "i": 189,
+        "top_mark": 0.03601876646280289,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 298,
+        "nll_off": 764.735107421875,
+        "nll_on": 811.2431030273438,
+        "nll_frame": 850.6824340820312
+      },
+      {
+        "i": 190,
+        "top_mark": 0.11898031085729599,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 182,
+        "nll_off": 670.6785278320312,
+        "nll_on": 685.647705078125,
+        "nll_frame": 732.4873657226562
+      },
+      {
+        "i": 191,
+        "top_mark": 0.13127388060092926,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 219,
+        "nll_off": 808.2780151367188,
+        "nll_on": 860.8795166015625,
+        "nll_frame": 920.3458251953125
+      },
+      {
+        "i": 192,
+        "top_mark": 0.08334729075431824,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 298,
+        "nll_off": 703.5067138671875,
+        "nll_on": 767.9141235351562,
+        "nll_frame": 803.373291015625
+      },
+      {
+        "i": 193,
+        "top_mark": 0.15525461733341217,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 226,
+        "nll_off": 679.9216918945312,
+        "nll_on": 711.6124877929688,
+        "nll_frame": 782.7363891601562
+      },
+      {
+        "i": 194,
+        "top_mark": 0.28467580676078796,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 218,
+        "nll_off": 795.1863403320312,
+        "nll_on": 896.5734252929688,
+        "nll_frame": 946.206298828125
+      },
+      {
+        "i": 195,
+        "top_mark": 0.03900301456451416,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 228,
+        "nll_off": 598.42822265625,
+        "nll_on": 664.58447265625,
+        "nll_frame": 704.0494995117188
+      },
+      {
+        "i": 196,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 193,
+        "nll_off": 755.3307495117188,
+        "nll_on": 786.8890991210938,
+        "nll_frame": 901.551513671875
+      },
+      {
+        "i": 197,
+        "top_mark": 0.1027960404753685,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 205,
+        "nll_off": 688.7412109375,
+        "nll_on": 757.7294311523438,
+        "nll_frame": 785.9879150390625
+      },
+      {
+        "i": 198,
+        "top_mark": 0.05674605071544647,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 193,
+        "nll_off": 344.0585021972656,
+        "nll_on": 340.521728515625,
+        "nll_frame": 379.67901611328125
+      },
+      {
+        "i": 199,
+        "top_mark": 0.2703912556171417,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 224,
+        "nll_off": 715.3571166992188,
+        "nll_on": 749.3433837890625,
+        "nll_frame": 795.663330078125
+      },
+      {
+        "i": 200,
+        "top_mark": 0.14544916152954102,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 683.4254150390625,
+        "nll_on": 712.18359375,
+        "nll_frame": 783.6002197265625
+      },
+      {
+        "i": 201,
+        "top_mark": 0.2953655421733856,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 214,
+        "nll_off": 721.583251953125,
+        "nll_on": 751.7103881835938,
+        "nll_frame": 797.4598999023438
+      },
+      {
+        "i": 202,
+        "top_mark": 0.1303751915693283,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 261,
+        "nll_off": 859.24853515625,
+        "nll_on": 894.1538696289062,
+        "nll_frame": 941.340576171875
+      },
+      {
+        "i": 203,
+        "top_mark": 0.17981883883476257,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 226,
+        "nll_off": 774.8185424804688,
+        "nll_on": 815.5626831054688,
+        "nll_frame": 860.0601806640625
+      },
+      {
+        "i": 204,
+        "top_mark": 0.20543846487998962,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 229,
+        "nll_off": 735.8190307617188,
+        "nll_on": 797.7227783203125,
+        "nll_frame": 876.6990966796875
+      },
+      {
+        "i": 205,
+        "top_mark": 0.12995882332324982,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 233,
+        "nll_off": 667.6842041015625,
+        "nll_on": 728.250732421875,
+        "nll_frame": 778.4989013671875
+      },
+      {
+        "i": 206,
+        "top_mark": 0.050778456032276154,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 192,
+        "nll_off": 641.3150634765625,
+        "nll_on": 671.31201171875,
+        "nll_frame": 686.8289794921875
+      },
+      {
+        "i": 207,
+        "top_mark": 0.2574458122253418,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 202,
+        "nll_off": 676.0751342773438,
+        "nll_on": 725.3577880859375,
+        "nll_frame": 765.1998901367188
+      },
+      {
+        "i": 208,
+        "top_mark": 0.04899592697620392,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 286,
+        "nll_off": 641.657470703125,
+        "nll_on": 751.0197143554688,
+        "nll_frame": 880.7969970703125
+      },
+      {
+        "i": 209,
+        "top_mark": 0.14398585259914398,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 196,
+        "nll_off": 588.9072265625,
+        "nll_on": 616.8516845703125,
+        "nll_frame": 698.9757080078125
+      },
+      {
+        "i": 210,
+        "top_mark": 0.2297075241804123,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 715.6797485351562,
+        "nll_on": 743.5654907226562,
+        "nll_frame": 766.9757080078125
+      },
+      {
+        "i": 211,
+        "top_mark": 0.0,
+        "lines": 0,
+        "admitted": false,
+        "tokens": 246,
+        "nll_off": 703.486328125,
+        "nll_on": 710.7194213867188,
+        "nll_frame": 771.2730712890625
+      },
+      {
+        "i": 212,
+        "top_mark": 0.15031717717647552,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 215,
+        "nll_off": 624.8701782226562,
+        "nll_on": 631.3302001953125,
+        "nll_frame": 692.4888305664062
+      },
+      {
+        "i": 213,
+        "top_mark": 0.19348159432411194,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 294,
+        "nll_off": 698.863525390625,
+        "nll_on": 747.079345703125,
+        "nll_frame": 772.8684692382812
+      },
+      {
+        "i": 214,
+        "top_mark": 0.2016419917345047,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 224,
+        "nll_off": 804.4898681640625,
+        "nll_on": 821.2750244140625,
+        "nll_frame": 891.9390869140625
+      },
+      {
+        "i": 215,
+        "top_mark": 0.14035429060459137,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 232,
+        "nll_off": 875.2720947265625,
+        "nll_on": 914.721435546875,
+        "nll_frame": 952.9735107421875
+      },
+      {
+        "i": 216,
+        "top_mark": 0.017242062836885452,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 207,
+        "nll_off": 680.4637451171875,
+        "nll_on": 692.02197265625,
+        "nll_frame": 741.9895629882812
+      },
+      {
+        "i": 217,
+        "top_mark": 0.17344045639038086,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 199,
+        "nll_off": 714.825927734375,
+        "nll_on": 777.2637939453125,
+        "nll_frame": 860.6038818359375
+      },
+      {
+        "i": 218,
+        "top_mark": 0.16196025907993317,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 183,
+        "nll_off": 604.325927734375,
+        "nll_on": 633.2847290039062,
+        "nll_frame": 704.5756225585938
+      },
+      {
+        "i": 219,
+        "top_mark": 0.04570072516798973,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 216,
+        "nll_off": 697.064453125,
+        "nll_on": 713.42236328125,
+        "nll_frame": 780.5789184570312
+      },
+      {
+        "i": 220,
+        "top_mark": 0.09717737883329391,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 197,
+        "nll_off": 639.96337890625,
+        "nll_on": 666.6063842773438,
+        "nll_frame": 712.7694091796875
+      },
+      {
+        "i": 221,
+        "top_mark": 0.28987836837768555,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 208,
+        "nll_off": 634.058349609375,
+        "nll_on": 680.5294189453125,
+        "nll_frame": 707.1776123046875
+      },
+      {
+        "i": 222,
+        "top_mark": 0.20634019374847412,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 249,
+        "nll_off": 726.0948486328125,
+        "nll_on": 763.006103515625,
+        "nll_frame": 798.9932250976562
+      },
+      {
+        "i": 223,
+        "top_mark": 0.04363918676972389,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 237,
+        "nll_off": 439.6103820800781,
+        "nll_on": 494.95294189453125,
+        "nll_frame": 518.3914794921875
+      },
+      {
+        "i": 224,
+        "top_mark": 0.002888650167733431,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 290,
+        "nll_off": 939.3091430664062,
+        "nll_on": 1009.9305419921875,
+        "nll_frame": 1081.6400146484375
+      },
+      {
+        "i": 225,
+        "top_mark": 0.2339833527803421,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 218,
+        "nll_off": 829.6460571289062,
+        "nll_on": 859.4855346679688,
+        "nll_frame": 900.7353515625
+      },
+      {
+        "i": 226,
+        "top_mark": 0.17645888030529022,
+        "lines": 1,
+        "admitted": false,
+        "tokens": 192,
+        "nll_off": 650.5671997070312,
+        "nll_on": 675.5052490234375,
+        "nll_frame": 729.3994750976562
+      },
+      {
+        "i": 227,
+        "top_mark": 0.18758167326450348,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 222,
+        "nll_off": 860.6664428710938,
+        "nll_on": 910.0879516601562,
+        "nll_frame": 974.1055297851562
+      },
+      {
+        "i": 228,
+        "top_mark": 0.18951383233070374,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 258,
+        "nll_off": 707.6134033203125,
+        "nll_on": 727.0856323242188,
+        "nll_frame": 737.0394287109375
+      },
+      {
+        "i": 229,
+        "top_mark": 0.1164386123418808,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 331,
+        "nll_off": 836.5986328125,
+        "nll_on": 891.5262451171875,
+        "nll_frame": 953.939453125
+      },
+      {
+        "i": 230,
+        "top_mark": 0.05839034542441368,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 235,
+        "nll_off": 604.6087646484375,
+        "nll_on": 661.0117797851562,
+        "nll_frame": 714.5006103515625
+      },
+      {
+        "i": 231,
+        "top_mark": 0.249702587723732,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 246,
+        "nll_off": 714.7752685546875,
+        "nll_on": 740.686279296875,
+        "nll_frame": 808.2637939453125
+      },
+      {
+        "i": 232,
+        "top_mark": 0.15661711990833282,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 305,
+        "nll_off": 736.5743408203125,
+        "nll_on": 831.3603515625,
+        "nll_frame": 861.4465942382812
+      },
+      {
+        "i": 233,
+        "top_mark": 0.15215131640434265,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 250,
+        "nll_off": 767.7578125,
+        "nll_on": 801.208740234375,
+        "nll_frame": 846.3253173828125
+      },
+      {
+        "i": 234,
+        "top_mark": 0.24791184067726135,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 224,
+        "nll_off": 728.2886962890625,
+        "nll_on": 773.5115966796875,
+        "nll_frame": 794.8201904296875
+      },
+      {
+        "i": 235,
+        "top_mark": 0.052962061017751694,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 193,
+        "nll_off": 657.579833984375,
+        "nll_on": 686.3616943359375,
+        "nll_frame": 708.0045776367188
+      },
+      {
+        "i": 236,
+        "top_mark": 0.3908926248550415,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 245,
+        "nll_off": 788.0406494140625,
+        "nll_on": 837.6478881835938,
+        "nll_frame": 906.5241088867188
+      },
+      {
+        "i": 237,
+        "top_mark": 0.3185206949710846,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 240,
+        "nll_off": 698.2830200195312,
+        "nll_on": 760.887451171875,
+        "nll_frame": 811.2145385742188
+      },
+      {
+        "i": 238,
+        "top_mark": 0.08827981352806091,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 219,
+        "nll_off": 815.8602905273438,
+        "nll_on": 823.01513671875,
+        "nll_frame": 848.3321533203125
+      },
+      {
+        "i": 239,
+        "top_mark": 0.21866369247436523,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 198,
+        "nll_off": 712.2559204101562,
+        "nll_on": 729.696044921875,
+        "nll_frame": 751.9647216796875
+      },
+      {
+        "i": 240,
+        "top_mark": 0.17417095601558685,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 235,
+        "nll_off": 819.0283203125,
+        "nll_on": 870.0613403320312,
+        "nll_frame": 903.9249877929688
+      },
+      {
+        "i": 241,
+        "top_mark": 0.1449895203113556,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 182,
+        "nll_off": 616.922119140625,
+        "nll_on": 645.7891235351562,
+        "nll_frame": 670.0227661132812
+      },
+      {
+        "i": 242,
+        "top_mark": 0.23482100665569305,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 253,
+        "nll_off": 834.335205078125,
+        "nll_on": 870.0029907226562,
+        "nll_frame": 949.4954833984375
+      },
+      {
+        "i": 243,
+        "top_mark": 0.4272383153438568,
+        "lines": 4,
+        "admitted": true,
+        "tokens": 347,
+        "nll_off": 805.1987915039062,
+        "nll_on": 861.1362915039062,
+        "nll_frame": 909.3701782226562
+      },
+      {
+        "i": 244,
+        "top_mark": 0.07317785918712616,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 363,
+        "nll_off": 834.03515625,
+        "nll_on": 907.0684204101562,
+        "nll_frame": 987.6441650390625
+      },
+      {
+        "i": 245,
+        "top_mark": 0.16752512753009796,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 283,
+        "nll_off": 976.5869140625,
+        "nll_on": 1043.429443359375,
+        "nll_frame": 1076.2974853515625
+      },
+      {
+        "i": 246,
+        "top_mark": 0.19554403424263,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 216,
+        "nll_off": 858.3314819335938,
+        "nll_on": 926.5939331054688,
+        "nll_frame": 1022.2915649414062
+      },
+      {
+        "i": 247,
+        "top_mark": 0.08920914679765701,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 189,
+        "nll_off": 578.364013671875,
+        "nll_on": 597.3087158203125,
+        "nll_frame": 647.6931762695312
+      },
+      {
+        "i": 248,
+        "top_mark": 0.09905104339122772,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 371,
+        "nll_off": 816.1196899414062,
+        "nll_on": 879.4441528320312,
+        "nll_frame": 994.3529663085938
+      },
+      {
+        "i": 249,
+        "top_mark": 0.3564293682575226,
+        "lines": 3,
+        "admitted": true,
+        "tokens": 275,
+        "nll_off": 777.5067138671875,
+        "nll_on": 825.75341796875,
+        "nll_frame": 907.5645141601562
+      },
+      {
+        "i": 250,
+        "top_mark": 0.30119022727012634,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 208,
+        "nll_off": 616.3333129882812,
+        "nll_on": 644.7606201171875,
+        "nll_frame": 703.5903930664062
+      },
+      {
+        "i": 251,
+        "top_mark": 0.14151224493980408,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 213,
+        "nll_off": 879.1668701171875,
+        "nll_on": 924.796630859375,
+        "nll_frame": 957.9434204101562
+      },
+      {
+        "i": 252,
+        "top_mark": 0.28001540899276733,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 211,
+        "nll_off": 622.2831420898438,
+        "nll_on": 666.1063232421875,
+        "nll_frame": 711.5026245117188
+      },
+      {
+        "i": 253,
+        "top_mark": 0.001839335192926228,
+        "lines": 3,
+        "admitted": false,
+        "tokens": 220,
+        "nll_off": 879.272216796875,
+        "nll_on": 914.5599975585938,
+        "nll_frame": 947.3094482421875
+      },
+      {
+        "i": 254,
+        "top_mark": 0.16691556572914124,
+        "lines": 4,
+        "admitted": false,
+        "tokens": 197,
+        "nll_off": 596.5181274414062,
+        "nll_on": 624.0450439453125,
+        "nll_frame": 660.8544311523438
+      },
+      {
+        "i": 255,
+        "top_mark": 0.03867665305733681,
+        "lines": 2,
+        "admitted": false,
+        "tokens": 196,
+        "nll_off": 641.3170776367188,
+        "nll_on": 669.809326171875,
+        "nll_frame": 695.1368408203125
+      }
+    ],
+    "note": "S' is attribution, never a condition: the verdict reads S; 1 + S'_signed = (ppl_prime / ppl_off); the admitted spans' own cost is hm_skill_delta_admitted"
+  },
+  "software": {
+    "python": "3.12.10",
+    "numpy": "2.5.3"
+  },
+  "session_a": {
+    "session": "A",
+    "generator": {
+      "config_hash": "a5e22c70a3275ed4",
+      "n_facts": 200,
+      "seed": 0
+    },
+    "admitted": 200,
+    "durable": true,
+    "storage": {
+      "mode": "durable",
+      "policy": "stop",
+      "degraded_reason": null,
+      "unpersisted_events": 0,
+      "plaintext_scope": false
+    },
+    "timestamp_utc": "2026-09-17T13:41:16.841218+00:00"
+  },
+  "process": "new (nothing of session A but the disk)",
+  "answers": {
+    "on": [
+      {
+        "entity": "Tone-4010",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "CITE A ANS cartographer",
+        "kind": "cite",
+        "label": "A",
+        "answered": "cartographer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tovi-9fba",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "CITE B ANS falconer",
+        "kind": "cite",
+        "label": "B",
+        "answered": "falconer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nugu-a06d",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "CITE B ANS falconer",
+        "kind": "cite",
+        "label": "B",
+        "answered": "falconer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bosu-21d0",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "CITE D ANS falconer",
+        "kind": "cite",
+        "label": "D",
+        "answered": "falconer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Demi-6001",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE B ANS glazier",
+        "kind": "cite",
+        "label": "B",
+        "answered": "glazier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rire-9c67",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE B ANS milliner",
+        "kind": "cite",
+        "label": "B",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tulo-fadb",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE A ANS archivist",
+        "kind": "cite",
+        "label": "A",
+        "answered": "archivist",
+        "own_in_window": true
+      },
+      {
+        "entity": "Ludi-bd86",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "CITE B ANS cooper",
+        "kind": "cite",
+        "label": "B",
+        "answered": "cooper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lisu-1e85",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE L ANS archivist",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": true
+      },
+      {
+        "entity": "Peko-985c",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "CITE B ANS luthier",
+        "kind": "cite",
+        "label": "B",
+        "answered": "luthier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kuge-b901",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "CITE B ANS luthier",
+        "kind": "cite",
+        "label": "B",
+        "answered": "luthier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tite-3ce1",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE C ANS glazier",
+        "kind": "cite",
+        "label": "C",
+        "answered": "glazier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Repa-d7ec",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE A ANS archivist",
+        "kind": "cite",
+        "label": "A",
+        "answered": "archivist",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gobi-6f3f",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE C ANS glazier",
+        "kind": "cite",
+        "label": "C",
+        "answered": "glazier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pive-eae3",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "CITE A ANS tanner",
+        "kind": "cite",
+        "label": "A",
+        "answered": "tanner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zalo-18ac",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE A ANS milliner",
+        "kind": "cite",
+        "label": "A",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Limu-3706",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE C ANS milliner",
+        "kind": "cite",
+        "label": "C",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pezo-f07d",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "CITE C ANS tanner",
+        "kind": "cite",
+        "label": "C",
+        "answered": "tanner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lili-3c16",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "CITE D ANS cooper",
+        "kind": "cite",
+        "label": "D",
+        "answered": "cooper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Soru-e212",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE A ANS archivist",
+        "kind": "cite",
+        "label": "A",
+        "answered": "archivist",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zuru-d01d",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE B ANS glazier",
+        "kind": "cite",
+        "label": "B",
+        "answered": "glazier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zuze-28f5",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE C ANS milliner",
+        "kind": "cite",
+        "label": "C",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lugi-53ec",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "CITE D ANS cartographer",
+        "kind": "cite",
+        "label": "D",
+        "answered": "cartographer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vugi-8a72",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE B ANS milliner",
+        "kind": "cite",
+        "label": "B",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rato-2980",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE A ANS milliner",
+        "kind": "cite",
+        "label": "A",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Seba-c28e",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE B ANS milliner",
+        "kind": "cite",
+        "label": "B",
+        "answered": "milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gamu-91a5",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "CITE A ANS cartographer",
+        "kind": "cite",
+        "label": "A",
+        "answered": "cartographer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Muza-8c44",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "CITE A ANS cartographer",
+        "kind": "cite",
+        "label": "A",
+        "answered": "cartographer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fuge-21c4",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "CITE B ANS tanner",
+        "kind": "cite",
+        "label": "B",
+        "answered": "tanner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Puno-c087",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "CITE B ANS cooper",
+        "kind": "cite",
+        "label": "B",
+        "answered": "cooper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mimu-dabf",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE A ANS archivist",
+        "kind": "cite",
+        "label": "A",
+        "answered": "archivist",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lane-90df",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "CITE B ANS cartographer",
+        "kind": "cite",
+        "label": "B",
+        "answered": "cartographer",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tibu-f09d",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "CITE D ANS tanner",
+        "kind": "cite",
+        "label": "D",
+        "answered": "tanner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Luta-0151",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE B ANS glazier",
+        "kind": "cite",
+        "label": "B",
+        "answered": "glazier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gone-fbaf",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "CITE C ANS tanner",
+        "kind": "cite",
+        "label": "C",
+        "answered": "tanner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Davi-0766",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "CITE A ANS luthier",
+        "kind": "cite",
+        "label": "A",
+        "answered": "luthier",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kimu-bc04",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE B ANS works as a milliner",
+        "kind": "cite",
+        "label": "B",
+        "answered": "works as a milliner",
+        "own_in_window": true
+      },
+      {
+        "entity": "Givo-e28a",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "CITE C ANS cooper",
+        "kind": "cite",
+        "label": "C",
+        "answered": "cooper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Puse-124e",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "CITE A ANS cooper",
+        "kind": "cite",
+        "label": "A",
+        "answered": "cooper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Teri-f9ef",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE D ANS archivist",
+        "kind": "cite",
+        "label": "D",
+        "answered": "archivist",
+        "own_in_window": true
+      },
+      {
+        "entity": "Puze-921a",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "CITE A ANS Kalvaria",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Kalvaria",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sufo-6ee9",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "CITE C ANS is a town in Sandrelle",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Sandrelle",
+        "own_in_window": true
+      },
+      {
+        "entity": "Risa-c8c8",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "CITE B ANS is a town in Brenmoor",
+        "kind": "cite",
+        "label": "B",
+        "answered": "is a town in Brenmoor",
+        "own_in_window": true
+      },
+      {
+        "entity": "Diza-9708",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE C ANS is a town in Ebbelund",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Suni-f5c3",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "CITE D ANS Brenmoor",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Brenmoor",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rifo-9e9e",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "CITE C ANS is a town in Marrowick",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Marrowick",
+        "own_in_window": true
+      },
+      {
+        "entity": "Dani-8b52",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "CITE A ANS Tornquay",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Tornquay",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lubo-b415",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "CITE D ANS Vilkas",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Vilkas",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zugi-9e2c",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "CITE C ANS is a town in Marrowick",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Marrowick",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vedi-1213",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE D ANS Ebbelund",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rozi-024a",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "CITE B ANS is a town in Brenmoor",
+        "kind": "cite",
+        "label": "B",
+        "answered": "is a town in Brenmoor",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kara-7b8a",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE C ANS Ebbelund",
+        "kind": "cite",
+        "label": "C",
+        "answered": "Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gabi-43bc",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "CITE A ANS Marrowick",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Marrowick",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mizi-24f0",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE A ANS Ebbelund",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Ritu-79ca",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "CITE B ANS is a town in Vilkas",
+        "kind": "cite",
+        "label": "B",
+        "answered": "is a town in Vilkas",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vubi-d168",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "CITE A ANS Brenmoor",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Brenmoor",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rulo-1706",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "CITE C ANS is a town in Kalvaria",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Kalvaria",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vudu-b4cf",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE D ANS Ebbelund",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Repo-b365",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "CITE B ANS Tornquay",
+        "kind": "cite",
+        "label": "B",
+        "answered": "Tornquay",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lini-1e62",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "CITE C ANS is a town in Kalvaria",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Kalvaria",
+        "own_in_window": true
+      },
+      {
+        "entity": "Moku-326b",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "CITE D ANS Brenmoor",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Brenmoor",
+        "own_in_window": true
+      },
+      {
+        "entity": "Taza-d064",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "CITE B ANS is a town in Marrowick",
+        "kind": "cite",
+        "label": "B",
+        "answered": "is a town in Marrowick",
+        "own_in_window": true
+      },
+      {
+        "entity": "Ruli-8c8e",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "CITE A ANS Osterhold",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Osterhold",
+        "own_in_window": true
+      },
+      {
+        "entity": "Meva-be44",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE C ANS is a town in Ebbelund",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Piva-46e1",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "CITE A ANS Vilkas",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Vilkas",
+        "own_in_window": true
+      },
+      {
+        "entity": "Malo-649f",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "CITE A ANS Kalvaria",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Kalvaria",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kuko-5d9e",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "CITE A ANS Tornquay",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Tornquay",
+        "own_in_window": true
+      },
+      {
+        "entity": "Piba-ba91",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE B ANS Ebbelund",
+        "kind": "cite",
+        "label": "B",
+        "answered": "Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tigu-8f45",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "CITE A ANS Ebbelund",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Ebbelund",
+        "own_in_window": true
+      },
+      {
+        "entity": "Felo-cc79",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "CITE C ANS Sandrelle",
+        "kind": "cite",
+        "label": "C",
+        "answered": "Sandrelle",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sako-34f3",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "CITE B ANS is a town in Marrowick",
+        "kind": "cite",
+        "label": "B",
+        "answered": "is a town in Marrowick",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vane-79ee",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "CITE C ANS is a town in Kalvaria",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Kalvaria",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fofe-92fa",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "CITE A ANS Osterhold",
+        "kind": "cite",
+        "label": "A",
+        "answered": "Osterhold",
+        "own_in_window": true
+      },
+      {
+        "entity": "Loko-f534",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "CITE D ANS is a town in Sandrelle",
+        "kind": "cite",
+        "label": "D",
+        "answered": "is a town in Sandrelle",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nara-ae3c",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "CITE C ANS is a town in Kalvaria",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Kalvaria",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nogo-8602",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "CITE D ANS Tornquay",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Tornquay",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lozo-b941",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "CITE B ANS Sandrelle",
+        "kind": "cite",
+        "label": "B",
+        "answered": "Sandrelle",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gapo-6afc",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "CITE D ANS Marrowick",
+        "kind": "cite",
+        "label": "D",
+        "answered": "Marrowick",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bali-bbe2",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "CITE C ANS Osterhold",
+        "kind": "cite",
+        "label": "C",
+        "answered": "Osterhold",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kasi-e454",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "CITE C ANS is a town in Osterhold",
+        "kind": "cite",
+        "label": "C",
+        "answered": "is a town in Osterhold",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tuki-e7e4",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE B ANS 1904",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Doba-9738",
+        "schema": "event",
+        "attr": "2003",
+        "line": "CITE A ANS 2003",
+        "kind": "cite",
+        "label": "A",
+        "answered": "2003",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zasi-76d3",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE C ANS 1967",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sira-b414",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE A ANS 1931",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Riti-e053",
+        "schema": "event",
+        "attr": "1958",
+        "line": "CITE B ANS 1958",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1958",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zafi-d0dc",
+        "schema": "event",
+        "attr": "1958",
+        "line": "CITE B ANS 1958",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1958",
+        "own_in_window": true
+      },
+      {
+        "entity": "Biru-2a8d",
+        "schema": "event",
+        "attr": "1982",
+        "line": "CITE A ANS 1982",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1982",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sure-e8d1",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE A ANS 1904",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Noza-d6f6",
+        "schema": "event",
+        "attr": "2003",
+        "line": "CITE C ANS 2003",
+        "kind": "cite",
+        "label": "C",
+        "answered": "2003",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fezu-120e",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE D ANS 1931",
+        "kind": "cite",
+        "label": "D",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nute-5d72",
+        "schema": "event",
+        "attr": "2003",
+        "line": "CITE D ANS 2003",
+        "kind": "cite",
+        "label": "D",
+        "answered": "2003",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pozo-bdf8",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE C ANS 1967",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rumu-4c1e",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE A ANS 1931",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Paka-8f34",
+        "schema": "event",
+        "attr": "1996",
+        "line": "CITE B ANS 1996",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1996",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fagi-880a",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE C ANS 1931",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sude-9265",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE C ANS 1967",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Soki-cbc8",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE D ANS 1967",
+        "kind": "cite",
+        "label": "D",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Moki-38bc",
+        "schema": "event",
+        "attr": "1982",
+        "line": "CITE D ANS 1982",
+        "kind": "cite",
+        "label": "D",
+        "answered": "1982",
+        "own_in_window": true
+      },
+      {
+        "entity": "Falu-0a48",
+        "schema": "event",
+        "attr": "1873",
+        "line": "CITE D ANS 1873",
+        "kind": "cite",
+        "label": "D",
+        "answered": "1873",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tumo-7b45",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE C ANS 1904",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mosu-3a45",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE B ANS 1931",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pina-ed69",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE A ANS 1904",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Puvu-00b3",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE B ANS 1904",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pata-9a36",
+        "schema": "event",
+        "attr": "1873",
+        "line": "CITE B ANS 1873",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1873",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zifu-b351",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE C ANS 1967",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nafi-1bcb",
+        "schema": "event",
+        "attr": "1996",
+        "line": "CITE A ANS 1996",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1996",
+        "own_in_window": true
+      },
+      {
+        "entity": "Teme-24b5",
+        "schema": "event",
+        "attr": "2003",
+        "line": "CITE D ANS 2003",
+        "kind": "cite",
+        "label": "D",
+        "answered": "2003",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pono-59ad",
+        "schema": "event",
+        "attr": "1982",
+        "line": "CITE B ANS 1982",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1982",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pibe-4959",
+        "schema": "event",
+        "attr": "1958",
+        "line": "CITE A ANS 1958",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1958",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kike-8f99",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE A ANS 1967",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Veli-8f26",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE B ANS 1904",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tida-e7f1",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE B ANS 1931",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nali-32ef",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE C ANS 1967",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Viza-908e",
+        "schema": "event",
+        "attr": "1996",
+        "line": "CITE A ANS 1996",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1996",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fofe-6ea7",
+        "schema": "event",
+        "attr": "1904",
+        "line": "CITE A ANS 1904",
+        "kind": "cite",
+        "label": "A",
+        "answered": "1904",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sino-2e47",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE B ANS 1967",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fama-963c",
+        "schema": "event",
+        "attr": "1931",
+        "line": "CITE B ANS 1931",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1931",
+        "own_in_window": true
+      },
+      {
+        "entity": "Peko-ba74",
+        "schema": "event",
+        "attr": "2003",
+        "line": "CITE B ANS 2003",
+        "kind": "cite",
+        "label": "B",
+        "answered": "2003",
+        "own_in_window": true
+      },
+      {
+        "entity": "Voku-94c2",
+        "schema": "event",
+        "attr": "1967",
+        "line": "CITE C ANS 1967",
+        "kind": "cite",
+        "label": "C",
+        "answered": "1967",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fami-8031",
+        "schema": "event",
+        "attr": "1996",
+        "line": "CITE B ANS 1996",
+        "kind": "cite",
+        "label": "B",
+        "answered": "1996",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bufe-5859",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "CITE B ANS basalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "basalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sufa-43bb",
+        "schema": "object",
+        "attr": "linen",
+        "line": "CITE B ANS linen",
+        "kind": "cite",
+        "label": "B",
+        "answered": "linen",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zuzi-8644",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE C ANS amber",
+        "kind": "cite",
+        "label": "C",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gari-44d0",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "CITE A ANS vellum",
+        "kind": "cite",
+        "label": "A",
+        "answered": "vellum",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nopi-caae",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE B ANS cobalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "cobalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fufu-1f1e",
+        "schema": "object",
+        "attr": "linen",
+        "line": "CITE C ANS linen",
+        "kind": "cite",
+        "label": "C",
+        "answered": "linen",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nadu-3075",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "CITE B ANS basalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "basalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mage-563c",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "CITE B ANS vellum",
+        "kind": "cite",
+        "label": "B",
+        "answered": "vellum",
+        "own_in_window": true
+      },
+      {
+        "entity": "Muzi-6659",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE A ANS amber",
+        "kind": "cite",
+        "label": "A",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rore-169e",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE A ANS amber",
+        "kind": "cite",
+        "label": "A",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kori-d271",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE C ANS amber",
+        "kind": "cite",
+        "label": "C",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kovu-79e1",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "CITE B ANS basalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "basalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kozi-7b45",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "CITE C ANS boxwood",
+        "kind": "cite",
+        "label": "C",
+        "answered": "boxwood",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vigo-05bf",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE B ANS amber",
+        "kind": "cite",
+        "label": "B",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Doso-2961",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE D ANS horn",
+        "kind": "cite",
+        "label": "D",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rubi-2e6a",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "CITE C ANS basalt",
+        "kind": "cite",
+        "label": "C",
+        "answered": "basalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zadi-99d6",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE D ANS horn",
+        "kind": "cite",
+        "label": "D",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rigo-20b3",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE C ANS amber",
+        "kind": "cite",
+        "label": "C",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nima-4a6b",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE B ANS horn",
+        "kind": "cite",
+        "label": "B",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fare-5eee",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE D ANS cobalt",
+        "kind": "cite",
+        "label": "D",
+        "answered": "cobalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bepu-40b2",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE B ANS horn",
+        "kind": "cite",
+        "label": "B",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gase-8f74",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "CITE B ANS boxwood",
+        "kind": "cite",
+        "label": "B",
+        "answered": "boxwood",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mosa-935c",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE B ANS cobalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "cobalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mevu-96c6",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "CITE C ANS boxwood",
+        "kind": "cite",
+        "label": "C",
+        "answered": "boxwood",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zere-f797",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE C ANS horn",
+        "kind": "cite",
+        "label": "C",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tife-dfef",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "CITE A ANS pewter",
+        "kind": "cite",
+        "label": "A",
+        "answered": "pewter",
+        "own_in_window": true
+      },
+      {
+        "entity": "Labe-966f",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE C ANS horn",
+        "kind": "cite",
+        "label": "C",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bese-7827",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "CITE D ANS vellum",
+        "kind": "cite",
+        "label": "D",
+        "answered": "vellum",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lebe-b4f6",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "CITE A ANS vellum",
+        "kind": "cite",
+        "label": "A",
+        "answered": "vellum",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zamu-fe08",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "CITE A ANS pewter",
+        "kind": "cite",
+        "label": "A",
+        "answered": "pewter",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lago-d369",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE C ANS cobalt",
+        "kind": "cite",
+        "label": "C",
+        "answered": "cobalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tuki-30b7",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "CITE B ANS basalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "basalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nasa-1b6d",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE C ANS cobalt",
+        "kind": "cite",
+        "label": "C",
+        "answered": "cobalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vanu-2d34",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "CITE B ANS basalt",
+        "kind": "cite",
+        "label": "B",
+        "answered": "basalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Muto-744c",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "CITE A ANS vellum",
+        "kind": "cite",
+        "label": "A",
+        "answered": "vellum",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mezi-6dd2",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "CITE D ANS pewter",
+        "kind": "cite",
+        "label": "D",
+        "answered": "pewter",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vove-3723",
+        "schema": "object",
+        "attr": "amber",
+        "line": "CITE A ANS amber",
+        "kind": "cite",
+        "label": "A",
+        "answered": "amber",
+        "own_in_window": true
+      },
+      {
+        "entity": "Zefu-8a9b",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE C ANS cobalt",
+        "kind": "cite",
+        "label": "C",
+        "answered": "cobalt",
+        "own_in_window": true
+      },
+      {
+        "entity": "Ditu-d84f",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE A ANS horn",
+        "kind": "cite",
+        "label": "A",
+        "answered": "horn",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sive-fbcb",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "CITE D ANS pewter",
+        "kind": "cite",
+        "label": "D",
+        "answered": "pewter",
+        "own_in_window": true
+      },
+      {
+        "entity": "Dazo-e486",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "CITE C ANS was decided by the toll keeper",
+        "kind": "cite",
+        "label": "C",
+        "answered": "was decided by the toll keeper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Foso-df2d",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "CITE C ANS was decided by the quarry board",
+        "kind": "cite",
+        "label": "C",
+        "answered": "was decided by the quarry board",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tebo-27bb",
+        "schema": "decision",
+        "attr": "the guild council",
+        "line": "CITE B ANS was decided by the guild council",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the guild council",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nazi-66fb",
+        "schema": "decision",
+        "attr": "the river warden",
+        "line": "CITE D ANS the river warden",
+        "kind": "cite",
+        "label": "D",
+        "answered": "the river warden",
+        "own_in_window": true
+      },
+      {
+        "entity": "Salo-c479",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE D ANS the choir master",
+        "kind": "cite",
+        "label": "D",
+        "answered": "the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rifi-0af9",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE D ANS was decided by the choir master",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Lalu-a4c3",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "CITE A ANS was decided by the abbess",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the abbess",
+        "own_in_window": true
+      },
+      {
+        "entity": "Sesu-dc28",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "CITE B ANS was decided by the toll keeper",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the toll keeper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vige-6b2d",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "CITE B ANS was decided by the ferry syndic",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the ferry syndic",
+        "own_in_window": true
+      },
+      {
+        "entity": "Kufa-f9e7",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "CITE A ANS was decided by the abbess",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the abbess",
+        "own_in_window": true
+      },
+      {
+        "entity": "Guda-9e3c",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "CITE D ANS was decided by the toll keeper",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the toll keeper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Foki-925b",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "CITE D ANS toll keeper",
+        "kind": "cite",
+        "label": "D",
+        "answered": "toll keeper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fide-e9e0",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE B ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Defi-5a07",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "CITE D ANS was decided by the ferry syndic",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the ferry syndic",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tefe-e62f",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE A ANS was decided by the choir master",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Koma-46f8",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "CITE A ANS was decided by the abbess",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the abbess",
+        "own_in_window": true
+      },
+      {
+        "entity": "Dapo-ab25",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "CITE B ANS was decided by the quarry board",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the quarry board",
+        "own_in_window": true
+      },
+      {
+        "entity": "Folu-74ff",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE B ANS was decided by the choir master",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nofa-cb7c",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE D ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Dile-5397",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "CITE B ANS was decided by the toll keeper",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the toll keeper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bali-df00",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE D ANS the choir master",
+        "kind": "cite",
+        "label": "D",
+        "answered": "the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Luku-61d2",
+        "schema": "decision",
+        "attr": "the river warden",
+        "line": "CITE D ANS was decided by the river warden",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the river warden",
+        "own_in_window": true
+      },
+      {
+        "entity": "Guli-0624",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE C ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "C",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Turi-3927",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE B ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Fumi-6d7e",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "CITE D ANS was decided by the abbess",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the abbess",
+        "own_in_window": true
+      },
+      {
+        "entity": "Geba-25c5",
+        "schema": "decision",
+        "attr": "the guild council",
+        "line": "CITE A ANS was decided by the guild council",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the guild council",
+        "own_in_window": true
+      },
+      {
+        "entity": "Liba-fca7",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE A ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Noki-7a0a",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE C ANS was decided by the choir master",
+        "kind": "cite",
+        "label": "C",
+        "answered": "was decided by the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bupo-57bd",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "CITE D ANS was decided by the quarry board",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the quarry board",
+        "own_in_window": true
+      },
+      {
+        "entity": "Bire-cc54",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE D ANS the choir master",
+        "kind": "cite",
+        "label": "D",
+        "answered": "the choir master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rago-94ea",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "CITE D ANS was decided by the abbess",
+        "kind": "cite",
+        "label": "D",
+        "answered": "was decided by the abbess",
+        "own_in_window": true
+      },
+      {
+        "entity": "Gefe-ac77",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE A ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nuru-881b",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "CITE B ANS was decided by the ferry syndic",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the ferry syndic",
+        "own_in_window": true
+      },
+      {
+        "entity": "Mite-d5cc",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "CITE B ANS was decided by the harbour master",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the harbour master",
+        "own_in_window": true
+      },
+      {
+        "entity": "Raso-06de",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "CITE A ANS was decided by the abbess",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the abbess",
+        "own_in_window": true
+      },
+      {
+        "entity": "Vuna-6abf",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "CITE B ANS was decided by the toll keeper",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the toll keeper",
+        "own_in_window": true
+      },
+      {
+        "entity": "Rosu-f938",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "CITE B ANS was decided by the ferry syndic",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the ferry syndic",
+        "own_in_window": true
+      },
+      {
+        "entity": "Nuvu-5dd6",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "CITE B ANS was decided by the quarry board",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the quarry board",
+        "own_in_window": true
+      },
+      {
+        "entity": "Pabi-94e8",
+        "schema": "decision",
+        "attr": "the guild council",
+        "line": "CITE B ANS was decided by the guild council",
+        "kind": "cite",
+        "label": "B",
+        "answered": "was decided by the guild council",
+        "own_in_window": true
+      },
+      {
+        "entity": "Tifi-709b",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "CITE A ANS was decided by the choir master",
+        "kind": "cite",
+        "label": "A",
+        "answered": "was decided by the choir master",
+        "own_in_window": true
+      }
+    ],
+    "off": [
+      {
+        "entity": "Tone-4010",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tovi-9fba",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nugu-a06d",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bosu-21d0",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Demi-6001",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE Demi-6001 ANS UNKNOWN",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rire-9c67",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tulo-fadb",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Ludi-bd86",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lisu-1e85",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "CITE Lisu-1e85 ANS cooper",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Peko-985c",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "CITE Peko-985c ANS UNKNOWN",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kuge-b901",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tite-3ce1",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Repa-d7ec",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gobi-6f3f",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pive-eae3",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zalo-18ac",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Limu-3706",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE L ANS limu-3706",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pezo-f07d",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lili-3c16",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Soru-e212",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zuru-d01d",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zuze-28f5",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lugi-53ec",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vugi-8a72",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rato-2980",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "CITE A ANS archivist",
+        "kind": "cite",
+        "label": "A",
+        "answered": "archivist",
+        "own_in_window": false
+      },
+      {
+        "entity": "Seba-c28e",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gamu-91a5",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Muza-8c44",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "CITE Muza-8c44 ANS UNKNOWN",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fuge-21c4",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Puno-c087",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "CITE P UNS unknown",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mimu-dabf",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lane-90df",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tibu-f09d",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "CITE Tibu-f09d ANS UNKNOWN",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Luta-0151",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "CITE Luta-0151 ANS UNKNOWN",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gone-fbaf",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Davi-0766",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kimu-bc04",
+        "schema": "person",
+        "attr": "milliner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Givo-e28a",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Puse-124e",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Teri-f9ef",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Puze-921a",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sufo-6ee9",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Risa-c8c8",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Diza-9708",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Suni-f5c3",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rifo-9e9e",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Dani-8b52",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lubo-b415",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zugi-9e2c",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vedi-1213",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rozi-024a",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kara-7b8a",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gabi-43bc",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mizi-24f0",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Ritu-79ca",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vubi-d168",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rulo-1706",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vudu-b4cf",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Repo-b365",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lini-1e62",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Moku-326b",
+        "schema": "place",
+        "attr": "Brenmoor",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Taza-d064",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Ruli-8c8e",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Meva-be44",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Piva-46e1",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Malo-649f",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kuko-5d9e",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Piba-ba91",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tigu-8f45",
+        "schema": "place",
+        "attr": "Ebbelund",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Felo-cc79",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sako-34f3",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vane-79ee",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fofe-92fa",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Loko-f534",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nara-ae3c",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nogo-8602",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lozo-b941",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gapo-6afc",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bali-bbe2",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kasi-e454",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tuki-e7e4",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Doba-9738",
+        "schema": "event",
+        "attr": "2003",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zasi-76d3",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sira-b414",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Riti-e053",
+        "schema": "event",
+        "attr": "1958",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zafi-d0dc",
+        "schema": "event",
+        "attr": "1958",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Biru-2a8d",
+        "schema": "event",
+        "attr": "1982",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sure-e8d1",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Noza-d6f6",
+        "schema": "event",
+        "attr": "2003",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fezu-120e",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nute-5d72",
+        "schema": "event",
+        "attr": "2003",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pozo-bdf8",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rumu-4c1e",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Paka-8f34",
+        "schema": "event",
+        "attr": "1996",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fagi-880a",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sude-9265",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Soki-cbc8",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Moki-38bc",
+        "schema": "event",
+        "attr": "1982",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Falu-0a48",
+        "schema": "event",
+        "attr": "1873",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tumo-7b45",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mosu-3a45",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pina-ed69",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Puvu-00b3",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pata-9a36",
+        "schema": "event",
+        "attr": "1873",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zifu-b351",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nafi-1bcb",
+        "schema": "event",
+        "attr": "1996",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Teme-24b5",
+        "schema": "event",
+        "attr": "2003",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pono-59ad",
+        "schema": "event",
+        "attr": "1982",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pibe-4959",
+        "schema": "event",
+        "attr": "1958",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kike-8f99",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Veli-8f26",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tida-e7f1",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nali-32ef",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Viza-908e",
+        "schema": "event",
+        "attr": "1996",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fofe-6ea7",
+        "schema": "event",
+        "attr": "1904",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sino-2e47",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fama-963c",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Peko-ba74",
+        "schema": "event",
+        "attr": "2003",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Voku-94c2",
+        "schema": "event",
+        "attr": "1967",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fami-8031",
+        "schema": "event",
+        "attr": "1996",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bufe-5859",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sufa-43bb",
+        "schema": "object",
+        "attr": "linen",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zuzi-8644",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gari-44d0",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nopi-caae",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fufu-1f1e",
+        "schema": "object",
+        "attr": "linen",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nadu-3075",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mage-563c",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Muzi-6659",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rore-169e",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kori-d271",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kovu-79e1",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kozi-7b45",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vigo-05bf",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Doso-2961",
+        "schema": "object",
+        "attr": "horn",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rubi-2e6a",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zadi-99d6",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE Zadi-99d6 ANS vellum",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rigo-20b3",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nima-4a6b",
+        "schema": "object",
+        "attr": "horn",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fare-5eee",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bepu-40b2",
+        "schema": "object",
+        "attr": "horn",
+        "line": "CITE D ANS vellum",
+        "kind": "cite",
+        "label": "D",
+        "answered": "vellum",
+        "own_in_window": false
+      },
+      {
+        "entity": "Gase-8f74",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mosa-935c",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE Mosa-935c ANS basalt",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mevu-96c6",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "CITE Mevu-96c6 ANS vellum",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zere-f797",
+        "schema": "object",
+        "attr": "horn",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tife-dfef",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Labe-966f",
+        "schema": "object",
+        "attr": "horn",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bese-7827",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lebe-b4f6",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zamu-fe08",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lago-d369",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tuki-30b7",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nasa-1b6d",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vanu-2d34",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Muto-744c",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mezi-6dd2",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vove-3723",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Zefu-8a9b",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "CITE Zefu-8a9b ANS vellum",
+        "kind": "malformed",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Ditu-d84f",
+        "schema": "object",
+        "attr": "horn",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sive-fbcb",
+        "schema": "object",
+        "attr": "pewter",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Dazo-e486",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Foso-df2d",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tebo-27bb",
+        "schema": "decision",
+        "attr": "the guild council",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nazi-66fb",
+        "schema": "decision",
+        "attr": "the river warden",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Salo-c479",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rifi-0af9",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Lalu-a4c3",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Sesu-dc28",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vige-6b2d",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Kufa-f9e7",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Guda-9e3c",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Foki-925b",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fide-e9e0",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Defi-5a07",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tefe-e62f",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Koma-46f8",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Dapo-ab25",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Folu-74ff",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nofa-cb7c",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Dile-5397",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bali-df00",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Luku-61d2",
+        "schema": "decision",
+        "attr": "the river warden",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Guli-0624",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Turi-3927",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Fumi-6d7e",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Geba-25c5",
+        "schema": "decision",
+        "attr": "the guild council",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Liba-fca7",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Noki-7a0a",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bupo-57bd",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Bire-cc54",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rago-94ea",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Gefe-ac77",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nuru-881b",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Mite-d5cc",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Raso-06de",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Vuna-6abf",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Rosu-f938",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Nuvu-5dd6",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Pabi-94e8",
+        "schema": "decision",
+        "attr": "the guild council",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      },
+      {
+        "entity": "Tifi-709b",
+        "schema": "decision",
+        "attr": "the choir master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": false
+      }
+    ],
+    "negctrl": [
+      {
+        "entity": "Fili-99b3",
+        "schema": "person",
+        "attr": "luthier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Fota-6e68",
+        "schema": "person",
+        "attr": "tanner",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Gede-ce14",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Faku-af5f",
+        "schema": "person",
+        "attr": "cartographer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Goka-019f",
+        "schema": "person",
+        "attr": "glazier",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Kibu-5fa6",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Zuka-354a",
+        "schema": "person",
+        "attr": "falconer",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Doro-76b7",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Gido-a9f5",
+        "schema": "person",
+        "attr": "archivist",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Tani-3310",
+        "schema": "person",
+        "attr": "cooper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Pane-da2f",
+        "schema": "place",
+        "attr": "Kalvaria",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Zagi-e9ae",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Mevi-16be",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Momu-6dae",
+        "schema": "place",
+        "attr": "Tornquay",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Suta-2c21",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Lazi-9245",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Bisu-33b4",
+        "schema": "place",
+        "attr": "Osterhold",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Gero-41ac",
+        "schema": "place",
+        "attr": "Vilkas",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Voma-8bb7",
+        "schema": "place",
+        "attr": "Sandrelle",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Lori-764d",
+        "schema": "place",
+        "attr": "Marrowick",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Puso-8369",
+        "schema": "event",
+        "attr": "2003",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Kuse-7512",
+        "schema": "event",
+        "attr": "1982",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Vidi-38f9",
+        "schema": "event",
+        "attr": "1873",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Dave-9b8b",
+        "schema": "event",
+        "attr": "1996",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Lita-9c46",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Suvo-44d9",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Tuze-a6c9",
+        "schema": "event",
+        "attr": "1996",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Dezi-361d",
+        "schema": "event",
+        "attr": "1982",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Tafu-bd50",
+        "schema": "event",
+        "attr": "1931",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Dipi-140a",
+        "schema": "event",
+        "attr": "1958",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Mobe-bc44",
+        "schema": "object",
+        "attr": "cobalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Giro-6801",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Devu-2f89",
+        "schema": "object",
+        "attr": "basalt",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Vilu-e660",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Pinu-eb42",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Seva-2cfd",
+        "schema": "object",
+        "attr": "amber",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Fige-0239",
+        "schema": "object",
+        "attr": "horn",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Dolu-40c5",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Pimo-428e",
+        "schema": "object",
+        "attr": "vellum",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Refi-0bcd",
+        "schema": "object",
+        "attr": "boxwood",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Lopo-9360",
+        "schema": "decision",
+        "attr": "the river warden",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Bepi-31bf",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Paba-4889",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Nave-8ceb",
+        "schema": "decision",
+        "attr": "the river warden",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Zezi-baff",
+        "schema": "decision",
+        "attr": "the ferry syndic",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Zetu-9382",
+        "schema": "decision",
+        "attr": "the harbour master",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Nogu-d4b2",
+        "schema": "decision",
+        "attr": "the quarry board",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Daro-662c",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Fivo-fe39",
+        "schema": "decision",
+        "attr": "the toll keeper",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      },
+      {
+        "entity": "Tosa-e236",
+        "schema": "decision",
+        "attr": "the abbess",
+        "line": "UNKNOWN",
+        "kind": "unknown",
+        "label": null,
+        "answered": null,
+        "own_in_window": null
+      }
+    ]
+  },
+  "verdict": "FAIL -- external model arm, cite-or-abstain contract through the frozen prompt"
+}

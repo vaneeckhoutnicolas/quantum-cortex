@@ -1,0 +1,47 @@
+{
+ "row": "46",
+ "what": "the external model arm (ADR-008 amendment 2026-09-16, declared before any measurement; the addendum of 2026-09-17 pinning the three Qwen3 sizes; the amendments of 2026-10-08 and 2026-10-12 declaring and building S′): Qwen3-1.7B at its pinned revision through the frozen prompt 7fda43aced410d65, the Molaison protocol unchanged, session A planted on 2026-09-17 into the sealed journal runs\\external-qwen-qwen3-1.7b (the organ's hash seeded encoder, the entity as the address), session B run twice in a new process from the disk alone on the founder's processor (bf16, greedy, 32 new tokens), the second execution carrying S′ and the per span records of the skill arm",
+ "commands": [
+  "python -u -m cortex_c2b.external_arm --probe --journal runs\\external-qwen-qwen3-1.7b --model Qwen/Qwen3-1.7B --device cpu --repeat --out metrics\\mqar  (the second execution; the console teed to metrics\\mqar\\logs\\external-arm-qwen-qwen3-1.7b-repeat.log)",
+  "python -m cortex_c2b.external_arm --agree metrics\\mqar\\hm-lm-external-qwen-qwen3-1.7b-7fda43aced410d65.json metrics\\mqar\\hm-lm-external-qwen-qwen3-1.7b-7fda43aced410d65-repeat.json  (the agreement on the twenty shared numbers, the nine measured once named)"
+ ],
+ "code_commit_note": "the second execution ran the code of b874ef8 (S′ built, Rev107) or later; the file records the software versions and not the commit (the external arm predates that practice); the first execution ran the code of 2026-09-17",
+ "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (both files are LF as written, so the hash as sent equals the committed form)",
+ "logs": {
+  "metrics/mqar/logs/external-arm-qwen-qwen3-1.7b.log": "the first execution's console (UTF-16, as PowerShell wrote it; sha256 b137d83bb933dfc2)",
+  "metrics/mqar/logs/external-arm-qwen-qwen3-1.7b-repeat.log": "the second execution's console, committed by the founder with this row (written live by Tee-Object during the run; its progress lines: arm E on 16:04 to 18:55 local, arm E off to 20:30, the never planted arms to 21:19, arm S to 03:09 UTC)"
+ },
+ "read_cold": "2026-10-13, 10:05, from the two files sent by the founder, by the instance that keeps the record, before any text: the agreement recomputed with the module's own function (twenty shared numbers equal, nine measured once), the header blocks equal (model, prompt, thresholds, generator, window), S and S frame recomputed from the 256 per span records, S′, q, S_adm and the identity (1 + S_adm)^q = 1 + S′ recomputed, the band of two thousand chance subsets recomputed with its fixed seed (equal to the file's at 1e-12), the veto threshold recomputed by the organ alone (equal), the admitted spans checked against the rule (top mark strictly above the threshold and a non empty read); then row 46 and tests/test_c2b_external_arm_record.py",
+ "reading": "a",
+ "reading_note": "S_adm 0.19995 within the band [0.13392, 0.24603] of chance subsets of thirteen spans (share at or under 0.6905): the admitted windows cost what any subset of that size costs; S′ 0.010172, above the 1 % line by the weak inequality, equal to (1 + S_adm)^q - 1 at q 0.0555; the verdict reads S alone: 0.18686, FAIL by the skill arm, as the first execution; the three episodic conditions hold in both executions",
+ "files": {
+  "hm-lm-external-qwen-qwen3-1.7b-7fda43aced410d65.json": {
+   "sha256_lf": "578895243f167596",
+   "timestamp_utc": "2026-09-17T23:11:38.899464+00:00",
+   "prompt_hash": "7fda43aced410d65",
+   "model_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+   "device": "cpu",
+   "dtype": "bf16",
+   "versions": {
+    "transformers": "5.17.0",
+    "torch": "2.6.0+cu124"
+   },
+   "hardware": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+   "note": "the first execution (2026-09-17), retained since Rev70 and not graved until the agreement; no S′, no per span record"
+  },
+  "hm-lm-external-qwen-qwen3-1.7b-7fda43aced410d65-repeat.json": {
+   "sha256_lf": "705342928943e073",
+   "timestamp_utc": "2026-10-13T03:09:50.599324+00:00",
+   "prompt_hash": "7fda43aced410d65",
+   "model_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+   "device": "cpu",
+   "dtype": "bf16",
+   "versions": {
+    "transformers": "5.17.0",
+    "torch": "2.6.0+cu124"
+   },
+   "hardware": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+   "note": "the second execution (started 2026-10-12 14:04 UTC, retained 2026-10-13 03:09 UTC; about thirteen hours, the first block slowed by the machine), with S′, the per span records, the band and the threshold's reading"
+  }
+ }
+}
