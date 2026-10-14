@@ -774,13 +774,15 @@ def parse_index_argument(text: str) -> dict:
     return {"n_tables": int(parts[0]), "n_bits": 10, "signature": parts[1]}
 
 
-def session_b_file_name(run_id: str, policy: str, index_argument: dict | None, control: bool) -> str:
+def session_b_file_name(run_id: str, policy: str, index_argument: dict | None, control: bool, near_dup: str | None = None) -> str:
     """The file's name says what it is: `-control` for the replay under the recorded geometry read against a legacy
     file, `-index<tables><signature>` for a replay under a declared index, nothing for the files of every row to date;
-    then the policy's suffix as before."""
+    then the policy's suffix as before. `-near-dup-<arm>` (ADR-007, amendment of 2026-10-13, evening) names a session B
+    read on an arm's fresh journal of the near duplicate probe, so that no file of rows 36 to 47 can be overwritten."""
     suffix = "" if policy == "plain" else "-" + policy.replace("+", "-")
     what = "-control" if control else (f"-index{index_argument['n_tables']}{index_argument['signature']}" if index_argument else "")
-    return f"hm-lm-{run_id}-session-b{what}{suffix}.json"
+    nd = f"-near-dup-{near_dup}" if near_dup else ""
+    return f"hm-lm-{run_id}{nd}-session-b{what}{suffix}.json"
 
 
 def _min_margin(live: dict, thr: float) -> float | None:
@@ -892,7 +894,8 @@ def _compare_with_control(live: dict, legacy: dict, policy: str, against) -> dic
 def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL,
                         seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256,
                         train_pool_seed: int | None = None, train_pool_n: int = 200, policy: str = "plain",
-                        index_override: dict | None = None, control_against=None) -> dict:
+                        index_override: dict | None = None, control_against=None,
+                        near_duplicate_arm: str | None = None, planting_record=None) -> dict:
     """Reopen everything from the disk alone and probe. The planted facts are found
     by content addressing (a statement's pointer is the hash of its bytes), so no
     state of session A is needed beyond the journal file and the checkpoint.
@@ -904,7 +907,13 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     explicit `--index` (`index_override`) overrode them, the device, the versions, the code
     commit, and per question the live cost, the query's signatures and its cue; with
     `control_against`, a legacy session B file of the same checkpoint, the per question
-    outcomes and the counts are compared exactly and the file says `stopped` when one differs."""
+    outcomes and the counts are compared exactly and the file says `stopped` when one differs.
+
+    `near_duplicate_arm` (ADR-007, amendment of 2026-10-13, evening): the journal is an arm's fresh journal of the near
+    duplicate probe (B0, E0d, E1, E2); the pointers of the admitted near duplicates are recomputed here from the generator
+    and the seeded plan alone, and every planted question carries `cited_is_duplicate`, `duplicate_in_window`,
+    `both_marks_at_or_above_threshold` and `own_cited`; `planting_record`, the planting process's record (the gate's
+    decision per write), is embedded as written."""
     import train
     from datetime import datetime, timezone
     from cortex_c2b import content_hash, record_tools
@@ -949,6 +958,60 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
         on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy, veto_threshold=thr, record_index=True)
         off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy, veto_threshold=thr)
         neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy, veto_threshold=thr, record_index=True)
+        near_dup_block = None
+        entries_now = len(journal)
+        if near_duplicate_arm is not None:
+            from cortex_c2b.near_duplicate_probe import ARMS, KINDS, pointer_of_duplicate
+            if near_duplicate_arm not in ARMS:
+                raise ValueError(f"near duplicate arm must be one of {ARMS}, got {near_duplicate_arm!r}")
+            protected = {f.entity for f in facts} | {f.entity for f in neg}
+            dup_of = pointer_of_duplicate(facts, near_duplicate_arm, seed, protected, journal.payloads)
+            both = cited_dup = dup_in_window = own_cited_n = cited_dup_given_both = 0
+            for a in on["answers"]:
+                dp = dup_of.get(a["entity"])
+                wps = [w["pointer"] for w in a.get("window", [])]
+                a["own_cited"] = (a.get("cited_pointer_is_own") is True)
+                a["cited_is_duplicate"] = (dp is not None and a.get("cited_pointer") == dp)
+                a["duplicate_in_window"] = (dp is not None and dp in wps)
+                marks = {w["pointer"]: w["mark"] for w in a.get("window", [])}
+                op = pointer_of.get(a["entity"])
+                a["both_marks_at_or_above_threshold"] = (thr is not None and dp is not None and op in marks and dp in marks
+                                                         and marks[op] is not None and marks[dp] is not None
+                                                         and marks[op] >= thr and marks[dp] >= thr)
+                both += int(a["both_marks_at_or_above_threshold"]); cited_dup += int(a["cited_is_duplicate"])
+                cited_dup_given_both += int(a["cited_is_duplicate"] and a["both_marks_at_or_above_threshold"])
+                dup_in_window += int(a["duplicate_in_window"]); own_cited_n += int(a["own_cited"])
+                # the mark oracle's rule on this read (the highest marked line when its mark clears the threshold, no model):
+                # the ceiling the marks allow with the duplicate present, reported
+                hi = max((w for w in a.get("window", []) if w.get("mark") is not None), key=lambda w: w["mark"], default=None)
+                a["oracle_cites_own"] = bool(hi is not None and thr is not None and hi["mark"] >= thr and hi["pointer"] == op)
+                a["oracle_cites_duplicate"] = bool(hi is not None and thr is not None and hi["mark"] >= thr and dp is not None and hi["pointer"] == dp)
+            near_dup_block = {"arm": near_duplicate_arm, "kind": (near_duplicate_arm if near_duplicate_arm in KINDS else None),
+                              "pointer_of_duplicate": dup_of, "duplicates_found": len(dup_of),
+                              "counts": {"own_cited": own_cited_n, "cited_is_duplicate": cited_dup, "duplicate_in_window": dup_in_window,
+                                         "both_marks_at_or_above_threshold": both,
+                                         "duplicate_cited_given_both_present_n": cited_dup_given_both,
+                                         "duplicate_cited_given_both_present": ((cited_dup_given_both / both) if both else None),
+                                         "oracle_cites_own": sum(1 for a in on["answers"] if a["oracle_cites_own"]),
+                                         "oracle_cites_duplicate": sum(1 for a in on["answers"] if a["oracle_cites_duplicate"])},
+                              "rules": {"threshold_comparison": "at or above the oracle's threshold, as the veto compares (the oracle's own rule claims strictly above; equality on a float cosine is not observed)",
+                                        "own_cited": "cited_pointer_is_own is True after the veto", "cited_is_duplicate": "the surviving citation's pointer is the duplicate's"},
+                              "code_commit_source": "forwarded from the planting process, which verified the tree a moment before (the new mode)",
+                              "planting": planting_record}
+            # the file bound to the journal it read: the planting record must be there and agree with what the store holds
+            pc = (planting_record or {}).get("counts") if planting_record else None
+            problems = []
+            if pc is None:
+                problems.append("no planting record")
+            else:
+                if pc.get("entries") != entries_now:
+                    problems.append(f"entries {entries_now} in the journal, {pc.get('entries')} in the planting record")
+                if pc.get("duplicates_admitted", 0) != len(dup_of):
+                    problems.append(f"{len(dup_of)} duplicates found by the plan, {pc.get('duplicates_admitted')} admitted at planting")
+                if (planting_record or {}).get("arm") != near_duplicate_arm:
+                    problems.append(f"the planting record is arm {(planting_record or {}).get('arm')}, this read is {near_duplicate_arm}")
+            near_dup_block["consistent"] = not problems
+            near_dup_block["problems"] = problems
         storage = lifecycle_declaration(journal)["storage"]
         # the memorisation probe (run dc34fcf000aa): the same contract on entities the model SAW during training
         # (the first training pool), planted into a memory scope; a model that reads its window scores alike on
@@ -982,6 +1045,7 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
            "answers": {"on": on["answers"], "off": off["answers"], "negctrl": neg_on["answers"]},
            "cost": {"on": cost(on), "negctrl": cost(neg_on)},                   # the live cost: the index's touched counter per query
            "index": index_block,
+           "near_duplicates": near_dup_block,
            "training_pool_probe": train_probe,
            "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
                           "step": ck.get("step")},
@@ -1007,6 +1071,8 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
         if not out["control"]["ok"]:
             out["stopped"] = ["the control replay does not reproduce the legacy file: " + "; ".join(out["control"]["differences"][:8])
                               + (" ..." if len(out["control"]["differences"]) > 8 else "")]
+    if near_dup_block is not None and not near_dup_block["consistent"]:
+        out["stopped"] = ["the near duplicate arm's file is not bound to its journal: " + "; ".join(near_dup_block["problems"])]
     return out
 
 
@@ -1174,11 +1240,19 @@ def _cli(argv=None):
     ap.add_argument("--n-facts", type=int, default=N_FACTS); ap.add_argument("--n-negctrl", type=int, default=N_NEGCTRL)
     ap.add_argument("--probe-training-pool", action="store_true",
                     help="also probe the contract on the run's FIRST training pool (entities seen in training): memorisation evidence")
-    ap.add_argument("--policy", default="plain", choices=list(POLICIES),
+    ap.add_argument("--policy", default=None, choices=list(POLICIES),
                     help="decode policy: plain | head | head+pointer (ADR-008 amendment 2026-09-14) | mark-veto | mark-veto+value (amendment 2026-09-18)")
     ap.add_argument("--index", default=None, help="ADR-008 amendment 2026-10-13: with --session-b, an explicit index geometry `<tables>,<signature>` (as `16,exact`) that wins over the configuration; the file records both and `index.overridden`")
     ap.add_argument("--control-against", default=None, help="ADR-008 amendment 2026-10-13: with --session-b, a legacy session B file of the same checkpoint; the per question outcomes and the counts must reproduce it exactly, else the run stops and retains `<out>-FAILED-control.json`")
+    ap.add_argument("--near-duplicate-probe", default=None, metavar="ARM",
+                    help="ADR-007 amendment 2026-10-13 (evening): plant the arm's fresh journal (B0 | E0d | E1 | E2) at --journal (a path that does not exist) under a key generated for the run and the adopted geometry, then read it by session B in a new process under --index 16,exact and mark-veto+value; the journal is discarded after, the file retained")
+    ap.add_argument("--near-duplicate-arm", default=None, help="(internal, with --session-b) the arm of the fresh journal being read; the near duplicates' pointers are recomputed from the plan")
+    ap.add_argument("--planting-record", default=None, help="(internal, with --session-b) the planting process's record to embed in the file")
     args = ap.parse_args(argv)
+    if args.near_duplicate_probe:
+        return _near_duplicate_probe_cli(args, ap)
+    if args.policy is None:
+        args.policy = "plain"
     if not (args.session_b or args.shape_probe or args.representation_probe or args.retrieval_probe or args.extraction_probe):
         if args.replay:
             r = replay_policy(json.loads(Path(args.replay).read_text(encoding="utf-8")), args.policy, threshold=args.threshold)
@@ -1259,7 +1333,7 @@ def _cli(argv=None):
     out = Path(args.out) if args.out else None
 
     def never_overwritten(path: Path) -> None:
-        for q in (path, path.with_name(path.stem + "-FAILED-control.json")):
+        for q in (path, path.with_name(path.stem + "-FAILED-control.json"), path.with_name(path.stem + "-FAILED-arm.json")):
             if q.exists():
                 raise SystemExit(f"session B: {q} exists; a file of the record is never overwritten, give another --out")
 
@@ -1269,7 +1343,8 @@ def _cli(argv=None):
         ck_head = torch.load(args.ckpt, map_location="cpu", weights_only=False)
         if not ck_head.get("run_id"):
             raise SystemExit("session B: the checkpoint carries no run id; the file would be nameless")
-        name = session_b_file_name(ck_head["run_id"], args.policy, index_override, control=args.control_against is not None)
+        name = session_b_file_name(ck_head["run_id"], args.policy, index_override, control=args.control_against is not None,
+                                   near_dup=args.near_duplicate_arm)
         out = (out if out is not None else Path("metrics/mqar")) / name
         never_overwritten(out)
         del ck_head
@@ -1278,14 +1353,16 @@ def _cli(argv=None):
                                 seed=args.seed, k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
                                 train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),
                                 train_pool_n=cfg.journal_pool_facts, policy=args.policy, index_override=index_override,
-                                control_against=args.control_against)
+                                control_against=args.control_against, near_duplicate_arm=args.near_duplicate_arm,
+                                planting_record=(json.loads(Path(args.planting_record).read_text(encoding="utf-8")) if args.planting_record else None))
     except ValueError as e:
         raise SystemExit(f"session B: {e}")
     out.parent.mkdir(parents=True, exist_ok=True)
     if r.get("stopped"):
-        failed = out.with_name(out.stem + "-FAILED-control.json")
+        what = "control" if "control" in r else "arm"
+        failed = out.with_name(out.stem + f"-FAILED-{what}.json")
         failed.write_text(json.dumps(r, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
-        raise SystemExit("session B: stopped, the control does not reproduce the legacy file: " + " | ".join(r["stopped"]) + f"  (retained: {failed})")
+        raise SystemExit("session B: stopped: " + " | ".join(r["stopped"]) + f"  (retained: {failed})")
     out.write_text(json.dumps(r, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")   # LF, as the record's files
     print(f"retained: {out}  sha256 {hashlib.sha256(out.read_bytes()).hexdigest()[:16]}")
     short = {k: r[k] for k in ("policy", "hm_recall_on", "hm_recall_off", "hm_gap", "hm_invalid_citation_on", "hm_valid_citation_on",
@@ -1296,7 +1373,87 @@ def _cli(argv=None):
     short["hm_mark_oracle_threshold"] = r["hm_mark_oracle"]["threshold"]
     if "control" in r:
         short["control"] = {k2: r["control"][k2] for k2 in ("ok", "compared_as", "outcomes_equal", "threshold")}
+    if r.get("near_duplicates"):
+        nd = r["near_duplicates"]
+        short["near_duplicates"] = {"arm": nd["arm"], "duplicates_found": nd["duplicates_found"], "counts": nd["counts"],
+                                    "planting_counts": (nd["planting"] or {}).get("counts")}
     print(json.dumps(short, indent=2))
+
+
+def _near_duplicate_probe_cli(args, ap):
+    """Stage 3 of the near duplicate probe (ADR-007, amendment of 2026-10-13, evening): the checks of the command line, the
+    arm's journal planted here from the checkpoint (stage 2's gate numbers recorded write by write), then the existing session B
+    reading on it in a new process from the disk alone, the key handed by the environment, under the adopted geometry and the
+    system's policy; the journal discarded once read, the file retained and never overwritten."""
+    import hashlib
+    import os
+    import shutil
+    import subprocess
+    import sys
+    import train
+    from cortex_c2b import record_tools
+    from cortex_c2b.crypto import generate_key
+    from cortex_c2b.near_duplicate_probe import ARMS, load_model, plant_arm
+    arm = args.near_duplicate_probe
+    if arm not in ARMS:
+        ap.error(f"--near-duplicate-probe takes one of {ARMS}")
+    policy = "mark-veto+value"                     # the declaration's policy; `plain` is not run
+    if args.policy is not None or args.index is not None or args.control_against is not None or args.session_b:
+        ap.error("--near-duplicate-probe fixes the policy (mark-veto+value) and the index (16,exact) and is not a control; drop --policy, --index, --control-against and --session-b")
+    commit, tree_clean = record_tools.git_state()
+    if commit is None or tree_clean is not True:
+        raise SystemExit("near duplicate probe: the code's commit is unknown or the tracked tree is not clean; commit the code that runs, then run")
+    jpath = Path(args.journal)
+    if jpath.exists() or record_tools.payload_dir_of(jpath).exists():
+        raise SystemExit(f"near duplicate probe: {jpath} exists; the arm's journal is fresh, give a path that does not exist")
+    cfg = train.load_config(args.config)
+    ck_head = torch.load(args.ckpt, map_location="cpu", weights_only=False)
+    if not ck_head.get("run_id"):
+        raise SystemExit("near duplicate probe: the checkpoint carries no run id; the file would be nameless")
+    index_argument = {"n_tables": 16, "n_bits": 10, "signature": "exact"}
+    name = session_b_file_name(ck_head["run_id"], policy, index_argument, control=False, near_dup=arm)
+    del ck_head
+    outdir = Path(args.out) if args.out else Path("metrics/mqar")
+    out = outdir / name
+    if out.exists():
+        raise SystemExit(f"near duplicate probe: {out} exists; a file of the record is never overwritten")
+    try:
+        model, ck, device = load_model(args.ckpt, cfg)
+        key = generate_key()
+        jpath.parent.mkdir(parents=True, exist_ok=True)
+        record = plant_arm(model, cfg, jpath, key, arm, seed=args.seed, n_facts=args.n_facts, n_negctrl=args.n_negctrl, device=device)
+    except ValueError as e:
+        raise SystemExit(f"near duplicate probe: {e}")
+    record.update({"code_commit": commit, "code_tree_clean": tree_clean, "checkpoint": {"path": str(args.ckpt), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash")}})
+    del model, ck
+    sidecar = jpath.with_name(jpath.stem + ".planting.json")
+    sidecar.write_text(json.dumps(record, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
+    print(json.dumps({"planted": arm, "counts": record["counts"], "journal": str(jpath)}, indent=2))
+    env = dict(os.environ, QUANTUM_CORTEX_JOURNAL_KEY=key.hex())
+    inner_argv = ["--session-b", "--ckpt", str(args.ckpt), "--journal", str(jpath), "--config", str(args.config), "--seed", str(args.seed),
+                  "--n-facts", str(args.n_facts), "--n-negctrl", str(args.n_negctrl), "--policy", policy, "--index", "16,exact",
+                  "--out", str(out), "--near-duplicate-arm", arm, "--planting-record", str(sidecar)]
+    # the new process carries the commit this process verified a moment ago on the same tree (the inner check would otherwise
+    # read the tree again, which the tests' replaced state could not reach); the file records that commit
+    code = ("import sys; from cortex_c2b import record_tools, hm_lm; record_tools.git_state = lambda: (%r, %r); hm_lm._cli(%r)"
+            % (commit, tree_clean, inner_argv))
+    proc = subprocess.run([sys.executable, "-c", code], env=env, text=True, capture_output=True, cwd=str(record_tools.REPO_ROOT),
+                          encoding="utf-8", errors="replace")
+    discarded = False
+    if proc.returncode == 0 and out.exists():                                # the discard before any console output
+        for q in (jpath, sidecar):
+            if q.exists():
+                q.unlink()
+        pd = record_tools.payload_dir_of(jpath)
+        if pd.exists():
+            shutil.rmtree(pd)
+        discarded = True
+    sys.stdout.write(proc.stdout); sys.stderr.write(proc.stderr)
+    if proc.returncode != 0:
+        raise SystemExit(f"near duplicate probe: session B failed ({proc.returncode}); the planting record {sidecar} is the attribution "
+                         f"(the journal at {jpath} cannot be reopened, its key lived in this process alone); remove the journal, its payload "
+                         f"directory and the record before running the arm again")
+    print(f"near duplicate probe: arm {arm} read; the journal {'discarded' if discarded else 'kept'}, the file retained: {out}  sha256 {hashlib.sha256(out.read_bytes()).hexdigest()[:16]}")
 
 
 if __name__ == "__main__":
