@@ -1,0 +1,231 @@
+{
+  "row": "row 48",
+  "letter": "d",
+  "what": "near duplicates at the write gate: the probe that must produce the failure first (ADR-007, amendment of 2026-10-13, evening; validated 2026-10-14, 11:05; built 2026-10-14, 12:35; run by the founder 2026-10-14, 13:00 to 14:16; read cold 14:30 from the sixteen files by near_duplicate_reading.read_near_duplicates(**load_from_dir(...)) in the declared order: the exits, F1, F2, the letter)",
+  "commands": [
+    "python -m cortex_c2b.near_duplicate_probe --stage1 --out metrics\\mqar",
+    "python -m cortex_c2b.near_duplicate_probe --cues --ckpt <ckpt> --config <config> --row45 metrics\\mqar\\<row 45 file> --out metrics\\mqar  (per checkpoint)",
+    "python -m cortex_c2b.hm_lm --near-duplicate-probe <arm> --ckpt <ckpt> --journal runs\\near-dup\\<run id>-<arm>.jsonl --config <config> --out metrics\\mqar  (per checkpoint and arm B0, E0d, E1, E2)"
+  ],
+  "order_run": "stage 1 (13:00 UTC+2), the three cues files (seed 2024, 7, 1337; 13:21 to 13:33), the twelve arms (2024 B0, E0d, E1, E2; 7 the same; 1337 the same; 13:35 to 14:16), one command at a time, no stop",
+  "exits": [],
+  "F1": {
+    "produced": true,
+    "rule": "at least one near duplicate of E1 or E2 refused with its partner as the nearest stored code, under at least one encoder",
+    "refused_partner_nearest": {
+      "8ceba5db8d0b": {
+        "E1": 200,
+        "E2": 160
+      },
+      "4cfd6f6e1406": {
+        "E1": 198,
+        "E2": 162
+      },
+      "2e1dc71913b1": {
+        "E1": 192,
+        "E2": 185
+      }
+    },
+    "e0d_refused": {
+      "8ceba5db8d0b": 0,
+      "4cfd6f6e1406": 0,
+      "2e1dc71913b1": 0
+    }
+  },
+  "F2": {
+    "produced": true,
+    "tests": {
+      "E1": {
+        "b_test_only": 25,
+        "c_control_only": 27,
+        "n_pairs": 400,
+        "p": 0.8898839652765371,
+        "direction": "fewer own citations under the near duplicates"
+      },
+      "E2": {
+        "b_test_only": 27,
+        "c_control_only": 56,
+        "n_pairs": 400,
+        "p": 0.0019314374822250473,
+        "direction": "fewer own citations under the near duplicates"
+      }
+    },
+    "holm_rejected": {
+      "E2": true,
+      "E1": false
+    },
+    "per_seed": {
+      "E1": {
+        "4cfd6f6e1406": {
+          "b_test_only": 9,
+          "c_control_only": 12,
+          "own_cited_control": 189,
+          "own_cited_test": 186
+        },
+        "2e1dc71913b1": {
+          "b_test_only": 16,
+          "c_control_only": 15,
+          "own_cited_control": 182,
+          "own_cited_test": 183
+        }
+      },
+      "E2": {
+        "4cfd6f6e1406": {
+          "b_test_only": 11,
+          "c_control_only": 30,
+          "own_cited_control": 189,
+          "own_cited_test": 170
+        },
+        "2e1dc71913b1": {
+          "b_test_only": 16,
+          "c_control_only": 26,
+          "own_cited_control": 182,
+          "own_cited_test": 172
+        }
+      }
+    },
+    "reported_conceiving_seed": {
+      "8ceba5db8d0b:E1": {
+        "b_test_only": 12,
+        "c_control_only": 8,
+        "own_cited_control": 188,
+        "own_cited_test": 192
+      },
+      "8ceba5db8d0b:E2": {
+        "b_test_only": 8,
+        "c_control_only": 24,
+        "own_cited_control": 188,
+        "own_cited_test": 172
+      }
+    },
+    "resolution": "under Holm over the two primary tests the smaller p must be at or under 0.025: the first rejection needs at least seven discordant pairs all one way (six give 0.03125), the second six once the first is rejected (0.03125 against 0.05); so a loss of six questions in four hundred on either kind is invisible to the family, and a single test at 0.05 would need six (five give 0.0625)"
+  },
+  "thresholds_against_record": {
+    "8ceba5db8d0b:B0": "reproduced",
+    "8ceba5db8d0b:E0d": "reproduced",
+    "8ceba5db8d0b:E1": "reproduced",
+    "8ceba5db8d0b:E2": "reproduced",
+    "4cfd6f6e1406:B0": "reproduced",
+    "4cfd6f6e1406:E0d": "reproduced",
+    "4cfd6f6e1406:E1": "reproduced",
+    "4cfd6f6e1406:E2": "reproduced",
+    "2e1dc71913b1:B0": "reproduced",
+    "2e1dc71913b1:E0d": "reproduced",
+    "2e1dc71913b1:E1": "reproduced",
+    "2e1dc71913b1:E2": "reproduced"
+  },
+  "b0_against_record_identical_outcomes": {
+    "8ceba5db8d0b": true,
+    "4cfd6f6e1406": true,
+    "2e1dc71913b1": true
+  },
+  "band_stage1": {
+    "c_any": 0.95,
+    "c_all": 0.995,
+    "c_half": 0.98
+  },
+  "drift": {
+    "8ceba5db8d0b": false,
+    "4cfd6f6e1406": false,
+    "2e1dc71913b1": false
+  },
+  "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (the committed form); the files are written in LF by the instruments",
+  "files": {
+    "near-dup-stage1.json": {
+      "sha256_lf": "2a3413c8624d7dee",
+      "timestamp_utc": "2026-10-14T11:00:06+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 1, the controlled pairs through the gate, two processes"
+    },
+    "near-dup-cues-8ceba5db8d0b.json": {
+      "sha256_lf": "3e054fce5801d579",
+      "timestamp_utc": "2026-10-14T11:33:12+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 2, the realistic pairs under the encoder of 8ceba5db8d0b: the precondition against row 45, the distributions E1, E2, E0, the plans"
+    },
+    "near-dup-cues-4cfd6f6e1406.json": {
+      "sha256_lf": "0e97cf8ebf076dc4",
+      "timestamp_utc": "2026-10-14T11:23:13+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 2, the realistic pairs under the encoder of 4cfd6f6e1406: the precondition against row 45, the distributions E1, E2, E0, the plans"
+    },
+    "near-dup-cues-2e1dc71913b1.json": {
+      "sha256_lf": "08db36baa5873341",
+      "timestamp_utc": "2026-10-14T11:30:34+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 2, the realistic pairs under the encoder of 2e1dc71913b1: the precondition against row 45, the distributions E1, E2, E0, the plans"
+    },
+    "hm-lm-8ceba5db8d0b-near-dup-B0-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "e54a1e528a8f8824",
+      "timestamp_utc": "2026-10-14T12:07:01+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm B0 on 8ceba5db8d0b: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-8ceba5db8d0b-near-dup-E0d-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "8e882de73a1e89a7",
+      "timestamp_utc": "2026-10-14T12:09:47+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E0d on 8ceba5db8d0b: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-8ceba5db8d0b-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "10f74507249c7682",
+      "timestamp_utc": "2026-10-14T12:11:39+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E1 on 8ceba5db8d0b: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-8ceba5db8d0b-near-dup-E2-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "add294692af46405",
+      "timestamp_utc": "2026-10-14T12:14:50+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E2 on 8ceba5db8d0b: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-4cfd6f6e1406-near-dup-B0-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "d6554dbaf777d1fb",
+      "timestamp_utc": "2026-10-14T11:34:27+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm B0 on 4cfd6f6e1406: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-4cfd6f6e1406-near-dup-E0d-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "e9a486ab81090c11",
+      "timestamp_utc": "2026-10-14T11:36:37+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E0d on 4cfd6f6e1406: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-4cfd6f6e1406-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "55b4e5e5673caf54",
+      "timestamp_utc": "2026-10-14T11:42:25+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E1 on 4cfd6f6e1406: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-4cfd6f6e1406-near-dup-E2-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "d1f67202eee9aa1f",
+      "timestamp_utc": "2026-10-14T11:46:48+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E2 on 4cfd6f6e1406: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-2e1dc71913b1-near-dup-B0-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "5404a972aedc1328",
+      "timestamp_utc": "2026-10-14T11:55:18+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm B0 on 2e1dc71913b1: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-2e1dc71913b1-near-dup-E0d-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "1675070940d6f00a",
+      "timestamp_utc": "2026-10-14T11:57:17+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E0d on 2e1dc71913b1: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-2e1dc71913b1-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "fc8e142b450705d3",
+      "timestamp_utc": "2026-10-14T11:59:41+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E1 on 2e1dc71913b1: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    },
+    "hm-lm-2e1dc71913b1-near-dup-E2-session-b-index16exact-mark-veto-value.json": {
+      "sha256_lf": "049ab398c50ebdff",
+      "timestamp_utc": "2026-10-14T12:04:26+00:00",
+      "code_commit": "7b8c548",
+      "what": "stage 3, arm E2 on 2e1dc71913b1: the arm planted on the processor (the gate's record per write embedded) and read by session B in a new process under the adopted geometry and mark-veto+value"
+    }
+  }
+}
