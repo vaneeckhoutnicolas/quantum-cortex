@@ -21,6 +21,10 @@ CODE_COMMIT = "7b8c548"
 CONFIG_HASH = {"8ceba5db8d0b": "36a3dd10bbff84eb", "4cfd6f6e1406": "d0c0d93ba24555a8", "2e1dc71913b1": "a727d1cb445afa92"}
 THRESHOLD = {"8ceba5db8d0b": 0.5360028743743896, "4cfd6f6e1406": 0.6122402548789978, "2e1dc71913b1": 0.5907554626464844}
 REFUSED = {"8ceba5db8d0b": {"E1": 200, "E2": 160}, "4cfd6f6e1406": {"E1": 198, "E2": 162}, "2e1dc71913b1": {"E1": 192, "E2": 185}}
+# corrected 2026-10-14, 19:30 (Rev120): E2's admitted maxima per checkpoint and the refused pairs under 1e-3 (E1 and E2 together)
+E2_MAX = {"8ceba5db8d0b": 0.6312, "4cfd6f6e1406": 0.3616, "2e1dc71913b1": 0.2218}
+UNDER_1E3 = {"8ceba5db8d0b": 34, "4cfd6f6e1406": 25, "2e1dc71913b1": 37}
+GAP = {}
 OWN_CITED = {"8ceba5db8d0b": {"B0": 192, "E0d": 188, "E1": 192, "E2": 172}, "4cfd6f6e1406": {"B0": 190, "E0d": 189, "E1": 186, "E2": 170},
              "2e1dc71913b1": {"B0": 182, "E0d": 182, "E1": 183, "E2": 172}}
 CITED_DUPLICATE_E2 = {"8ceba5db8d0b": 15, "4cfd6f6e1406": 19, "2e1dc71913b1": 6}
@@ -180,6 +184,27 @@ def test_the_gate_s_surprise_on_near_duplicates_against_distinct_facts(loaded):
         e2 = [x["surprise"] for x in arms["E2"]["near_duplicates"]["planting"]["writes"] if x["kind"] == "E2"]
         assert min(distinct) > 0.21 and np.percentile(distinct, 1) > 0.45
         assert max(e1) < 0.22 and np.median(e1) < 0.07 and np.median(e2) < 0.1 and min(e2) < 1e-3     # an E2 pair with a near identical cue
+        # corrected 2026-10-14, 19:30 (Rev120): "at most 0.22" holds for E1 alone; E2's admitted tail reaches 0.36, 0.22 and 0.63
+        # (seeds 2024, 7, 1337), a name moved by one character moving the cue far for a few names; every refused pair is under 0.15
+        # and the gap between the highest refused near duplicate and the lowest distinct fact holds nothing
+        assert max(e2) > 0.22 and abs(max(e2) - E2_MAX[rid]) < 1e-3
+        refused = [x["surprise"] for a in ("E1", "E2") for x in arms[a]["near_duplicates"]["planting"]["writes"]
+                   if x["kind"] == a and not x["admitted"]]
+        assert max(refused) < 0.15 and max(refused) < min(distinct)
+        assert sum(1 for s in refused if s < 1e-3) == UNDER_1E3[rid]
+        # 23:00: the gap between the highest refused pair and the lowest distinct fact holds admitted near duplicates and no
+        # distinct fact (69 of the 103 admitted over the three checkpoints lie in it); the lowest near duplicate surprise is
+        # 2.26e-5 (seed 7), so no cut at or above 0.001 admits the 96 and a cut admitting all 1200 lies under the sample's minimum
+        admitted = [x["surprise"] for a in ("E1", "E2") for x in arms[a]["near_duplicates"]["planting"]["writes"]
+                    if x["kind"] == a and x["admitted"]]
+        assert all(s >= 0.15 for s in admitted)
+        GAP["admitted"] = GAP.get("admitted", []) + admitted
+        GAP["lowest_distinct"] = min(GAP.get("lowest_distinct", 1.0), min(distinct))
+        if rid == "2e1dc71913b1":
+            assert abs(min(refused) - 2.26e-5) < 1e-6
+    # pooled over the three checkpoints: the lowest distinct fact is 0.2129 (seed 7) and 69 admitted near duplicates lie under it
+    assert abs(GAP["lowest_distinct"] - 0.2129) < 1e-4
+    assert sum(1 for s in GAP["admitted"] if s < GAP["lowest_distinct"]) == 69
 
 
 def test_provenance_states_the_reading(prov, reading):
