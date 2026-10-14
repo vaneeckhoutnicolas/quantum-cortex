@@ -258,20 +258,27 @@ class JournalBridge:
     def __init__(self, model, journal: Journal, write_path: WritePath | None = None,
                  journal_path: JournalPath | None = None, k: int = 4, budget_bytes: int = 256,
                  seed: int = 0, shuffle_seed: int | None = None, device=None, mark: bool = False,
-                 index_geometry: dict | None = None):
+                 index_geometry: dict | None = None, admission: str | None = None, shadow_legacy: bool = False):
         """`seed` is the scope's separation seed (DG) and the index seed -- it must
         be the same at every open of a journal (Decision 8: a journal written under
         another separation is refused). `shuffle_seed` only drives the order of
         the read window and may differ between sessions. `index_geometry` (ADR-008,
         2026-10-13): the run's configuration's `n_tables` and `signature`
         (`train.index_geometry_of`); None leaves the journal's record, or the legacy
-        geometry on a fresh journal, to decide (the defaults do not move)."""
+        geometry on a fresh journal, to decide (the defaults do not move).
+        `admission` (ADR-007, amendment of 2026-10-14, evening): the write gate's rule,
+        `surprise` or `identity`, bound by the journal and refused when it records
+        another; None takes the journal's record, or the code's default (`surprise`)
+        on a fresh journal. `shadow_legacy`: the write path keeps the shadow legacy
+        gate beside the rule (the plantings of rows 49 and later)."""
         self.model = model
         self.j = journal
         if model.cue_encoder is None or model.cue_encoder.proj.out_features != journal.cue_dim:
             raise ValueError("the model's cue encoder must produce the journal's cue dimension "
                              f"({journal.cue_dim}); set journal_cue_dim accordingly")
-        self.wp = write_path or WritePath(journal, seed=seed)
+        if write_path is not None and admission is not None and write_path.admission != admission:
+            raise ValueError(f"the write path given was built under {write_path.admission!r}, this bridge asks {admission!r}; refused")
+        self.wp = write_path or WritePath(journal, seed=seed, admission=admission, shadow_legacy=shadow_legacy)
         self.jp = journal_path if journal_path is not None else JournalPath(journal, seed=seed, geometry=index_geometry)
         self.k, self.budget = k, budget_bytes
         self.mark = mark                                        # RES-23: the organ's similarity in every window line

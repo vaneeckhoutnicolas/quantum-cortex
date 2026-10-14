@@ -116,6 +116,10 @@ class Config:
     journal_index_signature: str = "collapsed"   # journals, 4 tables with the collapsed signature (legacy, every run to date) or 16 with
                                          # the exact signature (adopted); transparent in the hash at the legacy values, named at the adopted
                                          # ones; any other pair is refused (only the two were measured as what they are); stamped in the journal
+    journal_admission: str = "surprise"  # ADR-007, amendment of 2026-10-14 (evening; rows 49 and 50): the write gate's rule of the run's
+                                         # journals, `surprise` (legacy, every run to date; transparent in the hash) or `identity` (a
+                                         # different source text is admitted whatever the surprise; named in the hash); stamped on every
+                                         # write event and bound by the journal; the default moves only with Decision 12 (after row 49)
     journal_path: str | None = None      # the sealed on-disk journal of the run (key from QUANTUM_CORTEX_JOURNAL_KEY); None = a memory scope
     journal_hm_arm: bool = True          # run the frozen protocol's LM arm at the end of the run
     journal_hm_facts: int = 200          # the protocol's sizes (200 / 50 are the frozen defaults; smaller only for a CPU smoke)
@@ -161,26 +165,43 @@ HASH_TRANSPARENT_AT_DEFAULT = {"journal_fresh_pool": False, "journal_lm_window":
                                "journal_paired_negatives": False, "journal_paired_keep_shape": False,
                                "journal_match_head": False, "journal_match_loss_weight": 1.0, "journal_match_coupling": 2.0,
                                "attn_local_conv": False, "attn_local_conv_init": "random", "journal_familiarity_mark": False,
-                               "journal_index_tables": 4, "journal_index_signature": "collapsed"}
+                               "journal_index_tables": 4, "journal_index_signature": "collapsed",
+                               "journal_admission": "surprise"}
 
 # The two index geometries measured as what they are (ADR-008, amendment of 2026-10-13; row 45): the legacy one, the live
 # index of every run to date, and the adopted one. A configuration naming any other pair is refused.
 INDEX_GEOMETRIES = ((4, "collapsed"), (16, "exact"))
 
 
+def admission_of(cfg: "Config") -> str:
+    """The run's write gate rule from its configuration (ADR-007, amendment of 2026-10-14, evening), for
+    `JournalBridge(admission=...)`: one of the two declared rules, anything else refused."""
+    from cortex_c2b import ADMISSION_RULES
+    if not isinstance(cfg.journal_admission, str) or cfg.journal_admission not in ADMISSION_RULES:
+        raise ValueError(f"journal_admission {cfg.journal_admission!r} is not one of the two declared rules {ADMISSION_RULES} "
+                         "(ADR-007, 2026-10-14: surprise, the legacy rule, or identity)")
+    return cfg.journal_admission
+
+
 def check_existing_journal_geometry(cfg: "Config", key: bytes | None) -> dict | None:
     """A journal already at the run's `journal_path` is continued by the protocol arm at the end of the run, where a geometry
     other than the run's would be refused after the hours of training (committee of 2026-10-13): refused here instead, before
-    the first step. Returns the existing record (None when there is no journal or no write in it)."""
+    the first step. Returns the existing record (None when there is no journal or no write in it). The same for the admission
+    rule (ADR-007, 2026-10-14): a journal recorded under the other rule is refused before the first step."""
     if not cfg.journal_path or not (REPO_ROOT / cfg.journal_path).exists():
         return None
     from cortex_c2b import Journal, POLICY_STOP
     from cortex_c2b.read_path import same_geometry
-    existing = Journal(REPO_ROOT / cfg.journal_path, key=key, policy=POLICY_STOP).index_record()
+    journal = Journal(REPO_ROOT / cfg.journal_path, key=key, policy=POLICY_STOP)
+    existing = journal.index_record()
     wanted = {**index_geometry_of(cfg), "seed": 0}                          # the protocol arm's bridge seed
     if existing is not None and not same_geometry(existing, wanted):
         raise SystemExit(f"the journal at {cfg.journal_path} records the index geometry {existing}; this run's configuration "
                          f"names {wanted}; a journal is never re indexed under another geometry (ADR-008, 2026-10-13)")
+    recorded = journal.admission_record()
+    if recorded is not None and recorded != admission_of(cfg):
+        raise SystemExit(f"the journal at {cfg.journal_path} records the admission rule {recorded!r}; this run's configuration names "
+                         f"{cfg.journal_admission!r}; a journal is never continued under another rule (ADR-007, 2026-10-14)")
     return existing
 
 
@@ -656,6 +677,7 @@ def main() -> None:
             raise SystemExit("journal_path is set but QUANTUM_CORTEX_JOURNAL_KEY is not in the environment: the run's "
                              "journal is sealed by default (ADR-007 D8); set the key before training, not after")
         index_geometry_of(cfg)                                            # a pair outside the two declared geometries stops the run here
+        admission_of(cfg)                                                 # a rule outside the two declared ones stops the run here
         facts, negatives, rep_facts = training_facts(cfg.journal_pool_facts, cfg.journal_train_seed)
         print(f"[journal] curriculum facts {rep_facts['n_facts']} negatives {rep_facts['n_negatives']} "
               f"generator {rep_facts['generator_hash']} collisions removed {len(rep_facts['removed_collisions'])}"
@@ -664,7 +686,8 @@ def main() -> None:
               f" shape kept: {cfg.journal_paired_keep_shape}"
               f" | match head: {cfg.journal_match_head}"
               + (f" (loss weight {cfg.journal_match_loss_weight}, coupling {cfg.journal_match_coupling})" if cfg.journal_match_head else "")
-              + f" | index geometry: {cfg.journal_index_tables} tables, {cfg.journal_index_signature} signature")
+              + f" | index geometry: {cfg.journal_index_tables} tables, {cfg.journal_index_signature} signature"
+              + f" | admission: {cfg.journal_admission}")
         def run_journal():
             """The run's own scope: sealed on disk (key from the environment), policy stop --
             a measurement run never continues in memory unnoticed (ADR-007 D9)."""
@@ -771,7 +794,8 @@ def main() -> None:
                     journal_ctx["refresh"] += 1
                     jb = JournalBridge(model, Journal(), k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes,
                                        seed=cfg.seed, shuffle_seed=cfg.seed + step, device=device,
-                                       mark=cfg.journal_familiarity_mark, index_geometry=index_geometry_of(cfg))
+                                       mark=cfg.journal_familiarity_mark, index_geometry=index_geometry_of(cfg),
+                                       admission=admission_of(cfg))
                     model.eval(); plant_pool(jb, journal_ctx["facts"], now=float(step)); model.train()
                     journal_ctx["bridge"], journal_ctx["planted_at"] = jb, step
                 jb = journal_ctx["bridge"]
@@ -898,7 +922,7 @@ def main() -> None:
         hm = run_hm_lm(model, journal_ctx["run_journal"], n_facts=cfg.journal_hm_facts, n_negctrl=cfg.journal_hm_negctrl,
                        k=cfg.journal_k, budget=cfg.journal_read_bytes, window_len=cfg.journal_read_bytes,
                        val_batches=vb, on_disk=bool(cfg.journal_path), mark=cfg.journal_familiarity_mark,
-                       index_geometry=index_geometry_of(cfg))
+                       index_geometry=index_geometry_of(cfg), admission=admission_of(cfg))
         (out_dir / "hm-lm.json").write_text(json.dumps(hm, indent=2) + "\n", encoding="utf-8")
         kept = REPO_ROOT / "metrics" / "mqar" / f"hm-lm-{run_id}.json"          # runs/ is never committed; this is
         kept.parent.mkdir(parents=True, exist_ok=True)                          # the artefact a RESULTS row cites

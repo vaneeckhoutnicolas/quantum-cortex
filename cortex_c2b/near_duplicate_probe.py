@@ -31,6 +31,13 @@ duplicate whose content differs refused with its partner as the nearest stored c
 collision at the read (fewer own lines cited under the near duplicates than under the density control,
 on the two primary paired tests with Holm at 0.05). The readings are in `near_duplicate_reading`.
 Nothing here is a claim. The first number comes from the first file.
+
+Row 49 (ADR-007, amendment of 2026-10-14, evening; declared, built 2026-10-15, not measured): the same
+arms planted under the identity rule (`--admission identity`), a fifth arm E4 (the same fact under a
+second statement template per schema, `E4_TEMPLATES`, read by this module's own reader and never by
+the tagged system's `value_of_statement`), the shadow legacy gate's verdict recorded per write, the
+generator's truth per planted line, and two reported blocks after the protocol's (the near name never
+planted block, `near_name_plan`; the neighbour questions of the E2 runs). Nothing here is measured.
 """
 from __future__ import annotations
 
@@ -63,10 +70,24 @@ E0D_SEED = 20_000               # the density control's distinct facts (not 0, t
 E1_PLAN_OFFSET = 200_000        # E1's other attribute, one per fact, a seeded plan
 PRECONDITION_TOL = 1e-4         # on a cosine: the journal's four decimal rounding under a device drift can move the fourth decimal
 THRESHOLD_TOL = 1e-6            # the reproduction label on the oracle's threshold, row 47's
-ARMS = ("B0", "E0d", "E1", "E2")
-KINDS = ("E1", "E2")
+ARMS = ("B0", "E0d", "E1", "E2", "E4")
+KINDS = ("E1", "E2")            # the near duplicate kinds (F1 and F2 are read on them)
+PARAPHRASE_ARM = "E4"           # row 49: the same fact under a second statement template (a paraphrase, not a near duplicate)
+PARTNER_KINDS = KINDS + (PARAPHRASE_ARM,)   # the writes that carry a partner (the original written just before)
 LIVE_N_BITS, LIVE_N_TABLES = int(ADOPTED_GEOMETRY["n_bits"]), int(ADOPTED_GEOMETRY["n_tables"])
 HEX = "0123456789abcdef"
+NEAR_NAME_PER_SCHEMA = 10       # the near name never planted block: the first ten facts of each schema, their names moved
+
+# E4's templates (ADR-007, amendment of 2026-10-14, evening, section 4 (b)): one second statement template per schema,
+# constants of the declaration; read by `parse_statement` below (the protocol's templates tried first) and never by the
+# tagged system's `value_of_statement`, so that "outside the templates" keeps its meaning for the sealed families
+E4_TEMPLATES = {
+    "person":   "the occupation of {e} is {a}",
+    "place":    "{e}: a town of {a}",
+    "event":    "the year of {e} was {a}",
+    "object":   "{e} is {a} by its material",
+    "decision": "the decision on {e} came from {a}",
+}
 
 
 # ---- small geometry ---------------------------------------------------------------------------------
@@ -236,13 +257,114 @@ def e0d_facts(n: int, seed: int, protected_names: set[str]) -> list[Fact]:
     return [f for f in fs if f.entity not in protected_names]
 
 
-def duplicate_statement(f: Fact, kind: str, plan: dict) -> str | None:
+def duplicate_statement(f: Fact, kind: str, plan: dict | None) -> str | None:
     if kind == "E1":
         return statement_of(f, plan[f.entity])
     if kind == "E2":
         nb = plan.get(f.entity)
         return None if nb is None else statement_of(f, f.attr, entity=nb)
+    if kind == PARAPHRASE_ARM:
+        return e4_statement(f)
     raise ValueError(kind)
+
+
+def partner_truth(f: Fact, kind: str, plan: dict | None) -> tuple[str, str]:
+    """The generator's truth of a partner line: (entity, value). E1: the same entity, the plan's other value; E2: the
+    neighbour's name, the same value; E4: the same entity and value under another template."""
+    if kind == "E1":
+        return f.entity, plan[f.entity]
+    if kind == "E2":
+        return plan[f.entity], f.attr
+    if kind == PARAPHRASE_ARM:
+        return f.entity, f.attr
+    raise ValueError(kind)
+
+
+def e4_statement(f: Fact) -> str:
+    """The same fact under E4's template of its schema (the entity and the value unchanged)."""
+    return E4_TEMPLATES[f.schema].format(e=f.entity, a=f.attr)
+
+
+def _template_regex(template: str) -> str:
+    import re
+    return "^" + re.escape(template).replace(r"\{e\}", "(?P<e>.+?)").replace(r"\{a\}", "(?P<a>.+)") + "$"
+
+
+def parse_statement(text: str) -> tuple[str, str, str, str] | None:
+    """The probe's and the replay's own reader of a stored line: (schema, entity, value, template_set), the protocol's
+    templates tried first (`value_of_statement`, the tagged system's reader), E4's only when none matches; None when
+    neither set reads the line (a sealed family's statement, ADR-010 T5). The template sets' precedence is declared:
+    a line the protocol reads is read as the protocol reads it."""
+    import re
+    from cortex_c2b.hm_protocol import value_of_statement
+    v = value_of_statement(text)
+    if v is not None:
+        return v[0], v[1], v[2], "protocol"
+    for schema, st in E4_TEMPLATES.items():
+        m = re.match(_template_regex(st), text)
+        if m:
+            return schema, m.group("e"), m.group("a"), "E4"
+    return None
+
+
+def parse_question(text: str) -> tuple[str, str, str] | None:
+    """The question's entity read from its text through the protocol's question templates (the direct query, then the
+    paraphrase): (schema, entity, form) or None when no template reads it. The decode shapes of row 50 read the entity
+    here and never from an answer record's `entity` label (ADR-007, amendment of 2026-10-14, evening, section 6)."""
+    import re
+    for schema, (_, q, pq) in _TEMPLATES.items():
+        for form, tpl in (("query", q), ("paraphrase", pq)):
+            pat = "^" + re.escape(tpl).replace(r"\{e\}", "(?P<e>.+?)") + "$"
+            m = re.match(pat, text)
+            if m:
+                return schema, m.group("e"), form
+    return None
+
+
+def move_name(name: str, step: int) -> str:
+    """The generator's name with its last hexadecimal character moved by `step`, modulo sixteen (+1: `bump_name`, E2's
+    neighbour; -1: the near name never planted block, the other way)."""
+    last = name[-1]
+    if last not in HEX:
+        raise ValueError(f"not a generator name: {name!r}")
+    return name[:-1] + HEX[(HEX.index(last) + step) % 16]
+
+
+def near_name_plan(facts: list[Fact], protected_names: set[str]) -> dict:
+    """The near name never planted block (ADR-007, amendment of 2026-10-14, evening, section 5; the committee's finding
+    14): the first `NEAR_NAME_PER_SCHEMA` facts of each schema in the generator's order, their names moved by one
+    hexadecimal character the other way (minus one modulo sixteen), each a never planted entity one character from a
+    planted one; a moved name that coincides with a protected name (the 250 protocol names, E2's neighbours, E0d's
+    entities) or with another moved name is dropped and counted. Returns {"questions": [{entity, schema, query,
+    planted_neighbour, attr_of_neighbour}], "dropped": [...]}."""
+    per: dict[str, int] = {s: 0 for s in SCHEMAS}
+    out, dropped, seen = [], [], set()
+    for f in facts:
+        if per[f.schema] >= NEAR_NAME_PER_SCHEMA:
+            continue
+        per[f.schema] += 1
+        moved = move_name(f.entity, -1)
+        if moved in protected_names or moved in seen:
+            dropped.append({"planted": f.entity, "moved": moved})
+            continue
+        seen.add(moved)
+        out.append({"entity": moved, "schema": f.schema, "query": _TEMPLATES[f.schema][1].format(e=moved),
+                    "planted_neighbour": f.entity, "attr_of_neighbour": str(f.attr)})
+    return {"questions": out, "dropped": dropped, "rule": "the first ten facts of each schema, the last hexadecimal character minus one modulo sixteen"}
+
+
+def neighbour_questions(facts: list[Fact], plan: dict) -> list[Fact]:
+    """The E2 runs' neighbour block: the saved neighbour's own question (the protocol's direct query on the neighbour's
+    name; its own line is the duplicate's, which carries the original's value), one per pair the plan kept."""
+    out = []
+    for f in facts:
+        nb = plan.get(f.entity)
+        if nb is None:
+            continue
+        out.append(Fact(entity=nb, schema=f.schema, attr=f.attr, statement=statement_of(f, f.attr, entity=nb),
+                        query=_TEMPLATES[f.schema][1].format(e=nb), paraphrase=_TEMPLATES[f.schema][2].format(e=nb),
+                        cue=f.cue, address_text=f"{f.schema}|{nb}"))
+    return out
 
 
 def quantiles(xs: list[float]) -> dict:
@@ -403,30 +525,36 @@ def nearest_stored(wp: WritePath, incoming_code: np.ndarray, entity_of_pointer: 
     code = np.asarray(incoming_code, dtype=np.float32)
     sims = M @ code / (np.linalg.norm(M, axis=1) * (np.linalg.norm(code) + 1e-8) + 1e-8)
     k = int(np.argmax(sims))
-    eid = wp.j.ca3_order[k][0]
+    eid = wp.ca3.entry_ids[k] if k < len(wp.ca3.entry_ids) and wp.ca3.entry_ids[k] is not None else wp.j.ca3_order[k][0]
     e = wp.j._entries[eid]
     return {"entry_id": eid, "pointer": e.pointer, "entity": entity_of_pointer.get(e.pointer), "cosine": float(sims[k]), "index": k}
 
 
 def write_recorded(bridge, text: str, schema: str, now: float, entity: str | None, partner: dict | None,
-                   entity_of_pointer: dict, kind: str, for_entity: str | None = None, stored_as: str | None = None):
+                   entity_of_pointer: dict, kind: str, for_entity: str | None = None, stored_as: str | None = None,
+                   truth: tuple[str, str] | None = None):
     """One write through the gate exactly as `JournalBridge.write` does it (the cue from the text, the text as source and
     content, the index told of an admission, the entity's pointer kept for the originals only), with the gate's own
     quantities recorded beside it: the incoming code's nearest stored code before the write, and against the partner
-    (the original of a near duplicate) the raw cosine, the separated codes' cosine, the shared winner share."""
+    (the original of a near duplicate or of a paraphrase) the raw cosine, the separated codes' cosine, the shared winner
+    share. Row 49: the cue as computed and as journaled, the journal's rule, the `near` stamp, and the shadow legacy gate's
+    verdict (`legacy_surprise`, `legacy_decision`, `legacy_nearest`) when the write path carries the shadow; `truth`, the
+    generator's (entity, value) of the line, kept for the citation support reading."""
     cue = text_cue(bridge, text)
     wp = bridge.wp
     incoming = wp._code(cue)
     near = nearest_stored(wp, incoming, entity_of_pointer)
     rec = {"kind": kind, "text": text, "entity": entity, "for_entity": (for_entity if for_entity is not None else entity),
            "now": now, "nearest_before": near}
+    if truth is not None:
+        rec["truth"] = {"entity": str(truth[0]), "value": str(truth[1])}
     if partner is not None:
         pcode_stored = wp._code(np.asarray(partner["entry"].cue, dtype=np.float32))
         rec["partner"] = {"entity": partner["entity"], "pointer": partner["entry"].pointer, "admitted": True,
                           "cos_raw": cosine(cue, partner["cue"]), "cos_separated": cosine(incoming, pcode_stored),
                           "shared_winner_share": shared_winner_share(incoming, pcode_stored),
                           "nearest_is_partner": bool(near is not None and near["entry_id"] == partner["entry"].entry_id)}
-    elif kind in KINDS:
+    elif kind in PARTNER_KINDS:
         rec["partner"] = {"entity": for_entity, "pointer": None, "admitted": False, "nearest_is_partner": False}
     rep = wp.write(cue, text.encode("utf-8"), schema, now=now, source=text)
     if rep.admitted:
@@ -435,20 +563,35 @@ def write_recorded(bridge, text: str, schema: str, now: float, entity: str | Non
     if (rep.admitted or rep.revised) and entity is not None:
         bridge.pointer_of[entity] = rep.entry.pointer
     rec.update({"admitted": bool(rep.admitted), "revised": bool(rep.revised), "surprise": float(rep.surprise), "reason": rep.reason,
-                "pointer": (rep.entry.pointer if rep.entry is not None else None)})
+                "pointer": (rep.entry.pointer if rep.entry is not None else None),
+                # row 49: the rule, the cue as computed and as journaled, the comparator's verdict and the shadow's
+                "admission": rep.admission, "near": rep.near,
+                "cue_computed": [float(x) for x in cue],
+                "cue_journaled": ([float(x) for x in rep.entry.cue] if (rep.admitted and rep.entry is not None) else None),
+                "nearest_entry_id": rep.nearest_entry_id, "nearest_cosine": rep.nearest_cosine,
+                "legacy_surprise": rep.legacy_surprise, "legacy_decision": rep.legacy_admitted,
+                "legacy_nearest": rep.legacy_nearest_entry_id})
+    if rep.legacy_nearest_entry_id is not None:
+        le = wp.j._entries.get(rep.legacy_nearest_entry_id)
+        rec["legacy_nearest_entity"] = entity_of_pointer.get(le.pointer) if le is not None else None
     return rep, rec, cue
 
 
 def plant_arm(model, cfg, journal_path: str | Path, key: bytes, arm: str, seed: int = 0, n_facts: int = N_FACTS,
-              n_negctrl: int = N_NEGCTRL, device=None) -> dict:
+              n_negctrl: int = N_NEGCTRL, device=None, admission: str | None = None) -> dict:
     """The arm's fresh journal (the adopted geometry declared at construction, the key generated for the run), 200 writes
-    for B0, 400 for the others: the originals in the protocol's order, each followed by its near duplicate (E1, E2) or by
-    a distinct fact of the density control (E0d). Returns the planting record (stage 2's gate numbers for this arm)."""
+    for B0, 400 for the others: the originals in the protocol's order, each followed by its near duplicate (E1, E2), by
+    its paraphrase (E4, row 49) or by a distinct fact of the density control (E0d). `admission` (row 49): the journal's
+    rule, `surprise` (the code's default, row 48's plantings) or `identity`; the shadow legacy gate judges every write
+    beside the rule and its verdict is recorded. Returns the planting record (stage 2's gate numbers for this arm)."""
     import torch
-    from cortex_c2b import record_tools
+    from cortex_c2b import record_tools, ADMISSION_SURPRISE, ADMISSION_RULES
     from cortex_c2b.lm_bridge import JournalBridge
     if arm not in ARMS:
         raise ValueError(f"arm must be one of {ARMS}, got {arm!r}")
+    admission = ADMISSION_SURPRISE if admission is None else admission
+    if admission not in ADMISSION_RULES:
+        raise ValueError(f"admission must be one of {ADMISSION_RULES}, got {admission!r}")
     device = device or torch.device("cpu")
     facts, gen_hash = generate_facts(n_facts, seed)
     neg, _ = generate_facts(n_negctrl, seed + 10_000)
@@ -458,6 +601,8 @@ def plant_arm(model, cfg, journal_path: str | Path, key: bytes, arm: str, seed: 
         plan = e1_plan(facts, seed)
     elif arm == "E2":
         plan = e2_plan(facts, protected)
+    elif arm == PARAPHRASE_ARM:
+        plan = {f.entity: e4_statement(f) for f in facts}                       # the paraphrase per fact, written for the record
     elif arm == "E0d":
         extra = e0d_facts(n_facts, E0D_SEED, protected)
         if len(extra) < len(facts):                                             # a decontamination dropped some: top up schema by schema
@@ -467,46 +612,63 @@ def plant_arm(model, cfg, journal_path: str | Path, key: bytes, arm: str, seed: 
     journal = Journal(journal_path, key=key, policy=POLICY_STOP, index_geometry=ADOPTED_GEOMETRY)
     mark = bool(getattr(cfg, "journal_familiarity_mark", False))
     bridge = JournalBridge(model, journal, k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes, seed=seed, shuffle_seed=seed + 1,
-                           device=device, mark=mark, index_geometry=ADOPTED_GEOMETRY)
+                           device=device, mark=mark, index_geometry=ADOPTED_GEOMETRY, admission=admission, shadow_legacy=True)
     entity_of_pointer: dict = {}
     writes = []
     with torch.no_grad():
         for i, f in enumerate(facts):
-            rep, rec, cue = write_recorded(bridge, f.statement, f.schema, float(2 * i), f.entity, None, entity_of_pointer, "original")
+            rep, rec, cue = write_recorded(bridge, f.statement, f.schema, float(2 * i), f.entity, None, entity_of_pointer, "original",
+                                           truth=(f.entity, f.attr))
             writes.append(rec)
             partner = {"entity": f.entity, "entry": rep.entry, "cue": cue} if rep.admitted else None
-            if arm in KINDS:
+            if arm in PARTNER_KINDS:
                 dup = duplicate_statement(f, arm, plan)
                 if dup is None:
                     writes.append({"kind": arm, "entity": f.entity, "dropped": True, "now": float(2 * i + 1)})
                     continue
-                stored_as = (plan[f.entity] if arm == "E2" else f"{f.entity} ({arm} duplicate)")
+                stored_as = (plan[f.entity] if arm == "E2" else f"{f.entity} ({arm} {'paraphrase' if arm == PARAPHRASE_ARM else 'duplicate'})")
                 _, rec2, _ = write_recorded(bridge, dup, f.schema, float(2 * i + 1), None, partner, entity_of_pointer, arm,
-                                            for_entity=f.entity, stored_as=stored_as)
+                                            for_entity=f.entity, stored_as=stored_as, truth=partner_truth(f, arm, plan))
                 writes.append(rec2)
             elif arm == "E0d":
                 if i < len(extra):
                     g = extra[i]
-                    _, rec2, _ = write_recorded(bridge, g.statement, g.schema, float(2 * i + 1), g.entity, None, entity_of_pointer, "E0d")
+                    _, rec2, _ = write_recorded(bridge, g.statement, g.schema, float(2 * i + 1), g.entity, None, entity_of_pointer, "E0d",
+                                                truth=(g.entity, g.attr))
                     rec2["distinct_entity"] = g.entity
                     writes.append(rec2)
     dups = [w for w in writes if w.get("kind") in KINDS and not w.get("dropped")]
     refused = [w for w in dups if not w["admitted"]]
+    paraphrases = [w for w in writes if w.get("kind") == PARAPHRASE_ARM and not w.get("dropped")]
     originals = [w for w in writes if w.get("kind") == "original"]
     extras = [w for w in writes if w.get("kind") == "E0d"]
+    judged = [w for w in writes if not w.get("dropped") and w.get("legacy_decision") is not None]
     record = {"arm": arm, "seed": seed, "n_facts": n_facts, "generator_hash": gen_hash,
               "index_geometry": bridge.jp.index.geometry(), "journal_record": journal.index_record(),
+              # row 49: the journal's rule as recorded after the planting, and the shadow legacy gate's own counts
+              "admission": {"rule": journal.admission_record(), "source": journal.admission_record_source(),
+                            "asked": admission, "threshold": bridge.wp.thr,
+                            "near_recorded": len(journal.near_of),
+                            "shadow_legacy": {"judged": len(judged),
+                                              "legacy_refused": sum(1 for w in judged if w["legacy_decision"] is False),
+                                              "legacy_refused_duplicates": sum(1 for w in judged if w["kind"] in KINDS and w["legacy_decision"] is False),
+                                              "legacy_refused_paraphrases": sum(1 for w in judged if w["kind"] == PARAPHRASE_ARM and w["legacy_decision"] is False),
+                                              "legacy_refused_originals": sum(1 for w in judged if w["kind"] == "original" and w["legacy_decision"] is False),
+                                              "legacy_refused_e0d": sum(1 for w in judged if w["kind"] == "E0d" and w["legacy_decision"] is False),
+                                              "disagreements_with_rule": sum(1 for w in judged if w["legacy_decision"] != w["admitted"])}},
               "plan": plan, "e0d_entities": ([g.entity for g in extra] if extra is not None else None),
               "counts": {"originals_admitted": sum(1 for w in originals if w["admitted"]), "originals": len(originals),
                          "duplicates": len(dups), "duplicates_admitted": sum(1 for w in dups if w["admitted"]),
                          "duplicates_refused": len(refused),
                          "duplicates_refused_partner_nearest": sum(1 for w in refused if w.get("partner", {}).get("nearest_is_partner")),
                          "duplicates_whose_original_was_refused": sum(1 for w in dups if not w.get("partner", {}).get("admitted", False)),
+                         "paraphrases": len(paraphrases), "paraphrases_admitted": sum(1 for w in paraphrases if w["admitted"]),
+                         "paraphrases_refused": sum(1 for w in paraphrases if not w["admitted"]),
                          "dropped": sum(1 for w in writes if w.get("dropped")),
                          "e0d_written": len(extras), "e0d_admitted": sum(1 for w in extras if w["admitted"]),
                          "e0d_refused": sum(1 for w in extras if not w["admitted"]),
                          "entries": len(journal)},
-              "pointer_of_duplicate": {w["for_entity"]: w["pointer"] for w in dups if w["admitted"]},
+              "pointer_of_duplicate": {w["for_entity"]: w["pointer"] for w in (dups + paraphrases) if w["admitted"]},
               "writes": writes, "device": record_tools.device_info(device), "versions": record_tools.versions(),
               "timestamp_utc": datetime.now(timezone.utc).isoformat(timespec="seconds")}
     return record
@@ -514,10 +676,11 @@ def plant_arm(model, cfg, journal_path: str | Path, key: bytes, arm: str, seed: 
 
 def pointer_of_duplicate(facts: list[Fact], arm: str, seed: int, protected: set[str], payloads) -> dict:
     """Recomputed in session B from the generator and the plan alone (deterministic), the pointer of each admitted near
-    duplicate: entity of the original -> content hash of the duplicate's statement, when it is in the journal's store."""
-    if arm not in KINDS:
+    duplicate, or paraphrase (E4): entity of the original -> content hash of the partner's statement, when it is in the
+    journal's store."""
+    if arm not in PARTNER_KINDS:
         return {}
-    plan = e1_plan(facts, seed) if arm == "E1" else e2_plan(facts, protected)
+    plan = e1_plan(facts, seed) if arm == "E1" else e2_plan(facts, protected) if arm == "E2" else None
     out = {}
     for f in facts:
         dup = duplicate_statement(f, arm, plan)

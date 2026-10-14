@@ -123,6 +123,20 @@ LEGACY_INDEX_GEOMETRY = {"n_tables": 4, "n_bits": 10, "signature": "collapsed", 
 SOURCE_TEXT_WHAT = ("the text each address was computed from, one sealed payload per entry, released with the content "
                     "(ADR-009, B2)")        # what the declaration says of the source texts
 
+# the admission rule a write event is stamped with (row 49, declared, not the default until Decision 12).
+# a journal whose write events carry no stamp is read under the inherited rule: surprise
+ADMISSION_SURPRISE = "surprise"
+ADMISSION_IDENTITY = "identity"
+ADMISSION_RULES = (ADMISSION_SURPRISE, ADMISSION_IDENTITY)
+LEGACY_ADMISSION = ADMISSION_SURPRISE
+
+
+def validate_admission(rule: str, where: str) -> str:
+    """The two rules, nothing else. Called at open, at the stamp, and at the write."""
+    if rule not in ADMISSION_RULES:
+        raise ValueError(f"{where}: admission must be one of {ADMISSION_RULES}, got {rule!r}")
+    return rule
+
 
 def content_hash(payload: bytes) -> str:
     """Pointer = content hash of the payload (never the payload itself)."""
@@ -307,6 +321,17 @@ class Journal:
         self._index_record: dict | None = None
         self._index_stamped: bool | None = None       # whether the first write event carried a stamp (None: no write event yet)
         self._index_writes = 0
+        # ---- the admission rule (row 49): a property of the journal, stamped and reread ----
+        # default of the code is surprise; identity is asked for by a WritePath and refused if the record differs.
+        # a journal with no stamp is the inherited rule (surprise), every journal of the record to date
+        self.admission_rule: str | None = None
+        self._admission_record: str | None = None
+        self._admission_stamped: bool | None = None
+        self._admission_writes = 0
+        # the comparator's verdict kept as provenance on an admitted write (row 49): {entry_id, surprise} of the nearest
+        # stored code when the surprise was under the legacy threshold; read by nothing in v1.1.0; absent by construction
+        # from every journal written under the surprise rule (such a write is refused there)
+        self.near_of: dict[str, dict] = {}
         self._path = Path(path) if path else None
         if self._path is not None and key is None and not plaintext:
             raise ValueError("an on-disk journal is sealed by default (ADR-007 D8): pass key=<32 bytes>, "
@@ -416,6 +441,55 @@ class Journal:
                              f"{ {k: rec.get(k) for k in INDEX_GEOMETRY_KEYS} }, this open asks "
                              f"{ {k: self.index_geometry.get(k) for k in INDEX_GEOMETRY_KEYS} }; refused (ADR-008, 2026-10-13)")
 
+    # ---- the admission rule (row 49): the journal's, stamped, reread --------------------
+    def admission_record(self) -> str | None:
+        """The rule the log records, or None when no write event has been seen.
+        A journal that holds write events and none is stamped records the inherited rule."""
+        if self._admission_record is not None:
+            return self._admission_record
+        if self._admission_writes:
+            return LEGACY_ADMISSION
+        return None
+
+    def admission_record_source(self) -> str | None:
+        """How the record came: "stamp", "legacy_by_default" (write events without a stamp),
+        None (no write event yet)."""
+        if self._admission_stamped is None:
+            return None
+        return "stamp" if self._admission_stamped else "legacy_by_default"
+
+    def bind_admission(self, rule: str) -> None:
+        """The write path asks for a rule. A journal that already records another is refused, and so is a
+        journal already bound to another by an earlier write path (committee of 2026-10-15: a second write
+        path on a journal with no write yet must not change the rule silently). A journal with no write
+        and no binding takes the rule it is asked for: the first write stamps it. The code's default
+        stays surprise; identity is asked for, never implied."""
+        rule = validate_admission(rule, "admission asked at open")
+        rec = self.admission_record()
+        if rec is not None and rec != rule:
+            raise ValueError(f"admission: the journal records {rec!r}, this open asks {rule!r}; refused")
+        if self.admission_rule is not None and self.admission_rule != rule:
+            raise ValueError(f"admission: the journal is bound to {self.admission_rule!r} by an earlier write path, this open asks {rule!r}; refused")
+        self.admission_rule = rule
+
+    def _see_admission_stamp(self, stamp: str | None, count: bool = True) -> None:
+        """At replay and at write: the first write event fixes the record (its stamp, or the
+        inherited rule when it has none); a later write event under another rule refuses the
+        open. With `count` false the stamp is only checked, before a write reaches the disk,
+        so that no conflicting line is ever written."""
+        rule = LEGACY_ADMISSION if stamp is None else validate_admission(stamp, "admission stamp on a write event")
+        if self._admission_writes == 0:
+            if count:
+                self._admission_record = rule
+                self._admission_stamped = stamp is not None
+                if self.admission_rule is None:
+                    self.admission_rule = rule
+        elif rule != self._admission_record:
+            raise ValueError(f"journal written under two admission rules: "
+                             f"{self._admission_record!r} then {rule!r}; refused")
+        if count:
+            self._admission_writes += 1
+
     # ---- scope configuration -----------------------------------------------------
     def scope_config_hash(self) -> str:
         """Whatever changes the journal's behaviour on disk is in the hash (Decision 9). The index geometry is
@@ -437,15 +511,29 @@ class Journal:
     # ---- write ----------------------------------------------------------------
     def write(self, cue, payload: bytes, salience: float, schema_id: str,
               now: float | None = None, ca3: dict | None = None,
-              source: bytes | str | None = None) -> Entry:
+              source: bytes | str | None = None, admission: str | None = None,
+              near: dict | None = None) -> Entry:
         """Durable first: payload file, then the log line, then memory. `ca3` (the
         write path's separation meta) rides on the write event so CA3 is rebuilt
         from one line, never from two that could be split by a failure.
         `source` (ADR-009 B2): the text the cue was computed from, sealed as a
         payload of its own and referenced by the entry's `source_pointer`; the
-        entry never holds the text. None leaves the entry as before the decision."""
+        entry never holds the text. None leaves the entry as before the decision.
+        `admission` is the journal's rule, stamped on the line and reread: the first
+        stamp is kept, a later different one refuses the open, a line without one
+        is the inherited rule (surprise). Not in the scope hash: a phase event
+        would otherwise split a journal of the record (the index geometry's reason).
+        `near` (row 49): `{"entry_id", "surprise"}`, the nearest stored code and the
+        comparator's surprise, kept on the line when an admitted sourced write had a
+        surprise under the legacy threshold; provenance, read by nothing in v1.1.0."""
         cue = np.asarray(cue, dtype=np.float32)
         assert cue.shape == (self.cue_dim,), f"cue must be ({self.cue_dim},)"
+        if admission is None:
+            admission = self.admission_rule or LEGACY_ADMISSION
+        admission = validate_admission(admission, "admission on a write")
+        if self.admission_rule is not None and admission != self.admission_rule:
+            raise ValueError(f"admission: the journal is bound to {self.admission_rule!r}, "
+                             f"this write asks {admission!r}; refused")
         now = time.time() if now is None else now
         self._last_now = now
         if self.mode == MODE_READ_ONLY:
@@ -462,20 +550,28 @@ class Journal:
         sz = entry.size_bytes()
         if sz > ENTRY_MAX_BYTES:
             raise ValueError(f"entry violates the size law: {sz} B > {ENTRY_MAX_BYTES} B")
-        ev = {"ev": "write", "entry": entry.to_dict()}
+        ev = {"ev": "write", "entry": entry.to_dict(), "admission": admission}
         if ca3 is not None:
             ev["ca3"] = dict(ca3)
+        if near is not None:
+            if set(near) != {"entry_id", "surprise"} or near["entry_id"] not in self._entries:
+                raise ValueError("near: {entry_id, surprise} of a stored entry, the comparator's verdict on this write")
+            ev["near"] = {"entry_id": str(near["entry_id"]), "surprise": float(near["surprise"])}
         if self.index_geometry is not None:                               # the index geometry rides on the same line (ADR-008, 2026-10-13)
             ev["index"] = dict(self.index_geometry)
         self._see_index_stamp(ev.get("index"), count=False)               # checked before the disk: no conflicting line is ever written
+        self._see_admission_stamp(ev.get("admission"), count=False)
         self._persist(ev)                                                 # may raise; memory untouched then
         self._see_index_stamp(ev.get("index"))
+        self._see_admission_stamp(ev.get("admission"))
         self._entries[entry.entry_id] = entry
         self._by_cue_key.setdefault(self._cue_key(cue), []).append(entry.entry_id)
         self._hold_refs(entry)
         self.writes_since_last_phase.append(entry.entry_id)
         if ca3 is not None:
             self.ca3_order.append((entry.entry_id, dict(ca3)))
+        if "near" in ev:
+            self.near_of[entry.entry_id] = dict(ev["near"])
         return entry
 
     def _hold_refs(self, entry: Entry) -> None:
@@ -877,6 +973,9 @@ class Journal:
                 if "ca3" in ev:
                     self.ca3_order.append((e.entry_id, dict(ev["ca3"])))
                 self._see_index_stamp(ev.get("index"))                    # the first stamp kept, a later different one refused
+                self._see_admission_stamp(ev.get("admission"))            # absent: the inherited rule; a later different one refused
+                if "near" in ev:
+                    self.near_of[e.entry_id] = dict(ev["near"])           # the comparator's verdict, provenance (row 49)
             elif ev["ev"] == "transition":
                 self._entries[ev["entry_id"]].state = ev["to"]
                 if ev["to"] == STATE_CONSOLIDATED:
@@ -930,7 +1029,15 @@ def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
                       "survives_restart": durable, "encrypted_at_rest": sealed,
                       # ADR-007 amendment 2026-10-12: how many entries were revised and how many past versions they hold
                       "revisions": {"entries_revised": len(journal._versions) if has else 0,
-                                    "past_versions": sum(len(v) - 1 for v in journal._versions.values()) if has else 0}},
+                                    "past_versions": sum(len(v) - 1 for v in journal._versions.values()) if has else 0},
+                      # ADR-007 amendment 2026-10-14 (evening; row 49): the write gate's rule is a property of the log, stamped on every
+                      # write event and reread at open; the declaration keeps its four components (the founder's zip named it a fifth)
+                      "admission": {"what": "the journal's admission rule, stamped on every write event and reread at open",
+                                    "rule": journal.admission_record() if has else None,
+                                    "source": journal.admission_record_source() if has else None,
+                                    "default_until_decision_12": LEGACY_ADMISSION,
+                                    # admitted writes whose comparator surprise was under the legacy threshold, kept as provenance
+                                    "near_recorded": len(journal.near_of) if has else 0}},
         "bytes": {"what": "the payloads (content), one file per pointer",
                   "lifecycle": "content-addressed directory next to the log, released at the last reference",
                   "survives_restart": has and journal.payloads.persistent and durable,

@@ -1,0 +1,4704 @@
+{
+ "what": "the sealed families of ADR-010 (part A) and the draws of its scale probe (part C), generated from the constants of cortex_c2b/sealed_families.py and sealed by content hash before any encoder runs on them; a record test regenerates them and compares; no encoder, no journal",
+ "declared": "ADR-010, 2026-10-14 (A.1 to A.4, C.1); the precision of 2026-10-14 on the rule on instruments, clause (ii)",
+ "date": "2026-10-15",
+ "label": "a synthetic set locked before execution, not a blind validation: the templates and the generating rules are public",
+ "canonical_json": "json.dumps with sorted keys, separators (',', ':'), ensure_ascii false, UTF-8; sha256 in full",
+ "versions": {
+  "python": "3.13.16",
+  "numpy": "2.5.3"
+ },
+ "constants_sha256": "94683707457261fe4079316d65f520bf018b24f4d4d8589a7b5c9c7d451c003e",
+ "families": {
+  "T0": {
+   "what": "the in template control: the first family's templates and vocabularies with new names",
+   "content_sha256": "8ea43284bc504c0404791676cd301aaa38708c0ae83a89e0a557dd9af53c0a92",
+   "n_facts": 200,
+   "n_never_planted": 50,
+   "n_cross_schema": 50,
+   "seeds": {
+    "facts": 70000,
+    "never_planted": [
+     [
+      70001,
+      50
+     ]
+    ]
+   },
+   "rejections": {
+    "one_character": 6
+   },
+   "templates": {
+    "person": {
+     "S": {
+      "template": "{e} works as a {a}",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [
+       "a",
+       "as",
+       "works"
+      ],
+      "shared_bigrams": [
+       "as a",
+       "works as"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _ as a {a}",
+      "bytes_max_statement": 33
+     },
+     "Q": {
+      "template": "what is {e}'s job?",
+      "nearest_first_family_template": "person/Q",
+      "shared_words": [
+       "is",
+       "job",
+       "what"
+      ],
+      "shared_bigrams": [
+       "what is"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "what is {e} _ _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — occupation?",
+      "nearest_first_family_template": "person/P",
+      "shared_words": [
+       "occupation"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— _?",
+      "bytes_max_statement": null
+     }
+    },
+    "place": {
+     "S": {
+      "template": "{e} is a town in {a}",
+      "nearest_first_family_template": "place/S",
+      "shared_words": [
+       "a",
+       "in",
+       "is",
+       "town"
+      ],
+      "shared_bigrams": [
+       "a town",
+       "is a",
+       "town in"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} is a _ in {a}",
+      "bytes_max_statement": 32
+     },
+     "Q": {
+      "template": "where is {e}?",
+      "nearest_first_family_template": "place/Q",
+      "shared_words": [
+       "is",
+       "where"
+      ],
+      "shared_bigrams": [
+       "where is"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "where is {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} lies in which region?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "in",
+       "lies",
+       "region",
+       "which"
+      ],
+      "shared_bigrams": [
+       "in which",
+       "lies in",
+       "which region"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _ in which _?",
+      "bytes_max_statement": null
+     }
+    },
+    "event": {
+     "S": {
+      "template": "{e} took place in {a}",
+      "nearest_first_family_template": "event/S",
+      "shared_words": [
+       "in",
+       "place",
+       "took"
+      ],
+      "shared_bigrams": [
+       "place in",
+       "took place"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _ _ in {a}",
+      "bytes_max_statement": 28
+     },
+     "Q": {
+      "template": "when did {e} happen?",
+      "nearest_first_family_template": "event/Q",
+      "shared_words": [
+       "did",
+       "happen",
+       "when"
+      ],
+      "shared_bigrams": [
+       "when did"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "when did {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — the year?",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the",
+       "year"
+      ],
+      "shared_bigrams": [
+       "the year"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— the _?",
+      "bytes_max_statement": null
+     }
+    },
+    "object": {
+     "S": {
+      "template": "{e} is made of {a}",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "is",
+       "made",
+       "of"
+      ],
+      "shared_bigrams": [
+       "is made",
+       "made of"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} is _ of {a}",
+      "bytes_max_statement": 28
+     },
+     "Q": {
+      "template": "what is {e} made of?",
+      "nearest_first_family_template": "object/Q",
+      "shared_words": [
+       "is",
+       "made",
+       "of",
+       "what"
+      ],
+      "shared_bigrams": [
+       "made of",
+       "what is"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "what is {e} _ of?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — its material?",
+      "nearest_first_family_template": "object/P",
+      "shared_words": [
+       "its",
+       "material"
+      ],
+      "shared_bigrams": [
+       "its material"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— _ _?",
+      "bytes_max_statement": null
+     }
+    },
+    "decision": {
+     "S": {
+      "template": "{e} was decided by {a}",
+      "nearest_first_family_template": "decision/S",
+      "shared_words": [
+       "by",
+       "decided",
+       "was"
+      ],
+      "shared_bigrams": [
+       "decided by",
+       "was decided"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} was _ by {a}",
+      "bytes_max_statement": 43
+     },
+     "Q": {
+      "template": "who decided {e}?",
+      "nearest_first_family_template": "decision/Q",
+      "shared_words": [
+       "decided",
+       "who"
+      ],
+      "shared_bigrams": [
+       "who decided"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "who _ {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — decided by whom?",
+      "nearest_first_family_template": "decision/P",
+      "shared_words": [
+       "by",
+       "decided",
+       "whom"
+      ],
+      "shared_bigrams": [
+       "by whom",
+       "decided by"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— _ by whom?",
+      "bytes_max_statement": null
+     }
+    }
+   },
+   "never_planted_hamming_distance_counts": {
+    "3": 1,
+    "4": 27,
+    "5": 22
+   },
+   "never_planted_hamming": {
+    "Zope-5b66": {
+     "nearest_planted": "Zage-5c3b",
+     "distance": 5
+    },
+    "Zuku-ad7d": {
+     "nearest_planted": "Zutu-0174",
+     "distance": 4
+    },
+    "Sunu-42ff": {
+     "nearest_planted": "Sovu-a4f1",
+     "distance": 5
+    },
+    "Doso-7b03": {
+     "nearest_planted": "Boto-7e06",
+     "distance": 4
+    },
+    "Gula-2ecc": {
+     "nearest_planted": "Duda-aece",
+     "distance": 4
+    },
+    "Lizo-19b9": {
+     "nearest_planted": "Dizo-daaf",
+     "distance": 5
+    },
+    "Nefi-d004": {
+     "nearest_planted": "Veti-e0a4",
+     "distance": 4
+    },
+    "Fisi-a565": {
+     "nearest_planted": "Mesi-1524",
+     "distance": 5
+    },
+    "Moru-e165": {
+     "nearest_planted": "Mugo-e1ac",
+     "distance": 5
+    },
+    "Meve-1547": {
+     "nearest_planted": "Mesi-1524",
+     "distance": 4
+    },
+    "Tega-0ef6": {
+     "nearest_planted": "Teda-030d",
+     "distance": 4
+    },
+    "Vogo-b53f": {
+     "nearest_planted": "Vise-e5ef",
+     "distance": 5
+    },
+    "Popa-9fee": {
+     "nearest_planted": "Noka-9aa0",
+     "distance": 5
+    },
+    "Naki-e886": {
+     "nearest_planted": "Rafi-ee26",
+     "distance": 4
+    },
+    "Zufe-c16a": {
+     "nearest_planted": "Zufi-6625",
+     "distance": 5
+    },
+    "Zutu-7260": {
+     "nearest_planted": "Zutu-0174",
+     "distance": 4
+    },
+    "Nidi-309d": {
+     "nearest_planted": "Sidi-175c",
+     "distance": 5
+    },
+    "Nafe-7474": {
+     "nearest_planted": "Fabe-e41b",
+     "distance": 5
+    },
+    "Gako-a854": {
+     "nearest_planted": "Gina-a834",
+     "distance": 4
+    },
+    "Kase-7b8d": {
+     "nearest_planted": "Made-d283",
+     "distance": 5
+    },
+    "Tevu-48ba": {
+     "nearest_planted": "Totu-68bb",
+     "distance": 4
+    },
+    "Feso-70fc": {
+     "nearest_planted": "Feko-5070",
+     "distance": 4
+    },
+    "Puva-880e": {
+     "nearest_planted": "Duva-847b",
+     "distance": 4
+    },
+    "Mebi-029f": {
+     "nearest_planted": "Mabi-0244",
+     "distance": 3
+    },
+    "Rose-4584": {
+     "nearest_planted": "Pote-e5e3",
+     "distance": 5
+    },
+    "Refu-dd90": {
+     "nearest_planted": "Befi-2d10",
+     "distance": 4
+    },
+    "Zabo-58e0": {
+     "nearest_planted": "Zage-5c3b",
+     "distance": 5
+    },
+    "Rota-7969": {
+     "nearest_planted": "Rosu-797b",
+     "distance": 4
+    },
+    "Viga-5c07": {
+     "nearest_planted": "Zage-5c3b",
+     "distance": 5
+    },
+    "Badu-0652": {
+     "nearest_planted": "Lilu-c65b",
+     "distance": 5
+    },
+    "Safo-dc19": {
+     "nearest_planted": "Nozo-dd10",
+     "distance": 5
+    },
+    "Nafu-0005": {
+     "nearest_planted": "Lafu-082e",
+     "distance": 4
+    },
+    "Fulu-008e": {
+     "nearest_planted": "Zetu-0b8c",
+     "distance": 5
+    },
+    "Bule-3bd7": {
+     "nearest_planted": "Pupe-3b9f",
+     "distance": 4
+    },
+    "Lemu-d44e": {
+     "nearest_planted": "Zisu-f41e",
+     "distance": 5
+    },
+    "Vini-0458": {
+     "nearest_planted": "Rini-9354",
+     "distance": 4
+    },
+    "Nete-8c52": {
+     "nearest_planted": "Buse-8c58",
+     "distance": 4
+    },
+    "Nogo-0ef9": {
+     "nearest_planted": "Fogi-7829",
+     "distance": 5
+    },
+    "Vobi-3708": {
+     "nearest_planted": "Vizi-378b",
+     "distance": 4
+    },
+    "Fabe-40a2": {
+     "nearest_planted": "Fabe-e41b",
+     "distance": 4
+    },
+    "Foto-c564": {
+     "nearest_planted": "Pote-e5e3",
+     "distance": 5
+    },
+    "Kabe-1c0b": {
+     "nearest_planted": "Zage-5c3b",
+     "distance": 4
+    },
+    "Demo-f654": {
+     "nearest_planted": "Bena-7653",
+     "distance": 5
+    },
+    "Ruma-8f1f": {
+     "nearest_planted": "Kuta-cf52",
+     "distance": 5
+    },
+    "Tunu-73b4": {
+     "nearest_planted": "Suvi-73e4",
+     "distance": 4
+    },
+    "Faru-473a": {
+     "nearest_planted": "Fotu-8e3a",
+     "distance": 4
+    },
+    "Dibu-c8c6": {
+     "nearest_planted": "Debe-c1b6",
+     "distance": 4
+    },
+    "Tafu-d7c6": {
+     "nearest_planted": "Tavu-dbe8",
+     "distance": 4
+    },
+    "Kezi-950d": {
+     "nearest_planted": "Seza-75cd",
+     "distance": 4
+    },
+    "Pagi-0279": {
+     "nearest_planted": "Mabi-0244",
+     "distance": 4
+    }
+   }
+  },
+  "A": {
+   "what": "the unseen formulations: new templates in four structural cells, new vocabularies",
+   "content_sha256": "e5cb89235116f2729785b38a08cf891675635948af4b5dd076208ddd1c88b308",
+   "n_facts": 200,
+   "n_never_planted": 200,
+   "n_cross_schema": 50,
+   "seeds": {
+    "facts": 30000,
+    "never_planted": [
+     [
+      30001,
+      50
+     ],
+     [
+      30003,
+      150
+     ]
+    ]
+   },
+   "rejections": {
+    "one_character": 3
+   },
+   "templates": {
+    "person": {
+     "S1": {
+      "template": "{e} spends the week as {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.05263157894736842,
+      "skeleton": "{e} _ the _ as {a}",
+      "bytes_max_statement": 37
+     },
+     "S2": {
+      "template": "{e}, {a} by trade, lives nearby",
+      "nearest_first_family_template": "decision/S",
+      "shared_words": [
+       "by"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _, {a} by _, _ _",
+      "bytes_max_statement": 42
+     },
+     "S3": {
+      "template": "the trade of {e}: {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.07692307692307693,
+      "skeleton": "the _ of {e} _: {a}",
+      "bytes_max_statement": 32
+     },
+     "S4": {
+      "template": "by trade, {a} is what {e} does",
+      "nearest_first_family_template": "person/Q",
+      "shared_words": [
+       "is",
+       "what"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.3333333333333333,
+      "char_4gram_jaccard": 0.13043478260869565,
+      "skeleton": "by _, {a} is what {e} does",
+      "bytes_max_statement": 41
+     },
+     "Q1": {
+      "template": "{e} earns a living how?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [
+       "a"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _ a _ how?",
+      "bytes_max_statement": null
+     },
+     "Q2": {
+      "template": "how does {e} earn a living?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [
+       "a"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "how does {e} _ a _?",
+      "bytes_max_statement": null
+     },
+     "P1": {
+      "template": "{e}: trade?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _: _?",
+      "bytes_max_statement": null
+     },
+     "P2": {
+      "template": "trade of {e}?",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.3333333333333333,
+      "skeleton": "_ of {e} _?",
+      "bytes_max_statement": null
+     }
+    },
+    "place": {
+     "S1": {
+      "template": "{e} stands within the district of {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.03333333333333333,
+      "skeleton": "{e} _ _ the _ of {a}",
+      "bytes_max_statement": 49
+     },
+     "S2": {
+      "template": "{e}, a settlement of {a}, on the river",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.034482758620689655,
+      "skeleton": "{e} _, a _ of {a} _, on the _",
+      "bytes_max_statement": 48
+     },
+     "S3": {
+      "template": "the district holding {e} is {a}",
+      "nearest_first_family_template": "place/Q",
+      "shared_words": [
+       "is"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "the _ _ {e} is {a}",
+      "bytes_max_statement": 41
+     },
+     "S4": {
+      "template": "within {a} stands the settlement {e}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.034482758620689655,
+      "skeleton": "_ {a} _ the _ {e}",
+      "bytes_max_statement": 48
+     },
+     "Q1": {
+      "template": "{e} belongs to which district?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "which"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.11428571428571428,
+      "skeleton": "{e} _ to which _?",
+      "bytes_max_statement": null
+     },
+     "Q2": {
+      "template": "which district holds {e}?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "which"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.0967741935483871,
+      "skeleton": "which _ _ {e} _?",
+      "bytes_max_statement": null
+     },
+     "P1": {
+      "template": "{e}: district?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _: _?",
+      "bytes_max_statement": null
+     },
+     "P2": {
+      "template": "district of {e}?",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "_ of {e} _?",
+      "bytes_max_statement": null
+     }
+    },
+    "event": {
+     "S1": {
+      "template": "{e} dates back to {a}",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _ _ to {a}",
+      "bytes_max_statement": 28
+     },
+     "S2": {
+      "template": "{e}, dated {a}, marked the calendar",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.038461538461538464,
+      "skeleton": "{e} _, _ {a} _, _ the _",
+      "bytes_max_statement": 42
+     },
+     "S3": {
+      "template": "the calendar entry for {e} reads {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.034482758620689655,
+      "skeleton": "the _ _ _ {e} _ {a}",
+      "bytes_max_statement": 43
+     },
+     "S4": {
+      "template": "dated {a}, the calendar entry {e} was kept",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.029411764705882353,
+      "skeleton": "_ {a} _, the _ _ {e} was _",
+      "bytes_max_statement": 49
+     },
+     "Q1": {
+      "template": "{e} dates back to when?",
+      "nearest_first_family_template": "event/Q",
+      "shared_words": [
+       "when"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.038461538461538464,
+      "skeleton": "{e} _ _ to when?",
+      "bytes_max_statement": null
+     },
+     "Q2": {
+      "template": "to which date does {e} go back?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "which"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.1111111111111111,
+      "char_4gram_jaccard": 0.1111111111111111,
+      "skeleton": "to which _ does {e} _ _?",
+      "bytes_max_statement": null
+     },
+     "P1": {
+      "template": "{e}: dated?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _: _?",
+      "bytes_max_statement": null
+     },
+     "P2": {
+      "template": "dating of {e}?",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "_ of {e} _?",
+      "bytes_max_statement": null
+     }
+    },
+    "object": {
+     "S1": {
+      "template": "{e} was carved from {a}",
+      "nearest_first_family_template": "decision/S",
+      "shared_words": [
+       "was"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.045454545454545456,
+      "skeleton": "{e} was _ from {a}",
+      "bytes_max_statement": 32
+     },
+     "S2": {
+      "template": "{e}, carved from {a}, sits on the shelf",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.03333333333333333,
+      "skeleton": "{e} _, _ from {a} _, _ on the _",
+      "bytes_max_statement": 48
+     },
+     "S3": {
+      "template": "the raw stuff of {e} is {a}",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "is",
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.3333333333333333,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "the _ _ of {e} is {a}",
+      "bytes_max_statement": 36
+     },
+     "S4": {
+      "template": "from {a} the carvers shaped {e}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.041666666666666664,
+      "skeleton": "from {a} the _ _ {e}",
+      "bytes_max_statement": 40
+     },
+     "Q1": {
+      "template": "{e} was carved from what?",
+      "nearest_first_family_template": "person/Q",
+      "shared_words": [
+       "what"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.041666666666666664,
+      "skeleton": "{e} was _ from what?",
+      "bytes_max_statement": null
+     },
+     "Q2": {
+      "template": "from what was {e} carved?",
+      "nearest_first_family_template": "person/Q",
+      "shared_words": [
+       "what"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.08695652173913043,
+      "skeleton": "from what was {e} _?",
+      "bytes_max_statement": null
+     },
+     "P1": {
+      "template": "{e}: carved from?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _: _ from?",
+      "bytes_max_statement": null
+     },
+     "P2": {
+      "template": "stuff of {e}?",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "_ of {e} _?",
+      "bytes_max_statement": null
+     }
+    },
+    "decision": {
+     "S1": {
+      "template": "{e} fell to the judgment of {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.041666666666666664,
+      "skeleton": "{e} _ to the _ of {a}",
+      "bytes_max_statement": 49
+     },
+     "S2": {
+      "template": "{e}, settled through {a}, was closed",
+      "nearest_first_family_template": "decision/S",
+      "shared_words": [
+       "was"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.030303030303030304,
+      "skeleton": "{e} _, _ _ {a} _, was _",
+      "bytes_max_statement": 54
+     },
+     "S3": {
+      "template": "the matter of {e} rested with {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.038461538461538464,
+      "skeleton": "the _ of {e} _ _ {a}",
+      "bytes_max_statement": 51
+     },
+     "S4": {
+      "template": "settled through {a}, {e} was closed",
+      "nearest_first_family_template": "decision/S",
+      "shared_words": [
+       "was"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.030303030303030304,
+      "skeleton": "_ _ {a} _, {e} was _",
+      "bytes_max_statement": 53
+     },
+     "Q1": {
+      "template": "{e} rested with whom?",
+      "nearest_first_family_template": "decision/P",
+      "shared_words": [
+       "whom"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.08695652173913043,
+      "skeleton": "{e} _ _ whom?",
+      "bytes_max_statement": null
+     },
+     "Q2": {
+      "template": "with whom did the matter of {e} rest?",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.125,
+      "char_4gram_jaccard": 0.030303030303030304,
+      "skeleton": "_ whom did the _ of {e} _?",
+      "bytes_max_statement": null
+     },
+     "P1": {
+      "template": "{e}: settled through?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "{e} _: _ _?",
+      "bytes_max_statement": null
+     },
+     "P2": {
+      "template": "judgment on {e}?",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [],
+      "shared_bigrams": [],
+      "word_jaccard": 0.0,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "_ on {e} _?",
+      "bytes_max_statement": null
+     }
+    }
+   },
+   "never_planted_hamming_distance_counts": {
+    "3": 15,
+    "4": 88,
+    "5": 97
+   },
+   "never_planted_hamming": {
+    "Tegu-c86a": {
+     "nearest_planted": "Seso-c8df",
+     "distance": 5
+    },
+    "Vege-2d15": {
+     "nearest_planted": "Kipe-2df5",
+     "distance": 4
+    },
+    "Dase-27d0": {
+     "nearest_planted": "Dase-07f3",
+     "distance": 3
+    },
+    "Muzo-a2ea": {
+     "nearest_planted": "Vero-a1e6",
+     "distance": 5
+    },
+    "Dugi-f1a8": {
+     "nearest_planted": "Dipo-a1a2",
+     "distance": 5
+    },
+    "Doga-3d91": {
+     "nearest_planted": "Mugo-3d3d",
+     "distance": 5
+    },
+    "Bozo-be44": {
+     "nearest_planted": "Fazo-5147",
+     "distance": 5
+    },
+    "Nisu-4262": {
+     "nearest_planted": "Nisu-0f49",
+     "distance": 4
+    },
+    "Mive-e924": {
+     "nearest_planted": "Tive-09d4",
+     "distance": 3
+    },
+    "Tuke-7eb5": {
+     "nearest_planted": "Tulu-7e33",
+     "distance": 4
+    },
+    "Mali-d699": {
+     "nearest_planted": "Daki-1799",
+     "distance": 4
+    },
+    "Fovu-a574": {
+     "nearest_planted": "Bufu-7574",
+     "distance": 4
+    },
+    "Dugi-33e1": {
+     "nearest_planted": "Mugo-3d3d",
+     "distance": 5
+    },
+    "Fivu-e25d": {
+     "nearest_planted": "Fivu-d277",
+     "distance": 3
+    },
+    "Tupo-3b70": {
+     "nearest_planted": "Mugo-3d3d",
+     "distance": 5
+    },
+    "Nufu-53b5": {
+     "nearest_planted": "Vufu-6d9e",
+     "distance": 5
+    },
+    "Kogu-8557": {
+     "nearest_planted": "Dobu-f5c2",
+     "distance": 5
+    },
+    "Pemo-9a41": {
+     "nearest_planted": "Felo-a449",
+     "distance": 5
+    },
+    "Nali-52f7": {
+     "nearest_planted": "Pani-5450",
+     "distance": 5
+    },
+    "Befo-bd0e": {
+     "nearest_planted": "Vufu-6d9e",
+     "distance": 5
+    },
+    "Biri-cf4c": {
+     "nearest_planted": "Biru-7fc5",
+     "distance": 4
+    },
+    "Roso-31eb": {
+     "nearest_planted": "Vero-a1e6",
+     "distance": 5
+    },
+    "Voti-1439": {
+     "nearest_planted": "Daki-1799",
+     "distance": 5
+    },
+    "Felu-1c4b": {
+     "nearest_planted": "Felo-a449",
+     "distance": 4
+    },
+    "Kufi-9cfe": {
+     "nearest_planted": "Kugi-9a2d",
+     "distance": 4
+    },
+    "Muse-620b": {
+     "nearest_planted": "Base-422b",
+     "distance": 4
+    },
+    "Pila-2bcf": {
+     "nearest_planted": "Bila-e9a0",
+     "distance": 5
+    },
+    "Teza-8492": {
+     "nearest_planted": "Tova-05b2",
+     "distance": 5
+    },
+    "Sire-fd2d": {
+     "nearest_planted": "Rire-8f2f",
+     "distance": 4
+    },
+    "Gezi-90ed": {
+     "nearest_planted": "Visi-5bed",
+     "distance": 5
+    },
+    "Topo-b336": {
+     "nearest_planted": "Ropo-83a6",
+     "distance": 3
+    },
+    "Mavu-dd7c": {
+     "nearest_planted": "Mavu-79f2",
+     "distance": 4
+    },
+    "Kuvo-6de3": {
+     "nearest_planted": "Piro-6d83",
+     "distance": 4
+    },
+    "Pudu-3b7a": {
+     "nearest_planted": "Puze-309e",
+     "distance": 5
+    },
+    "Fomi-3f40": {
+     "nearest_planted": "Lomu-f930",
+     "distance": 5
+    },
+    "Muso-cac4": {
+     "nearest_planted": "Mepo-e8c6",
+     "distance": 5
+    },
+    "Nomu-7ee8": {
+     "nearest_planted": "Lomu-f930",
+     "distance": 5
+    },
+    "Tafo-d29f": {
+     "nearest_planted": "Tufa-c23a",
+     "distance": 5
+    },
+    "Nora-3f04": {
+     "nearest_planted": "Noro-a9b6",
+     "distance": 5
+    },
+    "Buni-211f": {
+     "nearest_planted": "Busi-1d9f",
+     "distance": 4
+    },
+    "Demi-394b": {
+     "nearest_planted": "Deti-5619",
+     "distance": 5
+    },
+    "Zisi-230b": {
+     "nearest_planted": "Visi-5bed",
+     "distance": 5
+    },
+    "Kola-55c7": {
+     "nearest_planted": "Vosa-51cc",
+     "distance": 4
+    },
+    "Dali-e924": {
+     "nearest_planted": "Bila-e9a0",
+     "distance": 5
+    },
+    "Nete-fd94": {
+     "nearest_planted": "Kete-dd0c",
+     "distance": 4
+    },
+    "Dedi-d046": {
+     "nearest_planted": "Deti-5619",
+     "distance": 5
+    },
+    "Lake-c242": {
+     "nearest_planted": "Zaze-c52a",
+     "distance": 5
+    },
+    "Gala-d949": {
+     "nearest_planted": "Bela-d6e9",
+     "distance": 4
+    },
+    "Toko-24ef": {
+     "nearest_planted": "Togu-14bb",
+     "distance": 5
+    },
+    "Ladu-1c98": {
+     "nearest_planted": "Nadu-ecc7",
+     "distance": 4
+    },
+    "Duro-b004": {
+     "nearest_planted": "Ruro-2f99",
+     "distance": 5
+    },
+    "Vine-9d72": {
+     "nearest_planted": "Vine-bdf7",
+     "distance": 3
+    },
+    "Zake-6817": {
+     "nearest_planted": "Maze-6c37",
+     "distance": 4
+    },
+    "Dopa-e6b2": {
+     "nearest_planted": "Tova-05b2",
+     "distance": 4
+    },
+    "Fafu-b9b7": {
+     "nearest_planted": "Fazo-5147",
+     "distance": 5
+    },
+    "Komo-0944": {
+     "nearest_planted": "Kame-b9c4",
+     "distance": 4
+    },
+    "Lumi-947c": {
+     "nearest_planted": "Kugi-9a2d",
+     "distance": 5
+    },
+    "Fofa-93fe": {
+     "nearest_planted": "Fora-6773",
+     "distance": 5
+    },
+    "Dupu-96dc": {
+     "nearest_planted": "Biku-e6d5",
+     "distance": 5
+    },
+    "Mela-87b4": {
+     "nearest_planted": "Fila-4790",
+     "distance": 5
+    },
+    "Kodu-77ab": {
+     "nearest_planted": "Togu-14bb",
+     "distance": 5
+    },
+    "Nevo-e699": {
+     "nearest_planted": "Felo-a449",
+     "distance": 5
+    },
+    "Tive-2122": {
+     "nearest_planted": "Tile-2502",
+     "distance": 3
+    },
+    "Zoze-8af9": {
+     "nearest_planted": "Lede-8cc9",
+     "distance": 5
+    },
+    "Bine-dc60": {
+     "nearest_planted": "Bila-e9a0",
+     "distance": 5
+    },
+    "Pevo-8114": {
+     "nearest_planted": "Pesu-8f1f",
+     "distance": 4
+    },
+    "Kabo-abe9": {
+     "nearest_planted": "Mago-abb6",
+     "distance": 4
+    },
+    "Mupo-4a1f": {
+     "nearest_planted": "Mepo-e8c6",
+     "distance": 5
+    },
+    "Kede-63ae": {
+     "nearest_planted": "Kede-bf90",
+     "distance": 4
+    },
+    "Fifu-6d4c": {
+     "nearest_planted": "Vufu-6d9e",
+     "distance": 4
+    },
+    "Bura-1018": {
+     "nearest_planted": "Zura-15d8",
+     "distance": 3
+    },
+    "Pima-0989": {
+     "nearest_planted": "Poda-09cd",
+     "distance": 4
+    },
+    "Goli-f45d": {
+     "nearest_planted": "Gili-84d9",
+     "distance": 4
+    },
+    "Kusu-b020": {
+     "nearest_planted": "Kugi-9a2d",
+     "distance": 5
+    },
+    "Solu-9434": {
+     "nearest_planted": "Lomu-f930",
+     "distance": 5
+    },
+    "Gako-3320": {
+     "nearest_planted": "Liva-9320",
+     "distance": 5
+    },
+    "Bibe-d887": {
+     "nearest_planted": "Pivi-d858",
+     "distance": 5
+    },
+    "Sizu-b6a0": {
+     "nearest_planted": "Bila-e9a0",
+     "distance": 5
+    },
+    "Leva-d13f": {
+     "nearest_planted": "Reva-7335",
+     "distance": 4
+    },
+    "Noma-be8d": {
+     "nearest_planted": "Lofe-be8d",
+     "distance": 3
+    },
+    "Muda-a69c": {
+     "nearest_planted": "Piva-a6d6",
+     "distance": 5
+    },
+    "Dofi-b0ba": {
+     "nearest_planted": "Bovu-b2bd",
+     "distance": 5
+    },
+    "Difi-d1f2": {
+     "nearest_planted": "Dipo-a1a2",
+     "distance": 4
+    },
+    "Rumu-d4b0": {
+     "nearest_planted": "Ripu-abb0",
+     "distance": 4
+    },
+    "Raka-5535": {
+     "nearest_planted": "Reva-7335",
+     "distance": 4
+    },
+    "Bipa-16dd": {
+     "nearest_planted": "Piva-a6d6",
+     "distance": 4
+    },
+    "Suse-1c94": {
+     "nearest_planted": "Busi-1d9f",
+     "distance": 4
+    },
+    "Vefe-9e00": {
+     "nearest_planted": "Vile-2e03",
+     "distance": 4
+    },
+    "Geni-9044": {
+     "nearest_planted": "Guni-422d",
+     "distance": 5
+    },
+    "Kira-bbc6": {
+     "nearest_planted": "Lere-bb1a",
+     "distance": 5
+    },
+    "Bake-2f35": {
+     "nearest_planted": "Base-d4b5",
+     "distance": 4
+    },
+    "Bafo-6b9f": {
+     "nearest_planted": "Busi-1d9f",
+     "distance": 5
+    },
+    "Pego-0f6d": {
+     "nearest_planted": "Mugo-3d3d",
+     "distance": 5
+    },
+    "Silu-034d": {
+     "nearest_planted": "Nisu-0f49",
+     "distance": 4
+    },
+    "Gila-cdad": {
+     "nearest_planted": "Bila-e9a0",
+     "distance": 4
+    },
+    "Moto-e838": {
+     "nearest_planted": "Mepo-e8c6",
+     "distance": 4
+    },
+    "Kara-3c18": {
+     "nearest_planted": "Kasa-9cfc",
+     "distance": 4
+    },
+    "Todi-9d77": {
+     "nearest_planted": "Dodo-0271",
+     "distance": 5
+    },
+    "Kazo-77da": {
+     "nearest_planted": "Saza-538a",
+     "distance": 5
+    },
+    "Babi-c026": {
+     "nearest_planted": "Mapu-cf96",
+     "distance": 5
+    },
+    "Tomo-b202": {
+     "nearest_planted": "Komo-6b06",
+     "distance": 4
+    },
+    "Nobu-499a": {
+     "nearest_planted": "Vobu-6e97",
+     "distance": 4
+    },
+    "Nami-e097": {
+     "nearest_planted": "Zame-e99a",
+     "distance": 4
+    },
+    "Zaro-93bc": {
+     "nearest_planted": "Zado-1abe",
+     "distance": 4
+    },
+    "Duve-8ada": {
+     "nearest_planted": "Bube-e1da",
+     "distance": 4
+    },
+    "Ziva-cf1d": {
+     "nearest_planted": "Nivo-5f3e",
+     "distance": 5
+    },
+    "Reli-09f6": {
+     "nearest_planted": "Keti-56fc",
+     "distance": 5
+    },
+    "Nodi-5177": {
+     "nearest_planted": "Nefi-1187",
+     "distance": 4
+    },
+    "Vuru-7a7b": {
+     "nearest_planted": "Bufu-7574",
+     "distance": 4
+    },
+    "Zuri-148b": {
+     "nearest_planted": "Zusi-758f",
+     "distance": 4
+    },
+    "Mebo-4c19": {
+     "nearest_planted": "Felo-a449",
+     "distance": 5
+    },
+    "Kite-a8b0": {
+     "nearest_planted": "Ripu-abb0",
+     "distance": 4
+    },
+    "Dani-7486": {
+     "nearest_planted": "Pani-5450",
+     "distance": 4
+    },
+    "Molo-088c": {
+     "nearest_planted": "Mepo-e8c6",
+     "distance": 5
+    },
+    "Zubu-82b1": {
+     "nearest_planted": "Zenu-02d1",
+     "distance": 4
+    },
+    "Rito-59e3": {
+     "nearest_planted": "Mito-0954",
+     "distance": 4
+    },
+    "Toga-917d": {
+     "nearest_planted": "Tova-05b2",
+     "distance": 5
+    },
+    "Nibu-fbf9": {
+     "nearest_planted": "Nisu-0f49",
+     "distance": 4
+    },
+    "Ripo-d193": {
+     "nearest_planted": "Dipo-a1a2",
+     "distance": 4
+    },
+    "Mepo-250b": {
+     "nearest_planted": "Mepo-e8c6",
+     "distance": 4
+    },
+    "Suta-275b": {
+     "nearest_planted": "Suva-41eb",
+     "distance": 4
+    },
+    "Vopi-f658": {
+     "nearest_planted": "Pivi-d858",
+     "distance": 5
+    },
+    "Poku-014e": {
+     "nearest_planted": "Nisu-0f49",
+     "distance": 5
+    },
+    "Zuzo-acda": {
+     "nearest_planted": "Zufa-d5da",
+     "distance": 4
+    },
+    "Voli-b798": {
+     "nearest_planted": "Daki-1799",
+     "distance": 5
+    },
+    "Riti-233a": {
+     "nearest_planted": "Nevi-4338",
+     "distance": 5
+    },
+    "Zogo-51bf": {
+     "nearest_planted": "Noro-a9b6",
+     "distance": 5
+    },
+    "Peti-0701": {
+     "nearest_planted": "Keti-56fc",
+     "distance": 5
+    },
+    "Sile-bad0": {
+     "nearest_planted": "Sere-ba1e",
+     "distance": 4
+    },
+    "Tiba-062c": {
+     "nearest_planted": "Tova-05b2",
+     "distance": 5
+    },
+    "Penu-dff7": {
+     "nearest_planted": "Pesu-8f1f",
+     "distance": 4
+    },
+    "Lumi-96ed": {
+     "nearest_planted": "Kugi-9a2d",
+     "distance": 4
+    },
+    "Velu-2cd5": {
+     "nearest_planted": "Seku-22a5",
+     "distance": 4
+    },
+    "Povo-94bf": {
+     "nearest_planted": "Noro-a9b6",
+     "distance": 5
+    },
+    "Sene-ea11": {
+     "nearest_planted": "Sere-ba1e",
+     "distance": 3
+    },
+    "Meku-05b9": {
+     "nearest_planted": "Tova-05b2",
+     "distance": 5
+    },
+    "Dope-21a7": {
+     "nearest_planted": "Dipo-a1a2",
+     "distance": 4
+    },
+    "Zalo-83a4": {
+     "nearest_planted": "Ropo-83a6",
+     "distance": 4
+    },
+    "Puzu-4886": {
+     "nearest_planted": "Papu-4189",
+     "distance": 4
+    },
+    "Dizo-f7ba": {
+     "nearest_planted": "Dika-77ca",
+     "distance": 4
+    },
+    "Pimo-62e3": {
+     "nearest_planted": "Piro-6d83",
+     "distance": 3
+    },
+    "Mate-5df5": {
+     "nearest_planted": "Kipe-2df5",
+     "distance": 4
+    },
+    "Fize-5436": {
+     "nearest_planted": "Nivo-5f3e",
+     "distance": 5
+    },
+    "Mabu-eba5": {
+     "nearest_planted": "Nabu-3ba1",
+     "distance": 3
+    },
+    "Vuvo-89b7": {
+     "nearest_planted": "Noro-a9b6",
+     "distance": 5
+    },
+    "Kole-a2e0": {
+     "nearest_planted": "Kone-e282",
+     "distance": 4
+    },
+    "Time-5629": {
+     "nearest_planted": "Tize-768f",
+     "distance": 4
+    },
+    "Guzo-7360": {
+     "nearest_planted": "Suno-7a80",
+     "distance": 4
+    },
+    "Kipa-3b3c": {
+     "nearest_planted": "Fina-3083",
+     "distance": 5
+    },
+    "Noba-e278": {
+     "nearest_planted": "Fora-6773",
+     "distance": 5
+    },
+    "Pase-0f30": {
+     "nearest_planted": "Dase-07f3",
+     "distance": 4
+    },
+    "Neko-f6f5": {
+     "nearest_planted": "Neko-71b2",
+     "distance": 4
+    },
+    "Vile-b2e3": {
+     "nearest_planted": "Vile-2e03",
+     "distance": 3
+    },
+    "Luga-2600": {
+     "nearest_planted": "Luta-0cc7",
+     "distance": 5
+    },
+    "Guru-698b": {
+     "nearest_planted": "Vufu-6d9e",
+     "distance": 5
+    },
+    "Litu-db63": {
+     "nearest_planted": "Ripu-abb0",
+     "distance": 5
+    },
+    "Komi-e0f8": {
+     "nearest_planted": "Moge-30c8",
+     "distance": 5
+    },
+    "Beto-9446": {
+     "nearest_planted": "Felo-a449",
+     "distance": 4
+    },
+    "Samo-8c23": {
+     "nearest_planted": "Sama-2a2f",
+     "distance": 4
+    },
+    "Suro-6480": {
+     "nearest_planted": "Suno-7a80",
+     "distance": 3
+    },
+    "Koro-6640": {
+     "nearest_planted": "Komo-6b06",
+     "distance": 4
+    },
+    "Kani-58cf": {
+     "nearest_planted": "Pani-5450",
+     "distance": 4
+    },
+    "Zize-d52c": {
+     "nearest_planted": "Zaze-c52a",
+     "distance": 3
+    },
+    "Tebe-2681": {
+     "nearest_planted": "Tize-768f",
+     "distance": 4
+    },
+    "Nera-d097": {
+     "nearest_planted": "Nefi-1187",
+     "distance": 5
+    },
+    "Kazo-ea7c": {
+     "nearest_planted": "Vezo-c171",
+     "distance": 5
+    },
+    "Relo-9757": {
+     "nearest_planted": "Felo-a449",
+     "distance": 5
+    },
+    "Todu-0774": {
+     "nearest_planted": "Dodo-0271",
+     "distance": 4
+    },
+    "Fole-e823": {
+     "nearest_planted": "Fora-6773",
+     "distance": 5
+    },
+    "Fori-89d6": {
+     "nearest_planted": "Noro-a9b6",
+     "distance": 4
+    },
+    "Duba-5c9a": {
+     "nearest_planted": "Saza-538a",
+     "distance": 5
+    },
+    "Fino-79fb": {
+     "nearest_planted": "Fano-6efe",
+     "distance": 4
+    },
+    "Fete-08ee": {
+     "nearest_planted": "Sere-ba1e",
+     "distance": 5
+    },
+    "Fava-46b3": {
+     "nearest_planted": "Fina-3083",
+     "distance": 5
+    },
+    "Rave-6a41": {
+     "nearest_planted": "Sale-1f01",
+     "distance": 5
+    },
+    "Vefu-deb4": {
+     "nearest_planted": "Vufu-6d9e",
+     "distance": 5
+    },
+    "Zudo-8888": {
+     "nearest_planted": "Zama-808b",
+     "distance": 5
+    },
+    "Kamu-c479": {
+     "nearest_planted": "Kanu-d493",
+     "distance": 4
+    },
+    "Lome-882f": {
+     "nearest_planted": "Rire-8f2f",
+     "distance": 4
+    },
+    "Vulo-3168": {
+     "nearest_planted": "Vero-a1e6",
+     "distance": 5
+    },
+    "Keno-f147": {
+     "nearest_planted": "Fazo-5147",
+     "distance": 4
+    },
+    "Pesi-40a2": {
+     "nearest_planted": "Pesu-fa12",
+     "distance": 4
+    },
+    "Pita-c598": {
+     "nearest_planted": "Kati-ca88",
+     "distance": 5
+    },
+    "Daba-9997": {
+     "nearest_planted": "Daki-1799",
+     "distance": 5
+    },
+    "Miba-5848": {
+     "nearest_planted": "Pivi-d858",
+     "distance": 5
+    },
+    "Vega-03b3": {
+     "nearest_planted": "Tova-05b2",
+     "distance": 5
+    },
+    "Fegi-3bf5": {
+     "nearest_planted": "Keti-56fc",
+     "distance": 5
+    },
+    "Silo-24fe": {
+     "nearest_planted": "Felo-a449",
+     "distance": 5
+    },
+    "Zadi-8f32": {
+     "nearest_planted": "Nada-6a32",
+     "distance": 4
+    },
+    "Kuzi-04f6": {
+     "nearest_planted": "Keti-56fc",
+     "distance": 5
+    },
+    "Sire-abe0": {
+     "nearest_planted": "Ripu-abb0",
+     "distance": 4
+    },
+    "Punu-9e94": {
+     "nearest_planted": "Puze-309e",
+     "distance": 5
+    },
+    "Dizo-2148": {
+     "nearest_planted": "Dipo-a1a2",
+     "distance": 4
+    },
+    "Duma-59ec": {
+     "nearest_planted": "Duda-792e",
+     "distance": 4
+    },
+    "Tunu-cb02": {
+     "nearest_planted": "Sunu-6542",
+     "distance": 4
+    },
+    "Debu-3156": {
+     "nearest_planted": "Vero-a1e6",
+     "distance": 5
+    },
+    "Sasu-85f8": {
+     "nearest_planted": "Balu-8589",
+     "distance": 4
+    },
+    "Nino-3d7a": {
+     "nearest_planted": "Fina-3083",
+     "distance": 5
+    },
+    "Ropi-26a6": {
+     "nearest_planted": "Ropo-83a6",
+     "distance": 3
+    },
+    "Ruki-2704": {
+     "nearest_planted": "Rube-271e",
+     "distance": 4
+    }
+   }
+  },
+  "Av": {
+   "what": "the value cell: the first family's templates with A's vocabularies",
+   "content_sha256": "47d75bf70be72ebe50e277afcf7107f7f2655b175b0d8c88e5e0fb8e7cd6409d",
+   "n_facts": 200,
+   "n_never_planted": 50,
+   "n_cross_schema": 50,
+   "seeds": {
+    "facts": 35000,
+    "never_planted": [
+     [
+      35001,
+      50
+     ]
+    ]
+   },
+   "rejections": {
+    "one_character": 4
+   },
+   "templates": {
+    "person": {
+     "S": {
+      "template": "{e} works as a {a}",
+      "nearest_first_family_template": "person/S",
+      "shared_words": [
+       "a",
+       "as",
+       "works"
+      ],
+      "shared_bigrams": [
+       "as a",
+       "works as"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _ as a {a}",
+      "bytes_max_statement": 29
+     },
+     "Q": {
+      "template": "what is {e}'s job?",
+      "nearest_first_family_template": "person/Q",
+      "shared_words": [
+       "is",
+       "job",
+       "what"
+      ],
+      "shared_bigrams": [
+       "what is"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "what is {e} _ _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — occupation?",
+      "nearest_first_family_template": "person/P",
+      "shared_words": [
+       "occupation"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— _?",
+      "bytes_max_statement": null
+     }
+    },
+    "place": {
+     "S": {
+      "template": "{e} is a town in {a}",
+      "nearest_first_family_template": "place/S",
+      "shared_words": [
+       "a",
+       "in",
+       "is",
+       "town"
+      ],
+      "shared_bigrams": [
+       "a town",
+       "is a",
+       "town in"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} is a _ in {a}",
+      "bytes_max_statement": 32
+     },
+     "Q": {
+      "template": "where is {e}?",
+      "nearest_first_family_template": "place/Q",
+      "shared_words": [
+       "is",
+       "where"
+      ],
+      "shared_bigrams": [
+       "where is"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "where is {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} lies in which region?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "in",
+       "lies",
+       "region",
+       "which"
+      ],
+      "shared_bigrams": [
+       "in which",
+       "lies in",
+       "which region"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _ in which _?",
+      "bytes_max_statement": null
+     }
+    },
+    "event": {
+     "S": {
+      "template": "{e} took place in {a}",
+      "nearest_first_family_template": "event/S",
+      "shared_words": [
+       "in",
+       "place",
+       "took"
+      ],
+      "shared_bigrams": [
+       "place in",
+       "took place"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _ _ in {a}",
+      "bytes_max_statement": 28
+     },
+     "Q": {
+      "template": "when did {e} happen?",
+      "nearest_first_family_template": "event/Q",
+      "shared_words": [
+       "did",
+       "happen",
+       "when"
+      ],
+      "shared_bigrams": [
+       "when did"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "when did {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — the year?",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the",
+       "year"
+      ],
+      "shared_bigrams": [
+       "the year"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— the _?",
+      "bytes_max_statement": null
+     }
+    },
+    "object": {
+     "S": {
+      "template": "{e} is made of {a}",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "is",
+       "made",
+       "of"
+      ],
+      "shared_bigrams": [
+       "is made",
+       "made of"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} is _ of {a}",
+      "bytes_max_statement": 27
+     },
+     "Q": {
+      "template": "what is {e} made of?",
+      "nearest_first_family_template": "object/Q",
+      "shared_words": [
+       "is",
+       "made",
+       "of",
+       "what"
+      ],
+      "shared_bigrams": [
+       "made of",
+       "what is"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "what is {e} _ of?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — its material?",
+      "nearest_first_family_template": "object/P",
+      "shared_words": [
+       "its",
+       "material"
+      ],
+      "shared_bigrams": [
+       "its material"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— _ _?",
+      "bytes_max_statement": null
+     }
+    },
+    "decision": {
+     "S": {
+      "template": "{e} was decided by {a}",
+      "nearest_first_family_template": "decision/S",
+      "shared_words": [
+       "by",
+       "decided",
+       "was"
+      ],
+      "shared_bigrams": [
+       "decided by",
+       "was decided"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} was _ by {a}",
+      "bytes_max_statement": 40
+     },
+     "Q": {
+      "template": "who decided {e}?",
+      "nearest_first_family_template": "decision/Q",
+      "shared_words": [
+       "decided",
+       "who"
+      ],
+      "shared_bigrams": [
+       "who decided"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "who _ {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e} — decided by whom?",
+      "nearest_first_family_template": "decision/P",
+      "shared_words": [
+       "by",
+       "decided",
+       "whom"
+      ],
+      "shared_bigrams": [
+       "by whom",
+       "decided by"
+      ],
+      "word_jaccard": 1.0,
+      "char_4gram_jaccard": 1.0,
+      "skeleton": "{e} _— _ by whom?",
+      "bytes_max_statement": null
+     }
+    }
+   },
+   "never_planted_hamming_distance_counts": {
+    "3": 2,
+    "4": 29,
+    "5": 19
+   },
+   "never_planted_hamming": {
+    "Bora-3e2e": {
+     "nearest_planted": "Tobi-0e2e",
+     "distance": 4
+    },
+    "Dona-7475": {
+     "nearest_planted": "Dofa-840f",
+     "distance": 4
+    },
+    "Kebe-e290": {
+     "nearest_planted": "Kube-32df",
+     "distance": 4
+    },
+    "Safe-6e02": {
+     "nearest_planted": "Sare-f7c2",
+     "distance": 4
+    },
+    "Kini-a05f": {
+     "nearest_planted": "Kofu-a59f",
+     "distance": 5
+    },
+    "Peno-6766": {
+     "nearest_planted": "Mene-a966",
+     "distance": 4
+    },
+    "Muro-aaae": {
+     "nearest_planted": "Mero-1c9e",
+     "distance": 4
+    },
+    "Siti-deb2": {
+     "nearest_planted": "Reta-3eb2",
+     "distance": 4
+    },
+    "Sike-8f41": {
+     "nearest_planted": "Bite-4f6b",
+     "distance": 5
+    },
+    "Riro-c9d5": {
+     "nearest_planted": "Riro-7d86",
+     "distance": 4
+    },
+    "Gobe-0110": {
+     "nearest_planted": "Tobi-0e2e",
+     "distance": 5
+    },
+    "Pake-aa8b": {
+     "nearest_planted": "Gake-657a",
+     "distance": 5
+    },
+    "Somu-f0e0": {
+     "nearest_planted": "Simu-04e6",
+     "distance": 4
+    },
+    "Dope-7a1c": {
+     "nearest_planted": "Vove-f62c",
+     "distance": 5
+    },
+    "Valo-0a5e": {
+     "nearest_planted": "Vipo-02fe",
+     "distance": 4
+    },
+    "Gubu-1767": {
+     "nearest_planted": "Pubi-c566",
+     "distance": 5
+    },
+    "Pori-7b12": {
+     "nearest_planted": "Sori-61d1",
+     "distance": 5
+    },
+    "Piru-28e5": {
+     "nearest_planted": "Peru-68cb",
+     "distance": 4
+    },
+    "Rizu-d191": {
+     "nearest_planted": "Rizu-d789",
+     "distance": 3
+    },
+    "Foti-968c": {
+     "nearest_planted": "Tori-9285",
+     "distance": 4
+    },
+    "Sezu-456e": {
+     "nearest_planted": "Demu-854e",
+     "distance": 4
+    },
+    "Kuvo-9e0f": {
+     "nearest_planted": "Kunu-9e19",
+     "distance": 4
+    },
+    "Nelu-7c2b": {
+     "nearest_planted": "Lesu-cc0b",
+     "distance": 4
+    },
+    "Leka-dd21": {
+     "nearest_planted": "Letu-2721",
+     "distance": 4
+    },
+    "Puta-e33f": {
+     "nearest_planted": "Guta-6187",
+     "distance": 5
+    },
+    "Piga-df0a": {
+     "nearest_planted": "Fita-df65",
+     "distance": 4
+    },
+    "Sova-ba1b": {
+     "nearest_planted": "Bama-ba15",
+     "distance": 4
+    },
+    "Zero-90c2": {
+     "nearest_planted": "Reto-97b0",
+     "distance": 5
+    },
+    "Rera-abf5": {
+     "nearest_planted": "Mega-aba7",
+     "distance": 4
+    },
+    "Sifo-f0d8": {
+     "nearest_planted": "Sifi-fa9f",
+     "distance": 4
+    },
+    "Tani-274a": {
+     "nearest_planted": "Rapi-7740",
+     "distance": 4
+    },
+    "Gefu-eaa7": {
+     "nearest_planted": "Giru-f197",
+     "distance": 5
+    },
+    "Ruru-b45c": {
+     "nearest_planted": "Giru-c02c",
+     "distance": 5
+    },
+    "Kera-2786": {
+     "nearest_planted": "Keve-8681",
+     "distance": 5
+    },
+    "Teri-a440": {
+     "nearest_planted": "Meba-a34f",
+     "distance": 5
+    },
+    "Vidu-c86c": {
+     "nearest_planted": "Giru-c02c",
+     "distance": 4
+    },
+    "Fove-f3da": {
+     "nearest_planted": "Vove-f62c",
+     "distance": 4
+    },
+    "Rete-48da": {
+     "nearest_planted": "Refi-48ee",
+     "distance": 4
+    },
+    "Gibo-1100": {
+     "nearest_planted": "Guno-153e",
+     "distance": 5
+    },
+    "Gefi-1287": {
+     "nearest_planted": "Guta-6187",
+     "distance": 5
+    },
+    "Dura-66ae": {
+     "nearest_planted": "Guta-6187",
+     "distance": 5
+    },
+    "Vafo-5cce": {
+     "nearest_planted": "Vabe-5bae",
+     "distance": 4
+    },
+    "Gire-55a8": {
+     "nearest_planted": "Pire-95a0",
+     "distance": 3
+    },
+    "Paso-f8de": {
+     "nearest_planted": "Kaba-ffd3",
+     "distance": 5
+    },
+    "Vepo-1ce2": {
+     "nearest_planted": "Mero-1c9e",
+     "distance": 4
+    },
+    "Toko-f913": {
+     "nearest_planted": "Roko-ff27",
+     "distance": 4
+    },
+    "Duze-7ab1": {
+     "nearest_planted": "Ruzo-8a11",
+     "distance": 4
+    },
+    "Lero-5751": {
+     "nearest_planted": "Letu-2721",
+     "distance": 4
+    },
+    "Veda-5445": {
+     "nearest_planted": "Beda-69e4",
+     "distance": 5
+    },
+    "Foli-2c1f": {
+     "nearest_planted": "Foge-2007",
+     "distance": 5
+    }
+   }
+  },
+  "dev": {
+   "what": "the development family (the former B): public, open to whoever designs a change, never read as a result",
+   "content_sha256": "4256c806bf5285534a078308769bfb71e57a393b0c9cb5f18041321c4050caa8",
+   "n_facts": 200,
+   "n_never_planted": 50,
+   "n_cross_schema": 50,
+   "seeds": {
+    "facts": 40000,
+    "never_planted": [
+     [
+      40001,
+      50
+     ]
+    ]
+   },
+   "rejections": {
+    "one_character": 2,
+    "year_value": 1
+   },
+   "templates": {
+    "person": {
+     "S": {
+      "template": "by trade, {e} is a {a}",
+      "nearest_first_family_template": "place/S",
+      "shared_words": [
+       "a",
+       "is"
+      ],
+      "shared_bigrams": [
+       "is a"
+      ],
+      "word_jaccard": 0.3333333333333333,
+      "char_4gram_jaccard": 0.05555555555555555,
+      "skeleton": "by _, {e} is a {a}",
+      "bytes_max_statement": 34
+     },
+     "Q": {
+      "template": "which trade does {e} practise?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "which"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.08333333333333333,
+      "skeleton": "which _ does {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e}, what trade?",
+      "nearest_first_family_template": "person/Q",
+      "shared_words": [
+       "what"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.15384615384615385,
+      "skeleton": "{e} _, what _?",
+      "bytes_max_statement": null
+     }
+    },
+    "place": {
+     "S": {
+      "template": "the district of {a} contains {e}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.04,
+      "skeleton": "the _ of {a} _ {e}",
+      "bytes_max_statement": 43
+     },
+     "Q": {
+      "template": "{e} sits in which district?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "in",
+       "which"
+      ],
+      "shared_bigrams": [
+       "in which"
+      ],
+      "word_jaccard": 0.3333333333333333,
+      "char_4gram_jaccard": 0.2857142857142857,
+      "skeleton": "{e} _ in which _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "district of {e}?",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.25,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "_ of {e} _?",
+      "bytes_max_statement": null
+     }
+    },
+    "event": {
+     "S": {
+      "template": "the year {a} saw {e}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the",
+       "year"
+      ],
+      "shared_bigrams": [
+       "the year"
+      ],
+      "word_jaccard": 0.6666666666666666,
+      "char_4gram_jaccard": 0.5555555555555556,
+      "skeleton": "the _ {a} _ {e}",
+      "bytes_max_statement": 27
+     },
+     "Q": {
+      "template": "in which year did {e} occur?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "in",
+       "which"
+      ],
+      "shared_bigrams": [
+       "in which"
+      ],
+      "word_jaccard": 0.2857142857142857,
+      "char_4gram_jaccard": 0.1935483870967742,
+      "skeleton": "in which _ did {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "year of {e}?",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "year"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.3333333333333333,
+      "char_4gram_jaccard": 0.125,
+      "skeleton": "_ of {e} _?",
+      "bytes_max_statement": null
+     }
+    },
+    "object": {
+     "S": {
+      "template": "the stuff of {e} is {a}",
+      "nearest_first_family_template": "object/S",
+      "shared_words": [
+       "is",
+       "of"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.4,
+      "char_4gram_jaccard": 0.0,
+      "skeleton": "the _ of {e} is {a}",
+      "bytes_max_statement": 33
+     },
+     "Q": {
+      "template": "of what stuff is {e}?",
+      "nearest_first_family_template": "object/Q",
+      "shared_words": [
+       "is",
+       "of",
+       "what"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.6,
+      "char_4gram_jaccard": 0.08695652173913043,
+      "skeleton": "of what _ is {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "{e}, which stuff?",
+      "nearest_first_family_template": "place/P",
+      "shared_words": [
+       "which"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.2,
+      "char_4gram_jaccard": 0.13636363636363635,
+      "skeleton": "{e} _, which _?",
+      "bytes_max_statement": null
+     }
+    },
+    "decision": {
+     "S": {
+      "template": "the ruling on {e} came from {a}",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.16666666666666666,
+      "char_4gram_jaccard": 0.041666666666666664,
+      "skeleton": "the _ on {e} _ from {a}",
+      "bytes_max_statement": 49
+     },
+     "Q": {
+      "template": "from whom came the ruling on {e}?",
+      "nearest_first_family_template": "event/P",
+      "shared_words": [
+       "the"
+      ],
+      "shared_bigrams": [],
+      "word_jaccard": 0.14285714285714285,
+      "char_4gram_jaccard": 0.034482758620689655,
+      "skeleton": "from whom _ the _ on {e} _?",
+      "bytes_max_statement": null
+     },
+     "P": {
+      "template": "ruling on {e}, by whom?",
+      "nearest_first_family_template": "decision/P",
+      "shared_words": [
+       "by",
+       "whom"
+      ],
+      "shared_bigrams": [
+       "by whom"
+      ],
+      "word_jaccard": 0.4,
+      "char_4gram_jaccard": 0.23809523809523808,
+      "skeleton": "_ on {e} _, by whom?",
+      "bytes_max_statement": null
+     }
+    }
+   },
+   "never_planted_hamming_distance_counts": {
+    "3": 8,
+    "4": 19,
+    "5": 23
+   },
+   "never_planted_hamming": {
+    "Pala-daf1": {
+     "nearest_planted": "Bala-3af3",
+     "distance": 3
+    },
+    "Maze-08f6": {
+     "nearest_planted": "Suze-c8ea",
+     "distance": 5
+    },
+    "Sema-2696": {
+     "nearest_planted": "Siga-e306",
+     "distance": 5
+    },
+    "Viba-1d69": {
+     "nearest_planted": "Vube-1db0",
+     "distance": 4
+    },
+    "Rura-a547": {
+     "nearest_planted": "Lusa-a59b",
+     "distance": 4
+    },
+    "Fapa-4358": {
+     "nearest_planted": "Nape-fe5a",
+     "distance": 5
+    },
+    "Tudo-3e78": {
+     "nearest_planted": "Ture-1e2e",
+     "distance": 5
+    },
+    "Ruki-341e": {
+     "nearest_planted": "Ruki-6112",
+     "distance": 3
+    },
+    "Rezo-0b5b": {
+     "nearest_planted": "Vefo-0bfb",
+     "distance": 3
+    },
+    "Nuse-ba74": {
+     "nearest_planted": "Nibe-fa3b",
+     "distance": 5
+    },
+    "Kida-a7be": {
+     "nearest_planted": "Kura-16de",
+     "distance": 5
+    },
+    "Muni-de0a": {
+     "nearest_planted": "Mupi-d3c0",
+     "distance": 4
+    },
+    "Dugi-0fc7": {
+     "nearest_planted": "Degi-efa7",
+     "distance": 3
+    },
+    "Dina-7071": {
+     "nearest_planted": "Rona-7ebc",
+     "distance": 5
+    },
+    "Roso-565f": {
+     "nearest_planted": "Golo-6056",
+     "distance": 5
+    },
+    "Zumo-5a42": {
+     "nearest_planted": "Dumu-4a1d",
+     "distance": 5
+    },
+    "Gefa-aa46": {
+     "nearest_planted": "Sara-ca4a",
+     "distance": 5
+    },
+    "Nuzo-3118": {
+     "nearest_planted": "Nogo-21a0",
+     "distance": 5
+    },
+    "Goze-509d": {
+     "nearest_planted": "Gobo-501d",
+     "distance": 3
+    },
+    "Foso-63b3": {
+     "nearest_planted": "Golo-6056",
+     "distance": 5
+    },
+    "Pide-8ee3": {
+     "nearest_planted": "Pipu-4e3e",
+     "distance": 5
+    },
+    "Nuna-ee0e": {
+     "nearest_planted": "Rona-7ebc",
+     "distance": 5
+    },
+    "Posi-a4c2": {
+     "nearest_planted": "Voki-246c",
+     "distance": 5
+    },
+    "Vage-285e": {
+     "nearest_planted": "Fage-2ea7",
+     "distance": 4
+    },
+    "Badi-50a0": {
+     "nearest_planted": "Basa-5050",
+     "distance": 3
+    },
+    "Feko-4cce": {
+     "nearest_planted": "Rezo-4ce0",
+     "distance": 4
+    },
+    "Line-cb27": {
+     "nearest_planted": "Fime-7b24",
+     "distance": 4
+    },
+    "Pomi-7c5f": {
+     "nearest_planted": "Poti-739b",
+     "distance": 4
+    },
+    "Kila-ae1c": {
+     "nearest_planted": "Rona-7ebc",
+     "distance": 5
+    },
+    "Bepe-caef": {
+     "nearest_planted": "Beki-f5eb",
+     "distance": 5
+    },
+    "Refo-51f3": {
+     "nearest_planted": "Vefo-0bfb",
+     "distance": 4
+    },
+    "Sage-873a": {
+     "nearest_planted": "Nape-fe5a",
+     "distance": 5
+    },
+    "Kuki-c42f": {
+     "nearest_planted": "Guza-b42f",
+     "distance": 4
+    },
+    "Pigo-f6e9": {
+     "nearest_planted": "Migo-6ee9",
+     "distance": 3
+    },
+    "Pide-5b35": {
+     "nearest_planted": "Pedi-b915",
+     "distance": 5
+    },
+    "Bivi-99d9": {
+     "nearest_planted": "Misi-92de",
+     "distance": 4
+    },
+    "Tepo-a58c": {
+     "nearest_planted": "Refo-a5c5",
+     "distance": 4
+    },
+    "Bepe-a471": {
+     "nearest_planted": "Bese-8442",
+     "distance": 4
+    },
+    "Gila-f591": {
+     "nearest_planted": "Gigu-f5e6",
+     "distance": 4
+    },
+    "Sesa-ad50": {
+     "nearest_planted": "Basa-5050",
+     "distance": 4
+    },
+    "Liku-0d17": {
+     "nearest_planted": "Riki-2317",
+     "distance": 4
+    },
+    "Subu-bb7b": {
+     "nearest_planted": "Gibe-b02b",
+     "distance": 5
+    },
+    "Nofo-c2e7": {
+     "nearest_planted": "Nogo-21a0",
+     "distance": 5
+    },
+    "Reve-8968": {
+     "nearest_planted": "Bese-8442",
+     "distance": 5
+    },
+    "Tufe-1f22": {
+     "nearest_planted": "Ture-1e2e",
+     "distance": 3
+    },
+    "Nupu-b7da": {
+     "nearest_planted": "Nepu-e5df",
+     "distance": 4
+    },
+    "Gedi-a19d": {
+     "nearest_planted": "Badi-ae6d",
+     "distance": 4
+    },
+    "Kere-faf6": {
+     "nearest_planted": "Kire-aa0a",
+     "distance": 4
+    },
+    "Vubu-5cf9": {
+     "nearest_planted": "Desu-5c60",
+     "distance": 5
+    },
+    "Nese-a992": {
+     "nearest_planted": "Bese-8442",
+     "distance": 4
+    }
+   }
+  }
+ },
+ "decontamination": {
+  "sources": [
+   [
+    "first family facts",
+    0,
+    200
+   ],
+   [
+    "first family never planted",
+    10000,
+    50
+   ],
+   [
+    "density control E0d (first 400 facts)",
+    20000,
+    400
+   ],
+   [
+    "row 40 domain B",
+    1394548301,
+    200
+   ],
+   [
+    "sentinels",
+    2,
+    200
+   ],
+   [
+    "sentinels",
+    10002,
+    50
+   ],
+   [
+    "v9 pool",
+    100000,
+    200
+   ],
+   [
+    "v9 pool",
+    100002,
+    200
+   ],
+   [
+    "v9 pool",
+    100004,
+    200
+   ],
+   [
+    "v9 pool",
+    100006,
+    200
+   ],
+   [
+    "v9 pool",
+    100008,
+    200
+   ],
+   [
+    "v9 pool",
+    100010,
+    200
+   ],
+   [
+    "v9 pool",
+    100012,
+    200
+   ],
+   [
+    "v9 pool",
+    100014,
+    200
+   ],
+   [
+    "v9 pool",
+    100016,
+    200
+   ],
+   [
+    "v9 pool",
+    100018,
+    200
+   ],
+   [
+    "v9 pool",
+    100020,
+    200
+   ],
+   [
+    "v9 pool",
+    100022,
+    200
+   ],
+   [
+    "v9 pool",
+    100024,
+    200
+   ],
+   [
+    "v9 pool",
+    100026,
+    200
+   ],
+   [
+    "v9 pool",
+    100028,
+    200
+   ],
+   [
+    "v9 pool",
+    100030,
+    200
+   ],
+   [
+    "v9 pool",
+    100032,
+    200
+   ],
+   [
+    "v9 pool",
+    100034,
+    200
+   ],
+   [
+    "v9 pool",
+    100036,
+    200
+   ],
+   [
+    "v9 pool",
+    100038,
+    200
+   ],
+   [
+    "v9 pool",
+    100040,
+    200
+   ],
+   [
+    "v9 pool",
+    100042,
+    200
+   ],
+   [
+    "v9 pool",
+    100044,
+    200
+   ],
+   [
+    "v9 pool",
+    100046,
+    200
+   ],
+   [
+    "v9 pool",
+    100048,
+    200
+   ],
+   [
+    "v9 pool",
+    100050,
+    200
+   ],
+   [
+    "v9 pool",
+    100052,
+    200
+   ],
+   [
+    "v9 pool",
+    100054,
+    200
+   ],
+   [
+    "v9 pool",
+    100056,
+    200
+   ],
+   [
+    "v9 pool",
+    100058,
+    200
+   ],
+   [
+    "v9 pool",
+    100060,
+    200
+   ],
+   [
+    "v9 pool",
+    100062,
+    200
+   ],
+   [
+    "v9 pool",
+    100064,
+    200
+   ],
+   [
+    "v9 pool",
+    100066,
+    200
+   ],
+   [
+    "v9 pool",
+    100068,
+    200
+   ],
+   [
+    "v9 pool",
+    100070,
+    200
+   ],
+   [
+    "v9 pool",
+    100072,
+    200
+   ],
+   [
+    "v9 pool",
+    100074,
+    200
+   ],
+   [
+    "v9 pool",
+    100076,
+    200
+   ],
+   [
+    "v9 pool",
+    100078,
+    200
+   ],
+   [
+    "v9 pool",
+    100080,
+    200
+   ],
+   [
+    "v9 pool",
+    100082,
+    200
+   ],
+   [
+    "v9 pool",
+    100084,
+    200
+   ],
+   [
+    "v9 pool",
+    100086,
+    200
+   ],
+   [
+    "v9 pool",
+    100088,
+    200
+   ],
+   [
+    "v9 pool",
+    100090,
+    200
+   ],
+   [
+    "v9 pool",
+    100092,
+    200
+   ],
+   [
+    "v9 pool",
+    100094,
+    200
+   ],
+   [
+    "v9 pool",
+    100096,
+    200
+   ],
+   [
+    "v9 pool",
+    100098,
+    200
+   ],
+   [
+    "v9 pool",
+    100100,
+    200
+   ],
+   [
+    "v9 pool",
+    100102,
+    200
+   ],
+   [
+    "v9 pool",
+    100104,
+    200
+   ],
+   [
+    "v9 pool",
+    100106,
+    200
+   ],
+   [
+    "v9 pool",
+    100108,
+    200
+   ],
+   [
+    "v9 pool",
+    100110,
+    200
+   ],
+   [
+    "v9 pool",
+    100112,
+    200
+   ],
+   [
+    "v9 pool",
+    100114,
+    200
+   ],
+   [
+    "v9 pool",
+    100116,
+    200
+   ],
+   [
+    "v9 pool",
+    100118,
+    200
+   ],
+   [
+    "v9 pool",
+    100120,
+    200
+   ],
+   [
+    "v9 pool",
+    100122,
+    200
+   ],
+   [
+    "v9 pool",
+    100124,
+    200
+   ],
+   [
+    "v9 pool",
+    100126,
+    200
+   ],
+   [
+    "v9 pool",
+    100128,
+    200
+   ],
+   [
+    "v9 pool",
+    100130,
+    200
+   ],
+   [
+    "v9 pool",
+    100132,
+    200
+   ],
+   [
+    "v9 pool",
+    100134,
+    200
+   ],
+   [
+    "v9 pool",
+    100136,
+    200
+   ],
+   [
+    "v9 pool",
+    100138,
+    200
+   ],
+   [
+    "v9 pool",
+    100140,
+    200
+   ],
+   [
+    "v9 pool",
+    100142,
+    200
+   ],
+   [
+    "v9 pool",
+    100144,
+    200
+   ],
+   [
+    "v9 pool",
+    100146,
+    200
+   ],
+   [
+    "v9 pool",
+    100148,
+    200
+   ],
+   [
+    "v9 pool",
+    100150,
+    200
+   ],
+   [
+    "v9 pool",
+    100152,
+    200
+   ],
+   [
+    "v9 pool",
+    100154,
+    200
+   ],
+   [
+    "v9 pool",
+    100156,
+    200
+   ],
+   [
+    "v9 pool",
+    100158,
+    200
+   ],
+   [
+    "v9 pool",
+    100160,
+    200
+   ],
+   [
+    "v9 pool",
+    100162,
+    200
+   ],
+   [
+    "v9 pool",
+    100164,
+    200
+   ],
+   [
+    "v9 pool",
+    100166,
+    200
+   ],
+   [
+    "v9 pool",
+    100168,
+    200
+   ],
+   [
+    "v9 pool",
+    100170,
+    200
+   ],
+   [
+    "v9 pool",
+    100172,
+    200
+   ],
+   [
+    "v9 pool",
+    100174,
+    200
+   ],
+   [
+    "v9 pool",
+    100176,
+    200
+   ],
+   [
+    "v9 pool",
+    100178,
+    200
+   ],
+   [
+    "v9 pool",
+    100180,
+    200
+   ],
+   [
+    "v9 pool",
+    100182,
+    200
+   ],
+   [
+    "v9 pool",
+    100184,
+    200
+   ],
+   [
+    "v9 pool",
+    100186,
+    200
+   ],
+   [
+    "v9 pool",
+    100188,
+    200
+   ],
+   [
+    "v9 pool",
+    100190,
+    200
+   ],
+   [
+    "v9 pool",
+    100192,
+    200
+   ],
+   [
+    "v9 pool",
+    100194,
+    200
+   ],
+   [
+    "v9 pool",
+    100196,
+    200
+   ],
+   [
+    "v9 pool",
+    100198,
+    200
+   ],
+   [
+    "v9 pool",
+    100200,
+    200
+   ],
+   [
+    "v9 pool",
+    100202,
+    200
+   ],
+   [
+    "v9 pool",
+    100204,
+    200
+   ],
+   [
+    "v9 pool",
+    100206,
+    200
+   ],
+   [
+    "v9 pool",
+    100208,
+    200
+   ],
+   [
+    "v9 pool",
+    100210,
+    200
+   ],
+   [
+    "v9 pool",
+    100212,
+    200
+   ],
+   [
+    "v9 pool",
+    100214,
+    200
+   ],
+   [
+    "v9 pool",
+    100216,
+    200
+   ],
+   [
+    "v9 pool",
+    100218,
+    200
+   ],
+   [
+    "v9 pool",
+    100220,
+    200
+   ],
+   [
+    "v9 pool",
+    100222,
+    200
+   ],
+   [
+    "v9 pool",
+    100224,
+    200
+   ],
+   [
+    "v9 pool",
+    100226,
+    200
+   ],
+   [
+    "v9 pool",
+    100228,
+    200
+   ],
+   [
+    "v9 pool",
+    100230,
+    200
+   ],
+   [
+    "v9 pool",
+    100232,
+    200
+   ],
+   [
+    "v9 pool",
+    100234,
+    200
+   ],
+   [
+    "v9 pool",
+    100236,
+    200
+   ],
+   [
+    "v9 pool",
+    100238,
+    200
+   ],
+   [
+    "v9 pool",
+    100240,
+    200
+   ],
+   [
+    "v9 pool",
+    100242,
+    200
+   ],
+   [
+    "v9 pool",
+    100244,
+    200
+   ],
+   [
+    "v9 pool",
+    100246,
+    200
+   ],
+   [
+    "v9 pool",
+    100248,
+    200
+   ],
+   [
+    "v9 pool",
+    100250,
+    200
+   ],
+   [
+    "v9 pool",
+    100252,
+    200
+   ],
+   [
+    "v9 pool",
+    100254,
+    200
+   ],
+   [
+    "v9 pool",
+    100256,
+    200
+   ],
+   [
+    "v9 pool",
+    100258,
+    200
+   ],
+   [
+    "v9 pool",
+    100260,
+    200
+   ],
+   [
+    "v9 pool",
+    100262,
+    200
+   ],
+   [
+    "v9 pool",
+    100264,
+    200
+   ],
+   [
+    "v9 pool",
+    100266,
+    200
+   ],
+   [
+    "v9 pool",
+    100268,
+    200
+   ],
+   [
+    "v9 pool",
+    100270,
+    200
+   ],
+   [
+    "v9 pool",
+    100272,
+    200
+   ],
+   [
+    "v9 pool",
+    100274,
+    200
+   ],
+   [
+    "v9 pool",
+    100276,
+    200
+   ],
+   [
+    "v9 pool",
+    100278,
+    200
+   ],
+   [
+    "v9 pool",
+    100280,
+    200
+   ],
+   [
+    "v9 pool",
+    100282,
+    200
+   ],
+   [
+    "v9 pool",
+    100284,
+    200
+   ],
+   [
+    "v9 pool",
+    100286,
+    200
+   ],
+   [
+    "v9 pool",
+    100288,
+    200
+   ],
+   [
+    "v9 pool",
+    100290,
+    200
+   ],
+   [
+    "v9 pool",
+    100292,
+    200
+   ],
+   [
+    "v9 pool",
+    100294,
+    200
+   ],
+   [
+    "v9 pool",
+    100296,
+    200
+   ],
+   [
+    "v9 pool",
+    100298,
+    200
+   ],
+   [
+    "v9 pool",
+    100300,
+    200
+   ],
+   [
+    "v9 negatives",
+    100001,
+    50
+   ],
+   [
+    "v9 negatives",
+    100003,
+    50
+   ],
+   [
+    "v9 negatives",
+    100005,
+    50
+   ],
+   [
+    "v9 negatives",
+    100007,
+    50
+   ],
+   [
+    "v9 negatives",
+    100009,
+    50
+   ],
+   [
+    "v9 negatives",
+    100011,
+    50
+   ],
+   [
+    "v9 negatives",
+    100013,
+    50
+   ],
+   [
+    "v9 negatives",
+    100015,
+    50
+   ],
+   [
+    "v9 negatives",
+    100017,
+    50
+   ],
+   [
+    "v9 negatives",
+    100019,
+    50
+   ],
+   [
+    "v9 negatives",
+    100021,
+    50
+   ],
+   [
+    "v9 negatives",
+    100023,
+    50
+   ],
+   [
+    "v9 negatives",
+    100025,
+    50
+   ],
+   [
+    "v9 negatives",
+    100027,
+    50
+   ],
+   [
+    "v9 negatives",
+    100029,
+    50
+   ],
+   [
+    "v9 negatives",
+    100031,
+    50
+   ],
+   [
+    "v9 negatives",
+    100033,
+    50
+   ],
+   [
+    "v9 negatives",
+    100035,
+    50
+   ],
+   [
+    "v9 negatives",
+    100037,
+    50
+   ],
+   [
+    "v9 negatives",
+    100039,
+    50
+   ],
+   [
+    "v9 negatives",
+    100041,
+    50
+   ],
+   [
+    "v9 negatives",
+    100043,
+    50
+   ],
+   [
+    "v9 negatives",
+    100045,
+    50
+   ],
+   [
+    "v9 negatives",
+    100047,
+    50
+   ],
+   [
+    "v9 negatives",
+    100049,
+    50
+   ],
+   [
+    "v9 negatives",
+    100051,
+    50
+   ],
+   [
+    "v9 negatives",
+    100053,
+    50
+   ],
+   [
+    "v9 negatives",
+    100055,
+    50
+   ],
+   [
+    "v9 negatives",
+    100057,
+    50
+   ],
+   [
+    "v9 negatives",
+    100059,
+    50
+   ],
+   [
+    "v9 negatives",
+    100061,
+    50
+   ],
+   [
+    "v9 negatives",
+    100063,
+    50
+   ],
+   [
+    "v9 negatives",
+    100065,
+    50
+   ],
+   [
+    "v9 negatives",
+    100067,
+    50
+   ],
+   [
+    "v9 negatives",
+    100069,
+    50
+   ],
+   [
+    "v9 negatives",
+    100071,
+    50
+   ],
+   [
+    "v9 negatives",
+    100073,
+    50
+   ],
+   [
+    "v9 negatives",
+    100075,
+    50
+   ],
+   [
+    "v9 negatives",
+    100077,
+    50
+   ],
+   [
+    "v9 negatives",
+    100079,
+    50
+   ],
+   [
+    "v9 negatives",
+    100081,
+    50
+   ],
+   [
+    "v9 negatives",
+    100083,
+    50
+   ],
+   [
+    "v9 negatives",
+    100085,
+    50
+   ],
+   [
+    "v9 negatives",
+    100087,
+    50
+   ],
+   [
+    "v9 negatives",
+    100089,
+    50
+   ],
+   [
+    "v9 negatives",
+    100091,
+    50
+   ],
+   [
+    "v9 negatives",
+    100093,
+    50
+   ],
+   [
+    "v9 negatives",
+    100095,
+    50
+   ],
+   [
+    "v9 negatives",
+    100097,
+    50
+   ],
+   [
+    "v9 negatives",
+    100099,
+    50
+   ],
+   [
+    "v9 negatives",
+    100101,
+    50
+   ],
+   [
+    "v9 negatives",
+    100103,
+    50
+   ],
+   [
+    "v9 negatives",
+    100105,
+    50
+   ],
+   [
+    "v9 negatives",
+    100107,
+    50
+   ],
+   [
+    "v9 negatives",
+    100109,
+    50
+   ],
+   [
+    "v9 negatives",
+    100111,
+    50
+   ],
+   [
+    "v9 negatives",
+    100113,
+    50
+   ],
+   [
+    "v9 negatives",
+    100115,
+    50
+   ],
+   [
+    "v9 negatives",
+    100117,
+    50
+   ],
+   [
+    "v9 negatives",
+    100119,
+    50
+   ],
+   [
+    "v9 negatives",
+    100121,
+    50
+   ],
+   [
+    "v9 negatives",
+    100123,
+    50
+   ],
+   [
+    "v9 negatives",
+    100125,
+    50
+   ],
+   [
+    "v9 negatives",
+    100127,
+    50
+   ],
+   [
+    "v9 negatives",
+    100129,
+    50
+   ],
+   [
+    "v9 negatives",
+    100131,
+    50
+   ],
+   [
+    "v9 negatives",
+    100133,
+    50
+   ],
+   [
+    "v9 negatives",
+    100135,
+    50
+   ],
+   [
+    "v9 negatives",
+    100137,
+    50
+   ],
+   [
+    "v9 negatives",
+    100139,
+    50
+   ],
+   [
+    "v9 negatives",
+    100141,
+    50
+   ],
+   [
+    "v9 negatives",
+    100143,
+    50
+   ],
+   [
+    "v9 negatives",
+    100145,
+    50
+   ],
+   [
+    "v9 negatives",
+    100147,
+    50
+   ],
+   [
+    "v9 negatives",
+    100149,
+    50
+   ],
+   [
+    "v9 negatives",
+    100151,
+    50
+   ],
+   [
+    "v9 negatives",
+    100153,
+    50
+   ],
+   [
+    "v9 negatives",
+    100155,
+    50
+   ],
+   [
+    "v9 negatives",
+    100157,
+    50
+   ],
+   [
+    "v9 negatives",
+    100159,
+    50
+   ],
+   [
+    "v9 negatives",
+    100161,
+    50
+   ],
+   [
+    "v9 negatives",
+    100163,
+    50
+   ],
+   [
+    "v9 negatives",
+    100165,
+    50
+   ],
+   [
+    "v9 negatives",
+    100167,
+    50
+   ],
+   [
+    "v9 negatives",
+    100169,
+    50
+   ],
+   [
+    "v9 negatives",
+    100171,
+    50
+   ],
+   [
+    "v9 negatives",
+    100173,
+    50
+   ],
+   [
+    "v9 negatives",
+    100175,
+    50
+   ],
+   [
+    "v9 negatives",
+    100177,
+    50
+   ],
+   [
+    "v9 negatives",
+    100179,
+    50
+   ],
+   [
+    "v9 negatives",
+    100181,
+    50
+   ],
+   [
+    "v9 negatives",
+    100183,
+    50
+   ],
+   [
+    "v9 negatives",
+    100185,
+    50
+   ],
+   [
+    "v9 negatives",
+    100187,
+    50
+   ],
+   [
+    "v9 negatives",
+    100189,
+    50
+   ],
+   [
+    "v9 negatives",
+    100191,
+    50
+   ],
+   [
+    "v9 negatives",
+    100193,
+    50
+   ],
+   [
+    "v9 negatives",
+    100195,
+    50
+   ],
+   [
+    "v9 negatives",
+    100197,
+    50
+   ],
+   [
+    "v9 negatives",
+    100199,
+    50
+   ],
+   [
+    "v9 negatives",
+    100201,
+    50
+   ],
+   [
+    "v9 negatives",
+    100203,
+    50
+   ],
+   [
+    "v9 negatives",
+    100205,
+    50
+   ],
+   [
+    "v9 negatives",
+    100207,
+    50
+   ],
+   [
+    "v9 negatives",
+    100209,
+    50
+   ],
+   [
+    "v9 negatives",
+    100211,
+    50
+   ],
+   [
+    "v9 negatives",
+    100213,
+    50
+   ],
+   [
+    "v9 negatives",
+    100215,
+    50
+   ],
+   [
+    "v9 negatives",
+    100217,
+    50
+   ],
+   [
+    "v9 negatives",
+    100219,
+    50
+   ],
+   [
+    "v9 negatives",
+    100221,
+    50
+   ],
+   [
+    "v9 negatives",
+    100223,
+    50
+   ],
+   [
+    "v9 negatives",
+    100225,
+    50
+   ],
+   [
+    "v9 negatives",
+    100227,
+    50
+   ],
+   [
+    "v9 negatives",
+    100229,
+    50
+   ],
+   [
+    "v9 negatives",
+    100231,
+    50
+   ],
+   [
+    "v9 negatives",
+    100233,
+    50
+   ],
+   [
+    "v9 negatives",
+    100235,
+    50
+   ],
+   [
+    "v9 negatives",
+    100237,
+    50
+   ],
+   [
+    "v9 negatives",
+    100239,
+    50
+   ],
+   [
+    "v9 negatives",
+    100241,
+    50
+   ],
+   [
+    "v9 negatives",
+    100243,
+    50
+   ],
+   [
+    "v9 negatives",
+    100245,
+    50
+   ],
+   [
+    "v9 negatives",
+    100247,
+    50
+   ],
+   [
+    "v9 negatives",
+    100249,
+    50
+   ],
+   [
+    "v9 negatives",
+    100251,
+    50
+   ],
+   [
+    "v9 negatives",
+    100253,
+    50
+   ],
+   [
+    "v9 negatives",
+    100255,
+    50
+   ],
+   [
+    "v9 negatives",
+    100257,
+    50
+   ],
+   [
+    "v9 negatives",
+    100259,
+    50
+   ],
+   [
+    "v9 negatives",
+    100261,
+    50
+   ],
+   [
+    "v9 negatives",
+    100263,
+    50
+   ],
+   [
+    "v9 negatives",
+    100265,
+    50
+   ],
+   [
+    "v9 negatives",
+    100267,
+    50
+   ],
+   [
+    "v9 negatives",
+    100269,
+    50
+   ],
+   [
+    "v9 negatives",
+    100271,
+    50
+   ],
+   [
+    "v9 negatives",
+    100273,
+    50
+   ],
+   [
+    "v9 negatives",
+    100275,
+    50
+   ],
+   [
+    "v9 negatives",
+    100277,
+    50
+   ],
+   [
+    "v9 negatives",
+    100279,
+    50
+   ],
+   [
+    "v9 negatives",
+    100281,
+    50
+   ],
+   [
+    "v9 negatives",
+    100283,
+    50
+   ],
+   [
+    "v9 negatives",
+    100285,
+    50
+   ],
+   [
+    "v9 negatives",
+    100287,
+    50
+   ],
+   [
+    "v9 negatives",
+    100289,
+    50
+   ],
+   [
+    "v9 negatives",
+    100291,
+    50
+   ],
+   [
+    "v9 negatives",
+    100293,
+    50
+   ],
+   [
+    "v9 negatives",
+    100295,
+    50
+   ],
+   [
+    "v9 negatives",
+    100297,
+    50
+   ],
+   [
+    "v9 negatives",
+    100299,
+    50
+   ],
+   [
+    "v9 negatives",
+    100301,
+    50
+   ]
+  ],
+  "derived": [
+   "E2 neighbours of the first family's 200 facts (the last hexadecimal character plus one)",
+   "the first family's 200 names moved the other way (the last hexadecimal character minus one), which cover the near name block's fifty"
+  ],
+  "rule": "a name is rejected for an exact match or a one character substitution against the union; a name whose hexadecimal part reads as a year value of any family is rejected; a name already drawn in its family is rejected; a rejected name is replaced by the generator's next draw and counted",
+  "protected_names": 39249
+ },
+ "scale_draws": {
+  "50000": {
+   "size": "ten_thousand",
+   "seed": 50000,
+   "n_facts": 10000,
+   "generator_hash": "5dcb086ab5353453",
+   "never_planted_seed": 50100,
+   "order": {
+    "what": "a permutation of the generator's facts by default_rng(seed + 7); the written sequence",
+    "sha256": "df39899680d605eae19fb76810855a2305eba0a6fc48c100b164ddb56c2b2614",
+    "first_ten": [
+     3159,
+     8768,
+     1907,
+     3239,
+     3756,
+     851,
+     7297,
+     9390,
+     1281,
+     7876
+    ]
+   },
+   "names": {
+    "n": 10000,
+    "distinct": 10000,
+    "repeated_names": 0,
+    "repeated_pairs": 0,
+    "hamming_one_pairs": 14,
+    "what": "among the facts alone, the partners excluded; pairs counted with multiplicity"
+   },
+   "entries_planned": 11000,
+   "partners": {
+    "E1": 500,
+    "E2": 500,
+    "E2_dropped": 0
+   },
+   "never_planted": {
+    "n": 1000,
+    "replaced": 0,
+    "distance_to_nearest_planted_counts": {
+     "1": 3,
+     "2": 107,
+     "3": 824,
+     "4": 66
+    },
+    "per_schema": {
+     "person": 200,
+     "place": 200,
+     "event": 200,
+     "object": 200,
+     "decision": 200
+    }
+   },
+   "sample": {
+    "n": 2000,
+    "sha256": "dfddd9c1d457c8d97cf2f993141557c6dbd4c9e9f70ad8af8bb07cd62bd3a131",
+    "first_ten": [
+     9,
+     12,
+     15,
+     25,
+     34,
+     35,
+     36,
+     38,
+     39,
+     41
+    ]
+   },
+   "content_sha256": "43eab4af76340c218d7bfc9d984253b2112e8df4231f70d9fdcd38e257b40736"
+  },
+  "50001": {
+   "size": "ten_thousand",
+   "seed": 50001,
+   "n_facts": 10000,
+   "generator_hash": "314835cc193dbae6",
+   "never_planted_seed": 50101,
+   "order": {
+    "what": "a permutation of the generator's facts by default_rng(seed + 7); the written sequence",
+    "sha256": "39b0520a7831f61335c82a8b299e8de1cf5471ffb4ed907ee3e9aa651b917b14",
+    "first_ten": [
+     790,
+     1005,
+     9985,
+     9104,
+     4342,
+     9715,
+     3314,
+     6101,
+     8206,
+     6350
+    ]
+   },
+   "names": {
+    "n": 10000,
+    "distinct": 10000,
+    "repeated_names": 0,
+    "repeated_pairs": 0,
+    "hamming_one_pairs": 14,
+    "what": "among the facts alone, the partners excluded; pairs counted with multiplicity"
+   },
+   "entries_planned": 11000,
+   "partners": {
+    "E1": 500,
+    "E2": 500,
+    "E2_dropped": 0
+   },
+   "never_planted": {
+    "n": 1000,
+    "replaced": 0,
+    "distance_to_nearest_planted_counts": {
+     "1": 3,
+     "2": 101,
+     "3": 847,
+     "4": 49
+    },
+    "per_schema": {
+     "person": 200,
+     "place": 200,
+     "event": 200,
+     "object": 200,
+     "decision": 200
+    }
+   },
+   "sample": {
+    "n": 2000,
+    "sha256": "0563d95ed44af3e23e0109375f503b5f071806a4adab7a840c5bd629c4c7b10d",
+    "first_ten": [
+     2,
+     7,
+     18,
+     25,
+     26,
+     33,
+     39,
+     40,
+     47,
+     52
+    ]
+   },
+   "content_sha256": "7f1c2bf7502b06f50ef11d0cf32cfefffdada2476007e07f903e228b7a61762c"
+  },
+  "50002": {
+   "size": "ten_thousand",
+   "seed": 50002,
+   "n_facts": 10000,
+   "generator_hash": "d6fe6100b1c3aad1",
+   "never_planted_seed": 50102,
+   "order": {
+    "what": "a permutation of the generator's facts by default_rng(seed + 7); the written sequence",
+    "sha256": "66f8ea5705320fb34e0ea1c4764ce07ebd4f6eea946beb605f0e3402e88a8a6f",
+    "first_ten": [
+     1421,
+     6919,
+     628,
+     5912,
+     9643,
+     6508,
+     1713,
+     5680,
+     8544,
+     5722
+    ]
+   },
+   "names": {
+    "n": 10000,
+    "distinct": 10000,
+    "repeated_names": 0,
+    "repeated_pairs": 0,
+    "hamming_one_pairs": 17,
+    "what": "among the facts alone, the partners excluded; pairs counted with multiplicity"
+   },
+   "entries_planned": 11000,
+   "partners": {
+    "E1": 500,
+    "E2": 500,
+    "E2_dropped": 0
+   },
+   "never_planted": {
+    "n": 1000,
+    "replaced": 0,
+    "distance_to_nearest_planted_counts": {
+     "1": 4,
+     "2": 105,
+     "3": 829,
+     "4": 62
+    },
+    "per_schema": {
+     "person": 200,
+     "place": 200,
+     "event": 200,
+     "object": 200,
+     "decision": 200
+    }
+   },
+   "sample": {
+    "n": 2000,
+    "sha256": "fe5467c0b4673b9924261bbf02bb07cb6aeff5efc262aaa03e27d1c8e69a047e",
+    "first_ten": [
+     6,
+     7,
+     13,
+     15,
+     20,
+     25,
+     41,
+     42,
+     46,
+     49
+    ]
+   },
+   "content_sha256": "d0ec67561fcf38c34973fe518cabcb9a81c9617b0a6b4bcd1fc1d43de700cb87"
+  },
+  "50003": {
+   "size": "ten_thousand",
+   "seed": 50003,
+   "n_facts": 10000,
+   "generator_hash": "79f7276200df18eb",
+   "never_planted_seed": 50103,
+   "order": {
+    "what": "a permutation of the generator's facts by default_rng(seed + 7); the written sequence",
+    "sha256": "edb8e0957d335ba7e3e1ab56c7b3fe7c2da7b9614cb9720160a6963d495575c7",
+    "first_ten": [
+     9927,
+     8002,
+     2560,
+     3675,
+     3737,
+     9184,
+     5591,
+     5476,
+     3864,
+     7713
+    ]
+   },
+   "names": {
+    "n": 10000,
+    "distinct": 10000,
+    "repeated_names": 0,
+    "repeated_pairs": 0,
+    "hamming_one_pairs": 18,
+    "what": "among the facts alone, the partners excluded; pairs counted with multiplicity"
+   },
+   "entries_planned": 11000,
+   "partners": {
+    "E1": 500,
+    "E2": 500,
+    "E2_dropped": 0
+   },
+   "never_planted": {
+    "n": 1000,
+    "replaced": 0,
+    "distance_to_nearest_planted_counts": {
+     "1": 2,
+     "2": 103,
+     "3": 840,
+     "4": 55
+    },
+    "per_schema": {
+     "person": 200,
+     "place": 200,
+     "event": 200,
+     "object": 200,
+     "decision": 200
+    }
+   },
+   "sample": {
+    "n": 2000,
+    "sha256": "943338a1ab080af110fdf085888519365f5514fdd0288be94bbb1b9e0f95f9ef",
+    "first_ten": [
+     5,
+     10,
+     11,
+     18,
+     28,
+     32,
+     33,
+     38,
+     46,
+     51
+    ]
+   },
+   "content_sha256": "6df561eb134b1dd55a23d0844996091687618ad7a883ee967a78c278aebae445"
+  },
+  "50004": {
+   "size": "ten_thousand",
+   "seed": 50004,
+   "n_facts": 10000,
+   "generator_hash": "efba6b5f7b2f63be",
+   "never_planted_seed": 50104,
+   "order": {
+    "what": "a permutation of the generator's facts by default_rng(seed + 7); the written sequence",
+    "sha256": "daa6a68137d478f0400cf88839a9ef760dcf23ed9296c049cda5f9322ba1c18d",
+    "first_ten": [
+     2978,
+     6709,
+     1086,
+     1204,
+     6570,
+     2290,
+     8395,
+     4563,
+     1313,
+     6639
+    ]
+   },
+   "names": {
+    "n": 10000,
+    "distinct": 9999,
+    "repeated_names": 1,
+    "repeated_pairs": 1,
+    "hamming_one_pairs": 13,
+    "what": "among the facts alone, the partners excluded; pairs counted with multiplicity"
+   },
+   "entries_planned": 11000,
+   "partners": {
+    "E1": 500,
+    "E2": 500,
+    "E2_dropped": 0
+   },
+   "never_planted": {
+    "n": 1000,
+    "replaced": 1,
+    "distance_to_nearest_planted_counts": {
+     "1": 3,
+     "2": 132,
+     "3": 801,
+     "4": 64
+    },
+    "per_schema": {
+     "person": 200,
+     "place": 200,
+     "event": 200,
+     "object": 200,
+     "decision": 200
+    }
+   },
+   "sample": {
+    "n": 2000,
+    "sha256": "c691504eea37f4c1e79ce995e259549a56475e43f4c1661ece4ece375afb6ba2",
+    "first_ten": [
+     5,
+     6,
+     8,
+     20,
+     22,
+     35,
+     57,
+     58,
+     65,
+     67
+    ]
+   },
+   "content_sha256": "a7084075ae3d5ea15418048c8a55ea8c08be4d135834ec678a18ac7cfe4a54b6"
+  },
+  "60000": {
+   "size": "hundred_thousand",
+   "seed": 60000,
+   "n_facts": 100000,
+   "generator_hash": "ed8be88077c98496",
+   "never_planted_seed": 60100,
+   "order": {
+    "what": "a permutation of the generator's facts by default_rng(seed + 7); the written sequence",
+    "sha256": "a3869272a3799d99f5123e9bb08b80343d6fff3a61b1b5b4bb4d234aa8b5c0ad",
+    "first_ten": [
+     27141,
+     22544,
+     19729,
+     35906,
+     72887,
+     90464,
+     3113,
+     74599,
+     94663,
+     91756
+    ]
+   },
+   "names": {
+    "n": 100000,
+    "distinct": 99990,
+    "repeated_names": 10,
+    "repeated_pairs": 10,
+    "hamming_one_pairs": 1537,
+    "what": "among the facts alone, the partners excluded; pairs counted with multiplicity"
+   },
+   "entries_planned": 110000,
+   "partners": {
+    "E1": 5000,
+    "E2": 5000,
+    "E2_dropped": 0
+   },
+   "never_planted": {
+    "n": 1000,
+    "replaced": 0,
+    "distance_to_nearest_planted_counts": {
+     "1": 31,
+     "2": 683,
+     "3": 286
+    },
+    "per_schema": {
+     "person": 200,
+     "place": 200,
+     "event": 200,
+     "object": 200,
+     "decision": 200
+    }
+   },
+   "sample": {
+    "n": 2000,
+    "sha256": "454e59bebe67c845dcc1683f56f2846e59b96f34e71eacbfc1a9834c32dbee13",
+    "first_ten": [
+     43,
+     125,
+     155,
+     158,
+     185,
+     240,
+     399,
+     426,
+     480,
+     492
+    ]
+   },
+   "content_sha256": "559d30bfba3b18a2a2d858b2bdecb474abdce9d566216014a0a7bc217d168f29"
+  }
+ }
+}

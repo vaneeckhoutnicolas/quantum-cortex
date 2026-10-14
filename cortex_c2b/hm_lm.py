@@ -168,12 +168,21 @@ def generate(model, prefix: list[int], window_tokens=None, window_mask=None, gat
 
 def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, window_len: int,
            pointer_of: dict[str, str], policy: str = "plain", veto_threshold: float | None = None,
-           record_index: bool = False) -> dict:
+           record_index: bool = False, shape: str | None = None) -> dict:
     """One arm over a fact list. `pointer_of`: entity -> pointer for planted facts
     (empty for the negative control). `record_index` (ADR-008, 2026-10-13): every answer of
     an arm with the journal open also carries the live cost of its read (the index's
     `touched` increment), the index's signatures of the query under the live geometry and
-    the query's cue, so that a live miss is attributable against the probe's files."""
+    the query's cue, so that a live miss is attributable against the probe's files.
+
+    Row 49 (ADR-007, amendment of 2026-10-14, evening): every answer also carries the question's
+    text (`query`), the raw parse of the model's output before any policy (`raw_kind`, `raw_label`,
+    `raw_answered`, `raw_cited_pointer`), the citation surviving the veto before the value reader
+    (`veto_cited_pointer`) and the window's retrieval order. `shape` (row 50, the live run): a decode
+    shape of `near_duplicate_reading.select_citation`, applied after `parse_contract` and after the
+    veto, under `mark-veto+value` only, on a surviving citation alone; the generation is unchanged."""
+    if shape is not None and shape != "none" and policy != "mark-veto+value":
+        raise ValueError("a decode shape applies under mark-veto+value only (ADR-007, 2026-10-14, section 6)")
     n = max(1, len(facts))
     strict = abstain = invalid = valid = attr_ok = guess = attr_by_chance = hit = 0
     masses = []
@@ -210,13 +219,39 @@ def _probe(model, bridge: JournalBridge, facts: list[Fact], journal_on: bool, wi
             toks, _ = generate(model, query, None, None, gate=0.0)
             labels = {}
         kind, label, attr = parse_contract(toks)
+        raw = {"raw_kind": kind, "raw_label": (chr(label) if isinstance(label, int) else label) if label is not None else None,
+               "raw_answered": attr, "raw_cited_pointer": (labels.get(label) if (kind == "cite" and label in labels) else None)}
         own_p = pointer_of.get(f.entity) if pointer_of else None
         mbp = dict(zip(read.pointers, [float(x) for x in read.scores])) if (read is not None and read.scores) else {}
+        veto_cited = None
+        shape_rec = None
         if policy in ("mark-veto", "mark-veto+value"):
+            if shape is not None and shape != "none":
+                # the veto alone first, then the shape on a surviving citation, then the policy as declared (the value read
+                # from the final cited line); `policy_outcome` stays the one veto function live and in replay
+                k1, _, _ = policy_outcome(kind, label, labels, mbp, bridge.j.payloads, own_p, attr, f.attr, "mark-veto", veto_threshold)
+                veto_cited = labels.get(label) if k1 == "cite" else None
+                from cortex_c2b.near_duplicate_reading import select_citation
+                lines = [{"pointer": pt, "mark": float(sc), "text": (bridge.j.payloads.get(pt) or b"").decode("utf-8", errors="replace")}
+                         for pt, sc in zip(read.pointers, read.scores)]
+                shape_rec = select_citation(shape, veto_cited, lines, float(veto_threshold), f.query)
+                if veto_cited is not None:
+                    if shape_rec["pointer"] is None:
+                        kind, label, attr = "unknown", None, None
+                    elif shape_rec["pointer"] != veto_cited:
+                        label = next(b for b, pt in labels.items() if pt == shape_rec["pointer"])
+            else:
+                k1, _, _ = policy_outcome(kind, label, labels, mbp, bridge.j.payloads, own_p, attr, f.attr, "mark-veto", veto_threshold)
+                veto_cited = labels.get(label) if k1 == "cite" else None
             kind, attr, _ = policy_outcome(kind, label, labels, mbp, bridge.j.payloads, own_p, attr, f.attr, policy, veto_threshold)
-        rec = {"entity": f.entity, "schema": f.schema, "attr": f.attr, "kind": kind,
+        rec = {"entity": f.entity, "schema": f.schema, "attr": f.attr, "query": f.query, "kind": kind,
                "label": (chr(label) if isinstance(label, int) else label) if label is not None else None, "answered": attr,
-               "outcome": None, "own_in_window": (own_p in read.pointers) if (read is not None and own_p) else None}
+               "outcome": None, "own_in_window": (own_p in read.pointers) if (read is not None and own_p) else None,
+               **raw, "veto_cited_pointer": veto_cited}
+        if shape is not None:
+            rec["shape"] = shape_rec
+        if journal_on and read is not None:
+            rec["retrieval_order"] = list(read.pointers)
         if journal_on and record_index:
             idx = bridge.jp.index
             rec["touched"] = int(touched)
@@ -415,7 +450,8 @@ def best_mark_threshold(pos: list[tuple[float, bool]], negs: list[float]) -> tup
 
 @torch.no_grad()
 def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact], pointer_of: dict[str, str],
-                train_seed: int = 100_000, train_n: int = 200, k: int | None = None, threshold_geometry: dict | None = None) -> dict:
+                train_seed: int = 100_000, train_n: int = 200, k: int | None = None, threshold_geometry: dict | None = None,
+                admission: str | None = None) -> dict:
     """RES-23, declared before v9 ran: the ceiling the organ's marks allow, with no
     model output. A rule: cite the line with the highest mark when that mark clears
     a threshold, else abstain. The threshold is read from the training facts family
@@ -433,9 +469,12 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
     # `threshold_geometry` (ADR-008, 2026-10-13): the geometry of the scratch journal the threshold is read on; None is the
     # code's default, legacy, whatever index the live bridge holds, so a replay under the adopted geometry keeps the legacy
     # threshold as declared ("the same checkpoint, journal, shuffle seed, k, budget and threshold"); recorded below
+    # `admission` (ADR-007, 2026-10-14, evening): the scratch journal is planted under the arm's rule, its admissions recorded;
+    # None is the code's default (surprise), the rule of every threshold of the record
     scratch = JournalBridge(model, Journal(), k=k, budget_bytes=bridge.budget, seed=0, shuffle_seed=1,
-                            device=bridge.device, mark=bridge.mark, index_geometry=threshold_geometry)
+                            device=bridge.device, mark=bridge.mark, index_geometry=threshold_geometry, admission=admission)
     plant_pool(scratch, tf)
+    scratch_admitted = len(scratch.j)
     pos, negs = [], []
     for f in tf:
         r = scratch.read(scratch.cues([encode_query(f.query)])[0])
@@ -472,7 +511,8 @@ def mark_oracle(model, bridge: JournalBridge, facts: list[Fact], neg: list[Fact]
             "gap": gap, "passes_without_skill_arm": bool(passes), "encoder": "this checkpoint's own cue encoder",
             # the oracle's recall and claims above are the live bridge's; the threshold's reads are the scratch journal's
             "threshold_index_geometry": {k2: v for k2, v in scratch.jp.index.geometry().items() if k2 != "planes_sha256"},
-            "live_index_geometry": {k2: v for k2, v in bridge.jp.index.geometry().items() if k2 != "planes_sha256"}}
+            "live_index_geometry": {k2: v for k2, v in bridge.jp.index.geometry().items() if k2 != "planes_sha256"},
+            "scratch_admission": scratch.j.admission_record(), "scratch_admitted": int(scratch_admitted), "scratch_facts": len(tf)}
 
 
 @torch.no_grad()
@@ -494,7 +534,8 @@ def skill_delta(model, bridge: JournalBridge, val_batches: list[tuple[torch.Tens
 
 def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N_NEGCTRL, seed: int = 0,
               k: int = 4, budget: int = 256, window_len: int = 256, val_batches=None,
-              on_disk: bool = False, reopen: bool = True, mark: bool = False, index_geometry: dict | None = None) -> dict:
+              on_disk: bool = False, reopen: bool = True, mark: bool = False, index_geometry: dict | None = None,
+              admission: str | None = None) -> dict:
     """`journal_factory()` returns the run's journal (a fresh one on the first
     call; the same on-disk scope reopened on the second). Session A plants the
     frozen protocol's facts through the model's cues; session B reopens the
@@ -509,7 +550,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
     # --- session A: plant through the NORMAL gated path, cues from the model ---
     journal = journal_factory()
     bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, device=device, mark=mark,
-                           index_geometry=index_geometry)                       # the run's geometry, stamped in a fresh journal (2026-10-13)
+                           index_geometry=index_geometry, admission=admission)  # the run's geometry and rule, stamped in a fresh journal
     admitted = 0
     for i, f in enumerate(facts):
         admitted += int(bridge.write(f.statement, f.schema, now=float(i), entity=f.entity).admitted)
@@ -521,7 +562,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
         del bridge
         journal = journal_factory()
     bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
-                           mark=mark, index_geometry=index_geometry)
+                           mark=mark, index_geometry=index_geometry, admission=admission)
     storage = lifecycle_declaration(journal)["storage"]
     persistent = bool(on_disk and reopen and durable_a and journal.mode == MODE_DURABLE)
 
@@ -530,7 +571,7 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
     neg_on = _probe(model, bridge, neg, True, window_len, {})
     neg_off = _probe(model, bridge, neg, False, window_len, {})
     delta, ppl_on, ppl_off = skill_delta(model, bridge, val_batches, window_len) if val_batches else (0.0, None, None)
-    oracle = mark_oracle(model, bridge, facts, neg, pointer_of)
+    oracle = mark_oracle(model, bridge, facts, neg, pointer_of, admission=admission)
 
     negctrl_claims = neg_on["guess_rate"]                     # a claim on a never-planted entity
     valid = negctrl_claims < NEGCTRL_INVALID
@@ -563,6 +604,8 @@ def run_hm_lm(model, journal_factory, n_facts: int = N_FACTS, n_negctrl: int = N
         "attribution": {"encoder": on["retrieval_hit"], "reader": on["attention_mass"],
                         "answer": on["attr_exact_given_valid"]},
         "index": {"record": journal.index_record(), "live": bridge.jp.index.geometry(), "overridden": bridge.jp.index_overridden},
+        "admission": {"record": journal.admission_record(), "source": journal.admission_record_source(), "asked": admission,
+                      "near_recorded": len(journal.near_of)},
         "verdict": (("PASS" if dissociation else ("INVALID" if not valid else "FAIL"))
                     + " -- LM arm, cite-or-abstain contract"
                     + ("" if persistent else " -- persistent: false, not claimable")),
@@ -774,15 +817,20 @@ def parse_index_argument(text: str) -> dict:
     return {"n_tables": int(parts[0]), "n_bits": 10, "signature": parts[1]}
 
 
-def session_b_file_name(run_id: str, policy: str, index_argument: dict | None, control: bool, near_dup: str | None = None) -> str:
+def session_b_file_name(run_id: str, policy: str, index_argument: dict | None, control: bool, near_dup: str | None = None,
+                        admission: str | None = None, shape: str | None = None) -> str:
     """The file's name says what it is: `-control` for the replay under the recorded geometry read against a legacy
     file, `-index<tables><signature>` for a replay under a declared index, nothing for the files of every row to date;
     then the policy's suffix as before. `-near-dup-<arm>` (ADR-007, amendment of 2026-10-13, evening) names a session B
-    read on an arm's fresh journal of the near duplicate probe, so that no file of rows 36 to 47 can be overwritten."""
+    read on an arm's fresh journal of the near duplicate probe, so that no file of rows 36 to 47 can be overwritten.
+    `-identity` after the arm (row 49) names a journal planted under the identity rule, so that no file of row 48 can be
+    overwritten; `-R4` (row 50's live run) names the decode shape applied live."""
     suffix = "" if policy == "plain" else "-" + policy.replace("+", "-")
     what = "-control" if control else (f"-index{index_argument['n_tables']}{index_argument['signature']}" if index_argument else "")
     nd = f"-near-dup-{near_dup}" if near_dup else ""
-    return f"hm-lm-{run_id}{nd}-session-b{what}{suffix}.json"
+    rule = "-identity" if admission == "identity" else ""
+    sh = f"-{shape}" if (shape and shape != "none") else ""
+    return f"hm-lm-{run_id}{nd}{rule}{sh}-session-b{what}{suffix}.json"
 
 
 def _min_margin(live: dict, thr: float) -> float | None:
@@ -895,7 +943,8 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
                         seed: int = 0, k: int = 4, budget: int = 256, window_len: int = 256,
                         train_pool_seed: int | None = None, train_pool_n: int = 200, policy: str = "plain",
                         index_override: dict | None = None, control_against=None,
-                        near_duplicate_arm: str | None = None, planting_record=None) -> dict:
+                        near_duplicate_arm: str | None = None, planting_record=None,
+                        admission: str | None = None, decode_shape: str | None = None) -> dict:
     """Reopen everything from the disk alone and probe. The planted facts are found
     by content addressing (a statement's pointer is the hash of its bytes), so no
     state of session A is needed beyond the journal file and the checkpoint.
@@ -913,7 +962,14 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     duplicate probe (B0, E0d, E1, E2); the pointers of the admitted near duplicates are recomputed here from the generator
     and the seeded plan alone, and every planted question carries `cited_is_duplicate`, `duplicate_in_window`,
     `both_marks_at_or_above_threshold` and `own_cited`; `planting_record`, the planting process's record (the gate's
-    decision per write), is embedded as written."""
+    decision per write), is embedded as written.
+
+    Row 49 (ADR-007, amendment of 2026-10-14, evening): `admission`, the rule the journal must record (refused when the
+    record differs; None reads the record); the arm E4 (the paraphrase's pointer as the partner's); every planted question
+    carries the citation support read from the planting record's truth; two reported blocks run after the protocol's
+    three (the near name never planted block in every arm; the neighbour questions in the E2 arm), entering no
+    precondition; the oracle's scratch journal is planted under the arm's rule. `decode_shape` (row 50's live run): a
+    shape of `near_duplicate_reading.select_citation` applied live under `mark-veto+value`, named in the file."""
     import train
     from datetime import datetime, timezone
     from cortex_c2b import content_hash, record_tools
@@ -934,44 +990,62 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
     started = datetime.now(timezone.utc).isoformat(timespec="seconds")
     with record_tools.opened_copy(jpath, key_from_env(), prefix="session-b-") as (journal, _copy):
         mark = bool(getattr(cfg, "journal_familiarity_mark", False))
+        if admission is not None and journal.admission_record() not in (None, admission):
+            raise ValueError(f"admission: the journal records {journal.admission_record()!r}, this read asks {admission!r}; refused")
+        if decode_shape is not None and decode_shape != "none" and policy != "mark-veto+value":
+            raise ValueError("a decode shape applies under mark-veto+value only (ADR-007, 2026-10-14, section 6)")
         if index_override is not None:                                       # the declared probe variable: an explicit index, kept whatever the record
             live_index = CueIndex(dim=journal.cue_dim, n_bits=index_override["n_bits"], n_tables=index_override["n_tables"],
                                   seed=seed, signature=index_override["signature"])
             jp = JournalPath(journal, index=live_index)
             bridge = JournalBridge(model, journal, journal_path=jp, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1,
-                                   device=device, mark=mark)
+                                   device=device, mark=mark, admission=admission)
         else:
             bridge = JournalBridge(model, journal, k=k, budget_bytes=budget, seed=seed, shuffle_seed=seed + 1, device=device,
-                                   mark=mark, index_geometry=config_geometry)
+                                   mark=mark, index_geometry=config_geometry, admission=admission)
         index_block = {"record": journal.index_record(), "record_source": journal.index_record_source(),
                        "live": bridge.jp.index.geometry(), "overridden": bool(bridge.jp.index_overridden),
                        "config": {"n_tables": int(cfg.journal_index_tables), "signature": str(cfg.journal_index_signature)},
                        "argument": (dict(index_override) if index_override is not None else None)}
+        rule = journal.admission_record() or bridge.wp.admission          # the journal's rule as recorded (the code's default on a fresh one)
+        admission_block = {"record": journal.admission_record(), "record_source": journal.admission_record_source(),
+                           "bound": bridge.wp.admission, "argument": admission, "near_recorded": len(journal.near_of),
+                           "planting": ((planting_record or {}).get("admission") if planting_record else None)}
         if control_against is not None and index_block["overridden"]:
             raise ValueError("control: a control replay reads the journal's recorded geometry; an explicit --index is not a control (drop one of the two)")
         facts, gen_hash = generate_facts(n_facts, seed)
         neg, _ = generate_facts(n_negctrl, seed + 10_000)
         pointer_of = {f.entity: content_hash(f.statement.encode("utf-8")) for f in facts
                       if content_hash(f.statement.encode("utf-8")) in journal.payloads}
-        oracle = mark_oracle(model, bridge, facts, neg, pointer_of)        # once: the veto's threshold is the one the file records
+        oracle = mark_oracle(model, bridge, facts, neg, pointer_of, admission=rule)   # once: the veto's threshold is the one the file records
         thr = oracle["threshold"] if policy.startswith("mark-veto") else None
-        on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy, veto_threshold=thr, record_index=True)
+        shape = decode_shape if (decode_shape and decode_shape != "none") else None
+        on = _probe(model, bridge, facts, True, window_len, pointer_of, policy=policy, veto_threshold=thr, record_index=True, shape=shape)
         off = _probe(model, bridge, facts, False, window_len, pointer_of, policy=policy, veto_threshold=thr)
-        neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy, veto_threshold=thr, record_index=True)
+        neg_on = _probe(model, bridge, neg, True, window_len, {}, policy=policy, veto_threshold=thr, record_index=True, shape=shape)
         near_dup_block = None
+        reported_blocks = None
         entries_now = len(journal)
         if near_duplicate_arm is not None:
-            from cortex_c2b.near_duplicate_probe import ARMS, KINDS, pointer_of_duplicate
+            from cortex_c2b.near_duplicate_probe import (ARMS, KINDS, PARAPHRASE_ARM, pointer_of_duplicate, e2_plan, near_name_plan,
+                                                         neighbour_questions)
             if near_duplicate_arm not in ARMS:
                 raise ValueError(f"near duplicate arm must be one of {ARMS}, got {near_duplicate_arm!r}")
             protected = {f.entity for f in facts} | {f.entity for f in neg}
             dup_of = pointer_of_duplicate(facts, near_duplicate_arm, seed, protected, journal.payloads)
+            # the generator's truth per planted line, from the planting record (row 49): pointer -> {entity, value, kind}
+            truth = {w["pointer"]: {**w["truth"], "kind": w.get("kind")} for w in ((planting_record or {}).get("writes") or [])
+                     if w.get("pointer") and w.get("truth")}
             both = cited_dup = dup_in_window = own_cited_n = cited_dup_given_both = 0
+            supported = unreadable = 0
             for a in on["answers"]:
                 dp = dup_of.get(a["entity"])
                 wps = [w["pointer"] for w in a.get("window", [])]
                 a["own_cited"] = (a.get("cited_pointer_is_own") is True)
-                a["cited_is_duplicate"] = (dp is not None and a.get("cited_pointer") == dp)
+                # the surviving citation's pointer is the partner's (the rules text); read on the citation surviving the veto, before the
+                # value reader, which on E4 abstains on a paraphrase line by construction (committee of 2026-10-15); equal to the final
+                # citation on E1 and E2, whose lines the value reader always reads
+                a["cited_is_duplicate"] = (dp is not None and a.get("veto_cited_pointer") == dp)
                 a["duplicate_in_window"] = (dp is not None and dp in wps)
                 marks = {w["pointer"]: w["mark"] for w in a.get("window", [])}
                 op = pointer_of.get(a["entity"])
@@ -986,18 +1060,99 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
                 hi = max((w for w in a.get("window", []) if w.get("mark") is not None), key=lambda w: w["mark"], default=None)
                 a["oracle_cites_own"] = bool(hi is not None and thr is not None and hi["mark"] >= thr and hi["pointer"] == op)
                 a["oracle_cites_duplicate"] = bool(hi is not None and thr is not None and hi["mark"] >= thr and dp is not None and hi["pointer"] == dp)
+                # row 49: citation support, read on the citation surviving the veto (before the value reader) from the planting
+                # record's truth: the cited line's entity equals the question's and its value the expected one (citing a paraphrase
+                # is correct provenance; a duplicate of E1 or E2 is not); the final citation's support beside it
+                vc = a.get("veto_cited_pointer")
+                t = truth.get(vc) if vc is not None else None
+                a["cited_line_kind"] = (t["kind"] if t is not None else None)
+                if vc is not None and t is None:
+                    a["citation_support"] = None; a["citation_support_answered"] = None; unreadable += 1
+                else:
+                    a["citation_support"] = (bool(t is not None and t["entity"] == a["entity"] and t["value"] == a["attr"]) if vc is not None else None)
+                    # section 7's wording, the answered value (under +value the cited line's own, so the entity decides): recorded beside
+                    a["citation_support_answered"] = (bool(t is not None and t["entity"] == a["entity"] and (a.get("answered") is None or t["value"] == a.get("answered")))
+                                                      if vc is not None else None)
+                    supported += int(a["citation_support"] is True)
+                fc = a.get("cited_pointer"); tf_ = truth.get(fc) if fc is not None else None
+                a["citation_support_final"] = (bool(tf_ is not None and tf_["entity"] == a["entity"] and tf_["value"] == a["attr"]) if fc is not None else None)
+                if shape is not None and a.get("shape") is not None:
+                    a["shape_cited_own"] = (a["shape"].get("pointer") == op)
+                    a["shape_cited_duplicate"] = (dp is not None and a["shape"].get("pointer") == dp)
+            partner_word = "paraphrase" if near_duplicate_arm == PARAPHRASE_ARM else "duplicate"
             near_dup_block = {"arm": near_duplicate_arm, "kind": (near_duplicate_arm if near_duplicate_arm in KINDS else None),
+                              "partner": (partner_word if near_duplicate_arm in (KINDS + (PARAPHRASE_ARM,)) else None),
                               "pointer_of_duplicate": dup_of, "duplicates_found": len(dup_of),
                               "counts": {"own_cited": own_cited_n, "cited_is_duplicate": cited_dup, "duplicate_in_window": dup_in_window,
                                          "both_marks_at_or_above_threshold": both,
                                          "duplicate_cited_given_both_present_n": cited_dup_given_both,
                                          "duplicate_cited_given_both_present": ((cited_dup_given_both / both) if both else None),
                                          "oracle_cites_own": sum(1 for a in on["answers"] if a["oracle_cites_own"]),
-                                         "oracle_cites_duplicate": sum(1 for a in on["answers"] if a["oracle_cites_duplicate"])},
+                                         "oracle_cites_duplicate": sum(1 for a in on["answers"] if a["oracle_cites_duplicate"]),
+                                         "citation_supported": supported, "citation_unreadable": unreadable},
                               "rules": {"threshold_comparison": "at or above the oracle's threshold, as the veto compares (the oracle's own rule claims strictly above; equality on a float cosine is not observed)",
-                                        "own_cited": "cited_pointer_is_own is True after the veto", "cited_is_duplicate": "the surviving citation's pointer is the duplicate's"},
+                                        "own_cited": "cited_pointer_is_own is True after the veto",
+                                        "cited_is_duplicate": "the citation surviving the veto (before the value reader) is the partner's line (E4: the paraphrase's)",
+                                        "citation_support": "the citation surviving the veto names a line whose planted truth is the question's entity and the expected value "
+                                                            "(ADR-007, 2026-10-14, section 4 (b)); `citation_support_answered` reads section 7's wording, the answered value, beside it"},
                               "code_commit_source": "forwarded from the planting process, which verified the tree a moment before (the new mode)",
+                              "admission": admission_block, "decode_shape": decode_shape,
                               "planting": planting_record}
+            # ---- the two reported blocks (ADR-007, amendment of 2026-10-14, evening, section 5), after the protocol's three: the
+            # shuffle's stream has advanced with the declared blocks' windows, which these do not touch; they enter no precondition
+            from cortex_c2b.near_duplicate_probe import e0d_facts, E0D_SEED
+            protected_block = set(protected) | {g.entity for g in e0d_facts(2 * n_facts, E0D_SEED, protected)}   # E0d's entities, every arm
+            protected_block |= set((planting_record or {}).get("e0d_entities") or [])
+            e2p = e2_plan(facts, protected)
+            protected_block |= {nb for nb in e2p.values() if nb is not None}
+            nn = near_name_plan(facts, protected_block)
+            nn_facts = [Fact(entity=q["entity"], schema=q["schema"], attr="(never planted)", statement="", query=q["query"], paraphrase="", cue=facts[0].cue)
+                        for q in nn["questions"]]
+            nn_probe = _probe(model, bridge, nn_facts, True, window_len, {}, policy=policy, veto_threshold=thr, record_index=True, shape=shape)
+            for a, q in zip(nn_probe["answers"], nn["questions"]):
+                npnt = pointer_of.get(q["planted_neighbour"])
+                marks = {w["pointer"]: w["mark"] for w in a.get("window", [])}
+                a["planted_neighbour"] = q["planted_neighbour"]; a["neighbour_pointer"] = npnt
+                a["neighbour_in_window"] = (npnt in marks)
+                a["neighbour_mark"] = marks.get(npnt)
+                a["neighbour_mark_at_or_above_threshold"] = bool(thr is not None and marks.get(npnt) is not None and marks[npnt] >= thr)
+                a["cited_neighbour"] = (a.get("cited_pointer") == npnt and npnt is not None)
+                a["raw_cited_neighbour"] = (a.get("raw_cited_pointer") == npnt and npnt is not None)
+            reported_blocks = {"near_name_never_planted": {"what": "never planted names one hexadecimal character from a planted one (the planted "
+                                                                  "name's last character minus one modulo sixteen), the protocol's direct query; a "
+                                                                  "reported block, no precondition (ADR-007, 2026-10-14, section 5)",
+                                                           "plan": {"rule": nn["rule"], "dropped": nn["dropped"], "n": len(nn["questions"])},
+                                                           "claims": nn_probe["guess_rate"], "abstain_rate": nn_probe["abstain_rate"],
+                                                           "claims_n": sum(1 for a in nn_probe["answers"] if a["kind"] != "unknown"),
+                                                           "raw_claims_n": sum(1 for a in nn_probe["answers"] if a["raw_kind"] != "unknown"),
+                                                           "neighbour_in_window": sum(1 for a in nn_probe["answers"] if a["neighbour_in_window"]),
+                                                           "neighbour_mark_at_or_above_threshold": sum(1 for a in nn_probe["answers"] if a["neighbour_mark_at_or_above_threshold"]),
+                                                           "cited_neighbour": sum(1 for a in nn_probe["answers"] if a["cited_neighbour"]),
+                                                           "marks": nn_probe["marks"], "answers": nn_probe["answers"]}}
+            if near_duplicate_arm == "E2":
+                nq = neighbour_questions(facts, e2p)
+                nq_pointer_of = {f.entity: dup_of[orig.entity] for f, orig in zip(nq, [g for g in facts if e2p.get(g.entity) is not None])
+                                 if orig.entity in dup_of}
+                nq_probe = _probe(model, bridge, nq, True, window_len, nq_pointer_of, policy=policy, veto_threshold=thr, record_index=True, shape=shape)
+                originals_of = {nb: g.entity for g, nb in ((g, e2p.get(g.entity)) for g in facts) if nb is not None}
+                for a in nq_probe["answers"]:
+                    orig = originals_of.get(a["entity"]); op = pointer_of.get(orig)
+                    marks = {w["pointer"]: w["mark"] for w in a.get("window", [])}
+                    a["original_entity"] = orig; a["original_pointer"] = op
+                    a["original_in_window"] = (op in marks)
+                    a["cited_is_original"] = (a.get("cited_pointer") == op and op is not None)
+                    dp = nq_pointer_of.get(a["entity"])
+                    a["both_marks_at_or_above_threshold"] = (thr is not None and dp in marks and op in marks and marks[dp] is not None
+                                                             and marks[op] is not None and marks[dp] >= thr and marks[op] >= thr)
+                reported_blocks["neighbour_questions"] = {"what": "the saved neighbour asked about once (the protocol's direct query on its name); its own "
+                                                                  "line is the duplicate's, which carries the original's value; the collision read from the "
+                                                                  "side written second; a reported block, no precondition",
+                                                          "n": len(nq), "own_in_window": nq_probe["retrieval_hit"], "recall_strict": nq_probe["recall_strict"],
+                                                          "own_cited": sum(1 for a in nq_probe["answers"] if a.get("cited_pointer_is_own") is True),
+                                                          "cited_is_original": sum(1 for a in nq_probe["answers"] if a["cited_is_original"]),
+                                                          "both_marks_at_or_above_threshold": sum(1 for a in nq_probe["answers"] if a["both_marks_at_or_above_threshold"]),
+                                                          "abstain_rate": nq_probe["abstain_rate"], "invalid_citation_rate": nq_probe["invalid_citation_rate"],
+                                                          "marks": nq_probe["marks"], "answers": nq_probe["answers"]}
             # the file bound to the journal it read: the planting record must be there and agree with what the store holds
             pc = (planting_record or {}).get("counts") if planting_record else None
             problems = []
@@ -1006,8 +1161,9 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
             else:
                 if pc.get("entries") != entries_now:
                     problems.append(f"entries {entries_now} in the journal, {pc.get('entries')} in the planting record")
-                if pc.get("duplicates_admitted", 0) != len(dup_of):
-                    problems.append(f"{len(dup_of)} duplicates found by the plan, {pc.get('duplicates_admitted')} admitted at planting")
+                admitted_key = "paraphrases_admitted" if near_duplicate_arm == PARAPHRASE_ARM else "duplicates_admitted"
+                if pc.get(admitted_key, 0) != len(dup_of):
+                    problems.append(f"{len(dup_of)} partners found by the plan, {pc.get(admitted_key)} admitted at planting ({admitted_key})")
                 if (planting_record or {}).get("arm") != near_duplicate_arm:
                     problems.append(f"the planting record is arm {(planting_record or {}).get('arm')}, this read is {near_duplicate_arm}")
             near_dup_block["consistent"] = not problems
@@ -1045,7 +1201,10 @@ def session_b_from_disk(ckpt_path, journal_path, cfg, n_facts: int = N_FACTS, n_
            "answers": {"on": on["answers"], "off": off["answers"], "negctrl": neg_on["answers"]},
            "cost": {"on": cost(on), "negctrl": cost(neg_on)},                   # the live cost: the index's touched counter per query
            "index": index_block,
+           "admission": admission_block,
+           "decode_shape": decode_shape,
            "near_duplicates": near_dup_block,
+           "reported_blocks": reported_blocks,
            "training_pool_probe": train_probe,
            "checkpoint": {"path": str(ckpt_path), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash"),
                           "step": ck.get("step")},
@@ -1248,6 +1407,10 @@ def _cli(argv=None):
                     help="ADR-007 amendment 2026-10-13 (evening): plant the arm's fresh journal (B0 | E0d | E1 | E2) at --journal (a path that does not exist) under a key generated for the run and the adopted geometry, then read it by session B in a new process under --index 16,exact and mark-veto+value; the journal is discarded after, the file retained")
     ap.add_argument("--near-duplicate-arm", default=None, help="(internal, with --session-b) the arm of the fresh journal being read; the near duplicates' pointers are recomputed from the plan")
     ap.add_argument("--planting-record", default=None, help="(internal, with --session-b) the planting process's record to embed in the file")
+    ap.add_argument("--admission", default=None, choices=["surprise", "identity"],
+                    help="ADR-007 amendment 2026-10-14 (evening; row 49): with --near-duplicate-probe, the write gate's rule the arm's fresh journal is planted under (surprise, the code's default and row 48's; identity, a different source text admitted whatever the surprise); with --session-b, the rule the journal must record; the file's name carries `-identity`")
+    ap.add_argument("--decode-shape", default=None, choices=["none", "R1", "R2", "R3", "R4"],
+                    help="ADR-007 amendment 2026-10-14 (evening; row 50's live run): a decode shape applied live under mark-veto+value after the veto, on a surviving citation alone (`near_duplicate_reading.select_citation`); named in the file")
     args = ap.parse_args(argv)
     if args.near_duplicate_probe:
         return _near_duplicate_probe_cli(args, ap)
@@ -1326,6 +1489,8 @@ def _cli(argv=None):
         index_override = parse_index_argument(args.index) if args.index else None
     except ValueError as e:
         raise SystemExit(f"session B: {e}")
+    if args.decode_shape and args.decode_shape != "none" and not (args.near_duplicate_arm == "E2" and args.admission == "identity" and args.policy == "mark-veto+value"):
+        raise SystemExit("session B: a decode shape is the live run of row 50 alone: the E2 arm under the identity rule and mark-veto+value (ADR-007, 2026-10-14, section 6)")
     commit, tree_clean = record_tools.git_state()
     if commit is None or tree_clean is not True:                             # a file of the record names the code that ran
         raise SystemExit("session B: the code's commit is unknown or the tracked tree is not clean; commit the code that runs, then run "
@@ -1344,7 +1509,7 @@ def _cli(argv=None):
         if not ck_head.get("run_id"):
             raise SystemExit("session B: the checkpoint carries no run id; the file would be nameless")
         name = session_b_file_name(ck_head["run_id"], args.policy, index_override, control=args.control_against is not None,
-                                   near_dup=args.near_duplicate_arm)
+                                   near_dup=args.near_duplicate_arm, admission=args.admission, shape=args.decode_shape)
         out = (out if out is not None else Path("metrics/mqar")) / name
         never_overwritten(out)
         del ck_head
@@ -1354,7 +1519,8 @@ def _cli(argv=None):
                                 train_pool_seed=(cfg.journal_train_seed if args.probe_training_pool else None),
                                 train_pool_n=cfg.journal_pool_facts, policy=args.policy, index_override=index_override,
                                 control_against=args.control_against, near_duplicate_arm=args.near_duplicate_arm,
-                                planting_record=(json.loads(Path(args.planting_record).read_text(encoding="utf-8")) if args.planting_record else None))
+                                planting_record=(json.loads(Path(args.planting_record).read_text(encoding="utf-8")) if args.planting_record else None),
+                                admission=args.admission, decode_shape=args.decode_shape)
     except ValueError as e:
         raise SystemExit(f"session B: {e}")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -1376,7 +1542,12 @@ def _cli(argv=None):
     if r.get("near_duplicates"):
         nd = r["near_duplicates"]
         short["near_duplicates"] = {"arm": nd["arm"], "duplicates_found": nd["duplicates_found"], "counts": nd["counts"],
-                                    "planting_counts": (nd["planting"] or {}).get("counts")}
+                                    "planting_counts": (nd["planting"] or {}).get("counts"),
+                                    "admission": {k2: nd["admission"].get(k2) for k2 in ("record", "record_source", "argument", "near_recorded")},
+                                    "decode_shape": nd.get("decode_shape")}
+        if r.get("reported_blocks"):
+            short["reported_blocks"] = {k2: {k3: v3 for k3, v3 in v2.items() if k3 not in ("answers", "marks", "what")}
+                                        for k2, v2 in r["reported_blocks"].items()}
     print(json.dumps(short, indent=2))
 
 
@@ -1400,6 +1571,10 @@ def _near_duplicate_probe_cli(args, ap):
     policy = "mark-veto+value"                     # the declaration's policy; `plain` is not run
     if args.policy is not None or args.index is not None or args.control_against is not None or args.session_b:
         ap.error("--near-duplicate-probe fixes the policy (mark-veto+value) and the index (16,exact) and is not a control; drop --policy, --index, --control-against and --session-b")
+    admission = args.admission or "surprise"       # row 49: the arm's rule; the code's default (row 48's plantings) when not asked
+    shape = args.decode_shape if (args.decode_shape and args.decode_shape != "none") else None
+    if shape is not None and (admission != "identity" or arm != "E2"):
+        ap.error("--decode-shape is the live run of row 50: on the E2 arm under --admission identity only (ADR-007, 2026-10-14, section 6)")
     commit, tree_clean = record_tools.git_state()
     if commit is None or tree_clean is not True:
         raise SystemExit("near duplicate probe: the code's commit is unknown or the tracked tree is not clean; commit the code that runs, then run")
@@ -1411,28 +1586,32 @@ def _near_duplicate_probe_cli(args, ap):
     if not ck_head.get("run_id"):
         raise SystemExit("near duplicate probe: the checkpoint carries no run id; the file would be nameless")
     index_argument = {"n_tables": 16, "n_bits": 10, "signature": "exact"}
-    name = session_b_file_name(ck_head["run_id"], policy, index_argument, control=False, near_dup=arm)
+    name = session_b_file_name(ck_head["run_id"], policy, index_argument, control=False, near_dup=arm, admission=admission, shape=shape)
     del ck_head
     outdir = Path(args.out) if args.out else Path("metrics/mqar")
     out = outdir / name
-    if out.exists():
-        raise SystemExit(f"near duplicate probe: {out} exists; a file of the record is never overwritten")
+    for q in (out, out.with_name(out.stem + "-FAILED-control.json"), out.with_name(out.stem + "-FAILED-arm.json")):
+        if q.exists():
+            raise SystemExit(f"near duplicate probe: {q} exists; a file of the record is never overwritten")
     try:
         model, ck, device = load_model(args.ckpt, cfg)
         key = generate_key()
         jpath.parent.mkdir(parents=True, exist_ok=True)
-        record = plant_arm(model, cfg, jpath, key, arm, seed=args.seed, n_facts=args.n_facts, n_negctrl=args.n_negctrl, device=device)
+        record = plant_arm(model, cfg, jpath, key, arm, seed=args.seed, n_facts=args.n_facts, n_negctrl=args.n_negctrl, device=device,
+                           admission=admission)
     except ValueError as e:
         raise SystemExit(f"near duplicate probe: {e}")
     record.update({"code_commit": commit, "code_tree_clean": tree_clean, "checkpoint": {"path": str(args.ckpt), "run_id": ck.get("run_id"), "config_hash": ck.get("config_hash")}})
     del model, ck
     sidecar = jpath.with_name(jpath.stem + ".planting.json")
     sidecar.write_text(json.dumps(record, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
-    print(json.dumps({"planted": arm, "counts": record["counts"], "journal": str(jpath)}, indent=2))
+    print(json.dumps({"planted": arm, "admission": record["admission"], "counts": record["counts"], "journal": str(jpath)}, indent=2))
     env = dict(os.environ, QUANTUM_CORTEX_JOURNAL_KEY=key.hex())
     inner_argv = ["--session-b", "--ckpt", str(args.ckpt), "--journal", str(jpath), "--config", str(args.config), "--seed", str(args.seed),
                   "--n-facts", str(args.n_facts), "--n-negctrl", str(args.n_negctrl), "--policy", policy, "--index", "16,exact",
-                  "--out", str(out), "--near-duplicate-arm", arm, "--planting-record", str(sidecar)]
+                  "--out", str(out), "--near-duplicate-arm", arm, "--planting-record", str(sidecar), "--admission", admission]
+    if shape is not None:
+        inner_argv += ["--decode-shape", shape]
     # the new process carries the commit this process verified a moment ago on the same tree (the inner check would otherwise
     # read the tree again, which the tests' replaced state could not reach); the file records that commit
     code = ("import sys; from cortex_c2b import record_tools, hm_lm; record_tools.git_state = lambda: (%r, %r); hm_lm._cli(%r)"
