@@ -28,11 +28,14 @@ without DG, recall without CA3, and write precision without CA1 are each a row.
             the judge. Slice B implements the tribunal's rule; the schedule (RES-9)
             is Slice E.
 
-The admission rule is a property of the journal, not of a neighbour (row 49,
-declared, not yet the default). `surprise` is the code's default and the
-inherited rule of every journal already sealed. `identity` is asked for at
-construction; Decision 12 may make it the default only after letter (a) of
-row 49. A journal opened under another rule than the one it records is refused.
+The admission rule is a property of the journal, not of a neighbour (row 49).
+`surprise` is the library's default and the inherited rule of every journal
+already sealed. `identity` is asked for at construction: since Decision 12
+(row 49, letter alpha, 2026-10-15) it is the rule of every new journal of the
+record, declared by the run's configuration or argument and stamped in the
+journal, the library's default staying `surprise` as ADR-008 D1 A kept the
+index geometry's (ADR-007, the measured paragraph of 2026-10-15 says why). A
+journal opened under another rule than the one it records is refused.
 
 Written from scratch (our filon). No torch here — pure numpy over the store.
 """
@@ -173,8 +176,9 @@ class WritePath:
 
     `admission` is the journal's rule, asked for here and refused if the journal
     already records another (the index geometry's precedent). None takes the rule the
-    journal records, and the code's default, `surprise`, on a journal with no write yet.
-    `identity` is opt-in until Decision 12 (ADR-007, amendment of 2026-10-14, evening).
+    journal records, and the library's default, `surprise`, on a journal with no write yet.
+    `identity` is asked for by the run: the record's rule for every new journal since
+    Decision 12 (row 49), the library's default staying `surprise` (ADR-008 D1 A).
 
     `admission_threshold`: under `surprise`, a cue whose CA1 surprise is below it
     is REDUNDANT and is not admitted. Under `identity`, a write that carries a

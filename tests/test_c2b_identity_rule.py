@@ -72,6 +72,11 @@ def test_identity_admits_a_near_duplicate_the_surprise_rule_refuses():
     decl = lifecycle_declaration(j_i)
     assert decl["structure"]["admission"]["near_recorded"] == 1 and decl["structure"]["admission"]["rule"] == ADMISSION_IDENTITY
     assert set(decl) == {"storage", "structure", "bytes", "index", "associative_memory"}       # the four components, the rule inside the log's
+    # Decision 12 (row 49, 2026-10-15), realised as ADR-008 D1 A: the library's default stays the legacy rule, the record's rule
+    # for every new journal is identity, declared by the run; the declaration says both, and WritePath(None) on a fresh journal gives the default
+    assert decl["structure"]["admission"]["library_default"] == ADMISSION_SURPRISE == WritePath(Journal(), seed=0).admission
+    assert decl["structure"]["admission"]["record_rule_since_decision_12"] == ADMISSION_IDENTITY
+    assert "default_until_decision_12" not in decl["structure"]["admission"]
     # the salience is the surprise on both journals (D4.8 unchanged)
     assert abs(r_i.entry.salience - r_i.surprise) < 1e-12
     # a write without a source text stays under the surprise rule on the identity journal

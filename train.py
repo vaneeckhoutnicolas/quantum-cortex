@@ -119,7 +119,8 @@ class Config:
     journal_admission: str = "surprise"  # ADR-007, amendment of 2026-10-14 (evening; rows 49 and 50): the write gate's rule of the run's
                                          # journals, `surprise` (legacy, every run to date; transparent in the hash) or `identity` (a
                                          # different source text is admitted whatever the surprise; named in the hash); stamped on every
-                                         # write event and bound by the journal; the default moves only with Decision 12 (after row 49)
+                                         # write event and bound by the journal; the default stays legacy (ADR-008 D1 A), the record's
+                                         # configurations naming identity since Decision 12 (row 49, 2026-10-15)
     journal_path: str | None = None      # the sealed on-disk journal of the run (key from QUANTUM_CORTEX_JOURNAL_KEY); None = a memory scope
     journal_hm_arm: bool = True          # run the frozen protocol's LM arm at the end of the run
     journal_hm_facts: int = 200          # the protocol's sizes (200 / 50 are the frozen defaults; smaller only for a CPU smoke)

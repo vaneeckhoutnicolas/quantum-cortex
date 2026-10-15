@@ -123,7 +123,8 @@ LEGACY_INDEX_GEOMETRY = {"n_tables": 4, "n_bits": 10, "signature": "collapsed", 
 SOURCE_TEXT_WHAT = ("the text each address was computed from, one sealed payload per entry, released with the content "
                     "(ADR-009, B2)")        # what the declaration says of the source texts
 
-# the admission rule a write event is stamped with (row 49, declared, not the default until Decision 12).
+# the admission rule a write event is stamped with (row 49). Since Decision 12 (letter alpha, 2026-10-15) the record's
+# rule for every new journal is identity, declared by the run and stamped; the library's default stays surprise (ADR-008 D1 A).
 # a journal whose write events carry no stamp is read under the inherited rule: surprise
 ADMISSION_SURPRISE = "surprise"
 ADMISSION_IDENTITY = "identity"
@@ -1035,7 +1036,10 @@ def lifecycle_declaration(journal: "Journal | None" = None) -> dict:
                       "admission": {"what": "the journal's admission rule, stamped on every write event and reread at open",
                                     "rule": journal.admission_record() if has else None,
                                     "source": journal.admission_record_source() if has else None,
-                                    "default_until_decision_12": LEGACY_ADMISSION,
+                                    # the library's default stays the legacy rule (ADR-008 D1 A); the record's rule for every new
+                                    # journal since Decision 12 (row 49, 2026-10-15) is identity, declared by the run and stamped
+                                    "library_default": LEGACY_ADMISSION,
+                                    "record_rule_since_decision_12": ADMISSION_IDENTITY,
                                     # admitted writes whose comparator surprise was under the legacy threshold, kept as provenance
                                     "near_recorded": len(journal.near_of) if has else 0}},
         "bytes": {"what": "the payloads (content), one file per pointer",
