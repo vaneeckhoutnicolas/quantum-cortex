@@ -26,7 +26,7 @@ Among those tests, `tests/test_recurrent_base_record.py` recomputes every publis
 
 ## 5. What we already know is weak
 
-`§6 Limitations & honest reserves` of the whitepaper, and the reserve sentence at the end of every row. The shortest list: most model results rest on one or two seeds; the never planted control rests on 50 entities; the post hoc system reading of row 36 was computed on the seed that suggested the policy and is labelled as not a result; the external model arm has one execution on one hardware and its agreement is pending; the recurrent arms beat their reference with a trunk that never learned the task, which is stated in the same sentence as the result; the organ's veto has a margin of 0.005 of mark on one seed (row 40) and the journal's sequence is not authenticated (whitepaper §4.9, a declared flaw).
+`§6 Limitations & honest reserves` of the whitepaper, and the reserve sentence at the end of every row. The shortest list: most model results rest on one or two seeds; the never planted control rests on 50 entities; the post hoc system reading of row 36 was computed on the seed that suggested the policy and is labelled as not a result; the external model arm has one execution on one hardware and its agreement is pending; the recurrent arms beat their reference with a trunk that never learned the task, which is stated in the same sentence as the result; the organ's veto has a margin of 0.005 of mark on one seed (row 40) and the journal's sequence is not authenticated (whitepaper §4.9, a declared flaw); which of two texts about one attribute holds is not decided in v1.1.0 (RES-27, 2026-10-29).
 
 ## 6. What would falsify the central claim
 
