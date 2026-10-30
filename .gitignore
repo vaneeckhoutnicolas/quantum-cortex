@@ -29,3 +29,11 @@ data/**/*.bin
 data/*.bin
 !data/mixes/
 !data/mixes/*.json
+
+# ADR-010 (the amendment of 2026-10-15, section 4 (b); the build of 2026-10-30): a resumable pass writes its progress file
+# beside its output; the final file carries the progress file's sha256 and every record it holds, so the progress files
+# stay with the founder like the journals and their keys (never committed). The journals, keys and archives of parts A
+# and C live under runs/ (already ignored).
+metrics/mqar/*.progress.jsonl
+metrics/mqar/*.progress.jsonl.torn-*
+metrics/mqar/*.progress.jsonl.traceback-*
