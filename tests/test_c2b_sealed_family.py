@@ -430,3 +430,46 @@ def test_reference_passes_record_the_whole_store_rank_and_the_reference_ranking(
         if index == "I2":
             assert all("query_tokens" in a["reference"] for a in f["answers"])
             assert f["bm25"]["pair"] == {"k1": 1.5, "b": 0.75}
+
+
+def test_the_first_family_pass_reads_a_legacy_geometry_journal_through_an_explicit_adopted_index(tmp_path, monkeypatch):
+    """Found at the founder's run (2026-10-30, 10:51): the record's journals record the legacy geometry (four tables, the
+    collapsed signature) and the frozen JournalPath refuses a silent re indexing under the adopted one; the pass passes the
+    adopted index explicitly, as row 47 did through `session_b_from_disk`'s override. The fixture: the first family's 200
+    facts written under the legacy geometry on the tiny model, sealed under a fixture key given through the environment."""
+    from cortex_c2b.read_path import LEGACY_GEOMETRY
+    from cortex_c2b.near_duplicate_probe import write_recorded
+    cfg, model = tiny()
+    ck, cfgp = checkpoint(tmp_path / "ckpt.pt", cfg, model)
+    key = generate_key()
+    jpath = tmp_path / "journal.jsonl"
+    journal = Journal(jpath, key=key, policy=POLICY_STOP, index_geometry=LEGACY_GEOMETRY)
+    bridge = JournalBridge(model, journal, k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes, seed=0, shuffle_seed=1, device=torch.device("cpu"),
+                           mark=False, index_geometry=LEGACY_GEOMETRY, admission=ADMISSION_IDENTITY)
+    facts, _ = generate_facts(SF.N_FACTS, 0)
+    with torch.no_grad():
+        for i, f in enumerate(facts):
+            write_recorded(bridge, f.statement, f.schema, float(i), f.entity, None, {}, "original", truth=(f.entity, f.attr))
+    assert len(journal) == SF.N_FACTS and {k: journal.index_record()[k] for k in LEGACY_GEOMETRY} == LEGACY_GEOMETRY
+    del journal, bridge
+    # the frozen path refuses the adopted geometry on this journal without an explicit index (the founder's error, reproduced)
+    j2 = Journal(jpath, key=key, policy=POLICY_STOP)
+    with pytest.raises(ValueError, match="never re indexed"):
+        JournalBridge(model, j2, k=cfg.journal_k, budget_bytes=cfg.journal_read_bytes, seed=0, shuffle_seed=3, device=torch.device("cpu"), index_geometry=ADOPTED_GEOMETRY)
+    del j2
+    # row 47's plain file for this run id: the threshold the pass must meet
+    thr = SF.threshold_of(model, cfg, torch.device("cpu"))["threshold"]
+    (tmp_path / "hm-lm-tiny-session-b-index16exact.json").write_text(json.dumps({"hm_mark_oracle": {"threshold": thr}}), encoding="utf-8")
+    (tmp_path / "sealed-precondition-tiny.json").write_text(json.dumps({"ok": True, "fixture": "the A.5 precondition file this run requires"}), encoding="utf-8")
+    monkeypatch.setenv("QUANTUM_CORTEX_JOURNAL_KEY", key.hex())
+    argv = ["--family", "first", "--ckpt", str(ck), "--config", str(cfgp), "--journal", str(jpath), "--out", str(tmp_path), "--admission", "identity", "--decode-shape", "R4"]
+    p = run_pass(argv)
+    assert p.returncode == 0, p.stderr[-3000:]
+    f = json.loads((tmp_path / "sealed-first-tiny-I0-paraphrase.pass.json").read_text(encoding="utf-8"))
+    assert f["family"] == "first" and f["index"] == "I0" and f["form"] == "paraphrase" and f["planting"]["first_family"] is True
+    assert {k: f["index_record"]["record"][k] for k in LEGACY_GEOMETRY} == LEGACY_GEOMETRY and f["index_record"]["record_source"] == "stamp" and f["index_record"]["overridden"] is True
+    assert f["live_index_geometry"]["n_tables"] == 16 and f["live_index_geometry"]["signature"] == "exact"
+    assert f["admission"] == "identity" and f["admission_asked"] == "identity" and f["planting"]["counts"]["entries"] == SF.N_FACTS
+    assert f["n_questions"] == len(SF.questions_of_first("paraphrase")) and {a["block"] for a in f["answers"]} == {"planted", "never_planted"}
+    assert f["oracle"]["within_tolerance"] is True and f["oracle"]["row47"] == thr
+    assert all(a["own_in_candidates"] is not None for a in f["answers"] if a["own_pointer"] is not None)

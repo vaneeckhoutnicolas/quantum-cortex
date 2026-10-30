@@ -536,7 +536,18 @@ def run_pass(args) -> dict:
             admission_of_pass = args.admission
             if journal.admission_record() != args.admission:
                 raise SystemExit(f"sealed family pass: the journal records {journal.admission_record()!r}, this pass asks {args.admission!r}")
-        if args.index == "I0":
+        if first:
+            planting["counts"] = {"entries": len(journal)}             # the record's journal as opened (its facts and whatever else it holds)
+        if args.index == "I0" and first:
+            # the record's journals record the legacy geometry (written before ADR-008); row 47 read them under the adopted
+            # geometry through an explicit index (hm_lm.session_b_from_disk with index_override), never by a silent re indexing,
+            # which the frozen JournalPath refuses: the same explicit index here (found at the founder's run of 2026-10-30, 10:51)
+            live_index = CueIndex(dim=journal.cue_dim, n_bits=ADOPTED_GEOMETRY["n_bits"], n_tables=ADOPTED_GEOMETRY["n_tables"],
+                                  seed=ADOPTED_GEOMETRY["seed"], signature=ADOPTED_GEOMETRY["signature"])
+            jp = JournalPath(journal, index=live_index)
+            bridge = JournalBridge(model, journal, journal_path=jp, k=args.k, budget_bytes=args.budget, seed=0, shuffle_seed=SHUFFLE_SEED[args.form],
+                                   device=device, mark=mark, admission=admission_of_pass)
+        elif args.index == "I0":
             bridge = JournalBridge(model, journal, k=args.k, budget_bytes=args.budget, seed=0, shuffle_seed=SHUFFLE_SEED[args.form], device=device,
                                    mark=mark, index_geometry=ADOPTED_GEOMETRY, admission=admission_of_pass)
         else:
@@ -545,6 +556,10 @@ def run_pass(args) -> dict:
                                      bm25_parameters=(bm25["pair"]["k1"], bm25["pair"]["b"]))
         organ_path = bridge.organ_path if args.index != "I0" else bridge.jp
         live_geometry = organ_path.index.geometry()
+        index_block = {"record": journal.index_record(), "record_source": journal.index_record_source(), "live": live_geometry,
+                       "overridden": bool(getattr(organ_path, "index_overridden", False)),
+                       "what": ("the record's journal records the legacy geometry; read under the adopted geometry through an explicit index, as row 47 (never re indexed silently)" if first
+                                else "the journal records the adopted geometry it was planted under; the path's index follows it")}
         whole = ExhaustiveCosine(journal, organ_path); whole.hold(True)      # the own line under the whole store (A.5), one scan per question
         i = None
         try:
@@ -597,7 +612,7 @@ def run_pass(args) -> dict:
                             "rules.oracle": "the frozen mark_oracle's rule, the citation alone (no value); rules['oracle+organ-value'] reads the value by the organ",
                             "aggregates.strict_recall_own": "strict answers citing the own line over the block; the frozen gate's strict recall (any line) is `strict`"},
            "oracle": thr_rec, "bm25": bm25, "index_label": {"I0": "the organ's live index", "I1": "the organ's cues without the buckets, a component ablation", "I2": "BM25 over the stored payloads' bytes"}[args.index],
-           "live_index_geometry": live_geometry, "index_bridge": ("the frozen JournalBridge" if args.index == "I0" else "the reference bridge of cortex_c2b.references"),
+           "live_index_geometry": live_geometry, "index_record": index_block, "index_bridge": ("the frozen JournalBridge" if args.index == "I0" else "the reference bridge of cortex_c2b.references"),
            "blocks": block_summary(units), "aggregates": aggregates(units, thr),
            "answers": [u["record"] for u in units], "n_questions": len(units),
            "planting": {"record_file": str(sidecar), "sha256_lf": RS.sha256_file(sidecar, lf=True), "counts": planting["counts"], "admission": planting["admission"],
