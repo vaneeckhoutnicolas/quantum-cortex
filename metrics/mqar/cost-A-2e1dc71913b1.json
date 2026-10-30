@@ -1,0 +1,1174 @@
+{
+ "benchmark": "the cost by stage (ADR-010 B.3; the amendment of 2026-10-15 on parts B and C)",
+ "family": "A",
+ "run_id": "2e1dc71913b1",
+ "label": "not a scale result: 200 entries, one processor, the build and the query separated; the scale comparison is part C's",
+ "pinned": {
+  "thread_variables": {
+   "OMP_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMEXPR_NUM_THREADS": "1"
+  },
+  "torch_threads": 1,
+  "torch_interop_threads": 1,
+  "pinned": true,
+  "problems": [],
+  "launcher": true,
+  "interop_set_note": null
+ },
+ "command": "python -m cortex_c2b.cost_harness --family A --ckpt C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\ckpt.pt --config configs\\kaggle_t4_journal_v9_seed3.json --journal runs\\sealed\\A-2e1dc71913b1.jsonl --out metrics\\mqar  [tools/adr010_launcher.py]",
+ "launcher": "tools/adr010_launcher.py --pin-threads",
+ "read_side": {
+  "protocol_1": {
+   "label": "protocol 1",
+   "repetitions": 6,
+   "orders": [
+    [
+     "I0",
+     "I1",
+     "I2"
+    ],
+    [
+     "I0",
+     "I2",
+     "I1"
+    ],
+    [
+     "I1",
+     "I0",
+     "I2"
+    ],
+    [
+     "I1",
+     "I2",
+     "I0"
+    ],
+    [
+     "I2",
+     "I0",
+     "I1"
+    ],
+    [
+     "I2",
+     "I1",
+     "I0"
+    ]
+   ],
+   "timer_overhead_ns": 100.0,
+   "stages": {
+    "I0": {
+     "cue": {
+      "n": 2400,
+      "median": 23146400.0,
+      "p95": 28900864.999999996,
+      "mean": 24278091.875,
+      "min": 19550300.0,
+      "max": 116918200.0,
+      "unit": "ns",
+      "repetition_medians": [
+       23129700.0,
+       23699500.0,
+       23386650.0,
+       22693100.0,
+       22521150.0,
+       23250750.0
+      ],
+      "spread_of_medians": 1178350.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "index": {
+      "n": 2400,
+      "median": 242750.0,
+      "p95": 292624.9999999999,
+      "mean": 251881.0,
+      "min": 176200.0,
+      "max": 4953600.0,
+      "unit": "ns",
+      "repetition_medians": [
+       243150.0,
+       243350.0,
+       245350.0,
+       241700.0,
+       241050.0,
+       241700.0
+      ],
+      "spread_of_medians": 4300.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "marks": {
+      "absent": true,
+      "note": "included in the index step for I0 (the scores come with the lookup), reported as included and not as zero"
+     },
+     "window": {
+      "n": 2400,
+      "median": 30700.0,
+      "p95": 38600.0,
+      "mean": 32322.208333333332,
+      "min": 2500.0,
+      "max": 1717400.0,
+      "unit": "ns",
+      "repetition_medians": [
+       30800.0,
+       30950.0,
+       30800.0,
+       30400.0,
+       30500.0,
+       30700.0
+      ],
+      "spread_of_medians": 550.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "plain": {
+      "n": 2400,
+      "median": 300.0,
+      "p95": 300.0,
+      "mean": 288.75,
+      "min": 200.0,
+      "max": 1100.0,
+      "unit": "ns",
+      "repetition_medians": [
+       300.0,
+       300.0,
+       300.0,
+       300.0,
+       300.0,
+       300.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "mark-veto": {
+      "n": 2400,
+      "median": 5000.0,
+      "p95": 8000.0,
+      "mean": 5961.916666666667,
+      "min": 3800.0,
+      "max": 1410500.0,
+      "unit": "ns",
+      "repetition_medians": [
+       5000.0,
+       5000.0,
+       5000.0,
+       5000.0,
+       4900.0,
+       5000.0
+      ],
+      "spread_of_medians": 100.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "mark-veto+value": {
+      "n": 2400,
+      "median": 900.0,
+      "p95": 31800.0,
+      "mean": 3340.125,
+      "min": 600.0,
+      "max": 88600.0,
+      "unit": "ns",
+      "repetition_medians": [
+       900.0,
+       900.0,
+       900.0,
+       900.0,
+       900.0,
+       900.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "V1": {
+      "n": 2400,
+      "median": 7900.0,
+      "p95": 9704.999999999973,
+      "mean": 8109.25,
+      "min": 5200.0,
+      "max": 57300.0,
+      "unit": "ns",
+      "repetition_medians": [
+       7900.0,
+       8100.0,
+       7900.0,
+       7900.0,
+       7900.0,
+       7900.0
+      ],
+      "spread_of_medians": 200.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "V1+organ-value": {
+      "n": 2400,
+      "median": 30900.0,
+      "p95": 35304.99999999997,
+      "mean": 30682.166666666668,
+      "min": 1200.0,
+      "max": 104600.0,
+      "unit": "ns",
+      "repetition_medians": [
+       30850.0,
+       30900.0,
+       31000.0,
+       31000.0,
+       30800.0,
+       30950.0
+      ],
+      "spread_of_medians": 200.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "oracle": {
+      "n": 2400,
+      "median": 1300.0,
+      "p95": 2000.0,
+      "mean": 1430.4166666666667,
+      "min": 300.0,
+      "max": 16000.0,
+      "unit": "ns",
+      "repetition_medians": [
+       1300.0,
+       1300.0,
+       1300.0,
+       1300.0,
+       1200.0,
+       1300.0
+      ],
+      "spread_of_medians": 100.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "oracle+organ-value": {
+      "n": 2400,
+      "median": 600.0,
+      "p95": 18600.0,
+      "mean": 6001.916666666667,
+      "min": 200.0,
+      "max": 73000.0,
+      "unit": "ns",
+      "repetition_medians": [
+       600.0,
+       600.0,
+       600.0,
+       600.0,
+       600.0,
+       600.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "operations": {
+      "n": 2400,
+      "median": 6.0,
+      "p95": 14.0,
+      "mean": 6.7,
+      "min": 0.0,
+      "max": 29.0,
+      "what": "candidates scored (the index's touched increment)"
+     }
+    },
+    "I1": {
+     "cue": {
+      "n": 2400,
+      "median": 23100200.0,
+      "p95": 28817044.999999996,
+      "mean": 24234042.25,
+      "min": 19472600.0,
+      "max": 93797000.0,
+      "unit": "ns",
+      "repetition_medians": [
+       23099300.0,
+       23529300.0,
+       23477650.0,
+       22666700.0,
+       22626100.0,
+       23150950.0
+      ],
+      "spread_of_medians": 903200.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "index": {
+      "n": 2400,
+      "median": 524000.0,
+      "p95": 575039.9999999998,
+      "mean": 548334.9166666666,
+      "min": 500000.0,
+      "max": 7566800.0,
+      "unit": "ns",
+      "repetition_medians": [
+       522750.0,
+       526600.0,
+       525550.0,
+       522750.0,
+       521700.0,
+       526150.0
+      ],
+      "spread_of_medians": 4900.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "marks": {
+      "n": 2400,
+      "median": 48900.0,
+      "p95": 69704.99999999997,
+      "mean": 51159.916666666664,
+      "min": 31700.0,
+      "max": 451100.0,
+      "unit": "ns",
+      "repetition_medians": [
+       49400.0,
+       49150.0,
+       49950.0,
+       48700.0,
+       48200.0,
+       48200.0
+      ],
+      "spread_of_medians": 1750.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false,
+      "note": "marks_for on the returned lines, a stage of its own"
+     },
+     "window": {
+      "n": 2400,
+      "median": 33600.0,
+      "p95": 42604.99999999997,
+      "mean": 35733.0,
+      "min": 30900.0,
+      "max": 1794600.0,
+      "unit": "ns",
+      "repetition_medians": [
+       33850.0,
+       33850.0,
+       33700.0,
+       33250.0,
+       33500.0,
+       33700.0
+      ],
+      "spread_of_medians": 600.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "plain": {
+      "n": 2400,
+      "median": 300.0,
+      "p95": 400.0,
+      "mean": 293.75,
+      "min": 200.0,
+      "max": 700.0,
+      "unit": "ns",
+      "repetition_medians": [
+       300.0,
+       300.0,
+       300.0,
+       300.0,
+       300.0,
+       300.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "mark-veto": {
+      "n": 2400,
+      "median": 4900.0,
+      "p95": 8000.0,
+      "mean": 5473.125,
+      "min": 4000.0,
+      "max": 31500.0,
+      "unit": "ns",
+      "repetition_medians": [
+       4900.0,
+       4900.0,
+       5000.0,
+       4900.0,
+       4900.0,
+       4900.0
+      ],
+      "spread_of_medians": 100.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "mark-veto+value": {
+      "n": 2400,
+      "median": 900.0,
+      "p95": 31800.0,
+      "mean": 5094.333333333333,
+      "min": 800.0,
+      "max": 77200.0,
+      "unit": "ns",
+      "repetition_medians": [
+       900.0,
+       900.0,
+       900.0,
+       900.0,
+       900.0,
+       900.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "V1": {
+      "n": 2400,
+      "median": 7200.0,
+      "p95": 9100.0,
+      "mean": 7682.416666666667,
+      "min": 4600.0,
+      "max": 654100.0,
+      "unit": "ns",
+      "repetition_medians": [
+       7200.0,
+       7200.0,
+       7300.0,
+       7200.0,
+       7200.0,
+       7200.0
+      ],
+      "spread_of_medians": 100.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "V1+organ-value": {
+      "n": 2400,
+      "median": 30500.0,
+      "p95": 35004.99999999997,
+      "mean": 29743.458333333332,
+      "min": 16900.0,
+      "max": 94200.0,
+      "unit": "ns",
+      "repetition_medians": [
+       30500.0,
+       30600.0,
+       30600.0,
+       30500.0,
+       30300.0,
+       30400.0
+      ],
+      "spread_of_medians": 300.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "oracle": {
+      "n": 2400,
+      "median": 1400.0,
+      "p95": 2100.0,
+      "mean": 1536.625,
+      "min": 900.0,
+      "max": 48400.0,
+      "unit": "ns",
+      "repetition_medians": [
+       1350.0,
+       1400.0,
+       1350.0,
+       1350.0,
+       1400.0,
+       1400.0
+      ],
+      "spread_of_medians": 50.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "oracle+organ-value": {
+      "n": 2400,
+      "median": 600.0,
+      "p95": 18600.0,
+      "mean": 7918.0,
+      "min": 500.0,
+      "max": 45700.0,
+      "unit": "ns",
+      "repetition_medians": [
+       700.0,
+       600.0,
+       600.0,
+       600.0,
+       600.0,
+       600.0
+      ],
+      "spread_of_medians": 100.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "operations": {
+      "n": 2400,
+      "median": 200.0,
+      "p95": 200.0,
+      "mean": 200.0,
+      "min": 200.0,
+      "max": 200.0,
+      "what": "cues compared"
+     }
+    },
+    "I2": {
+     "cue": {
+      "n": 2400,
+      "median": 23130650.0,
+      "p95": 28955709.999999993,
+      "mean": 24255247.416666668,
+      "min": 19547500.0,
+      "max": 89648000.0,
+      "unit": "ns",
+      "repetition_medians": [
+       22916950.0,
+       23671950.0,
+       23348550.0,
+       22863150.0,
+       22564300.0,
+       23312200.0
+      ],
+      "spread_of_medians": 1107650.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "index": {
+      "n": 2400,
+      "median": 66500.0,
+      "p95": 178504.99999999997,
+      "mean": 83340.5,
+      "min": 42100.0,
+      "max": 3112500.0,
+      "unit": "ns",
+      "repetition_medians": [
+       66500.0,
+       67550.0,
+       67350.0,
+       66000.0,
+       65200.0,
+       67100.0
+      ],
+      "spread_of_medians": 2350.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "marks": {
+      "n": 2400,
+      "median": 89400.0,
+      "p95": 112704.99999999997,
+      "mean": 92069.54166666667,
+      "min": 62400.0,
+      "max": 1808300.0,
+      "unit": "ns",
+      "repetition_medians": [
+       89350.0,
+       90100.0,
+       90900.0,
+       88900.0,
+       88600.0,
+       91050.0
+      ],
+      "spread_of_medians": 2450.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false,
+      "note": "marks_for on the returned lines, a stage of its own"
+     },
+     "window": {
+      "n": 2400,
+      "median": 32600.0,
+      "p95": 39514.99999999992,
+      "mean": 34761.583333333336,
+      "min": 29800.0,
+      "max": 2345200.0,
+      "unit": "ns",
+      "repetition_medians": [
+       32700.0,
+       32800.0,
+       32600.0,
+       32200.0,
+       32500.0,
+       32600.0
+      ],
+      "spread_of_medians": 600.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "plain": {
+      "n": 2400,
+      "median": 300.0,
+      "p95": 400.0,
+      "mean": 307.25,
+      "min": 200.0,
+      "max": 21800.0,
+      "unit": "ns",
+      "repetition_medians": [
+       300.0,
+       300.0,
+       300.0,
+       300.0,
+       300.0,
+       300.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "mark-veto": {
+      "n": 2400,
+      "median": 4700.0,
+      "p95": 7800.0,
+      "mean": 5238.75,
+      "min": 3800.0,
+      "max": 31000.0,
+      "unit": "ns",
+      "repetition_medians": [
+       4800.0,
+       4800.0,
+       4750.0,
+       4700.0,
+       4700.0,
+       4800.0
+      ],
+      "spread_of_medians": 100.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "mark-veto+value": {
+      "n": 2400,
+      "median": 900.0,
+      "p95": 30600.0,
+      "mean": 4574.333333333333,
+      "min": 800.0,
+      "max": 158300.0,
+      "unit": "ns",
+      "repetition_medians": [
+       900.0,
+       900.0,
+       900.0,
+       900.0,
+       900.0,
+       900.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "V1": {
+      "n": 2400,
+      "median": 5700.0,
+      "p95": 7800.0,
+      "mean": 6059.916666666667,
+      "min": 3800.0,
+      "max": 68700.0,
+      "unit": "ns",
+      "repetition_medians": [
+       5700.0,
+       5800.0,
+       5700.0,
+       5600.0,
+       5600.0,
+       5700.0
+      ],
+      "spread_of_medians": 200.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "V1+organ-value": {
+      "n": 2400,
+      "median": 29850.0,
+      "p95": 34000.0,
+      "mean": 29623.0,
+      "min": 16800.0,
+      "max": 172300.0,
+      "unit": "ns",
+      "repetition_medians": [
+       29800.0,
+       30000.0,
+       30000.0,
+       29800.0,
+       29600.0,
+       29800.0
+      ],
+      "spread_of_medians": 400.0,
+      "under_100_timer_overheads": false,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "oracle": {
+      "n": 2400,
+      "median": 1300.0,
+      "p95": 2004.9999999999727,
+      "mean": 1491.625,
+      "min": 900.0,
+      "max": 40800.0,
+      "unit": "ns",
+      "repetition_medians": [
+       1300.0,
+       1300.0,
+       1300.0,
+       1300.0,
+       1300.0,
+       1300.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "oracle+organ-value": {
+      "n": 2400,
+      "median": 600.0,
+      "p95": 18600.0,
+      "mean": 7331.791666666667,
+      "min": 500.0,
+      "max": 172100.0,
+      "unit": "ns",
+      "repetition_medians": [
+       600.0,
+       600.0,
+       600.0,
+       600.0,
+       600.0,
+       600.0
+      ],
+      "spread_of_medians": 0.0,
+      "under_100_timer_overheads": true,
+      "timer_overhead_ns": 100.0,
+      "unstable_repetitions": [],
+      "flag": false
+     },
+     "operations": {
+      "n": 2400,
+      "median": 40.0,
+      "p95": 240.09999999999945,
+      "mean": 64.075,
+      "min": 10.0,
+      "max": 243.0,
+      "what": "postings read"
+     }
+    }
+   },
+   "n_questions": 400,
+   "collections_outside_stages": 25,
+   "rule_stage_note": "timed on a standing input (a citation of the first window line with the question's expected value), not on the passes' recorded outputs: the cost of a rule on a surviving citation, the longest path; an abstention returns at the first line of policy_outcome and a vetoed citation skips the value reader, so the branch taken follows the first line's mark against the threshold; the `plain` row is an empty stage, the timer's own cost per question, beside timer_overhead_ns"
+  },
+  "protocol_2": null,
+  "the_row_reads": "protocol 1; protocol 2, when present, is reported beside it",
+  "configurations": [
+   "I0",
+   "I1",
+   "I2"
+  ],
+  "rules": [
+   "plain",
+   "mark-veto",
+   "mark-veto+value",
+   "V1",
+   "V1+organ-value",
+   "oracle",
+   "oracle+organ-value"
+  ]
+ },
+ "generation": {
+  "n": 50,
+  "median": 86713150.0,
+  "p95": 741273219.9999992,
+  "mean": 275446006.0,
+  "min": 75288100.0,
+  "max": 1014473800.0,
+  "unit": "ns",
+  "label": "the generation, a common stage, once per checkpoint; one repetition after a discarded warm up"
+ },
+ "write_side": {
+  "repetitions": 6,
+  "stages": {
+   "cue": {
+    "n": 1200,
+    "median": 28595200.0,
+    "p95": 33581755.0,
+    "mean": 28670769.416666668,
+    "min": 19709600.0,
+    "max": 110119200.0,
+    "unit": "ns",
+    "repetition_medians": [
+     28823050.0,
+     27927750.0,
+     28196750.0,
+     28515050.0,
+     29209900.0,
+     28780950.0
+    ],
+    "spread_of_medians": 1282150.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false
+   },
+   "gate": {
+    "n": 1200,
+    "median": 266700.0,
+    "p95": 360815.0,
+    "mean": 271187.1666666667,
+    "min": 87700.0,
+    "max": 1917800.0,
+    "unit": "ns",
+    "repetition_medians": [
+     253900.0,
+     268300.0,
+     265400.0,
+     267000.0,
+     276050.0,
+     268300.0
+    ],
+    "spread_of_medians": 22150.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false,
+    "note": "the organ's gate as the surprise's computation (the code, CA3Completion.nearest, the surprise); under the identity rule the admission's decision is the address lookup (Journal.at_address), not timed here; I1 and I2 have no gate: absent, not zero"
+   },
+   "insert_I0": {
+    "n": 1200,
+    "median": 151850.0,
+    "p95": 312205.0,
+    "mean": 169188.91666666666,
+    "min": 143900.0,
+    "max": 2435900.0,
+    "unit": "ns",
+    "repetition_medians": [
+     152300.0,
+     151300.0,
+     151000.0,
+     151950.0,
+     152250.0,
+     152600.0
+    ],
+    "spread_of_medians": 1600.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false
+   },
+   "insert_I1": {
+    "n": 1200,
+    "median": 3100.0,
+    "p95": 6504.999999999995,
+    "mean": 6507.666666666667,
+    "min": 2800.0,
+    "max": 3595500.0,
+    "unit": "ns",
+    "repetition_medians": [
+     3100.0,
+     3100.0,
+     3100.0,
+     3100.0,
+     3100.0,
+     3100.0
+    ],
+    "spread_of_medians": 0.0,
+    "under_100_timer_overheads": true,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false,
+    "note": "I1 has no index structure: the cue appended to the store of vectors; its norms are computed at the first read and cached, so that cost sits in the read side's warm up, not here"
+   },
+   "insert_I2": {
+    "n": 1200,
+    "median": 16800.0,
+    "p95": 27900.0,
+    "mean": 17875.583333333332,
+    "min": 11800.0,
+    "max": 90600.0,
+    "unit": "ns",
+    "repetition_medians": [
+     16700.0,
+     16350.0,
+     16600.0,
+     17200.0,
+     17300.0,
+     16850.0
+    ],
+    "spread_of_medians": 950.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false,
+    "note": "BM25's insertion with its statistics (N, the document frequencies, the lengths, avgdl)"
+   },
+   "store_write": {
+    "n": 1200,
+    "median": 1686350.0,
+    "p95": 2318130.0,
+    "mean": 1798754.3333333333,
+    "min": 1417800.0,
+    "max": 13629400.0,
+    "unit": "ns",
+    "repetition_medians": [
+     1612750.0,
+     1657250.0,
+     1650800.0,
+     1708600.0,
+     1754350.0,
+     1716350.0
+    ],
+    "spread_of_medians": 141600.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false
+   },
+   "seal_payload": {
+    "n": 1200,
+    "median": 33700.0,
+    "p95": 49700.0,
+    "mean": 37899.166666666664,
+    "min": 24500.0,
+    "max": 1650900.0,
+    "unit": "ns",
+    "repetition_medians": [
+     32200.0,
+     32700.0,
+     32350.0,
+     34900.0,
+     35650.0,
+     34400.0
+    ],
+    "spread_of_medians": 3450.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false
+   },
+   "seal_line": {
+    "n": 1200,
+    "median": 14200.0,
+    "p95": 25204.999999999996,
+    "mean": 15298.583333333334,
+    "min": 11300.0,
+    "max": 77600.0,
+    "unit": "ns",
+    "repetition_medians": [
+     14100.0,
+     13900.0,
+     14000.0,
+     14400.0,
+     14300.0,
+     14400.0
+    ],
+    "spread_of_medians": 500.0,
+    "under_100_timer_overheads": false,
+    "timer_overhead_ns": 100.0,
+    "unstable_repetitions": [],
+    "flag": false
+   },
+   "append_derived": {
+    "median": 1638450.0,
+    "unit": "ns",
+    "label": "derived: the whole store write minus the sealing (medians)"
+   }
+  },
+  "durability": "the write's durability is the organ's as frozen: the sealed payload written whole to a temporary file and renamed into place, the sealed log line appended to a file opened and closed per write, neither synchronised to the disk (no fsync); 'durable first' in the code means ordered before the memory changes; said here, not changed",
+  "cues": {
+   "what": "the cue stage recomputes the encoder's pass; the recomputed cue is compared with the planting record's cue_computed",
+   "largest_abs_difference": 0.0,
+   "compared": 200
+  },
+  "write_event": "the harness's Journal.write carries the `near` stamp as the frozen write path computes it (the nearest code and the surprise under the legacy threshold), so the sealed line's bytes are the frozen write's",
+  "n_statements": 200,
+  "timer_overhead_ns": 100.0
+ },
+ "memory": {
+  "journal_on_disk_bytes": 250983,
+  "checkpoint_bytes": 325242261,
+  "note": "numpy's buffers are traced; torch's are not: the model's weights are reported from the checkpoint's size, common",
+  "journal_open_bytes": 686112,
+  "journal_payloads_read_bytes": 21483,
+  "journal_in_memory_bytes": 707595,
+  "entries": 200,
+  "read_side_build_bytes": {
+   "I0": 480733,
+   "I1": 11700,
+   "I2": 149919
+  },
+  "index_sizes": {
+   "I0": {
+    "vectors": 200,
+    "tables": 16,
+    "buckets": 2458
+   },
+   "I1": {
+    "vectors": 200
+   },
+   "I2": {
+    "documents": 200,
+    "tokens": 483,
+    "postings": 1520
+   }
+  }
+ },
+ "maintenance_proxies": {
+  "label": "proxies, not measurements of maintenance",
+  "tunable_parameters": {
+   "I0": {
+    "n_tables": 16,
+    "n_bits": 10,
+    "signature": "exact",
+    "seed": 0,
+    "count": 4
+   },
+   "I1": {
+    "count": 0
+   },
+   "I2": {
+    "k1": 1.5,
+    "b": 0.75,
+    "count": 2
+   }
+  },
+  "lines_of_code": {
+   "I0": 228,
+   "I1": 40,
+   "I2": 95
+  }
+ },
+ "bm25": {
+  "counts": {
+   "0.6,0.4": 200,
+   "0.6,0.75": 200,
+   "0.9,0.4": 200,
+   "0.9,0.75": 200,
+   "1.2,0.4": 200,
+   "1.2,0.75": 200,
+   "1.5,0.4": 200,
+   "1.5,0.75": 200,
+   "2.0,0.4": 200,
+   "2.0,0.75": 200
+  },
+  "n_queries": 200,
+  "k": 4,
+  "best": 200,
+  "all_tie": true,
+  "pair": {
+   "k1": 1.5,
+   "b": 0.75
+  },
+  "label": "the textbook pair, confirmed and not selected by the first family",
+  "first_family_label": "BM25's parameters: the tie rule's, the criterion separating no pair on this protocol",
+  "grid": {
+   "k1": [
+    0.6,
+    0.9,
+    1.2,
+    1.5,
+    2.0
+   ],
+   "b": [
+    0.4,
+    0.75
+   ]
+  },
+  "rule": "the own line among the four on the first family's 200 direct queries; ties to (1.5, 0.75) when among the best, else the lowest k1 then the lowest b"
+ },
+ "threshold": 0.5907554626464844,
+ "seal": {
+  "seal_path": "metrics\\mqar\\SEALED-FAMILIES.json",
+  "seal_sha256": "41bf409289af518ed22cc04a9613fefd8dafb723adb83d892570068c5a290a35",
+  "family_content_sha256": "e5cb89235116f2729785b38a08cf891675635948af4b5dd076208ddd1c88b308",
+  "constants_sha256": "94683707457261fe4079316d65f520bf018b24f4d4d8589a7b5c9c7d451c003e"
+ },
+ "planting_sha256_lf": "d8eed9e1250f508a6f7ca8de7fe84305b58e8172cd3f65d809e9f98a4bb84e9e",
+ "checkpoint": {
+  "path": "C:\\kaggle-out\\v9-seed3\\journal-n1-v9-seed3\\ckpt.pt",
+  "run_id": "2e1dc71913b1",
+  "config_hash": "a727d1cb445afa92",
+  "sha256": "1fce01e633caca4fe17965040bf81966b1029f7e47bee4c033abf8cce0d02a67"
+ },
+ "device": {
+  "device": "cpu",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce GTX 1660 Ti",
+  "hardware": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+  "threads": 1,
+  "parallel_info": "ATen/Parallel:\n\tat::get_num_threads() : 1\n\tat::get_num_interop_threads() : 1\nOpenMP 2019\n\tomp_get_max_threads() : 1\nIntel(R) oneAPI Math Kernel Library Version 2025.0.1-Product Build 20241031 for Intel(R) 64 architecture applications\n\tmkl_get_max_threads() : 1\nIntel(R) MKL-DNN v3.5.3 (Git Hash 66f0cb9eb66affd2da3bf5f8d897376f04aae6af)\nstd::thread::hardware_concurrency() : 16\nEnvironment variables:\n\tOMP_NUM_THREADS : 1\n\tMKL_NUM_THREADS : 1\nATen parallel backend: OpenMP\n"
+ },
+ "versions": {
+  "python": "3.12.10",
+  "torch": "2.6.0+cu124",
+  "numpy": "2.5.3",
+  "platform": "Windows-11-10.0.26200-SP0"
+ },
+ "environment": {
+  "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+  "machine": "AMD64",
+  "torch_threads": 1,
+  "torch_interop_threads": 1,
+  "thread_variables": {
+   "OMP_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMEXPR_NUM_THREADS": "1"
+  },
+  "PYTHONHASHSEED": "0",
+  "versions": {
+   "python": "3.12.10",
+   "numpy": "2.5.3",
+   "torch": "2.6.0+cu124"
+  }
+ },
+ "code_commit": "217dd50",
+ "started_utc": "2026-10-30T11:11:09+00:00",
+ "timestamp_utc": "2026-10-30T11:15:53+00:00"
+}
