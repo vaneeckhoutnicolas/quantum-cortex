@@ -1,0 +1,741 @@
+{
+  "rows": "row 51",
+  "row51_letter": "A3",
+  "row51_m2_sentence": "on these formulations the organ's mark reproduces the selection the protocol rewards; the model's measured contribution is its copy and its abstention",
+  "what": "row 51, the independent test on the sealed families T0, A and Av, read once each on the three checkpoints of the frozen v1.1.0 system (ADR-010 parts A and E, the amendment of 2026-10-15 on parts B and C; built 2026-10-30 tests first with a committee of three, Rev125; run by the founder 2026-10-30, 01:28 to 10:39 UTC: the three A.5 preconditions (01:28 to 01:37), the nine families (A, T0, Av on seed 2024 at 01:43 to 08:12, seed 1337 at 08:16 to 08:41, seed 7 at 08:51 to 09:15 UTC), the first family's three paraphrase passes (10:36 to 10:39 UTC, after the correction of ADR-010 section 9 (c) at 217dd50); read cold at 12:57 UTC by sealed_reading.read_rows(<metrics dir>) in the declared order (the preconditions, letter A, M1 to M4, the factor product, the first family, the blocks); recomputed by the instance on the committed files on 2026-10-30 (56 719 numbers equal: the 30 106 counts exactly, the 26 613 rates, intervals, products and p values within 4e-15; the summary lines identical)",
+  "commands": [
+    "python -m cortex_c2b.freeze --write --commit c5b4818d3db29902f72d1b3078e01c4b3cb1e634  (the freeze file, first)",
+    "python tools\\adr010_launcher.py cortex_c2b.sealed_family --precondition --ckpt <ckpt> --config <config> --journal <the record's journal> --out metrics\\mqar  (per checkpoint; the record's key in the window)",
+    "python tools\\adr010_launcher.py cortex_c2b.sealed_family --family <A|T0|Av> --ckpt <ckpt> --config <config> --journal runs\\sealed\\<family>-<run id>.jsonl --out metrics\\mqar --admission identity --decode-shape R4 --stop-file runs\\sealed\\stop  (per family and checkpoint; the six passes as new processes)",
+    "python tools\\adr010_launcher.py cortex_c2b.sealed_family --family first --ckpt <ckpt> --config <config> --journal <the record's journal> --out metrics\\mqar --admission identity --decode-shape R4 --stop-file runs\\sealed\\stop  (per checkpoint; the record's key in the window)",
+    "python -m cortex_c2b.sealed_reading --metrics metrics\\mqar  (the cold reading, files only)"
+  ],
+  "order_run": "the preconditions on seeds 2024, 1337, 7 (01:28 to 01:37 UTC); the families A, T0, Av on seed 2024 (01:43 to 08:12 UTC), then on seed 1337 (08:16 to 08:41) and seed 7 (08:51 to 09:15), one command at a time, no stop file used, every pass in one session; the Av run of seed 2024 was held between T0's last pass (ended 02:09:51) and its own planting (written 05:14:00) and again before its first pass (started 08:05:22), where on the other eight families the first pass starts within thirty seconds of the planting's write; the founder attributes the hold to the console's selection mode, a click in the window (ADR-010 section 9 (c)); the files carry the times alone; the first family's passes refused at 09:49 UTC by the frozen path (the record's journals under the legacy geometry; corrected at 217dd50) and complete at 10:36 to 10:39 UTC in a second session each",
+  "code": {
+    "sealed_reading_py_sha256_lf_at_the_founders_reading": "b0ee99b63af67bf4",
+    "sealed_reading_py_sha256_lf_at_the_recomputation": "fea9f60d1db91bc1",
+    "what": "the reading module as recorded in every pass's code state (the tree of f42bf9f and 217dd50; the founder's reading of 12:57 UTC ran it) and as corrected after the reading by one line, the loader resolving a pass file by its base name (ADR-010 section 10 (a)); the recomputation under the corrected module equals the committed reading"
+  },
+  "checkpoints": {
+    "4cfd6f6e1406": {
+      "seed": 2024,
+      "config_hash": "d0c0d93ba24555a8",
+      "step": 7323,
+      "threshold": 0.6122402548789978
+    },
+    "8ceba5db8d0b": {
+      "seed": 1337,
+      "config_hash": "36a3dd10bbff84eb",
+      "step": 7323,
+      "threshold": 0.5360028743743896
+    },
+    "2e1dc71913b1": {
+      "seed": 7,
+      "config_hash": "a727d1cb445afa92",
+      "step": 7323,
+      "threshold": 0.5907554626464844
+    }
+  },
+  "device": "the founder's processor (cpu; CUDA available and not used; torch 2.6.0+cu124, numpy 2.5.3, python 3.12.10, Windows 11), PYTHONHASHSEED 0 through tools/adr010_launcher.py; the same as rows 48 to 50",
+  "freeze": {
+    "file": "FREEZE-v1.1.0.json",
+    "sha256_lf": "33b57d451ca1887d",
+    "commit": "c5b4818d3db29902f72d1b3078e01c4b3cb1e634",
+    "files": 104,
+    "tree_sha256": "676060c734b6d3d7"
+  },
+  "seal": {
+    "file": "SEALED-FAMILIES.json",
+    "sha256_lf": "41bf409289af518e"
+  },
+  "row47_files": {
+    "hm-lm-4cfd6f6e1406-session-b-index16exact.json": "25ffc5930b31f16d",
+    "hm-lm-8ceba5db8d0b-session-b-index16exact.json": "5bc5556495edbbe9",
+    "hm-lm-2e1dc71913b1-session-b-index16exact.json": "49b3eacbecb58bc8"
+  },
+  "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (the committed form); the JSON files are written in LF by the instruments; the 79 values printed by the founder's consoles (the logs' 'retained' lines) equal the recomputed ones, checked by the instance on 2026-10-30; the logs are the consoles' UTF-16 text, hashed as they are",
+  "row51": {
+    "letter": "A3",
+    "cells": 6,
+    "cells_holding": 0,
+    "claimed_forms": [],
+    "sentence": "`mark-veto` is not the system's default policy; under the default the system abstains on every question of A by construction (the construction table, ii)",
+    "label": "A.2's label: a synthetic set locked before execution, not a blind validation",
+    "M2": {
+      "A": {
+        "b_model_only": 5,
+        "c_oracle_only": 287,
+        "n_reads_with_own_in_window": 466,
+        "p_two_sided": 4.371524835024213e-78,
+        "direction": "oracle"
+      },
+      "T0": {
+        "b_model_only": 0,
+        "c_oracle_only": 55,
+        "n_reads_with_own_in_window": 800,
+        "p_two_sided": 5.551115123125783e-17,
+        "direction": "oracle"
+      },
+      "Av": {
+        "b_model_only": 0,
+        "c_oracle_only": 106,
+        "n_reads_with_own_in_window": 799,
+        "p_two_sided": 2.465190328815662e-32,
+        "direction": "oracle"
+      }
+    },
+    "holm": {
+      "pvalues": {
+        "A": 4.371524835024213e-78,
+        "Av": 2.465190328815662e-32,
+        "T0": 5.551115123125783e-17
+      },
+      "rejected": {
+        "A": true,
+        "Av": true,
+        "T0": true
+      },
+      "alpha": 0.05,
+      "m": 3
+    },
+    "M2_sentence": "on these formulations the organ's mark reproduces the selection the protocol rewards; the model's measured contribution is its copy and its abstention",
+    "own_in_window_A_direct_I0": {
+      "4cfd6f6e1406": 110,
+      "8ceba5db8d0b": 108,
+      "2e1dc71913b1": 117
+    },
+    "misses_A_direct_I0": {
+      "4cfd6f6e1406": {
+        "n_misses": 90,
+        "index": 58,
+        "interference": 31,
+        "cue": 0
+      },
+      "8ceba5db8d0b": {
+        "n_misses": 92,
+        "index": 66,
+        "interference": 26,
+        "cue": 0
+      },
+      "2e1dc71913b1": {
+        "n_misses": 83,
+        "index": 52,
+        "interference": 30,
+        "cue": 0
+      }
+    },
+    "factor_product_plain_I0_direct": {
+      "4cfd6f6e1406": {
+        "A": 0.0,
+        "Av": 0.0,
+        "T0": 0.795,
+        "first": 0.815
+      },
+      "8ceba5db8d0b": {
+        "A": 0.0,
+        "Av": 0.0,
+        "T0": 0.8399999999999999,
+        "first": 0.82
+      },
+      "2e1dc71913b1": {
+        "A": 0.0,
+        "Av": 0.0,
+        "T0": 0.8200000000000001,
+        "first": 0.81
+      }
+    },
+    "transfer": {
+      "A against Av": {
+        "own_in_window": "not transferring",
+        "own_cited_given_in_window": "not transferring",
+        "exact_given_own_cited": "no fall detectable at this size"
+      },
+      "Av against first": {
+        "own_in_window": "no fall detectable at this size",
+        "own_cited_given_in_window": "mixed",
+        "exact_given_own_cited": "not transferring"
+      },
+      "T0 against first": {
+        "own_in_window": "no fall detectable at this size",
+        "own_cited_given_in_window": "no fall detectable at this size",
+        "exact_given_own_cited": "no fall detectable at this size"
+      }
+    },
+    "first_family_strict_own": {
+      "4cfd6f6e1406": {
+        "direct_plain": 163,
+        "paraphrase_plain": 166
+      },
+      "8ceba5db8d0b": {
+        "direct_plain": 164,
+        "paraphrase_plain": 159
+      },
+      "2e1dc71913b1": {
+        "direct_plain": 162,
+        "paraphrase_plain": 171
+      }
+    },
+    "T0_own_in_window": {
+      "I0-direct-8ceba5db8d0b": 200,
+      "I1-direct-8ceba5db8d0b": 200,
+      "I2-direct-8ceba5db8d0b": 200,
+      "I0-paraphrase-8ceba5db8d0b": 200,
+      "I1-paraphrase-8ceba5db8d0b": 200,
+      "I2-paraphrase-8ceba5db8d0b": 200,
+      "I0-direct-4cfd6f6e1406": 200,
+      "I1-direct-4cfd6f6e1406": 200,
+      "I2-direct-4cfd6f6e1406": 200,
+      "I0-paraphrase-4cfd6f6e1406": 200,
+      "I1-paraphrase-4cfd6f6e1406": 200,
+      "I2-paraphrase-4cfd6f6e1406": 200,
+      "I0-direct-2e1dc71913b1": 200,
+      "I1-direct-2e1dc71913b1": 200,
+      "I2-direct-2e1dc71913b1": 200,
+      "I0-paraphrase-2e1dc71913b1": 200,
+      "I1-paraphrase-2e1dc71913b1": 200,
+      "I2-paraphrase-2e1dc71913b1": 200
+    },
+    "plantings": {
+      "A-4cfd6f6e1406": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "A-8ceba5db8d0b": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "A-2e1dc71913b1": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "T0-4cfd6f6e1406": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "T0-8ceba5db8d0b": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "T0-2e1dc71913b1": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "Av-4cfd6f6e1406": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "Av-8ceba5db8d0b": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      },
+      "Av-2e1dc71913b1": {
+        "written": 200,
+        "admitted": 200,
+        "refused": 0,
+        "refused_attributed": [],
+        "entries": 200
+      }
+    },
+    "shadow_legacy_refused": {
+      "A-4cfd6f6e1406": 0,
+      "A-8ceba5db8d0b": 0,
+      "A-2e1dc71913b1": 0,
+      "T0-4cfd6f6e1406": 0,
+      "T0-8ceba5db8d0b": 0,
+      "T0-2e1dc71913b1": 0,
+      "Av-4cfd6f6e1406": 0,
+      "Av-8ceba5db8d0b": 0,
+      "Av-2e1dc71913b1": 0
+    },
+    "preconditions": {
+      "4cfd6f6e1406": {
+        "ok": true,
+        "n_differences": 0,
+        "threshold_difference": 0.0,
+        "bm25_all_tie": true,
+        "bm25_pair": {
+          "k1": 1.5,
+          "b": 0.75
+        }
+      },
+      "8ceba5db8d0b": {
+        "ok": true,
+        "n_differences": 0,
+        "threshold_difference": 0.0,
+        "bm25_all_tie": true,
+        "bm25_pair": {
+          "k1": 1.5,
+          "b": 0.75
+        }
+      },
+      "2e1dc71913b1": {
+        "ok": true,
+        "n_differences": 0,
+        "threshold_difference": 0.0,
+        "bm25_all_tie": true,
+        "bm25_pair": {
+          "k1": 1.5,
+          "b": 0.75
+        }
+      }
+    },
+    "sessions": {
+      "passes_in_one_session": 54,
+      "first_family_passes_in_two_sessions": 3,
+      "first_session_of_the_first_family": "death at 09:49 UTC (the frozen path refused the record's legacy geometry under the adopted one, ADR-010 section 9 (c)); the second session complete under 217dd50, the code change recorded in the session table"
+    },
+    "departures_stated": {
+      "difference_interval": "the hybrid of the two exact (Clopper and Pearson) intervals, Newcombe 1998 method 11; not an exact unconditional interval (A.6 says 'exact 95 % interval'; stated in ADR-010's built paragraph of 2026-10-30)",
+      "conditions": "the frozen four conditions decide the R letters; letter A asks for the four and the own line gap together (A.6)",
+      "factor_product_rule": "the factor product is read under plain on I0, the direct form (A.6 names no rule or form): a choice of the build, stated"
+    }
+  },
+  "files": {
+    "sealed-precondition-4cfd6f6e1406.json": {
+      "sha256_lf": "6025bfc597639082",
+      "timestamp_utc": "2026-10-30T01:28:49+00:00",
+      "code_commit": "f42bf9f",
+      "what": "the A.5 precondition on seed 2024: row 47's I0 arm replayed on the first family's journal, the threshold, BM25's ten counts",
+      "run_id": "4cfd6f6e1406"
+    },
+    "sealed-A-4cfd6f6e1406.json": {
+      "sha256_lf": "3988a2ad2c3b5790",
+      "timestamp_utc": "2026-10-30T01:53:12+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A on seed 2024: the planting record and the six passes' hashes and aggregates",
+      "run_id": "4cfd6f6e1406",
+      "family": "A"
+    },
+    "sealed-A-4cfd6f6e1406-I0-direct.pass.json": {
+      "sha256_lf": "0076fcf632f68b48",
+      "timestamp_utc": "2026-10-30T01:45:39+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 2024, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-A-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "fd22364264225322",
+      "timestamp_utc": "2026-10-30T01:50:17+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 2024, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-T0-4cfd6f6e1406.json": {
+      "sha256_lf": "353430cfb216574b",
+      "timestamp_utc": "2026-10-30T02:09:59+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0 on seed 2024: the planting record and the six passes' hashes and aggregates",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0"
+    },
+    "sealed-T0-4cfd6f6e1406-I0-direct.pass.json": {
+      "sha256_lf": "57a62a4a2a97c4e7",
+      "timestamp_utc": "2026-10-30T02:03:06+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 2024, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-T0-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "2e7724eb2dff3550",
+      "timestamp_utc": "2026-10-30T02:07:29+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 2024, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-Av-4cfd6f6e1406.json": {
+      "sha256_lf": "e6dc918b3ef347fd",
+      "timestamp_utc": "2026-10-30T08:12:43+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av on seed 2024: the planting record and the six passes' hashes and aggregates",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av"
+    },
+    "sealed-Av-4cfd6f6e1406-I0-direct.pass.json": {
+      "sha256_lf": "797e77486e35e20d",
+      "timestamp_utc": "2026-10-30T08:06:35+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 2024, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-Av-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "8dadce2718d9d1ff",
+      "timestamp_utc": "2026-10-30T08:10:32+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 2024, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-first-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "55b83d9a56d6e294",
+      "timestamp_utc": "2026-10-30T10:37:32+00:00",
+      "code_commit": "217dd50",
+      "what": "the first family's paraphrase pass on the record's journal of seed 2024 (read under the adopted geometry through an explicit index, as row 47)",
+      "run_id": "4cfd6f6e1406",
+      "family": "first",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-precondition-8ceba5db8d0b.json": {
+      "sha256_lf": "a665fc4d436e56d4",
+      "timestamp_utc": "2026-10-30T01:32:13+00:00",
+      "code_commit": "f42bf9f",
+      "what": "the A.5 precondition on seed 1337: row 47's I0 arm replayed on the first family's journal, the threshold, BM25's ten counts",
+      "run_id": "8ceba5db8d0b"
+    },
+    "sealed-A-8ceba5db8d0b.json": {
+      "sha256_lf": "f2f61f9737d2964b",
+      "timestamp_utc": "2026-10-30T08:25:08+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A on seed 1337: the planting record and the six passes' hashes and aggregates",
+      "run_id": "8ceba5db8d0b",
+      "family": "A"
+    },
+    "sealed-A-8ceba5db8d0b-I0-direct.pass.json": {
+      "sha256_lf": "5f8922768e2d9cbf",
+      "timestamp_utc": "2026-10-30T08:18:00+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 1337, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-A-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "09c3e067445fe161",
+      "timestamp_utc": "2026-10-30T08:22:14+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 1337, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-T0-8ceba5db8d0b.json": {
+      "sha256_lf": "e736848899054152",
+      "timestamp_utc": "2026-10-30T08:33:28+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0 on seed 1337: the planting record and the six passes' hashes and aggregates",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0"
+    },
+    "sealed-T0-8ceba5db8d0b-I0-direct.pass.json": {
+      "sha256_lf": "cd3c0eb78efd681f",
+      "timestamp_utc": "2026-10-30T08:27:10+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 1337, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-T0-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "d9592e26541c4e45",
+      "timestamp_utc": "2026-10-30T08:31:03+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 1337, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-Av-8ceba5db8d0b.json": {
+      "sha256_lf": "e074bd50d5fd2ab1",
+      "timestamp_utc": "2026-10-30T08:41:35+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av on seed 1337: the planting record and the six passes' hashes and aggregates",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av"
+    },
+    "sealed-Av-8ceba5db8d0b-I0-direct.pass.json": {
+      "sha256_lf": "5bbbcabb4bc74de7",
+      "timestamp_utc": "2026-10-30T08:35:11+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 1337, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-Av-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "91fcb391bcc8dc29",
+      "timestamp_utc": "2026-10-30T08:39:16+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 1337, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-first-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "ad2dd21ebe4ab377",
+      "timestamp_utc": "2026-10-30T10:38:31+00:00",
+      "code_commit": "217dd50",
+      "what": "the first family's paraphrase pass on the record's journal of seed 1337 (read under the adopted geometry through an explicit index, as row 47)",
+      "run_id": "8ceba5db8d0b",
+      "family": "first",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-precondition-2e1dc71913b1.json": {
+      "sha256_lf": "ad1d1bcaea4f36ec",
+      "timestamp_utc": "2026-10-30T01:37:32+00:00",
+      "code_commit": "f42bf9f",
+      "what": "the A.5 precondition on seed 7: row 47's I0 arm replayed on the first family's journal, the threshold, BM25's ten counts",
+      "run_id": "2e1dc71913b1"
+    },
+    "sealed-A-2e1dc71913b1.json": {
+      "sha256_lf": "67d954f91963325e",
+      "timestamp_utc": "2026-10-30T08:59:19+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A on seed 7: the planting record and the six passes' hashes and aggregates",
+      "run_id": "2e1dc71913b1",
+      "family": "A"
+    },
+    "sealed-A-2e1dc71913b1-I0-direct.pass.json": {
+      "sha256_lf": "ba5d7450d2bede0f",
+      "timestamp_utc": "2026-10-30T08:53:16+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 7, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-A-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "35e90ddf79363a50",
+      "timestamp_utc": "2026-10-30T08:57:00+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 7, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-T0-2e1dc71913b1.json": {
+      "sha256_lf": "1f85790acf2f4a55",
+      "timestamp_utc": "2026-10-30T09:07:34+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0 on seed 7: the planting record and the six passes' hashes and aggregates",
+      "run_id": "2e1dc71913b1",
+      "family": "T0"
+    },
+    "sealed-T0-2e1dc71913b1-I0-direct.pass.json": {
+      "sha256_lf": "705e539499b45eb0",
+      "timestamp_utc": "2026-10-30T09:01:03+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 7, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-T0-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "6d3cd69114be7409",
+      "timestamp_utc": "2026-10-30T09:05:11+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 7, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-Av-2e1dc71913b1.json": {
+      "sha256_lf": "45ad1771bde92c05",
+      "timestamp_utc": "2026-10-30T09:15:23+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av on seed 7: the planting record and the six passes' hashes and aggregates",
+      "run_id": "2e1dc71913b1",
+      "family": "Av"
+    },
+    "sealed-Av-2e1dc71913b1-I0-direct.pass.json": {
+      "sha256_lf": "88c5377696aed07e",
+      "timestamp_utc": "2026-10-30T09:09:13+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 7, I0 (the organ's live index), the direct form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "index": "I0",
+      "form": "direct"
+    },
+    "sealed-Av-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "448e4fe7d31f2919",
+      "timestamp_utc": "2026-10-30T09:13:07+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 7, I0 (the organ's live index), the paraphrase form: the pass, one generation per question, the seven rules replayed",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-first-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "4a73737ad591c3d8",
+      "timestamp_utc": "2026-10-30T10:39:31+00:00",
+      "code_commit": "217dd50",
+      "what": "the first family's paraphrase pass on the record's journal of seed 7 (read under the adopted geometry through an explicit index, as row 47)",
+      "run_id": "2e1dc71913b1",
+      "family": "first",
+      "index": "I0",
+      "form": "paraphrase"
+    },
+    "sealed-reading-rows51-52.json": {
+      "sha256_lf": "c462216115d38e28",
+      "timestamp_utc": "2026-10-30T12:57:07+00:00",
+      "code_commit": null,
+      "what": "the cold reading of rows 51 and 52 by sealed_reading.read_rows, written by the founder's command at 12:57 UTC"
+    }
+  },
+  "a0_files": {
+    "a0-sealed-A-2e1dc71913b1-I0-direct.pass.json": {
+      "sha256_lf": "c86cbd1b66c332d9",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-A-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "d27114744828b87c",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-A-4cfd6f6e1406-I0-direct.pass.json": {
+      "sha256_lf": "ad90a5752c9755da",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-A-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "8c407aa19fcf1dd1",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-A-8ceba5db8d0b-I0-direct.pass.json": {
+      "sha256_lf": "0274f9f03a2f3499",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-A-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "e71dc9932572fa1d",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-Av-2e1dc71913b1-I0-direct.pass.json": {
+      "sha256_lf": "dd995657c88e42f7",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-Av-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "6727e5f3a81fc72f",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-Av-4cfd6f6e1406-I0-direct.pass.json": {
+      "sha256_lf": "1abd69e49e6f8c41",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-Av-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "6696213195050d36",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-Av-8ceba5db8d0b-I0-direct.pass.json": {
+      "sha256_lf": "6958e2306595996c",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-Av-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "66c74092939539a1",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-T0-2e1dc71913b1-I0-direct.pass.json": {
+      "sha256_lf": "e5fdd522caf80d01",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-T0-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "bc59092689349506",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-T0-4cfd6f6e1406-I0-direct.pass.json": {
+      "sha256_lf": "726b2fb09628f6a8",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-T0-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "fadabc2710378e2b",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-T0-8ceba5db8d0b-I0-direct.pass.json": {
+      "sha256_lf": "6dddfa09c1017d75",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-T0-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "3b56ce3550cb090c",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-first-2e1dc71913b1-I0-paraphrase.pass.json": {
+      "sha256_lf": "e0c15c3e7706588f",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-first-4cfd6f6e1406-I0-paraphrase.pass.json": {
+      "sha256_lf": "0cb6ed989bc6db22",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    },
+    "a0-sealed-first-8ceba5db8d0b-I0-paraphrase.pass.json": {
+      "sha256_lf": "aa2fbf25d4604c11",
+      "what": "A0's file on an I0 pass (row 54's instrument, run 2026-10-30 after the passes); M2 reads the twelve of the live seeds' families as the construction's ceiling, beside, entering no letter"
+    }
+  },
+  "logs": {
+    "cost-A-2e1dc71913b1.log": "5179a13074054a04",
+    "cost-A-4cfd6f6e1406.log": "52b914d785636801",
+    "cost-A-8ceba5db8d0b.log": "4a1acffe989bddce",
+    "cost-Av-2e1dc71913b1.log": "2f430aa7bdb18d7a",
+    "cost-Av-4cfd6f6e1406.log": "e0d46a9f6b16d1a3",
+    "cost-Av-8ceba5db8d0b.log": "849b6f47e97a7af4",
+    "cost-T0-2e1dc71913b1.log": "1ad138d7e7e586f9",
+    "cost-T0-4cfd6f6e1406.log": "fcfaa423f1d1b90d",
+    "cost-T0-8ceba5db8d0b.log": "6e147d3c40298d48",
+    "sealed-A-2e1dc71913b1.log": "d5de77136f88e1a6",
+    "sealed-A-4cfd6f6e1406.log": "c2e573f8e33fbe96",
+    "sealed-A-8ceba5db8d0b.log": "5ea3f933b8d72283",
+    "sealed-Av-2e1dc71913b1.log": "98b3863fc3421ae2",
+    "sealed-Av-4cfd6f6e1406.log": "e8be33a8a00bc19a",
+    "sealed-Av-8ceba5db8d0b.log": "e89e007023c1d3ef",
+    "sealed-T0-2e1dc71913b1.log": "82bafec5de52a53a",
+    "sealed-T0-4cfd6f6e1406.log": "5b3de944025829e4",
+    "sealed-T0-8ceba5db8d0b.log": "578a03cba6219038",
+    "sealed-first-2e1dc71913b1.log": "06d1fbc7736a24b9",
+    "sealed-first-4cfd6f6e1406.log": "c75120eeac006bd2",
+    "sealed-first-8ceba5db8d0b.log": "64b0d8d404c14e19",
+    "sealed-precondition-2e1dc71913b1.log": "6b253993daf46a18",
+    "sealed-precondition-4cfd6f6e1406.log": "eda364173692c9fe",
+    "sealed-precondition-8ceba5db8d0b.log": "e97a5458cdfb9f52",
+    "sealed-reading-rows51-52.log": "45a4f7125c99e592"
+  }
+}

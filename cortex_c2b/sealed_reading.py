@@ -30,7 +30,7 @@ import argparse
 import json
 import math
 from functools import lru_cache
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 from cortex_c2b.hm_protocol import DELTA, NEGCTRL_INVALID, N_NEGCTRL
 from cortex_c2b.hm_lm import INVALID_CITATION_MAX, replay_outcomes
@@ -126,7 +126,7 @@ def load_family(metrics_dir: str | Path, family: str, run_id: str) -> dict:
     passes = {}
     for key, meta in fam["passes"].items():
         index, form = key.split("-")
-        ppath = md / Path(meta["file"]).name
+        ppath = md / PureWindowsPath(meta["file"]).name            # the family file names the pass file as the run's machine wrote it (either separator); read beside it
         sha = RS.sha256_file(ppath, lf=True)
         if sha != meta["sha256_lf"]:
             raise ValueError(f"{ppath}: sha256_lf {sha} differs from the family file's {meta['sha256_lf']}")

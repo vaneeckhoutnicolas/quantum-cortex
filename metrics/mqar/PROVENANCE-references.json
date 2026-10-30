@@ -1,0 +1,760 @@
+{
+  "rows": "row 52",
+  "row52_letter": "R-b (by vacuity: the organ's stack holds the four conditions on no live seed of A; no test favours it)",
+  "row52_primary_tests": "not separated at this size, both tests (0 against 0 strict on 400 pairs each)",
+  "what": "row 52, the simple references and the cost (ADR-010 part B, the amendment's section 2): the thirty six reference passes (I1, I2) of the same runs as row 51, and the nine cost harness runs of B.3 (2026-10-30, 10:47 to 11:23 UTC, pinned to one thread through tools/adr010_launcher.py --pin-threads, the code of 217dd50); read cold with row 51 at 12:57 UTC by sealed_reading.read_rows (the primary tests, the conditions per configuration, the attribution by component); the cost files read directly",
+  "commands": [
+    "python tools\\adr010_launcher.py --pin-threads cortex_c2b.cost_harness --family <A|T0|Av> --ckpt <ckpt> --config <config> --journal runs\\sealed\\<family>-<run id>.jsonl --out metrics\\mqar  (per family and checkpoint; mains power, nothing else running)"
+  ],
+  "order_run": "the cost harness on seed 2024 (A, T0, Av; 10:47 to 10:58 UTC), seed 1337 (10:59 to 11:10), seed 7 (11:11 to 11:23), one command chaining the nine, no repetition out of band on any stage",
+  "code": {
+    "sealed_reading_py_sha256_lf_at_the_founders_reading": "b0ee99b63af67bf4",
+    "sealed_reading_py_sha256_lf_at_the_recomputation": "fea9f60d1db91bc1",
+    "what": "the reading module as recorded in every pass's code state (the tree of f42bf9f and 217dd50; the founder's reading of 12:57 UTC ran it) and as corrected after the reading by one line, the loader resolving a pass file by its base name (ADR-010 section 10 (a)); the recomputation under the corrected module equals the committed reading"
+  },
+  "checkpoints": {
+    "4cfd6f6e1406": {
+      "seed": 2024,
+      "config_hash": "d0c0d93ba24555a8",
+      "step": 7323,
+      "threshold": 0.6122402548789978
+    },
+    "8ceba5db8d0b": {
+      "seed": 1337,
+      "config_hash": "36a3dd10bbff84eb",
+      "step": 7323,
+      "threshold": 0.5360028743743896
+    },
+    "2e1dc71913b1": {
+      "seed": 7,
+      "config_hash": "a727d1cb445afa92",
+      "step": 7323,
+      "threshold": 0.5907554626464844
+    }
+  },
+  "device": "the founder's processor (cpu; CUDA available and not used; torch 2.6.0+cu124, numpy 2.5.3, python 3.12.10, Windows 11), PYTHONHASHSEED 0 through tools/adr010_launcher.py; the same as rows 48 to 50",
+  "freeze": {
+    "file": "FREEZE-v1.1.0.json",
+    "sha256_lf": "33b57d451ca1887d",
+    "commit": "c5b4818d3db29902f72d1b3078e01c4b3cb1e634",
+    "files": 104,
+    "tree_sha256": "676060c734b6d3d7"
+  },
+  "seal": {
+    "file": "SEALED-FAMILIES.json",
+    "sha256_lf": "41bf409289af518e"
+  },
+  "row47_files": {
+    "hm-lm-4cfd6f6e1406-session-b-index16exact.json": "25ffc5930b31f16d",
+    "hm-lm-8ceba5db8d0b-session-b-index16exact.json": "5bc5556495edbbe9",
+    "hm-lm-2e1dc71913b1-session-b-index16exact.json": "49b3eacbecb58bc8"
+  },
+  "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (the committed form); the JSON files are written in LF by the instruments; the 79 values printed by the founder's consoles (the logs' 'retained' lines) equal the recomputed ones, checked by the instance on 2026-10-30; the logs are the consoles' UTF-16 text, hashed as they are",
+  "row52": {
+    "letter": "R-b",
+    "sentence": "the read side brings no measured advantage over the classical stack on these families; the write side, the persistence across the session boundary, the provenance and the withdrawal were compared with no reference, so no advantage is claimed for them either, and the industrial door's first item is answered against the organ",
+    "note": "the organ's stack holds the four conditions on no live seed: R-b holds by vacuity of its first clause; reported as such",
+    "primary_tests": {
+      "I0 mark-veto against I2 V1": {
+        "live_seeds_pooled": {
+          "pairs": 400,
+          "b_organ_only": 0,
+          "c_reference_only": 0,
+          "p_two_sided": 1.0
+        },
+        "third_checkpoint": {
+          "pairs": 200,
+          "b_organ_only": 0,
+          "c_reference_only": 0,
+          "p_two_sided": 1.0
+        },
+        "outcome": "not separated at this size"
+      },
+      "I0 mark-veto against I1 V1": {
+        "live_seeds_pooled": {
+          "pairs": 400,
+          "b_organ_only": 0,
+          "c_reference_only": 0,
+          "p_two_sided": 1.0
+        },
+        "third_checkpoint": {
+          "pairs": 200,
+          "b_organ_only": 0,
+          "c_reference_only": 0,
+          "p_two_sided": 1.0
+        },
+        "outcome": "not separated at this size"
+      }
+    },
+    "conditions": {
+      "organ": {
+        "8ceba5db8d0b": false,
+        "4cfd6f6e1406": false,
+        "2e1dc71913b1": false
+      },
+      "buyers": {
+        "I2 V1": {
+          "8ceba5db8d0b": false,
+          "4cfd6f6e1406": false,
+          "2e1dc71913b1": false
+        },
+        "I1 V1": {
+          "8ceba5db8d0b": false,
+          "4cfd6f6e1406": false,
+          "2e1dc71913b1": false
+        }
+      }
+    },
+    "own_in_window_A_direct_by_index": {
+      "I0": {
+        "4cfd6f6e1406": 110,
+        "8ceba5db8d0b": 108,
+        "2e1dc71913b1": 117
+      },
+      "I1": {
+        "4cfd6f6e1406": 180,
+        "8ceba5db8d0b": 188,
+        "2e1dc71913b1": 183
+      },
+      "I2": {
+        "4cfd6f6e1406": 200,
+        "8ceba5db8d0b": 200,
+        "2e1dc71913b1": 200
+      }
+    },
+    "own_cited_given_in_window_mark_veto": {
+      "I0": {
+        "4cfd6f6e1406": 30,
+        "8ceba5db8d0b": 34,
+        "2e1dc71913b1": 28
+      },
+      "I1": {
+        "4cfd6f6e1406": 35,
+        "8ceba5db8d0b": 41,
+        "2e1dc71913b1": 32
+      },
+      "I2": {
+        "4cfd6f6e1406": 32,
+        "8ceba5db8d0b": 42,
+        "2e1dc71913b1": 35
+      }
+    },
+    "cost": {
+      "A-4cfd6f6e1406": {
+        "started_utc": "2026-10-30T10:47:12+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 235400.0,
+          "I1": 518300.0,
+          "I2": 64800.0
+        },
+        "cue_median_ns": 22563400.0,
+        "read_side_build_bytes": {
+          "I0": 489469,
+          "I1": 11700,
+          "I2": 149919
+        },
+        "protocol_2_ran": false
+      },
+      "A-8ceba5db8d0b": {
+        "started_utc": "2026-10-30T10:59:09+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 236250.0,
+          "I1": 521600.0,
+          "I2": 65650.0
+        },
+        "cue_median_ns": 22348900.0,
+        "read_side_build_bytes": {
+          "I0": 483085,
+          "I1": 11756,
+          "I2": 149919
+        },
+        "protocol_2_ran": false
+      },
+      "A-2e1dc71913b1": {
+        "started_utc": "2026-10-30T11:11:09+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 242750.0,
+          "I1": 524000.0,
+          "I2": 66500.0
+        },
+        "cue_median_ns": 23146400.0,
+        "read_side_build_bytes": {
+          "I0": 480733,
+          "I1": 11700,
+          "I2": 149919
+        },
+        "protocol_2_ran": false
+      },
+      "T0-4cfd6f6e1406": {
+        "started_utc": "2026-10-30T10:52:09+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 241600.0,
+          "I1": 523300.0,
+          "I2": 89100.0
+        },
+        "cue_median_ns": 20993400.0,
+        "read_side_build_bytes": {
+          "I0": 548845,
+          "I1": 11756,
+          "I2": 140978
+        },
+        "protocol_2_ran": false
+      },
+      "T0-8ceba5db8d0b": {
+        "started_utc": "2026-10-30T11:04:06+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 238700.0,
+          "I1": 511900.0,
+          "I2": 86400.0
+        },
+        "cue_median_ns": 20211350.0,
+        "read_side_build_bytes": {
+          "I0": 553997,
+          "I1": 11756,
+          "I2": 140978
+        },
+        "protocol_2_ran": false
+      },
+      "T0-2e1dc71913b1": {
+        "started_utc": "2026-10-30T11:16:08+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 242700.0,
+          "I1": 522000.0,
+          "I2": 89150.0
+        },
+        "cue_median_ns": 21301450.0,
+        "read_side_build_bytes": {
+          "I0": 548749,
+          "I1": 11756,
+          "I2": 140978
+        },
+        "protocol_2_ran": false
+      },
+      "Av-4cfd6f6e1406": {
+        "started_utc": "2026-10-30T10:55:44+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 238900.0,
+          "I1": 515500.0,
+          "I2": 88700.0
+        },
+        "cue_median_ns": 20199400.0,
+        "read_side_build_bytes": {
+          "I0": 558021,
+          "I1": 11756,
+          "I2": 139694
+        },
+        "protocol_2_ran": false
+      },
+      "Av-8ceba5db8d0b": {
+        "started_utc": "2026-10-30T11:07:40+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 237550.0,
+          "I1": 517650.0,
+          "I2": 87400.0
+        },
+        "cue_median_ns": 20012450.0,
+        "read_side_build_bytes": {
+          "I0": 571749,
+          "I1": 11756,
+          "I2": 139694
+        },
+        "protocol_2_ran": false
+      },
+      "Av-2e1dc71913b1": {
+        "started_utc": "2026-10-30T11:19:50+00:00",
+        "pinned": true,
+        "problems": [],
+        "index_step_median_ns": {
+          "I0": 239900.0,
+          "I1": 516300.0,
+          "I2": 87850.0
+        },
+        "cue_median_ns": 20943650.0,
+        "read_side_build_bytes": {
+          "I0": 580821,
+          "I1": 11756,
+          "I2": 139694
+        },
+        "protocol_2_ran": false
+      }
+    },
+    "label": "not a scale result: 200 entries, one processor, the build and the query separated; the scale comparison is part C's"
+  },
+  "files": {
+    "sealed-A-4cfd6f6e1406-I1-direct.pass.json": {
+      "sha256_lf": "9cbe1f3aabb2e1f9",
+      "timestamp_utc": "2026-10-30T01:47:33+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 2024, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-A-4cfd6f6e1406-I2-direct.pass.json": {
+      "sha256_lf": "bc38ce2491be80e9",
+      "timestamp_utc": "2026-10-30T01:48:58+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 2024, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-A-4cfd6f6e1406-I1-paraphrase.pass.json": {
+      "sha256_lf": "ff6209767c2f3dd6",
+      "timestamp_utc": "2026-10-30T01:51:45+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 2024, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-A-4cfd6f6e1406-I2-paraphrase.pass.json": {
+      "sha256_lf": "59949df132674ecf",
+      "timestamp_utc": "2026-10-30T01:53:05+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 2024, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-A-4cfd6f6e1406.json": {
+      "sha256_lf": "3821a3565e283407",
+      "timestamp_utc": "2026-10-30T10:51:53+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family A, seed 2024: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "4cfd6f6e1406",
+      "family": "A",
+      "started_utc": "2026-10-30T10:47:12+00:00"
+    },
+    "sealed-T0-4cfd6f6e1406-I1-direct.pass.json": {
+      "sha256_lf": "401fae3971c09c94",
+      "timestamp_utc": "2026-10-30T02:04:43+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 2024, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-T0-4cfd6f6e1406-I2-direct.pass.json": {
+      "sha256_lf": "f8bb773b530fa5c9",
+      "timestamp_utc": "2026-10-30T02:06:12+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 2024, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-T0-4cfd6f6e1406-I1-paraphrase.pass.json": {
+      "sha256_lf": "8d8e122f15e188b3",
+      "timestamp_utc": "2026-10-30T02:08:43+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 2024, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-T0-4cfd6f6e1406-I2-paraphrase.pass.json": {
+      "sha256_lf": "1950e5f0c21ad456",
+      "timestamp_utc": "2026-10-30T02:09:52+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 2024, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-T0-4cfd6f6e1406.json": {
+      "sha256_lf": "04cf4bb8e9c169d0",
+      "timestamp_utc": "2026-10-30T10:55:29+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family T0, seed 2024: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "4cfd6f6e1406",
+      "family": "T0",
+      "started_utc": "2026-10-30T10:52:09+00:00"
+    },
+    "sealed-Av-4cfd6f6e1406-I1-direct.pass.json": {
+      "sha256_lf": "c7cb812f2bfdd65d",
+      "timestamp_utc": "2026-10-30T08:08:08+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 2024, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-Av-4cfd6f6e1406-I2-direct.pass.json": {
+      "sha256_lf": "b8a6ac3b50c200e0",
+      "timestamp_utc": "2026-10-30T08:09:24+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 2024, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-Av-4cfd6f6e1406-I1-paraphrase.pass.json": {
+      "sha256_lf": "87bd2d9fc9105bf8",
+      "timestamp_utc": "2026-10-30T08:11:38+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 2024, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-Av-4cfd6f6e1406-I2-paraphrase.pass.json": {
+      "sha256_lf": "c113aa7a02de1b5c",
+      "timestamp_utc": "2026-10-30T08:12:36+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 2024, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-Av-4cfd6f6e1406.json": {
+      "sha256_lf": "6fe25d5350f69785",
+      "timestamp_utc": "2026-10-30T10:58:54+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family Av, seed 2024: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "4cfd6f6e1406",
+      "family": "Av",
+      "started_utc": "2026-10-30T10:55:44+00:00"
+    },
+    "sealed-A-8ceba5db8d0b-I1-direct.pass.json": {
+      "sha256_lf": "93ba3452f3628b59",
+      "timestamp_utc": "2026-10-30T08:19:39+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 1337, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-A-8ceba5db8d0b-I2-direct.pass.json": {
+      "sha256_lf": "acb6670bf511df1a",
+      "timestamp_utc": "2026-10-30T08:21:05+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 1337, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-A-8ceba5db8d0b-I1-paraphrase.pass.json": {
+      "sha256_lf": "41df4571cab80c9f",
+      "timestamp_utc": "2026-10-30T08:23:34+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 1337, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-A-8ceba5db8d0b-I2-paraphrase.pass.json": {
+      "sha256_lf": "d67ca35251b4bf8e",
+      "timestamp_utc": "2026-10-30T08:25:00+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 1337, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-A-8ceba5db8d0b.json": {
+      "sha256_lf": "f4a79ab6b6d87297",
+      "timestamp_utc": "2026-10-30T11:03:51+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family A, seed 1337: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "8ceba5db8d0b",
+      "family": "A",
+      "started_utc": "2026-10-30T10:59:09+00:00"
+    },
+    "sealed-T0-8ceba5db8d0b-I1-direct.pass.json": {
+      "sha256_lf": "b73014c09a8faac1",
+      "timestamp_utc": "2026-10-30T08:28:36+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 1337, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-T0-8ceba5db8d0b-I2-direct.pass.json": {
+      "sha256_lf": "81efceb8b15a98ec",
+      "timestamp_utc": "2026-10-30T08:29:56+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 1337, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-T0-8ceba5db8d0b-I1-paraphrase.pass.json": {
+      "sha256_lf": "a0d3a61a19d58357",
+      "timestamp_utc": "2026-10-30T08:32:13+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 1337, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-T0-8ceba5db8d0b-I2-paraphrase.pass.json": {
+      "sha256_lf": "c8c5275563e40b0d",
+      "timestamp_utc": "2026-10-30T08:33:21+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 1337, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-T0-8ceba5db8d0b.json": {
+      "sha256_lf": "237e733069f1ece4",
+      "timestamp_utc": "2026-10-30T11:07:24+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family T0, seed 1337: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "8ceba5db8d0b",
+      "family": "T0",
+      "started_utc": "2026-10-30T11:04:06+00:00"
+    },
+    "sealed-Av-8ceba5db8d0b-I1-direct.pass.json": {
+      "sha256_lf": "edcd78c1b6f3f7aa",
+      "timestamp_utc": "2026-10-30T08:36:43+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 1337, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-Av-8ceba5db8d0b-I2-direct.pass.json": {
+      "sha256_lf": "91f4b73884ea7590",
+      "timestamp_utc": "2026-10-30T08:38:08+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 1337, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-Av-8ceba5db8d0b-I1-paraphrase.pass.json": {
+      "sha256_lf": "88b634fa67df91c4",
+      "timestamp_utc": "2026-10-30T08:40:24+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 1337, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-Av-8ceba5db8d0b-I2-paraphrase.pass.json": {
+      "sha256_lf": "34f260144c19e1f8",
+      "timestamp_utc": "2026-10-30T08:41:29+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 1337, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-Av-8ceba5db8d0b.json": {
+      "sha256_lf": "9a9266e7c9f6ab1a",
+      "timestamp_utc": "2026-10-30T11:10:53+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family Av, seed 1337: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "8ceba5db8d0b",
+      "family": "Av",
+      "started_utc": "2026-10-30T11:07:40+00:00"
+    },
+    "sealed-A-2e1dc71913b1-I1-direct.pass.json": {
+      "sha256_lf": "cba775b89f9140f0",
+      "timestamp_utc": "2026-10-30T08:54:47+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 7, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-A-2e1dc71913b1-I2-direct.pass.json": {
+      "sha256_lf": "35fc8221d994a864",
+      "timestamp_utc": "2026-10-30T08:55:59+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 7, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-A-2e1dc71913b1-I1-paraphrase.pass.json": {
+      "sha256_lf": "d052b43f73885102",
+      "timestamp_utc": "2026-10-30T08:58:08+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 7, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-A-2e1dc71913b1-I2-paraphrase.pass.json": {
+      "sha256_lf": "43a5ab1a16c66898",
+      "timestamp_utc": "2026-10-30T08:59:12+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family A, seed 7, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-A-2e1dc71913b1.json": {
+      "sha256_lf": "62eb902d452a380b",
+      "timestamp_utc": "2026-10-30T11:15:53+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family A, seed 7: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "2e1dc71913b1",
+      "family": "A",
+      "started_utc": "2026-10-30T11:11:09+00:00"
+    },
+    "sealed-T0-2e1dc71913b1-I1-direct.pass.json": {
+      "sha256_lf": "a4a09daefdf6f700",
+      "timestamp_utc": "2026-10-30T09:02:32+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 7, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-T0-2e1dc71913b1-I2-direct.pass.json": {
+      "sha256_lf": "a1fc902555f28d0c",
+      "timestamp_utc": "2026-10-30T09:04:00+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 7, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-T0-2e1dc71913b1-I1-paraphrase.pass.json": {
+      "sha256_lf": "8fbe384731374524",
+      "timestamp_utc": "2026-10-30T09:06:21+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 7, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-T0-2e1dc71913b1-I2-paraphrase.pass.json": {
+      "sha256_lf": "da4c232e5659a24f",
+      "timestamp_utc": "2026-10-30T09:07:28+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family T0, seed 7, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-T0-2e1dc71913b1.json": {
+      "sha256_lf": "79b332b60b244438",
+      "timestamp_utc": "2026-10-30T11:19:34+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family T0, seed 7: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "2e1dc71913b1",
+      "family": "T0",
+      "started_utc": "2026-10-30T11:16:08+00:00"
+    },
+    "sealed-Av-2e1dc71913b1-I1-direct.pass.json": {
+      "sha256_lf": "77b8b75ba1d8225c",
+      "timestamp_utc": "2026-10-30T09:10:43+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 7, I1 (the exhaustive cosine on the same cues), the direct form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "index": "I1",
+      "form": "direct"
+    },
+    "sealed-Av-2e1dc71913b1-I2-direct.pass.json": {
+      "sha256_lf": "aa49e812d3f93613",
+      "timestamp_utc": "2026-10-30T09:12:01+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 7, I2 (BM25 over the stored payloads), the direct form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "index": "I2",
+      "form": "direct"
+    },
+    "sealed-Av-2e1dc71913b1-I1-paraphrase.pass.json": {
+      "sha256_lf": "d6ac86ef68d03142",
+      "timestamp_utc": "2026-10-30T09:14:15+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 7, I1 (the exhaustive cosine on the same cues), the paraphrase form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "index": "I1",
+      "form": "paraphrase"
+    },
+    "sealed-Av-2e1dc71913b1-I2-paraphrase.pass.json": {
+      "sha256_lf": "55ce601fa19aae32",
+      "timestamp_utc": "2026-10-30T09:15:17+00:00",
+      "code_commit": "f42bf9f",
+      "what": "family Av, seed 7, I2 (BM25 over the stored payloads), the paraphrase form: the reference pass",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "index": "I2",
+      "form": "paraphrase"
+    },
+    "cost-Av-2e1dc71913b1.json": {
+      "sha256_lf": "ee6dcd9aa3abddfd",
+      "timestamp_utc": "2026-10-30T11:23:05+00:00",
+      "code_commit": "217dd50",
+      "what": "the cost harness of B.3 on family Av, seed 7: every stage's quantiles, the operation counts, the write side, the memory, the proxies",
+      "run_id": "2e1dc71913b1",
+      "family": "Av",
+      "started_utc": "2026-10-30T11:19:50+00:00"
+    },
+    "sealed-reading-rows51-52.json": {
+      "sha256_lf": "c462216115d38e28",
+      "timestamp_utc": "2026-10-30T12:57:07+00:00",
+      "code_commit": null,
+      "what": "the cold reading of rows 51 and 52 by sealed_reading.read_rows, written by the founder's command at 12:57 UTC"
+    }
+  },
+  "logs": {
+    "cost-A-2e1dc71913b1.log": "5179a13074054a04",
+    "cost-A-4cfd6f6e1406.log": "52b914d785636801",
+    "cost-A-8ceba5db8d0b.log": "4a1acffe989bddce",
+    "cost-Av-2e1dc71913b1.log": "2f430aa7bdb18d7a",
+    "cost-Av-4cfd6f6e1406.log": "e0d46a9f6b16d1a3",
+    "cost-Av-8ceba5db8d0b.log": "849b6f47e97a7af4",
+    "cost-T0-2e1dc71913b1.log": "1ad138d7e7e586f9",
+    "cost-T0-4cfd6f6e1406.log": "fcfaa423f1d1b90d",
+    "cost-T0-8ceba5db8d0b.log": "6e147d3c40298d48",
+    "sealed-reading-rows51-52.log": "45a4f7125c99e592"
+  }
+}
