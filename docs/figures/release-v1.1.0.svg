@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="716" viewBox="0 0 1200 716" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="quantum-cortex v1.1.0, the second edition: what it is, what this edition establishes, the test the system failed and published as declared, the lifecycle at scale, the provenance benchmark, the three commands, what is not claimed, the record behind it">
+  <title>quantum-cortex v1.1.0, the second edition: the record up to row 54, the provenance benchmark</title>
+  <rect width="1200" height="716" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="22" font-weight="bold">quantum-cortex v1.1.0, the second edition: the record up to row 54, the provenance benchmark</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">a small language model with a memory outside its weights, its limit measured; the numbers are in the notes under this figure,</text>
+  <text x="600" y="75" text-anchor="middle" fill="#57606a" font-size="13">every measured one a row's of docs/RESULTS.md, with the file that produced it and a test that recomputes it</text>
+
+  <!-- what it is -->
+  <rect x="40" y="96" width="250" height="376" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="165" y="120" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">What it is</text>
+  <g font-size="12" fill="#57606a">
+    <text x="56" y="146">a 27 million parameter byte level</text>
+    <text x="56" y="163">language model, trained from scratch</text>
+    <text x="56" y="180">by one researcher on a free GPU tier</text>
+    <text x="56" y="197">and a laptop, plus an organ outside</text>
+    <text x="56" y="214">the weights:</text>
+    <text x="56" y="240" fill="#1f2328">an append only journal of episodes,</text>
+    <text x="56" y="257" fill="#1f2328">sealed under a key;</text>
+    <text x="56" y="281" fill="#1f2328">every answer a citation of a stored</text>
+    <text x="56" y="298" fill="#1f2328">line by its pointer, or "no record";</text>
+    <text x="56" y="322" fill="#1f2328">the model decides, the organ answers;</text>
+    <text x="56" y="346" fill="#1f2328">an evicted address is withdrawn from</text>
+    <text x="56" y="363" fill="#1f2328">the memory and no longer returns;</text>
+    <text x="56" y="420">built so that every claim about it has</text>
+    <text x="56" y="437">a row, a file and a test that can fail</text>
+  </g>
+
+  <!-- what this edition establishes -->
+  <text x="310" y="114" fill="#1f2328" font-size="13" font-weight="bold">What this edition establishes, from row 42 to row 54</text>
+  <g font-size="12" fill="#57606a">
+    <rect x="310" y="124" width="410" height="112" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="322" y="144" fill="#1f2328" font-size="12.5" font-weight="bold">The organ forgets exactly and keeps a history (rows 42 to 46)</text>
+    <text x="322" y="164">an evicted address is withdrawn from the memory and no longer</text>
+    <text x="322" y="180">returns, nothing kept moved; a changed value at one address is a</text>
+    <text x="322" y="196">revision with its readable history, the past version never returned;</text>
+    <text x="322" y="212">the index's buckets probed; an external model run through the</text>
+    <text x="322" y="228">frozen prompt</text>
+
+    <rect x="730" y="124" width="430" height="112" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="742" y="144" fill="#1f2328" font-size="12.5" font-weight="bold">The system holds on its own family of facts (rows 47 to 50)</text>
+    <text x="742" y="164">under the adopted index geometry the right episode is retrieved on</text>
+    <text x="742" y="180">every question and the four frozen conditions hold on the two seeds</text>
+    <text x="742" y="196">that did not conceive the policy; a near duplicate written to the</text>
+    <text x="742" y="212">journal is admitted under an identity rule and never cited in place</text>
+    <text x="742" y="228">of the original under the adopted selection rule (R4)</text>
+
+    <rect x="310" y="248" width="410" height="128" rx="8" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="322" y="268" fill="#1f2328" font-size="12.5" font-weight="bold">The test the system failed, published as declared (rows 51, 52)</text>
+    <text x="322" y="288">on sealed families of formulations the system had never seen, the</text>
+    <text x="322" y="304">four frozen conditions hold on no cell: the model's own reading fails</text>
+    <text x="322" y="320">on every cell, and the organ's mark alone selects the right line where</text>
+    <text x="322" y="336">the model's does not; the simplest reference stacks are not separated</text>
+    <text x="322" y="352">from the organ's at this size; the sentence for this outcome was</text>
+    <text x="322" y="368">written before the run, and it is the one the row carries</text>
+
+    <rect x="730" y="248" width="430" height="128" rx="8" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="742" y="268" fill="#1f2328" font-size="12.5" font-weight="bold">The lifecycle at scale, read without the model (rows 53, 54)</text>
+    <text x="742" y="288">on journals of eleven thousand and one hundred and ten thousand</text>
+    <text x="742" y="304">entries, the withdrawal holds on every phase of every cascade; the</text>
+    <text x="742" y="320">mark's guarantee against never planted names is measured to end at</text>
+    <text x="742" y="336">these sizes, under the control's label; A0, the construction's own</text>
+    <text x="742" y="352">ceiling under byte keys, is read with an instrument built for it</text>
+  </g>
+
+  <!-- the bench and the five minutes -->
+  <rect x="310" y="388" width="410" height="84" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="515" y="408" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">For anyone's memory system: the provenance benchmark</text>
+  <text x="515" y="428" text-anchor="middle" fill="#57606a" font-size="12">a bench built from the sealed generator; your system's answers scored</text>
+  <text x="515" y="444" text-anchor="middle" fill="#57606a" font-size="12">with the record's reading and its frozen conditions, without the model</text>
+  <text x="515" y="460" text-anchor="middle" fill="#57606a" font-size="12">and without the organ; a measuring tool, not a leaderboard</text>
+
+  <rect x="730" y="388" width="430" height="84" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="945" y="408" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Try it in five minutes</text>
+  <g font-family="Consolas, Menlo, monospace" font-size="12" fill="#1f2328">
+    <text x="945" y="428" text-anchor="middle">pip install quantum-cortex</text>
+    <text x="945" y="444" text-anchor="middle">python -m cortex_c2b.companion_demo</text>
+    <text x="945" y="460" text-anchor="middle">python -m cortex_c2b.hm_protocol --persistent</text>
+  </g>
+
+  <!-- not claimed -->
+  <rect x="40" y="486" width="1120" height="74" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="600" y="508" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">What this edition does not claim</text>
+  <text x="600" y="528" text-anchor="middle" fill="#57606a" font-size="12">that any of it holds at a larger size or on natural text; the read side brings no measured advantage over a classical stack on the sealed</text>
+  <text x="600" y="544" text-anchor="middle" fill="#57606a" font-size="12">families, and the write side's properties were compared with no reference; the limits are in the same table as the rest; not a product, not a chat model</text>
+
+  <!-- the record -->
+  <rect x="40" y="574" width="1120" height="104" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="596" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The record behind it</text>
+  <g font-size="12" fill="#57606a">
+    <text x="600" y="616" text-anchor="middle">every measurement declared before it ran, with the readings of every outcome; every file retained before a number in it was read;</text>
+    <text x="600" y="632" text-anchor="middle">the gravings of rows 49 to 54, the benchmark module and the figures read by committees of readers before they were committed; the failures published in the same table as the rest;</text>
+    <text x="600" y="648" text-anchor="middle">ten decision records, each opening with an original figure; the ideas register with its dated revisions; the paper, the first screen and the journey page with their figures;</text>
+    <text x="600" y="664" text-anchor="middle">code under Apache 2.0, documentation under CC BY 4.0; cite with CITATION.cff; the package quantum-cortex 1.1.0 on the Python index</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="12" fill="#57606a">
+    <rect x="40" y="694" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="60" y="704">established, each with a row, a file and a test</text>
+    <rect x="360" y="694" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="380" y="704">the failure and the limits, published as declared</text>
+    <rect x="690" y="694" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="710" y="704">what you can run</text>
+    <rect x="850" y="694" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="870" y="704">the record</text>
+  </g>
+</svg>

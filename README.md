@@ -34,6 +34,56 @@ python -m cortex_c2b.hm_protocol --persistent
 
 The first command installs the organ and the protocols (no checkpoint is needed for what follows). The second runs the organ as a component: a session writes a project's decisions into a sealed journal on disk, a second session in a new process that knows nothing but the disk answers five questions by citing the stored line with its pointer and says "no record" for three it was never told, printing the scores it decided on (seconds on a CPU). The third runs the dissociation protocol the record is built on, against the organ alone, and prints its verdict. The twenty minute way to attack the published numbers, with the command that recomputes each of them from the committed files, is [`docs/FALSIFY.md`](docs/FALSIFY.md); the record tests run with `pytest tests/ -m "not slow"` on a clone (825 of the 842, in about fifteen minutes on one processor).
 
+<details>
+<summary><b>Use it with your own model, in a dozen lines</b> (the organ as a library, any model decoding, no training; the two blocks are run as printed by <code>tests/test_compose_snippet.py</code>)</summary>
+
+Session A, today (the key comes from the environment, one per journal, never from a file):
+
+<!-- compose: session A -->
+```python
+import os
+from cortex_c2b import Journal, POLICY_STOP
+from cortex_c2b.write_path import WritePath
+from cortex_c2b.read_path import JournalPath
+from cortex_c2b.hm_protocol import address_cue
+
+key = bytes.fromhex(os.environ["QUANTUM_CORTEX_JOURNAL_KEY"])     # one key per journal, one journal per scope, never in a file
+journal = Journal("runs/my-scope/journal.jsonl", key=key, policy=POLICY_STOP)
+write, read = WritePath(journal, admission_threshold=0.15, seed=0), JournalPath(journal)
+address = "decision|argument:originality"                          # the entity is the address
+report = write.write(address_cue(address),
+                     b"12 Jan: the originality argument is set aside on the strength of ruling 2024/AR/512",
+                     "decision", now=0.0, source=address)          # the text of the address is sealed beside the record (ADR-009)
+if report.admitted:                                                # the gate refuses what the journal already predicts
+    read.on_write(report.entry)
+print("written" if report.admitted else f"refused: {report.reason}", report.entry.pointer[:12] if report.entry else "")
+```
+
+Session B, months later, in a new process that knows nothing of session A but the disk:
+
+<!-- compose: session B -->
+```python
+import os
+from cortex_c2b import Journal, POLICY_STOP
+from cortex_c2b.read_path import JournalPath
+from cortex_c2b.hm_protocol import address_cue
+
+key = bytes.fromhex(os.environ["QUANTUM_CORTEX_JOURNAL_KEY"])
+journal = Journal("runs/my-scope/journal.jsonl", key=key, policy=POLICY_STOP)   # reopened from the disk alone
+read = JournalPath(journal)
+for address in ("decision|argument:originality", "decision|argument:database-right"):
+    hits = read.retrieve(address_cue(address), k=4)                # never a scan; (entry, payload, score) per hit
+    if hits and hits[0][2] >= 0.5:                                 # the declared line on the journal's own score
+        entry, payload, score = hits[0]
+        print("cite", entry.pointer[:12], payload.decode())        # the window your model answers from, under the contract
+    else:
+        print("abstain: no record for", address)
+```
+
+Expected: the first address is cited with its pointer and its record, the second is abstained on (no record was written); running session A again is refused as redundant; the files under `runs/my-scope/` are sealed (no plaintext at rest). `tests/test_compose_snippet.py` runs these two blocks as they stand, session B in a new process, and asserts all four. The line at 0.5 is declared for this cue convention; with your own encoder, set it on addresses never written before use, as the companion demonstration does. The three ways to compose the organ with a model, with what each inherits from the record and what it has to measure for itself, are in [`docs/README-LONG.md`](docs/README-LONG.md) and the paper's §3.6.
+
+</details>
+
 ## What to do with it today
 
 Three things it is for, as measured; nothing more is claimed.

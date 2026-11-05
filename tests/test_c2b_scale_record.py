@@ -5,6 +5,7 @@ tables below hold every file of the record as it arrives (the three encoders' fi
 the hundred thousand draw on seed 2024's encoder), complete on 2026-11-05: 79 files, every one in the tables."""
 import hashlib
 import json
+import math
 import os
 import re
 import sys
@@ -320,7 +321,8 @@ def test_c3_the_cascade(raw, key):
         late = {k: [r for r in d["near_duplicates"]["rows"] if r["kind"] == k and r.get("evicted_at_phase") is not None and r["evicted_at_phase"] != r["j"] // PERIOD + 1] for k in ("E1", "E2")}
         assert late["E1"] == [] and len(late["E2"]) == e.get("e2_late", 0)
         assert all(1 <= x["evicted_at_phase"] - x["j"] // PERIOD - 1 <= 3700 for x in late["E2"])
-    assert round(sum(d["probe_times_seconds"]), 2) == e["probe_s"]        # the probe's own time after the phases (the checks, the counts, the reads, the reconstruction)
+    assert abs(math.fsum(d["probe_times_seconds"]) - e["probe_s"]) <= 0.005 + 1e-9   # the probe's own time after the phases (the checks, the counts, the reads, the reconstruction), at two decimals;
+    # 2026-11-05: `round(sum(...), 2)` read 8.895 as 8.9 under Python 3.11 (the CI's) and as 8.89 under 3.12 and later, whose sum() compensates the rounding of floats (the CI's red runs from 8263e61)
     last = d["reads_by_phase"]["last"]
     assert tuple(last[k] for k in ("n", "sample_read", "pairs_read", "own_in_window", "holes_total", "duplicates_in_window")) == e["last"]
     assert d["read_phases"] == e["read_phases"] and set(d["reads_by_phase"]) == {str(x) for x in e["read_phases"]}
