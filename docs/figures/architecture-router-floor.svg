@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="730" viewBox="0 0 1200 730" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="The architecture of the paper: a conventional byte level base model; two associative memory layers as an additional residual sub block, zero initialised; a router over the control and the two memories under three constraints, a guaranteed floor, a routing regime that follows consolidation, a fallback with hysteresis; versioned behind a stable interface; and the write path of the organ as a ledger of five rules with their words">
+  <title>Figure 6. The architecture: a memory router on a non regression floor, and the organ's write path as a ledger</title>
+  <rect width="1200" height="730" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The architecture: a memory router on a non regression floor, and the organ's write path as a ledger</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for section 3 of the paper. The base is kept conventional so that every departure from it is attributable to a single ablated component.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the base model and one block -->
+  <rect x="40" y="80" width="520" height="222" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="300" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The base model, and one of its blocks</text>
+  <text x="300" y="122" text-anchor="middle" fill="#57606a" font-size="10.5">a byte level decoder only transformer trained from scratch, with a reserved block</text>
+  <text x="300" y="136" text-anchor="middle" fill="#57606a" font-size="10.5">of token identifiers for oracle events; the brain mapping a source of hypotheses, not a claim of fidelity</text>
+  <g font-size="10.5" fill="#1f2328">
+    <rect x="60" y="146" width="480" height="34" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="300" y="160" text-anchor="middle" font-weight="bold">in each transformer block, an additional residual sub block: the associative memory,</text>
+    <text x="300" y="174" text-anchor="middle" fill="#57606a">two layers of one fast weight family, differing in whether the memory is static or written online</text>
+  </g>
+  <rect x="60" y="190" width="235" height="88" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="177" y="210" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">the static memory</text>
+  <text x="177" y="227" text-anchor="middle" fill="#57606a" font-size="10.5">a learned bank of key and value patterns</text>
+  <text x="177" y="241" text-anchor="middle" fill="#57606a" font-size="10.5">read by attention: a static, content</text>
+  <text x="177" y="255" text-anchor="middle" fill="#57606a" font-size="10.5">addressable memory</text>
+  <rect x="305" y="190" width="235" height="88" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="422" y="210" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">the gated delta rule memory</text>
+  <text x="422" y="227" text-anchor="middle" fill="#57606a" font-size="10.5">a per head recurrent state, an error</text>
+  <text x="422" y="241" text-anchor="middle" fill="#57606a" font-size="10.5">correcting rank one write, a per channel</text>
+  <text x="422" y="255" text-anchor="middle" fill="#57606a" font-size="10.5">forget gate, keys normalised: written online</text>
+  <text x="300" y="290" text-anchor="middle" fill="#57606a" font-size="10">both zero initialised at the output projection: the model begins as the control and learns the memory</text>
+
+  <!-- the router -->
+  <rect x="580" y="80" width="580" height="222" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="870" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The router over paths, the central proposal</text>
+  <g font-size="10.5" fill="#1f2328">
+    <rect x="596" y="118" width="120" height="34" rx="6" fill="#ffffff" stroke="#4ac26b"/>
+    <text x="655" y="139" text-anchor="middle">the control, no memory</text>
+    <rect x="720" y="118" width="130" height="34" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="785" y="139" text-anchor="middle">the static memory layer</text>
+    <rect x="860" y="118" width="130" height="34" rx="6" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="925" y="139" text-anchor="middle">the delta layer</text>
+    <text x="1070" y="134" text-anchor="middle" fill="#57606a">not one memory, nor a fixed</text>
+    <text x="1070" y="146" text-anchor="middle" fill="#57606a">choice: a router, per span</text>
+  </g>
+  <g font-size="10.5" fill="#57606a">
+    <text x="600" y="172" fill="#1f2328" font-weight="bold">a guaranteed floor</text>
+    <text x="600" y="186">a memory path is selected on a span only where its predicted score exceeds the control's; at worst the</text>
+    <text x="600" y="200">router equals the control; falling to the control is recorded as a result, not a failure</text>
+    <text x="600" y="218" fill="#1f2328" font-weight="bold">the routing regime follows consolidation</text>
+    <text x="600" y="232">soft where unsure (paths computed and mixed), hard where learned, confidently and stably (one path,</text>
+    <text x="600" y="246">selected before computation); it migrates from soft to hard; an uncertain decision is never hardened</text>
+    <text x="600" y="264" fill="#1f2328" font-weight="bold">a fallback with hysteresis</text>
+    <text x="600" y="278">on a path that degrades, the breaker re routes to the best remaining path above the control, or to the control,</text>
+    <text x="600" y="292">and re softens the decision; a declared cooldown prevents oscillation between paths</text>
+  </g>
+
+  <!-- versioning strip -->
+  <rect x="40" y="314" width="1120" height="56" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="332" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">the router, versioned behind a stable interface</text>
+  <text x="600" y="348" text-anchor="middle" fill="#57606a" font-size="10.5">a first version, an oracle that reads the true per path scores and so computes the ceiling any learned router may reach; a second, a learned gate</text>
+  <text x="600" y="362" text-anchor="middle" fill="#57606a" font-size="10.5">predicting them from the span's context alone; the state serialised with a version tag and dispatched by version, so that later versions extend the interface without breaking earlier ones</text>
+
+  <!-- the write path as a ledger -->
+  <rect x="40" y="384" width="1120" height="282" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="600" y="400" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The organ's write path as a ledger: five rules transposed from the author's parallel program in gravitation, none as a theorem, each checked against the code and given its word</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="56" y="424" fill="#1f2328" font-weight="bold">one, the origin is stored at the write, never derived</text>
+    <text x="56" y="439">the anchor is the scope, one journal per domain, and the time of the write, kept in every</text>
+    <text x="56" y="453">entry; the "where" enters at the write and nowhere else, no local law returns it later. Satisfied.</text>
+    <text x="56" y="474" fill="#1f2328" font-weight="bold">two, two laws, not one</text>
+    <text x="56" y="489">the conserved total by construction: states move one way, what is kept plus what has left equals</text>
+    <text x="56" y="503">what was written, every phase writes the counts; no law for the shape of the defect, nothing is</text>
+    <text x="56" y="517">derived on the text. One satisfied, one declared.</text>
+    <text x="56" y="538" fill="#1f2328" font-weight="bold">three, a drifting invariant breaks reconstruction</text>
+    <text x="56" y="553">the scope's configuration, separation, sealing and policy are hashed together; a journal opened</text>
+    <text x="56" y="567">under another separation is refused; a changed value at an address carrying its own source text is</text>
+    <text x="56" y="581">a dated revision of the one entry, a new version with provenance rather than a drift; restated in</text>
+    <text x="56" y="595">another text it opens a second entry, undecided which holds. Satisfied for the organ's invariants; declared for the user's.</text>
+    <text x="616" y="424" fill="#1f2328" font-weight="bold">four, a collision is a crossing, not a wall</text>
+    <text x="616" y="439">two episodes that become indistinguishable are not resolved by deleting one against the other.</text>
+    <text x="616" y="453">Satisfied in part; its completion at the write the identity rule (a write carrying a source text</text>
+    <text x="616" y="467">is redundant only when that text is already stored byte for byte, an unsourced write staying under</text>
+    <text x="616" y="481">the surprise gate; every near duplicate stored), at the read the selection (exact key first,</text>
+    <text x="616" y="495">similarity second, a conflict of values exposed as an abstention), adopted as the system's policy;</text>
+    <text x="616" y="509">in sample by design for the model's choice; on the sealed set the key acts where the templates read</text>
+    <text x="616" y="523">the question, and the mark alone remains where none does</text>
+    <text x="616" y="544" fill="#1f2328" font-weight="bold">five, the defect sizes the hidden share but does not name it</text>
+    <text x="616" y="559">at eviction the payload is released at its last pointer, by identity, and the event names the</text>
+    <text x="616" y="573">pointer and never the content: from the visible record one knows how much has left and</text>
+    <text x="616" y="587">which hashes, never what they said. Satisfied by construction.</text>
+    <text x="616" y="608" fill="#1f2328" font-weight="bold">the four words a level may carry</text>
+    <text x="616" y="623">theorem; reconstructible at measured defect; backup; declared loss: consolidation and demotion</text>
+    <text x="616" y="637">are a backup (the bytes stay by pointer), eviction is a declared loss; the second word was</text>
+    <text x="616" y="651">earned on the organ's layer of numbers by a declared probe, not on its text</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="698" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="708">the memories</text>
+    <rect x="170" y="698" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="190" y="708">the router on its floor</text>
+    <rect x="350" y="698" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="370" y="708">the write path's rules</text>
+    <rect x="530" y="698" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="550" y="708">the base and the versioning</text>
+  </g>
+</svg>

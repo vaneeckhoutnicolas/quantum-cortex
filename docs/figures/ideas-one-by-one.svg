@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="893" viewBox="0 0 1200 893" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="The ideas of the program one by one, each turned into a measurement with a threshold declared before the run, and its verdict at this scale in the table's words with its numbers removed: validated, validated as a test or as a system, invalidated at this scale, met in its letter and not its intent, mostly invalidated, validated as a ceiling and unrealised as a mechanism, not claimed; the numbers stay in the record">
+  <title>Figure 7. The ideas, one by one: each turned into a measurement with a threshold declared before the run</title>
+  <rect width="1200" height="893" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The ideas, one by one: each turned into a measurement with a threshold declared before the run</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for section 4.8 of the paper: the verdicts in the table's words at this scale, their numbers removed; the numbers and the rows that hold the artefacts stay in the record.</text>
+
+  <g font-size="11" font-weight="bold" fill="#1f2328">
+    <text x="48" y="86">the idea</text>
+    <text x="350" y="86">the measurement</text>
+    <text x="692" y="86">the verdict at this scale</text>
+  </g>
+  <line x1="40" y1="92" x2="1160" y2="92" stroke="#d0d7de"/>
+
+  <g font-size="10.5">
+    <rect x="40" y="100" width="1120" height="67" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="48" y="116" fill="#1f2328" font-weight="bold">memory as an organ outside the weights, sealed, gated</text>
+    <text x="48" y="130" fill="#1f2328" font-weight="bold">by surprise, persistent across restarts</text>
+    <text x="350" y="116" fill="#57606a">the Molaison dissociation on the organ: leakage proof facts</text>
+    <text x="350" y="130" fill="#57606a">planted through the gate, recall with the journal on and off,</text>
+    <text x="350" y="144" fill="#57606a">a negative control, session B in a new process from the disk</text>
+    <text x="350" y="158" fill="#57606a">alone</text>
+    <text x="692" y="116" fill="#1f2328">validated: a pass on each of its seeds, the negative control under its line, persistent</text>
+    <text x="692" y="130" fill="#1f2328">and claimable</text>
+    <rect x="40" y="173" width="1120" height="39" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="48" y="189" fill="#1f2328" font-weight="bold">a dissociation test can distinguish &quot;retains&quot; from &quot;has</text>
+    <text x="48" y="203" fill="#1f2328" font-weight="bold">a prior&quot;</text>
+    <text x="350" y="189" fill="#57606a">the same protocol run on the model's fine tunes, measurement</text>
+    <text x="350" y="203" fill="#57606a">after measurement, with its thresholds frozen</text>
+    <text x="692" y="189" fill="#1f2328">validated as a test: it failed the model alone every time, each failure attributed to a</text>
+    <text x="692" y="203" fill="#1f2328">named shortcut, and passed the system on the live seeds, saying which half carried it</text>
+    <rect x="40" y="218" width="1120" height="39" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="48" y="234" fill="#1f2328" font-weight="bold">a small model can learn to read its organ in generation</text>
+    <text x="48" y="248" fill="#1f2328" font-weight="bold">from data alone (cite or abstain)</text>
+    <text x="350" y="234" fill="#57606a">several data recipes, one variable each, against the frozen</text>
+    <text x="350" y="248" fill="#57606a">thresholds</text>
+    <text x="692" y="234" fill="#1f2328">invalidated at this scale: the encoder and the reader work, the decision follows a class</text>
+    <text x="692" y="248" fill="#1f2328">prior in every recipe, never near the lines</text>
+    <rect x="40" y="263" width="1120" height="53" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="48" y="279" fill="#1f2328" font-weight="bold">the organ's own judgment, given to the model as a</text>
+    <text x="48" y="293" fill="#1f2328" font-weight="bold">number, moves the decision the model cannot make from</text>
+    <text x="48" y="307" fill="#1f2328" font-weight="bold">bytes</text>
+    <text x="350" y="279" fill="#57606a">the familiarity mark in every window line, one variable; two</text>
+    <text x="350" y="293" fill="#57606a">organ side decode policies declared before their run and read</text>
+    <text x="350" y="307" fill="#57606a">live on the seeds that did not conceive them</text>
+    <text x="692" y="279" fill="#1f2328">validated as a system, not as the model: the model alone stays INVALID on every seed;</text>
+    <text x="692" y="293" fill="#1f2328">the model deciding and the organ answering holds the four thresholds on the live seeds,</text>
+    <text x="692" y="307" fill="#1f2328">the exactness of the answer being the organ's by construction</text>
+    <rect x="40" y="322" width="1120" height="53" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="48" y="338" fill="#1f2328" font-weight="bold">a reader with another domain's key obtains nothing</text>
+    <text x="350" y="338" fill="#57606a">the extraction probe: the questions of one domain against the</text>
+    <text x="350" y="352" fill="#57606a">sealed journal of another, on the three checkpoints</text>
+    <text x="692" y="338" fill="#1f2328">validated by construction at the organ level and by measure at the system level: no</text>
+    <text x="692" y="352" fill="#1f2328">pointer and no claim on any seed; the veto's margin on one seed a measured limit,</text>
+    <text x="692" y="366" fill="#1f2328">written next to the zero</text>
+    <rect x="40" y="381" width="1120" height="67" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="48" y="397" fill="#1f2328" font-weight="bold">the organ's layer of numbers reconstructs at a measured</text>
+    <text x="48" y="411" fill="#1f2328" font-weight="bold">defect what it derives</text>
+    <text x="350" y="397" fill="#57606a">the reconstruction probe: three levels (the counts, the</text>
+    <text x="350" y="411" fill="#57606a">salience line, the memory) and a reading, phases of the</text>
+    <text x="350" y="425" fill="#57606a">lifecycle without a read on the sealed journals, two processes</text>
+    <text x="350" y="439" fill="#57606a">each</text>
+    <text x="692" y="397" fill="#1f2328">validated on the sealed journals: the counts exact at every phase (a theorem by</text>
+    <text x="692" y="411" fill="#1f2328">construction), the salience line within a relative defect, every replayed address under</text>
+    <text x="692" y="425" fill="#1f2328">the bound; the address of an evicted episode survives its eviction in the memory, a</text>
+    <text x="692" y="439" fill="#1f2328">finding for v1.1</text>
+    <rect x="40" y="454" width="1120" height="53" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="48" y="470" fill="#1f2328" font-weight="bold">a head supervised on the exact question can supply the</text>
+    <text x="48" y="484" fill="#1f2328" font-weight="bold">missing decision</text>
+    <text x="350" y="470" fill="#57606a">a matching head on the reader's output, coupled to the</text>
+    <text x="350" y="484" fill="#57606a">decision token; two decode policies; a post hoc linear probe;</text>
+    <text x="350" y="498" fill="#57606a">two seeds</text>
+    <text x="692" y="470" fill="#1f2328">invalidated at this scale, attributed: the head learns the class prior on both seeds;</text>
+    <text x="692" y="484" fill="#1f2328">the probe finds at most a weak, seed dependent trace of the comparison; the coupling</text>
+    <text x="692" y="498" fill="#1f2328">itself is a shortcut</text>
+    <rect x="40" y="513" width="1120" height="53" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="48" y="529" fill="#1f2328" font-weight="bold">memory components should be arbitrated by a router on a</text>
+    <text x="48" y="543" fill="#1f2328" font-weight="bold">control floor</text>
+    <text x="350" y="529" fill="#57606a">the domain map, the confirmation run, the ladder; the oracle</text>
+    <text x="350" y="543" fill="#57606a">router's ceiling</text>
+    <text x="692" y="529" fill="#1f2328">validated as a ceiling, unrealised as a mechanism: no single memory dominates, the</text>
+    <text x="692" y="543" fill="#1f2328">envelope beats every single path; the learned router reaches most of the ceiling on a</text>
+    <text x="692" y="557" fill="#1f2328">synthetic task and a fraction of it on real spans</text>
+    <rect x="40" y="572" width="1120" height="39" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="48" y="588" fill="#1f2328" font-weight="bold">hybrids of recurrent memories beat the best pure</text>
+    <text x="48" y="602" fill="#1f2328" font-weight="bold">recurrent rung</text>
+    <text x="350" y="588" fill="#57606a">the ladder on several seeds, paired on seed</text>
+    <text x="692" y="588" fill="#1f2328">invalidated at this scale: no hybrid beats the best pure rung or the control; a</text>
+    <text x="692" y="602" fill="#1f2328">structural negative line with a bimodal reserve</text>
+    <rect x="40" y="617" width="1120" height="39" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="48" y="633" fill="#1f2328" font-weight="bold">the bimodal take off of the pure rung is a matter of</text>
+    <text x="48" y="647" fill="#1f2328" font-weight="bold">basins</text>
+    <text x="350" y="633" fill="#57606a">the omitted factor of the convergence: the floor seeds at</text>
+    <text x="350" y="647" fill="#57606a">twice the steps</text>
+    <text x="692" y="633" fill="#1f2328">mostly invalidated: most of them take off with more steps; the bimodality is mostly a</text>
+    <text x="692" y="647" fill="#1f2328">distribution of speeds; a seed undecided; the hard tier unlearned by all</text>
+    <rect x="40" y="662" width="1120" height="67" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="48" y="678" fill="#1f2328" font-weight="bold">one model can carry both regimes: the recurrent rung as</text>
+    <text x="48" y="692" fill="#1f2328" font-weight="bold">the base, the attention added on a floor, protected by</text>
+    <text x="48" y="706" fill="#1f2328" font-weight="bold">a critical period</text>
+    <text x="350" y="678" fill="#57606a">the bare arm and the critical period arm, paired against the</text>
+    <text x="350" y="692" fill="#57606a">pure rung, the control and the convolved control</text>
+    <text x="692" y="678" fill="#1f2328">met in its letter, not in its intent: both arms beat the pure rung and the convolved</text>
+    <text x="692" y="692" fill="#1f2328">control on the paired test, but with a trunk that never takes off; the attention pre</text>
+    <text x="692" y="706" fill="#1f2328">empts; the critical period fired at the first plateau of the loss, before the take off;</text>
+    <text x="692" y="720" fill="#1f2328">the consolidation arms are not yet run</text>
+    <rect x="40" y="735" width="1120" height="39" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="48" y="751" fill="#1f2328" font-weight="bold">one consolidation law at three scales (the memory, the</text>
+    <text x="48" y="765" fill="#1f2328" font-weight="bold">router, the project)</text>
+    <text x="350" y="751" fill="#57606a">not a measurement; the organising principle of the runners,</text>
+    <text x="350" y="765" fill="#57606a">the router and the ledger</text>
+    <text x="692" y="751" fill="#1f2328">not claimed: recorded as the principle that kept three levels consistent</text>
+    <rect x="40" y="780" width="1120" height="67" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="48" y="796" fill="#1f2328" font-weight="bold">the method itself: a single researcher and an AI</text>
+    <text x="48" y="810" fill="#1f2328" font-weight="bold">collaborator can produce results that survive scrutiny</text>
+    <text x="350" y="796" fill="#57606a">every claim above, plus the errors on the record: a</text>
+    <text x="350" y="810" fill="#57606a">construction error caught by re reading the code, two AI</text>
+    <text x="350" y="824" fill="#57606a">instances in disagreement settled by the source, a data</text>
+    <text x="350" y="838" fill="#57606a">provenance gap resolved on the content</text>
+    <text x="692" y="796" fill="#1f2328">validated by the record: the attributed failures of the model alone and one system pass</text>
+    <text x="692" y="810" fill="#1f2328">read on the seeds that did not conceive it, thresholds never moved, every number with</text>
+    <text x="692" y="824" fill="#1f2328">its artefact</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="869" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="60" y="879">validated, as the paper qualifies it</text>
+    <rect x="270" y="869" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="290" y="879">invalidated at this scale</text>
+    <rect x="450" y="869" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="470" y="879">met in its letter, or as a ceiling</text>
+    <rect x="680" y="869" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="700" y="879">not claimed</text>
+  </g>
+</svg>

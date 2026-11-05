@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="The method of the paper: thresholds fixed before the run, measure first behind a flag, the append only ledger, data as a hashed object, tests from the first day, the circuit breaker, the admission gate for claims, decisions and errors as dated records, and the collaboration between the researcher and the language model with the ledger as arbiter">
+  <title>Figure 5. The method: an evidentiary discipline for single researcher work</title>
+  <rect width="1200" height="640" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The method: an evidentiary discipline for single researcher work, reproducible apart from the architecture</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for section 2 of the paper. The discipline is held to be the primary reason the results can be trusted; it is stated here without the numbers it produced.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the loop -->
+  <rect x="40" y="80" width="1120" height="112" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">What a component and a claim go through, under the rules of §2.1 to §2.6</text>
+  <g font-size="10.5" fill="#1f2328">
+    <rect x="60" y="118" width="190" height="60" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="155" y="138" text-anchor="middle" font-weight="bold" font-size="11.5">fixed before the run</text>
+    <text x="155" y="154" text-anchor="middle" fill="#57606a">thresholds fixed before the run, never</text>
+    <text x="155" y="168" text-anchor="middle" fill="#57606a">adjusted after; invariants written first</text>
+    <line x1="250" y1="148" x2="274" y2="148" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="274" y="118" width="190" height="60" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="369" y="138" text-anchor="middle" font-weight="bold" font-size="11.5">measured behind a flag</text>
+    <text x="369" y="154" text-anchor="middle" fill="#57606a">default off; the control bit identical</text>
+    <text x="369" y="168" text-anchor="middle" fill="#57606a">to the baseline, a test asserts it</text>
+    <line x1="464" y1="148" x2="488" y2="148" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="488" y="118" width="190" height="60" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="583" y="138" text-anchor="middle" font-weight="bold" font-size="11.5">committed to the ledger</text>
+    <text x="583" y="154" text-anchor="middle" fill="#57606a">a run not committed does not exist;</text>
+    <text x="583" y="168" text-anchor="middle" fill="#57606a">every abort a record too</text>
+    <line x1="678" y1="148" x2="702" y2="148" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="702" y="118" width="190" height="60" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="797" y="138" text-anchor="middle" font-weight="bold" font-size="11.5">read against the gate</text>
+    <text x="797" y="154" text-anchor="middle" fill="#57606a">the admission criteria, every one,</text>
+    <text x="797" y="168" text-anchor="middle" fill="#57606a">the sixth from the physics program</text>
+    <line x1="892" y1="148" x2="916" y2="148" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="916" y="118" width="224" height="60" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="1028" y="138" text-anchor="middle" font-weight="bold" font-size="11.5">a result, or an open question</text>
+    <text x="1028" y="154" text-anchor="middle" fill="#57606a">a finding that fails any criterion is reported</text>
+    <text x="1028" y="168" text-anchor="middle" fill="#57606a">as an open question; losses are recorded</text>
+  </g>
+
+  <!-- the pieces, two rows -->
+  <rect x="40" y="208" width="270" height="150" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="175" y="230" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Measure first</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="56" y="250">no component enters on the strength of an</text>
+    <text x="56" y="264">argument; it advances only if an ablation, at</text>
+    <text x="56" y="278">equal parameters, data, seed and schedule,</text>
+    <text x="56" y="292">extends the frontier of declared axes;</text>
+    <text x="56" y="306">components that do not clear the bar are</text>
+    <text x="56" y="320">recorded as losses</text>
+  </g>
+
+  <rect x="325" y="208" width="270" height="150" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="460" y="230" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">The ledger, and data as a first class object</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="341" y="250">each record follows a versioned schema validated</text>
+    <text x="341" y="264">in continuous integration, with a configuration</text>
+    <text x="341" y="278">hash and a content hash of the data mix; two runs</text>
+    <text x="341" y="292">are comparable only when the content hashes of</text>
+    <text x="341" y="306">their data mixes coincide; the mix is a hashed</text>
+    <text x="341" y="320">graph of typed operators, evaluated lazily;</text>
+    <text x="341" y="334">decontamination is an operator, its report archived</text>
+  </g>
+
+  <rect x="610" y="208" width="270" height="150" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="745" y="230" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Tests from the first day; the circuit breaker</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="626" y="250">structural invariants written before the</text>
+    <text x="626" y="264">components they protect; the defects they caught</text>
+    <text x="626" y="278">before any ablation are reported as method, not</text>
+    <text x="626" y="292">incident; an aggressive early abort with a bounded</text>
+    <text x="626" y="306">refine and retry, thresholds fixed before the run,</text>
+    <text x="626" y="320">never adjusted after; every abort a ledger record</text>
+  </g>
+
+  <rect x="895" y="208" width="265" height="150" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="1027" y="230" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Admission of claims</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="911" y="250">a finding enters a results section only if it is</text>
+    <text x="911" y="264">measured on several seeds with the gap significant</text>
+    <text x="911" y="278">under a paired test; situated against external</text>
+    <text x="911" y="292">references at equal size; demonstrated on the real</text>
+    <text x="911" y="306">task; reproducible from a committed artefact;</text>
+    <text x="911" y="320">stated with its reserves. Adopted after a result</text>
+    <text x="911" y="334">on a synthetic task shrank on the real one; the</text>
+    <text x="911" y="348">retrogradation read as a result of the method</text>
+  </g>
+
+  <rect x="40" y="374" width="365" height="150" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="222" y="396" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Decisions and errors; the same discipline twice</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="56" y="416">every design decision is a dated record; amendments are</text>
+    <text x="56" y="430">appended, never substituted, so that what was believed and</text>
+    <text x="56" y="444">when is preserved; proposals from either party are hypotheses</text>
+    <text x="56" y="458">to be tested, not conclusions. The author's parallel program</text>
+    <text x="56" y="472">in classical gravitation converged on the same apparatus; one</text>
+    <text x="56" y="486">result crossed over: the complete ledger observation, apparent</text>
+    <text x="56" y="500">volatility of an invariant is the signature of an omitted variable,</text>
+    <text x="56" y="514">became the gate's sixth rule</text>
+  </g>
+
+  <rect x="420" y="374" width="740" height="150" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="790" y="396" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">The collaboration, designed so that two differently wired participants make their difference productive</text>
+  <g font-size="10.5" fill="#1f2328">
+    <rect x="436" y="408" width="340" height="104" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="606" y="426" text-anchor="middle" font-weight="bold" font-size="11">the researcher: the upstream structure</text>
+    <text x="606" y="443" text-anchor="middle" fill="#57606a">which variables exist, which invariants must hold before</text>
+    <text x="606" y="457" text-anchor="middle" fill="#57606a">code is written, what a result must consolidate to count;</text>
+    <text x="606" y="471" text-anchor="middle" fill="#57606a">the structural checks, the gate; the over claims were</text>
+    <text x="606" y="485" text-anchor="middle" fill="#57606a">caught by the researcher's judgement: when generation is</text>
+    <text x="606" y="499" text-anchor="middle" fill="#57606a">cheap, the scarce step is judging what is true</text>
+    <rect x="796" y="408" width="348" height="104" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="970" y="426" text-anchor="middle" font-weight="bold" font-size="11">the language model: rapid divergence and execution</text>
+    <text x="970" y="443" text-anchor="middle" fill="#57606a">variants, drafts, implementations, the literature at hand,</text>
+    <text x="970" y="457" text-anchor="middle" fill="#57606a">a first pass at every document; proposals from either</text>
+    <text x="970" y="471" text-anchor="middle" fill="#57606a">party are hypotheses to be tested, not conclusions;</text>
+    <text x="970" y="485" text-anchor="middle" fill="#57606a">the structure frames the generation, the generation feeds</text>
+    <text x="970" y="499" text-anchor="middle" fill="#57606a">the structure, the ledger arbitrates</text>
+  </g>
+
+  <text x="600" y="556" text-anchor="middle" fill="#57606a" font-size="11">a design thinking discipline the author formalised earlier maps onto the rules: understand before defining the problem, define before designing; observe, contextualise, structure, empower, co create;</text>
+  <text x="600" y="571" text-anchor="middle" fill="#57606a" font-size="11">the register precedes any code and the protocols were frozen before a model existed that could pass them; a researcher with a strong upstream discipline and a generative partner, bound by a shared gate</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="600" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="60" y="610">the rules and the gate</text>
+    <rect x="220" y="600" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="240" y="610">what is run and generated</text>
+    <rect x="420" y="600" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="440" y="610">what is kept, admitted or reported</text>
+    <rect x="620" y="600" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="640" y="610">the records and the collaboration</text>
+  </g>
+</svg>

@@ -10,6 +10,10 @@ The idea is older than the record. It dates from 2019, when the author was explo
 
 The pace is the pace of one researcher with a language model as a working partner. The partner writes most of the code and reads every log; the researcher sets the discipline, decides what enters and what waits, and refuses a good part of what is proposed. Neither could have produced this record alone at this speed, and neither is allowed to grave a number the other has not read cold from a file.
 
+![A long haul: seven years of an idea, then a register that refuses to answer faster than the evidence allows](figures/journey-timeline.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/journey-timeline.svg`): the question the project asks, then the journey as this page tells it, from the idea of 2019 to the five weeks after the landing, at the page's dates; the register's rule in one line; the sealed test told as the page tells it; the pace and the partner. The numbers of the record are not drawn; the text is as written on its dates.*
+
 ## Why with a language model, and why in the open
 
 Two things about the approach are the author's choices, and he asks that they be said as such.
@@ -53,6 +57,10 @@ Beyond that, the question that decides the model arm's future is a matter of siz
 ## What it implies, if it holds
 
 For practitioners: a measurement you can run on your own model today, with frozen thresholds and a negative control, that answers whether the model holds an episode or reconstructs it; and an organ that composes with a model of any size in three ways, as a library, behind a frozen prompt, or in the decode loop, each stated with what is measured and what is not (whitepaper §3.6). For the field: a small, public, falsifiable setting for the separation of skills and episodes, with a record that can be audited to the digit. For users, eventually: a memory that is sealed per subject, stays on the machine, and can be shown to be a memory rather than a prompt. None of these is delivered by this edition; each is made testable by it.
+
+![What this step means, what it does not mean, and what comes next, in order](figures/journey-this-step.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/journey-this-step.svg`): what this step means, what it does not mean and what comes next, in the page's words at the first edition, with one sentence of the page's note of 2026-11-05 dated as such; the conviction underneath and what it would imply if it holds. No number of the record is drawn in it; the text is as written on its dates.*
 
 ## After the landing (added 2026-10-03)
 
