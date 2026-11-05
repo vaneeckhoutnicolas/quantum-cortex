@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use quantum-cortex, its continuity benchmarks, or any derivative work, please cite it as below and retain the NOTICE file (Apache License 2.0, Section 4(d))."
 title: "quantum-cortex: an open language model built to measure continuity"
-abstract: "A from-scratch, byte-level language model whose cognitive concepts (expert zones, associative memory, an oracle channel, typed decode contracts) live in the weights and the decode loop, built to measure one capability: continuity, as a triad of episodic persistence (the H.M. protocol), adaptive revision (oracle shift) and non regeneration (the reference ratio). Independent member of the Quantum Meridian ecosystem."
+abstract: "A 27 million parameter byte level language model with a memory outside its weights: a sealed journal of episodes that the model must cite or abstain from, built so that every claim about it has a row, a file and a test that can fail. The v1.1.0 edition carries the record up to row 54 (the organ's lifecycle on journals of eleven thousand and one hundred and ten thousand entries, the independent test on sealed families, the simple references and the cost) and the provenance benchmark module. Independent member of the Quantum Meridian ecosystem."
 type: software
 authors:
   - family-names: "Van Eeckhout"
@@ -9,29 +9,33 @@ authors:
     orcid: "https://orcid.org/0000-0002-5256-3185"
     affiliation: "Win2Win SRL, Brussels, Belgium"
 repository-code: "https://github.com/vaneeckhoutnicolas/quantum-cortex"
-repository-artifact: "https://pypi.org/project/quantum-cortex/1.0.0/"
-doi: 10.5281/zenodo.23110776
+repository-artifact: "https://pypi.org/project/quantum-cortex/1.1.0/"
+doi: 10.5281/zenodo.23110775
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.23110776
-    description: "The archived v1.0.0 edition on Zenodo (this version; deposited 2026-10-02 from the GitHub release of the tag)."
-  - type: doi
     value: 10.5281/zenodo.23110775
-    description: "The concept DOI of the archive: every archived version, resolving to the latest one."
+    description: "The concept DOI of the archive: every archived version, resolving to the latest one. The v1.1.0 edition's own version DOI is minted by Zenodo from the GitHub release of its tag and recorded here by a dated commit after the deposit."
+  - type: doi
+    value: 10.5281/zenodo.23110776
+    description: "The archived v1.0.0 edition on Zenodo (the previous edition; deposited 2026-10-02 from the GitHub release of its tag)."
   - type: swh
     value: "swh:1:dir:ab830a5c469705584ea586df1e4e144af94d5832"
-    description: "The Software Heritage identifier of the archived directory (the tag's tree, bit for bit, under the archive's folder)."
+    description: "The Software Heritage identifier of the v1.0.0 edition's archived directory (that tag's tree, bit for bit, under the archive's folder); the v1.1.0 tree's is recorded after its archival."
+  - type: url
+    value: "https://github.com/vaneeckhoutnicolas/quantum-cortex/releases/tag/v1.1.0"
+    description: "The GitHub release of this edition (immutable once published)."
   - type: url
     value: "https://github.com/vaneeckhoutnicolas/quantum-cortex/releases/tag/v1.0.0"
     description: "The GitHub release of the landing edition (immutable; commit 6572467)."
 license: Apache-2.0
-version: "1.0.0"
-date-released: "2026-10-01"
+version: "1.1.0"
+date-released: "2026-11-08"
 keywords:
   - language model
   - continuity
   - episodic memory
-  - associative memory
+  - provenance
+  - cite or abstain
   - H.M. protocol
   - Quantum Meridian
 references:

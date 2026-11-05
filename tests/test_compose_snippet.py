@@ -5,9 +5,10 @@ NEW process that knows nothing of session A but the disk, cites it with its poin
 abstains on an address never written; a second session A is refused as redundant; nothing
 at rest is plaintext, the text of the address included (ADR-009 B2, 2026-10-12: the record
 and the text its address was computed from are two sealed payloads next to the log). The
-blocks are extracted from README.md, so a change to the README
-that breaks the snippet breaks this test, and a change to the code that breaks the README
-does too. Nothing here is a number of the record."""
+blocks are extracted from docs/README-LONG.md (the v1.0.0 edition's README, moved there at
+v1.1.0 when the first screen took the root; the blocks live there, unchanged), so a change to
+that page that breaks the snippet breaks this test, and a change to the code that breaks the
+page does too. Nothing here is a number of the record."""
 from __future__ import annotations
 
 import os
@@ -17,7 +18,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-README = ROOT / "README.md"
+README = ROOT / "docs" / "README-LONG.md"
 RECORD = b"12 Jan: the originality argument is set aside on the strength of ruling 2024/AR/512"
 
 

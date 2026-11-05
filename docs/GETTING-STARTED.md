@@ -85,4 +85,4 @@ Then verify: `(Get-Content metrics\runs.jsonl).Count` and `python train.py --reg
 The MVP is self-testing: `smoke-train` guards the machine that produces the numbers, `validate-ledger` guards the truth of the numbers, and both run on every push. Running them locally *before* you push means CI never surprises you — and no result in this project is ever taken on faith. Measure first.
 
 ## Pointers
-`README.md` (what trains, when) · `CONTRIBUTING.md` (the ledger law, advancement rule, anti-plagiarism protocol) · `docs/SEQUENCE.md` (stage-by-stage synthesis, CI checks decoded).
+`README.md` (the first screen since v1.1.0; the long README of the first edition, what trains and when, is `docs/README-LONG.md`) · `CONTRIBUTING.md` (the ledger law, advancement rule, anti-plagiarism protocol) · `docs/SEQUENCE.md` (stage-by-stage synthesis, CI checks decoded).

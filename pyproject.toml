@@ -1,6 +1,6 @@
 [project]
 name = "quantum-cortex"
-version = "1.0.0"
+version = "1.1.0"
 description = "An open language model built to measure continuity: a sealed episodic organ outside the weights, a frozen dissociation protocol, and a record that can be audited to the digit."
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }

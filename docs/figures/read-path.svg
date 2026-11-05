@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="The read path of quantum-cortex: a question, its cues, the cue index over the sealed journal, a window of lines with their marks, the mark's veto and the key's selection, and the answer by pointer or no record">
+  <title>The read path: from a question to an answer by pointer, or to "no record"</title>
+  <rect width="1200" height="520" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">How a question is answered: a pointer into a sealed journal, or "no record"</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure. The model never answers from its weights alone: it cites a stored line by its pointer, or it abstains.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the sealed journal, at the bottom -->
+  <rect x="40" y="340" width="1120" height="140" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="366" text-anchor="middle" fill="#1f2328" font-size="15" font-weight="bold">The sealed journal, outside the weights</text>
+  <text x="600" y="388" text-anchor="middle" fill="#57606a" font-size="12">append only, sealed under a key; every line carries its address, its time and the evidence it rests on; an eviction withdraws an address and nothing of it returns</text>
+  <!-- a few journal lines -->
+  <g font-size="11" fill="#1f2328">
+    <rect x="70" y="404" width="330" height="22" rx="4" fill="#ffffff" stroke="#d0d7de"/><text x="80" y="419">pointer · time · "the lease is signed on the third"</text>
+    <rect x="420" y="404" width="330" height="22" rx="4" fill="#ffffff" stroke="#d0d7de"/><text x="430" y="419">pointer · time · "the supplier is Harrow &amp; Sons"</text>
+    <rect x="770" y="404" width="360" height="22" rx="4" fill="#ffffff" stroke="#d0d7de"/><text x="780" y="419">pointer · time · "the budget line was withdrawn"</text>
+    <rect x="70" y="434" width="330" height="22" rx="4" fill="#ffffff" stroke="#d0d7de"/><text x="80" y="449">pointer · time · "the meeting moved to Thursday"</text>
+    <rect x="420" y="434" width="330" height="22" rx="4" fill="#eef1f4" stroke="#d0d7de" stroke-dasharray="4 3"/><text x="430" y="449" fill="#8c959f">pointer · time · withdrawn (evicted): gone from the memory</text>
+    <rect x="770" y="434" width="360" height="22" rx="4" fill="#ffffff" stroke="#d0d7de"/><text x="780" y="449">pointer · time · "the invoice is due in sixty days"</text>
+  </g>
+  <!-- the write gate, on the journal's left edge -->
+  <rect x="40" y="290" width="200" height="40" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="140" y="307" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Write gate</text>
+  <text x="140" y="322" text-anchor="middle" fill="#57606a" font-size="11">admits or refuses each line</text>
+  <line x1="140" y1="330" x2="140" y2="340" stroke="#d4a72c" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- the read path, top row -->
+  <!-- question -->
+  <rect x="40" y="110" width="170" height="70" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="125" y="138" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A question</text>
+  <text x="125" y="158" text-anchor="middle" fill="#57606a" font-size="11">"who is the supplier?"</text>
+
+  <line x1="210" y1="145" x2="250" y2="145" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- cues -->
+  <rect x="250" y="110" width="170" height="70" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="335" y="138" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Its cues</text>
+  <text x="335" y="158" text-anchor="middle" fill="#57606a" font-size="11">a vector, by the model's encoder</text>
+
+  <line x1="420" y1="145" x2="460" y2="145" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- index -->
+  <rect x="460" y="110" width="190" height="70" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="555" y="138" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The cue index</text>
+  <text x="555" y="158" text-anchor="middle" fill="#57606a" font-size="11">hashed tables over the journal's cues</text>
+  <line x1="555" y1="180" x2="555" y2="288" stroke="#4ac26b" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="565" y="240" fill="#57606a" font-size="11">reads the journal,</text>
+  <text x="565" y="256" fill="#57606a" font-size="11">never the weights</text>
+
+  <line x1="650" y1="145" x2="690" y2="145" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- window -->
+  <rect x="690" y="96" width="200" height="98" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="790" y="120" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A window of a few lines</text>
+  <g font-size="10.5" fill="#1f2328">
+    <text x="702" y="140">line · mark ■■■■□</text>
+    <text x="702" y="155">line · mark ■■□□□</text>
+    <text x="702" y="170">line · mark ■□□□□</text>
+    <text x="702" y="185">line · mark □□□□□</text>
+  </g>
+  <text x="860" y="162" text-anchor="middle" fill="#57606a" font-size="10.5">each line</text>
+  <text x="860" y="176" text-anchor="middle" fill="#57606a" font-size="10.5">with its mark</text>
+
+  <line x1="890" y1="145" x2="930" y2="145" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- veto and selection -->
+  <rect x="930" y="96" width="230" height="98" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="1045" y="120" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The veto, then the selection</text>
+  <text x="1045" y="140" text-anchor="middle" fill="#57606a" font-size="11">no line marked at or above the threshold:</text>
+  <text x="1045" y="155" text-anchor="middle" fill="#57606a" font-size="11">the veto, the model may not claim</text>
+  <text x="1045" y="172" text-anchor="middle" fill="#57606a" font-size="11">lines above it: the key's exact rule chooses</text>
+  <text x="1045" y="186" text-anchor="middle" fill="#57606a" font-size="11">one line, or abstains when two values conflict</text>
+
+  <!-- outputs -->
+  <line x1="1045" y1="194" x2="1045" y2="222" stroke="#57606a" stroke-width="2"/>
+  <line x1="1045" y1="222" x2="930" y2="222" stroke="#57606a" stroke-width="2"/>
+  <line x1="1045" y1="222" x2="1160" y2="222" stroke="#57606a" stroke-width="2"/>
+  <line x1="930" y1="222" x2="930" y2="236" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="1160" y1="222" x2="1160" y2="236" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="830" y="238" width="200" height="54" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="930" y="258" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">An answer with its pointer</text>
+  <text x="930" y="276" text-anchor="middle" fill="#57606a" font-size="11">"Harrow &amp; Sons" · the cited line's pointer</text>
+
+  <rect x="1050" y="238" width="120" height="54" rx="8" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="1110" y="258" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">"no record"</text>
+  <text x="1110" y="276" text-anchor="middle" fill="#57606a" font-size="11">the abstention</text>
+
+  <!-- the pointer back to the journal -->
+  <path d="M 930 292 C 930 318, 760 318, 760 338" fill="none" stroke="#4ac26b" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+  <text x="1040" y="318" text-anchor="middle" fill="#57606a" font-size="11">the pointer names a sealed line, never a paraphrase</text>
+
+  <!-- the model's place -->
+  <rect x="40" y="200" width="380" height="68" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="230" y="222" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The model's part</text>
+  <text x="230" y="240" text-anchor="middle" fill="#57606a" font-size="11">it encodes the question and reads the window under the contract:</text>
+  <text x="230" y="256" text-anchor="middle" fill="#57606a" font-size="11">cite a line by its pointer, or abstain; it never answers from its weights alone</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="494" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="504">the question's side</text>
+    <rect x="190" y="494" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="210" y="504">the organ (the index, the window, the pointer)</text>
+    <rect x="470" y="494" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="490" y="504">the gates (writing: admit or refuse; reading: the veto and the key's rule)</text>
+    <rect x="900" y="494" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="920" y="504">the abstention</text>
+  </g>
+</svg>
