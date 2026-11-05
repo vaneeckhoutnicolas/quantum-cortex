@@ -1,5 +1,9 @@
 # ADR-009 — Components and their licences, the source text of every address, English first, the EuroHPC dossier (the founder's decisions of 2026-10-05, graved 2026-10-08)
 
+![No licence risk at all, the source text of every address kept, English first, the languages named](../figures/adr-009-licences-and-source-text.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-009-licences-and-source-text.svg`, drawn from this record's text and carrying no number of the record): the licence gate of B1, the entry's source pointer of B2, English first of B3, the dossier's languages of B4, and the doors closed. The text below is as written on its dates.*
+
 **Status:** accepted (2026-10-08). Decisions B1 to B4 are the founder's, taken on 2026-10-05 after an outside reading of the public copy at `41e309e` (the review's verdicts are in the register, Rev96, and in the workshop's `docs/working/REVUE-EXTERNE-2026-10-08.md`); the two principles of 2026-10-08 that frame them are his as well: **no licence risk at all** (anything carrying a sub licence, use conditions or a limitation is excluded or rewritten entirely) and **no added complexity** (doors are closed; the direction fixed is finished coherently rather than kept experimental). The facts that motivate each decision were checked against the code on 2026-10-08; what could not be checked from the workshop is marked as the founder's reading, to be reread at the moment it matters. Nothing here is a measurement.
 
 ## Decision B1 — No dependency that could become paid, and no licence risk at all

@@ -1,5 +1,9 @@
 # ADR 006 — The C2 ablation protocol (N2 = Wave 1)
 
+![The ablation protocol: one variable against a sacred control, benchmarks frozen before any run, three verdicts](../figures/adr-006-c2-ablation-protocol.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-006-c2-ablation-protocol.svg`, drawn from this record's text and carrying no number of the record): the layer under test in its two variants behind a flag, the control equal at everything, the benchmarks frozen before any run, the three verdicts, the circuit breaker with its bounded refine and retry, the router of memories on a control floor, and the discipline of the claims, the retrogradation kept in the record. The text below is as written on its dates.*
+
 - **Status:** Accepted (Nicolas Van Eeckhout, 2026-09-06)
 - **Deciders:** Nicolas Van Eeckhout
 - **Context:** N1 is committed (control `be1fa8139f59`, val_ppl 2.601) and the data terrain is a hashed, comparable object (ADR-005). N2 is the project's **first scientific question**: does an associative-memory layer (C2) earn its place against the vanilla control? This ADR fixes the protocol *before* any run, so results are read honestly (ADR-004/D16).

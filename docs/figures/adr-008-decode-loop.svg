@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-008: the journal in the decode loop; the query's cue from the residual stream, the organ's read path, a read window with the organ's marks, a zero init reader on the router's gate, the cite or abstain contract, the target computed from what the journal returned, the organ side policy where the model decides and the organ answers, an attributable failure, two processes">
+  <title>ADR-008 — The journal in the decode loop: the cue encoder, the reader, the cite or abstain contract</title>
+  <rect width="1200" height="700" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The journal in the decode loop: the model reads its organ as content, and cites or abstains</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-008. Nine invariants validated before any code; the abstention decided as one rule; under the organ side policies the verdict is the system's.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the loop, top row -->
+  <rect x="40" y="86" width="200" height="130" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="140" y="108" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the query, in the model</text>
+  <text x="140" y="126" text-anchor="middle" fill="#57606a" font-size="10.5">the residual stream at one block,</text>
+  <text x="140" y="140" text-anchor="middle" fill="#57606a" font-size="10.5">the hippocampal port; a learned cue</text>
+  <text x="140" y="154" text-anchor="middle" fill="#57606a" font-size="10.5">encoder projects it to a unit vector,</text>
+  <text x="140" y="168" text-anchor="middle" fill="#57606a" font-size="10.5">trained by contrast; one encoder for</text>
+  <text x="140" y="182" text-anchor="middle" fill="#57606a" font-size="10.5">writing and for reading, leakage free</text>
+  <line x1="240" y1="141" x2="268" y2="141" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="268" y="86" width="200" height="130" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="368" y="108" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the organ's read path</text>
+  <text x="368" y="126" text-anchor="middle" fill="#57606a" font-size="10.5">one read path, the organ's own;</text>
+  <text x="368" y="140" text-anchor="middle" fill="#57606a" font-size="10.5">nothing duplicated on the model's</text>
+  <text x="368" y="154" text-anchor="middle" fill="#57606a" font-size="10.5">side, nothing scans; the journal</text>
+  <text x="368" y="168" text-anchor="middle" fill="#57606a" font-size="10.5">sealed, its storage policy "stop"</text>
+  <text x="368" y="182" text-anchor="middle" fill="#57606a" font-size="10.5">during a measurement</text>
+  <line x1="468" y1="141" x2="496" y2="141" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="496" y="86" width="210" height="130" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="601" y="108" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the read window</text>
+  <text x="601" y="126" text-anchor="middle" fill="#57606a" font-size="10.5">a few retrieved lines, as bytes, in a</text>
+  <text x="601" y="140" text-anchor="middle" fill="#57606a" font-size="10.5">seeded random order (a position is never</text>
+  <text x="601" y="154" text-anchor="middle" fill="#57606a" font-size="10.5">a shortcut), each cut to its byte share;</text>
+  <text x="601" y="168" text-anchor="middle" fill="#57606a" font-size="10.5">under the familiarity mark, an amendment's</text>
+  <text x="601" y="182" text-anchor="middle" fill="#57606a" font-size="10.5">variable, each line carries the organ's mark,</text>
+  <text x="601" y="196" text-anchor="middle" fill="#57606a" font-size="10.5">its own similarity to the query, never a value</text>
+  <text x="601" y="210" text-anchor="middle" fill="#57606a" font-size="10.5">the harness supplies</text>
+  <line x1="706" y1="141" x2="734" y2="141" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="734" y="86" width="200" height="130" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="834" y="108" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the reader</text>
+  <text x="834" y="126" text-anchor="middle" fill="#57606a" font-size="10.5">a zero init cross attention over the</text>
+  <text x="834" y="140" text-anchor="middle" fill="#57606a" font-size="10.5">window's bytes in one block, as content,</text>
+  <text x="834" y="154" text-anchor="middle" fill="#57606a" font-size="10.5">not as prompt tokens; multiplied by the</text>
+  <text x="834" y="168" text-anchor="middle" fill="#57606a" font-size="10.5">router's gate on the floor; journal off,</text>
+  <text x="834" y="182" text-anchor="middle" fill="#57606a" font-size="10.5">the reader absent: the parent exactly</text>
+  <line x1="934" y1="141" x2="962" y2="141" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="962" y="86" width="198" height="130" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="1061" y="108" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the contract</text>
+  <text x="1061" y="126" text-anchor="middle" fill="#57606a" font-size="10.5">an episodic query is marked; the</text>
+  <text x="1061" y="140" text-anchor="middle" fill="#57606a" font-size="10.5">answer is a citation of a window line</text>
+  <text x="1061" y="154" text-anchor="middle" fill="#57606a" font-size="10.5">by its label plus the value, or an</text>
+  <text x="1061" y="168" text-anchor="middle" fill="#57606a" font-size="10.5">abstention token; the harness maps</text>
+  <text x="1061" y="182" text-anchor="middle" fill="#57606a" font-size="10.5">the label to the pointer and verifies</text>
+
+  <!-- the two outputs -->
+  <line x1="1061" y1="216" x2="1061" y2="228" stroke="#57606a" stroke-width="2"/>
+  <line x1="985" y1="228" x2="1130" y2="228" stroke="#57606a" stroke-width="2"/>
+  <line x1="985" y1="228" x2="985" y2="242" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="1130" y1="228" x2="1130" y2="242" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="910" y="244" width="150" height="44" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="985" y="262" text-anchor="middle" fill="#1f2328" font-size="11" font-weight="bold">a citation and a value</text>
+  <text x="985" y="278" text-anchor="middle" fill="#57606a" font-size="10">verifiable against the cited line</text>
+  <rect x="1070" y="244" width="90" height="44" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="1115" y="262" text-anchor="middle" fill="#1f2328" font-size="11" font-weight="bold">abstain</text>
+  <text x="1115" y="278" text-anchor="middle" fill="#57606a" font-size="10">one token</text>
+
+  <!-- the target rule -->
+  <rect x="40" y="230" width="860" height="110" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="470" y="252" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The abstention, decided as one rule: the target of every training example is computed from what the journal actually returned</text>
+  <text x="470" y="272" text-anchor="middle" fill="#57606a" font-size="11">if the episode holding the answer is among the retrieved lines, the target cites it and gives the value; otherwise the target is the abstention,</text>
+  <text x="470" y="287" text-anchor="middle" fill="#57606a" font-size="11">even though the fact is in the journal: the model is never rewarded for citing what it was not shown, so no invented citation enters the signal;</text>
+  <text x="470" y="302" text-anchor="middle" fill="#57606a" font-size="11">while retrieval is poor it learns silence first, and as the contrastive loss improves retrieval, citations replace abstentions by themselves;</text>
+  <text x="470" y="317" text-anchor="middle" fill="#57606a" font-size="11">organ use is taught through a curriculum, never assumed. Three mitigations, declared and hashed: a heavier decision token on an abstention target;</text>
+  <text x="470" y="332" text-anchor="middle" fill="#57606a" font-size="11">negative examples from the first step; a bootstrap on a missed retrieval that decays to nothing over the run, counted never as recall</text>
+
+  <!-- the organ side policy -->
+  <rect x="40" y="356" width="560" height="166" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="320" y="380" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The two organ side decode policies: the model decides, the organ answers</text>
+  <g font-size="11" fill="#57606a">
+    <text x="60" y="402">the amendment's reason: both residuals are things the organ knows, the mark of the cited line and the</text>
+    <text x="60" y="417">value the cited line holds; between the model arm and the organ's protocol sits a system the design describes</text>
+    <text x="60" y="436">the first, the veto: the model's citation stands unless the cited line's mark is below the threshold read on</text>
+    <text x="60" y="451">the training family, or the label is not in the window; then the answer is an abstention</text>
+    <text x="60" y="470">the second, the veto with the organ's value: the answered value is read by the organ from the cited line</text>
+    <text x="60" y="485">itself, never generated; the model keeps the two decisions the protocol is about, which line and whether to cite;</text>
+    <text x="60" y="500">a verdict is a system result, written as such, never as the model's; its exactness is the organ's by construction;</text>
+    <text x="60" y="515">declared with a post hoc reading on the seed that conceived them, measured live on seeds that did not</text>
+  </g>
+
+  <!-- attribution and processes -->
+  <rect x="620" y="356" width="540" height="166" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="890" y="380" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A failure is attributable; two processes; everything a flag and a record</text>
+  <g font-size="11" fill="#57606a">
+    <text x="640" y="402">next to the verdict: the retrieval hit rate (the encoder), the attention mass on the retrieved</text>
+    <text x="640" y="417">bytes (the reader), the exactness given a valid citation (the answer): a fail says which of the three broke</text>
+    <text x="640" y="436">session A writes through the model's cues into the sealed journal; session B reopens the</text>
+    <text x="640" y="451">journal from the disk alone and the model from its checkpoint, in a new process: the cues</text>
+    <text x="640" y="466">reproduce because the encoder is in the checkpoint and CA3 is rebuilt from the log</text>
+    <text x="640" y="485">the journal is a flag, default off; a run records its parent and the protocol's fields; the parent's logits are</text>
+    <text x="640" y="500">intact at step zero (the reader starts at zero); a smoke on the processor runs the whole loop and</text>
+    <text x="640" y="515">validates its record</text>
+  </g>
+
+  <!-- the protocol's conditions on the model -->
+  <rect x="40" y="540" width="1120" height="110" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="564" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">What the frozen protocol measures on the model, not on the organ</text>
+  <text x="600" y="586" text-anchor="middle" fill="#57606a" font-size="11">the gap between recall with the journal and without it, the strict recall counting a valid citation with the right value; recall off the window at the floor;</text>
+  <text x="600" y="601" text-anchor="middle" fill="#57606a" font-size="11">invalid citations under a threshold declared before any run; claims on never planted entities under theirs; the skill delta with the reader active on ordinary text;</text>
+  <text x="600" y="616" text-anchor="middle" fill="#57606a" font-size="11">a claim without a valid citation is a hallucination even when the value is right by chance; the false abstention needs no threshold, it is already paid in the gap;</text>
+  <text x="600" y="631" text-anchor="middle" fill="#57606a" font-size="11">dated amendments followed (among them minimal pair negatives, the matching head, the decode policies, the familiarity mark), each declared before its measurement, one variable at a time</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="674" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="684">the model's side</text>
+    <rect x="190" y="674" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="210" y="684">the organ's side</text>
+    <rect x="340" y="674" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="360" y="684">the contract and the rule</text>
+    <rect x="530" y="674" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="550" y="684">the abstention</text>
+    <rect x="680" y="674" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="700" y="684">what is measured and recorded</text>
+  </g>
+</svg>

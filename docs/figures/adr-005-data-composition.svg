@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-005: a data composition is a directed acyclic graph of typed operators from licensed sources to a hashed sink; every node is content addressed and the sink's hash is the mix hash; two runs are comparable only when they share it; decontamination is a bit vector algebra; five invariants are enforced by tests; the engine never chooses the mix">
+  <title>ADR-005 — The data composition layer: a hashed graph of typed operators, comparable by its mix hash</title>
+  <rect width="1200" height="600" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The data composition layer: a hashed graph of typed operators, and "at equal data" becomes a fact</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-005. Before architectures are compared, the data terrain is a declared, hashed, reproducible object; the engine never chooses a mix.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the graph -->
+  <rect x="40" y="80" width="700" height="310" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="390" y="104" text-anchor="middle" fill="#1f2328" font-size="15" font-weight="bold">Decisions one and two: a composition is a graph, every node is content addressed</text>
+
+  <!-- sources -->
+  <rect x="56" y="126" width="184" height="54" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="148" y="146" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">source</text>
+  <text x="148" y="162" text-anchor="middle" fill="#57606a" font-size="10.5">a licensed corpus or shard,</text>
+  <text x="148" y="175" text-anchor="middle" fill="#57606a" font-size="10.5">content addressed, licence declared</text>
+  <rect x="56" y="206" width="184" height="54" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="148" y="226" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">source</text>
+  <text x="148" y="242" text-anchor="middle" fill="#57606a" font-size="10.5">another licensed corpus,</text>
+  <text x="148" y="255" text-anchor="middle" fill="#57606a" font-size="10.5">its licence verified at ingestion</text>
+
+  <!-- unary transforms -->
+  <line x1="240" y1="153" x2="258" y2="153" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="240" y1="233" x2="258" y2="233" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="258" y="126" width="184" height="54" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="350" y="146" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">unary transforms</text>
+  <text x="350" y="162" text-anchor="middle" fill="#57606a" font-size="10.5">filter, dedup, decontaminate,</text>
+  <text x="350" y="175" text-anchor="middle" fill="#57606a" font-size="10.5">normalize: one stream in, one out</text>
+  <rect x="258" y="206" width="184" height="54" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="350" y="226" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">within a source</text>
+  <text x="350" y="242" text-anchor="middle" fill="#57606a" font-size="10">repeat, bounded; rephrase, by synthesis;</text>
+  <text x="350" y="255" text-anchor="middle" fill="#57606a" font-size="10">upsample: the distribution within it</text>
+
+  <!-- combinator -->
+  <line x1="442" y1="153" x2="460" y2="184" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="442" y1="233" x2="460" y2="202" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="460" y="166" width="156" height="54" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="538" y="186" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">combinators</text>
+  <text x="538" y="202" text-anchor="middle" fill="#57606a" font-size="10.5">mix, concat, interleave, sample:</text>
+  <text x="538" y="215" text-anchor="middle" fill="#57606a" font-size="10.5">actions that fuse streams</text>
+
+  <!-- sink -->
+  <line x1="616" y1="193" x2="630" y2="193" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="630" y="166" width="106" height="54" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="683" y="186" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the sink</text>
+  <text x="683" y="202" text-anchor="middle" fill="#57606a" font-size="10.5">the final byte stream,</text>
+  <text x="683" y="215" text-anchor="middle" fill="#57606a" font-size="10.5">hashed: the mix hash</text>
+
+  <!-- hash annotation -->
+  <text x="390" y="290" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">each node's hash = a function of its operator, its parameters and its inputs' hashes; the sink's hash is the mix hash</text>
+  <text x="390" y="308" text-anchor="middle" fill="#57606a" font-size="11">two runs are comparable if and only if they share the mix hash: "at equal data" is machine checkable, not a declaration;</text>
+  <text x="390" y="324" text-anchor="middle" fill="#57606a" font-size="11">two graphs differing by one operator are comparable on that one difference: the graph is the ablation axis and the provenance</text>
+  <text x="390" y="348" text-anchor="middle" fill="#57606a" font-size="11">the manifest, committed and human readable, is the recipe; execution is lazy and streaming, no intermediate materialised;</text>
+  <text x="390" y="364" text-anchor="middle" fill="#57606a" font-size="11">a node computed once is never recomputed, specified now and built when a second mix shares a subtree;</text>
+  <text x="390" y="380" text-anchor="middle" fill="#57606a" font-size="11">the run record carries the mix hash, and the existing control receives it retroactively, without retraining</text>
+
+  <!-- right column -->
+  <rect x="760" y="80" width="400" height="156" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="960" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision seven: the invariant harness, built first</text>
+  <g font-size="11" fill="#57606a">
+    <text x="780" y="126">identity: a mix of one source is that source</text>
+    <text x="780" y="142">duplication idempotence: a mix of a source with itself is that source,</text>
+    <text x="780" y="157">at the byte stream and at the hash</text>
+    <text x="780" y="172">(the founder's "run the same thing twice" test)</text>
+    <text x="780" y="188">commutativity: the order of sources does not change the mix, at equal seed</text>
+    <text x="780" y="204">determinism: same graph, same seed, same hash, twice running</text>
+    <text x="780" y="220">decontamination: a planted trap token in training is detected</text>
+  </g>
+
+  <rect x="760" y="252" width="400" height="144" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="960" y="276" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision four: decontamination as a bit vector algebra</text>
+  <g font-size="11" fill="#57606a">
+    <text x="780" y="298">evaluation sequences must not appear in the training data; each source's</text>
+    <text x="780" y="314">set of word sequences as a bit vector signature, a probabilistic set filter:</text>
+    <text x="780" y="332">set operations are then bitwise; union: the mix of sources;</text>
+    <text x="780" y="348">intersection of training and evaluation: contamination, detected at once</text>
+    <text x="780" y="364">difference: in training and not in the evaluation set</text>
+    <text x="780" y="382">a mix that fails decontamination is not comparable; the report is archived</text>
+  </g>
+
+  <!-- bottom strip -->
+  <rect x="40" y="406" width="360" height="134" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="220" y="430" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Decisions five and six: the mix weight</text>
+  <text x="220" y="450" text-anchor="middle" fill="#57606a" font-size="11">a weight is a share of a bounded token budget:</text>
+  <text x="220" y="465" text-anchor="middle" fill="#57606a" font-size="11">mixing redistributes, it never inflates; identical sources</text>
+  <text x="220" y="480" text-anchor="middle" fill="#57606a" font-size="11">are folded by their content hash before sampling, so a</text>
+  <text x="220" y="495" text-anchor="middle" fill="#57606a" font-size="11">duplicate is recognised, not re drawn; the weight's resolver</text>
+  <text x="220" y="510" text-anchor="middle" fill="#57606a" font-size="11">sits behind a seam: a declared constant today,</text>
+  <text x="220" y="525" text-anchor="middle" fill="#57606a" font-size="11">a value read from the frontier later</text>
+
+  <rect x="420" y="406" width="360" height="134" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="430" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Decision eight: legality, three things kept distinct</text>
+  <text x="600" y="450" text-anchor="middle" fill="#57606a" font-size="11">the engine: written from scratch, our own, zero borrowed lines</text>
+  <text x="600" y="465" text-anchor="middle" fill="#57606a" font-size="11">the data: licensed corpora, each source declaring its licence</text>
+  <text x="600" y="480" text-anchor="middle" fill="#57606a" font-size="11">in the manifest, attribution honoured</text>
+  <text x="600" y="495" text-anchor="middle" fill="#57606a" font-size="11">the recipes: ideas and methods, credited, re implemented,</text>
+  <text x="600" y="510" text-anchor="middle" fill="#57606a" font-size="11">never copied</text>
+
+  <rect x="800" y="406" width="360" height="134" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="980" y="430" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">What the engine never does</text>
+  <text x="980" y="450" text-anchor="middle" fill="#57606a" font-size="11">it does not choose the winning mix: whether a mix makes</text>
+  <text x="980" y="465" text-anchor="middle" fill="#57606a" font-size="11">a better model is an empirical question answered only</text>
+  <text x="980" y="480" text-anchor="middle" fill="#57606a" font-size="11">by the ledger and the frontier; the processing bottleneck</text>
+  <text x="980" y="495" text-anchor="middle" fill="#57606a" font-size="11">is removed by construction; the results bottleneck is</text>
+  <text x="980" y="510" text-anchor="middle" fill="#57606a" font-size="11">solved by no engine cleverness, only by the ledger and the frontier</text>
+
+  <text x="600" y="562" text-anchor="middle" fill="#57606a" font-size="11">the first slice, the interface and the five invariants, is built from the start; memoisation, the large scale bit vector cross check and the frontier read weight wait for the wave that exercises them</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="578" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="588">the sources</text>
+    <rect x="160" y="578" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="180" y="588">the operators and their rules</text>
+    <rect x="370" y="578" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="390" y="588">what is hashed and tested</text>
+    <rect x="570" y="578" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="590" y="588">what the engine never decides</text>
+  </g>
+</svg>

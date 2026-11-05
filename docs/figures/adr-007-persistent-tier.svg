@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="696" viewBox="0 0 1200 696" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-007: the persistent tier; weights semantic and procedural, the journal episodic; the life of an episode from the write path through the entry, the read path and the lifecycle; the journal survives a process restart from the disk alone, sealed per scope, durable first; the Molaison protocol is the milestone">
+  <title>ADR-007 — The persistent tier: the organ that makes continuity measurable</title>
+  <rect width="1200" height="696" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The persistent tier: an episodic organ outside the weights, surviving the session boundary</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-007. Weights are semantic and procedural; the journal is episodic; cut the journal and the episodes must vanish while the skills stay.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the two stores -->
+  <rect x="40" y="78" width="545" height="64" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="312" y="100" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The weights: semantic and procedural</text>
+  <text x="312" y="118" text-anchor="middle" fill="#57606a" font-size="11">semantic and procedural memory; the model is stateless between sessions</text>
+  <text x="312" y="133" text-anchor="middle" fill="#57606a" font-size="11">except through the organ and its checkpoint: the thesis itself</text>
+  <rect x="615" y="78" width="545" height="64" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="887" y="100" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The journal: episodic</text>
+  <text x="887" y="118" text-anchor="middle" fill="#57606a" font-size="11">what happened in a session; neither retrieval over documents nor a bigger context window:</text>
+  <text x="887" y="133" text-anchor="middle" fill="#57606a" font-size="11">the organ the continuity triad measures</text>
+
+  <!-- the life of an episode -->
+  <text x="40" y="160" fill="#1f2328" font-size="13" font-weight="bold">The life of an episode</text>
+
+  <rect x="40" y="172" width="120" height="118" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="100" y="194" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">an episode</text>
+  <text x="100" y="212" text-anchor="middle" fill="#57606a" font-size="10.5">something that</text>
+  <text x="100" y="226" text-anchor="middle" fill="#57606a" font-size="10.5">happened in a</text>
+  <text x="100" y="240" text-anchor="middle" fill="#57606a" font-size="10.5">session, with its</text>
+  <text x="100" y="254" text-anchor="middle" fill="#57606a" font-size="10.5">provenance</text>
+  <line x1="160" y1="231" x2="186" y2="231" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="186" y="172" width="250" height="118" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="311" y="194" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the write path, the hippocampal pipeline</text>
+  <text x="311" y="212" text-anchor="middle" fill="#57606a" font-size="10.5">separate (decorrelate near duplicates) →</text>
+  <text x="311" y="226" text-anchor="middle" fill="#57606a" font-size="10.5">associate (reconstruct from the cue) →</text>
+  <text x="311" y="240" text-anchor="middle" fill="#57606a" font-size="10.5">compare (surprise, their distance) →</text>
+  <text x="311" y="254" text-anchor="middle" fill="#57606a" font-size="10.5">the gate in two stages: admission rejects</text>
+  <text x="311" y="268" text-anchor="middle" fill="#57606a" font-size="10.5">the redundant; the verdict is retrospective,</text>
+  <text x="311" y="282" text-anchor="middle" fill="#57606a" font-size="10.5">forgetting is its tribunal; each stage a flag</text>
+  <line x1="436" y1="231" x2="462" y2="231" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="462" y="172" width="250" height="118" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="587" y="194" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the entry, in an append only log</text>
+  <text x="587" y="212" text-anchor="middle" fill="#57606a" font-size="10.5">a cue (the address), a pointer (the content hash),</text>
+  <text x="587" y="226" text-anchor="middle" fill="#57606a" font-size="10.5">a salience, a schema, the times written and read,</text>
+  <text x="587" y="240" text-anchor="middle" fill="#57606a" font-size="10.5">a lifecycle state; the bytes live in a content</text>
+  <text x="587" y="254" text-anchor="middle" fill="#57606a" font-size="10.5">addressed store, never duplicated;</text>
+  <text x="587" y="268" text-anchor="middle" fill="#57606a" font-size="10.5">the size law bounds the entry; reads never scan:</text>
+  <text x="587" y="282" text-anchor="middle" fill="#57606a" font-size="10.5">a fixed size associative state and a cue index</text>
+  <line x1="712" y1="231" x2="738" y2="231" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="738" y="172" width="200" height="118" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="838" y="194" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the read path</text>
+  <text x="838" y="212" text-anchor="middle" fill="#57606a" font-size="10.5">a fourth path of the router: control,</text>
+  <text x="838" y="226" text-anchor="middle" fill="#57606a" font-size="10.5">energy, delta, journal; used only</text>
+  <text x="838" y="240" text-anchor="middle" fill="#57606a" font-size="10.5">where its predicted score beats the</text>
+  <text x="838" y="254" text-anchor="middle" fill="#57606a" font-size="10.5">control: the organ can never degrade</text>
+  <text x="838" y="268" text-anchor="middle" fill="#57606a" font-size="10.5">the model; no new router is built,</text>
+  <text x="838" y="282" text-anchor="middle" fill="#57606a" font-size="10.5">the contract gains one path</text>
+  <line x1="938" y1="231" x2="964" y2="231" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="964" y="172" width="196" height="132" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="1062" y="194" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the lifecycle, on a rhythm</text>
+  <text x="1062" y="212" text-anchor="middle" fill="#57606a" font-size="10.5">live → consolidated →</text>
+  <text x="1062" y="226" text-anchor="middle" fill="#57606a" font-size="10.5">demoted, into a summary keeping</text>
+  <text x="1062" y="240" text-anchor="middle" fill="#57606a" font-size="10.5">the pointers → evicted; a phase</text>
+  <text x="1062" y="254" text-anchor="middle" fill="#57606a" font-size="10.5">every fixed count of admitted writes;</text>
+  <text x="1062" y="268" text-anchor="middle" fill="#57606a" font-size="10.5">budgets as setpoints; the sentinel</text>
+  <text x="1062" y="282" text-anchor="middle" fill="#57606a" font-size="10.5">check before every commit; an</text>
+  <text x="1062" y="296" text-anchor="middle" fill="#57606a" font-size="10.5">eviction withdraws the address</text>
+
+  <!-- the session boundary -->
+  <rect x="40" y="318" width="760" height="222" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="420" y="342" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Across the session boundary: after a stop and a relaunch of the process, from the disk alone</text>
+  <g font-size="11" fill="#57606a">
+    <text x="60" y="364">persistence is a property declared per component: the structure replayed from the append only log; the bytes in a</text>
+    <text x="60" y="379">content addressed directory next to it; the index recomputed at open; the associative memory rebuilt from its own events</text>
+    <text x="60" y="398">sealed at rest, per scope, with the hub's framing: a tampered line or file fails loudly; a sealed journal opened without</text>
+    <text x="60" y="413">its key fails loudly; sealed by default, a plaintext scope is declared explicitly; the key is never read implicitly, never written</text>
+    <text x="60" y="432">durable first: every mutation reaches the log, and a payload its file, before memory changes; never silent: a loss of</text>
+    <text x="60" y="447">durability is visible in the declaration, the telemetry and to the caller; free disk space is a regulated variable</text>
+    <text x="60" y="466">a storage policy per scope, in its hashed configuration: stop (consistency, for measurement runs), read only (reads continue),</text>
+    <text x="60" y="481">memory (a bounded spill, declared not durable, flushed in order when the disk returns); the protocol never claims on a journal in memory</text>
+    <text x="60" y="500">the restart test: write through the lifecycle, destroy every object, reopen in a new process: the episodes recalled, the sentinels</text>
+    <text x="60" y="515">intact, the counts identical, sealed and clear; a boundary named in advance: when the memory lives in the weights, the model's</text>
+    <text x="60" y="530">arm re declares this lifecycle and passes the restart test again before continuity is claimed</text>
+  </g>
+
+  <!-- the milestone -->
+  <rect x="820" y="318" width="340" height="222" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="990" y="342" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The milestone: the Molaison protocol gives a number</text>
+  <g font-size="11" fill="#57606a">
+    <text x="990" y="364" text-anchor="middle">facts written through the normal gated path; a second</text>
+    <text x="990" y="379" text-anchor="middle">session in a fresh context, with the journal and without it;</text>
+    <text x="990" y="394" text-anchor="middle">frozen thresholds, never adjusted after a number;</text>
+    <text x="990" y="409" text-anchor="middle">a negative control of never planted facts</text>
+    <text x="990" y="432" text-anchor="middle" fill="#1f2328" font-weight="bold">cut the journal: recall collapses, skills hold</text>
+    <text x="990" y="451" text-anchor="middle">the pass is published either way; a fail is a result</text>
+    <text x="990" y="466" text-anchor="middle">and revises the memory story; the protocol then runs</text>
+    <text x="990" y="481" text-anchor="middle">at every checkpoint and doubles as the eviction</text>
+    <text x="990" y="496" text-anchor="middle">safety check: consolidate then evict must never silently</text>
+    <text x="990" y="511" text-anchor="middle">degrade skills or contracted recall</text>
+  </g>
+
+  <!-- decided, not built, and reuse -->
+  <rect x="40" y="556" width="545" height="92" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="312" y="580" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Sequenced asynchrony: decided, not built</text>
+  <text x="312" y="600" text-anchor="middle" fill="#57606a" font-size="11">a sequence point decides a phase's plan and logs it; actions apply later, in order, durable first,</text>
+  <text x="312" y="615" text-anchor="middle" fill="#57606a" font-size="11">at a deterministic rate, each re checking its precondition when it applies; one plan in flight;</text>
+  <text x="312" y="630" text-anchor="middle" fill="#57606a" font-size="11">reads never wait and never see a half state; replay stays exact. Never a decision outside a sequence point.</text>
+
+  <rect x="615" y="556" width="545" height="92" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="887" y="580" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Reuse, legality, trade offs</text>
+  <text x="887" y="600" text-anchor="middle" fill="#57606a" font-size="11">three built things reused: the associative layer as the completion stage, the data layer's hashing, the router;</text>
+  <text x="887" y="615" text-anchor="middle" fill="#57606a" font-size="11">the engine written from scratch; episodes carry provenance and never cross scopes; the classic system</text>
+  <text x="887" y="630" text-anchor="middle" fill="#57606a" font-size="11">trade offs read one by one: most decided and dated, two open and parked, one a recorded reserve</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="672" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="682">what enters</text>
+    <rect x="160" y="672" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="180" y="682">the gates and the schedule</text>
+    <rect x="360" y="672" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="380" y="682">the organ and its test</text>
+    <rect x="540" y="672" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="560" y="682">the weights, the guarantees across the boundary, the reuse</text>
+  </g>
+</svg>

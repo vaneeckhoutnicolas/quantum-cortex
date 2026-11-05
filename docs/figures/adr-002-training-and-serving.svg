@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-002: training on one reference framework with device agnostic code and one portability rule dictated by the compute plan; serving portable across the runtime matrix; inference runtimes are never training targets">
+  <title>ADR-002 — Where portability applies: one rule at training, everything at serving</title>
+  <rect width="1200" height="500" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">Where portability applies: one precise rule at training, everything at serving</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-002. Inference runtimes are never training targets; transparency is about correctness, not wall clock.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- training column -->
+  <rect x="40" y="84" width="640" height="300" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="360" y="108" text-anchor="middle" fill="#1f2328" font-size="15" font-weight="bold">Training</text>
+
+  <rect x="60" y="122" width="290" height="110" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="205" y="144" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">One reference framework</text>
+  <text x="205" y="162" text-anchor="middle" fill="#57606a" font-size="11">the de facto standard is the abstraction layer;</text>
+  <text x="205" y="177" text-anchor="middle" fill="#57606a" font-size="11">the code is device agnostic, the device a parameter;</text>
+  <text x="205" y="192" text-anchor="middle" fill="#57606a" font-size="11">the same result across backends up to floating point</text>
+  <text x="205" y="207" text-anchor="middle" fill="#57606a" font-size="11">non determinism; the configuration hash pins what it can;</text>
+  <text x="205" y="222" text-anchor="middle" fill="#57606a" font-size="11">a variant framework only if a particular grant materialises</text>
+
+  <rect x="370" y="122" width="290" height="110" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="515" y="144" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Where a run happens</text>
+  <text x="515" y="162" text-anchor="middle" fill="#57606a" font-size="11">the paths without an accelerator exist for unit tests</text>
+  <text x="515" y="177" text-anchor="middle" fill="#57606a" font-size="11">and the CI smoke only, as correctness checks;</text>
+  <text x="515" y="192" text-anchor="middle" fill="#57606a" font-size="11">pretraining runs on accelerators, full stop:</text>
+  <text x="515" y="207" text-anchor="middle" fill="#57606a" font-size="11">wall clock is not transparent across backends</text>
+
+  <rect x="60" y="244" width="600" height="100" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="360" y="266" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The one rule, dictated by the compute plan: the free or granted compute spans three silicons</text>
+  <text x="360" y="286" text-anchor="middle" fill="#57606a" font-size="11">pure framework ops only; any custom kernel is written in a portable kernel language and is budgeted;</text>
+  <text x="360" y="301" text-anchor="middle" fill="#57606a" font-size="11">an op tied to one vendor is prohibited, otherwise a granted allocation on other hardware would be unusable;</text>
+  <text x="360" y="316" text-anchor="middle" fill="#57606a" font-size="11">a kernel proposal arrives with its portable implementation, a fallback pure framework path</text>
+  <text x="360" y="331" text-anchor="middle" fill="#57606a" font-size="11">and a measured speedup in the ledger that justifies it</text>
+
+  <text x="360" y="356" text-anchor="middle" fill="#57606a" font-size="11">benchmark tooling is installed as a dependency where its licence allows, never copied into the repository;</text>
+  <text x="360" y="372" text-anchor="middle" fill="#57606a" font-size="11">the N1 notebook is written device agnostic, its path without an accelerator exercised only as a correctness smoke test</text>
+
+
+  <!-- serving column -->
+  <rect x="716" y="84" width="444" height="300" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="938" y="108" text-anchor="middle" fill="#1f2328" font-size="15" font-weight="bold">Serving</text>
+
+  <rect x="736" y="122" width="404" height="110" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="938" y="144" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Portability is everything: the runtime matrix</text>
+  <text x="938" y="162" text-anchor="middle" fill="#57606a" font-size="11">the model is served through the inference runtimes of the</text>
+  <text x="938" y="177" text-anchor="middle" fill="#57606a" font-size="11">runtime matrix and their file formats; that matrix is unchanged;</text>
+  <text x="938" y="192" text-anchor="middle" fill="#57606a" font-size="11">those runtimes are serving targets only:</text>
+  <text x="938" y="207" text-anchor="middle" fill="#57606a" font-size="11">never a training target, never an abstraction to train on</text>
+
+  <rect x="736" y="244" width="404" height="100" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="938" y="266" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The performance clause</text>
+  <text x="938" y="286" text-anchor="middle" fill="#57606a" font-size="11">the tax of an abstraction layer belongs to the naive or immature ones;</text>
+  <text x="938" y="301" text-anchor="middle" fill="#57606a" font-size="11">mature layers embed hand tuned kernels, consuming them costs about nothing;</text>
+  <text x="938" y="316" text-anchor="middle" fill="#57606a" font-size="11">inventing our own compute layer or shipping exotic unbudgeted ops: prohibited</text>
+
+  <text x="938" y="356" text-anchor="middle" fill="#57606a" font-size="11">no adoption without performance: the constraint</text>
+  <text x="938" y="372" text-anchor="middle" fill="#57606a" font-size="11">behind both columns</text>
+
+  <!-- the question answered, bottom -->
+  <rect x="40" y="404" width="1120" height="56" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="600" y="426" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The question the record answers: should the model be trained on an inference runtime's abstraction layer, hardware agnostic?</text>
+  <text x="600" y="446" text-anchor="middle" fill="#57606a" font-size="11">Not on an inference runtime: the training abstraction layer already exists and is the reference framework; portability at training reduces to the one rule above, and at serving it is everything.</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="478" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="488">the training side</text>
+    <rect x="200" y="478" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="220" y="488">the serving side</text>
+    <rect x="360" y="478" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="380" y="488">the rules</text>
+  </g>
+</svg>

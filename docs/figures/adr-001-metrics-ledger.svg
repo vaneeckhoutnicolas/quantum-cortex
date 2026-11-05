@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-001: a run emits exactly one record under the versioned schema; the record enters the append only ledger, versioned in the repository; the latest state is regenerated in the same commit; every claim of a result cites run ids from the ledger; training records are public, serving telemetry private">
+  <title>ADR-001 — One run, one record: the repository is the source of truth, and claims cite run ids</title>
+  <rect width="1200" height="520" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">One run, one record: the repository is the source of truth, and every claim of a result cites its run ids</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-001. Metrics are a first class value of the project, by design: a run without its committed record does not exist.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the chain, top row: a run, its record, the ledger, a claim -->
+  <rect x="40" y="100" width="200" height="84" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="140" y="126" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A run</text>
+  <text x="140" y="146" text-anchor="middle" fill="#57606a" font-size="11">a training or an ablation run;</text>
+  <text x="140" y="161" text-anchor="middle" fill="#57606a" font-size="11">an invalid or an aborted one as well</text>
+
+  <line x1="240" y1="142" x2="276" y2="142" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="276" y="100" width="240" height="84" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="396" y="126" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Exactly one record</text>
+  <text x="396" y="146" text-anchor="middle" fill="#57606a" font-size="11">under the versioned schema;</text>
+  <text x="396" y="161" text-anchor="middle" fill="#57606a" font-size="11">an unknown value is null, never invented,</text>
+  <text x="396" y="176" text-anchor="middle" fill="#57606a" font-size="11">never a zero</text>
+
+  <line x1="516" y1="142" x2="552" y2="142" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="552" y="100" width="280" height="84" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="692" y="126" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The ledger, append only, versioned</text>
+  <text x="692" y="146" text-anchor="middle" fill="#57606a" font-size="11">the repository is the source of truth of results;</text>
+  <text x="692" y="161" text-anchor="middle" fill="#57606a" font-size="11">an invalid or aborted run stays in it:</text>
+  <text x="692" y="176" text-anchor="middle" fill="#57606a" font-size="11">errors are noted, never erased</text>
+
+  <line x1="832" y1="142" x2="868" y2="142" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="850" y="130" text-anchor="middle" fill="#57606a" font-size="10">cites</text>
+
+  <rect x="868" y="100" width="292" height="84" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="1014" y="126" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A claim of a result</text>
+  <text x="1014" y="146" text-anchor="middle" fill="#57606a" font-size="11">a post, an application, the paper: it cites run ids</text>
+  <text x="1014" y="161" text-anchor="middle" fill="#57606a" font-size="11">from the ledger, so that claims and state</text>
+  <text x="1014" y="176" text-anchor="middle" fill="#57606a" font-size="11">cannot diverge</text>
+
+  <!-- the schema rule, under the record -->
+  <line x1="396" y1="184" x2="396" y2="212" stroke="#d4a72c" stroke-width="2" stroke-dasharray="5 4"/>
+  <rect x="40" y="212" width="476" height="70" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="278" y="232" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">The schema is versioned</text>
+  <text x="278" y="251" text-anchor="middle" fill="#57606a" font-size="11">a breaking change is a new version of the schema with a migration note, never a silent edit;</text>
+  <text x="278" y="266" text-anchor="middle" fill="#57606a" font-size="11">a notebook that trains but does not write its record is a failed deliverable</text>
+
+  <!-- the latest state, under the ledger, same commit -->
+  <line x1="692" y1="184" x2="692" y2="212" stroke="#4ac26b" stroke-width="2" stroke-dasharray="5 4"/>
+  <rect x="552" y="212" width="608" height="70" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="856" y="232" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">The latest state, in the same commit</text>
+  <text x="856" y="251" text-anchor="middle" fill="#57606a" font-size="11">regenerated after every run (the last run, the best value per declared benchmark, the running verdicts against the control)</text>
+  <text x="856" y="266" text-anchor="middle" fill="#57606a" font-size="11">and committed with the ledger line and the state of the code: one commit per run</text>
+
+  <!-- what the record carries -->
+  <rect x="40" y="298" width="1120" height="72" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="318" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">What a record carries, so that the advancement rule is computable from the ledger</text>
+  <text x="600" y="338" text-anchor="middle" fill="#57606a" font-size="11">the benchmarks block: the declared capabilities, the perplexity, a standard suite slot; the comparison block: the control run it is read against, the perplexity delta, a verdict per capability;</text>
+  <text x="600" y="354" text-anchor="middle" fill="#57606a" font-size="11">the same standardisation at serving time, through the telemetry: training ledger and serving telemetry are the two halves of metrics as first class values of the model</text>
+
+  <!-- the two populations, bottom -->
+  <rect x="40" y="386" width="545" height="100" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="312" y="408" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Public: the training and ablation records, in this repository</text>
+  <text x="312" y="428" text-anchor="middle" fill="#57606a" font-size="11">the ledger, the schema, the latest state; a dashboard of its own reads only the ledger and the schema,</text>
+  <text x="312" y="443" text-anchor="middle" fill="#57606a" font-size="11">through repository relative paths, never an absolute path, never a user name; it references no stream</text>
+  <text x="312" y="458" text-anchor="middle" fill="#57606a" font-size="11">of the private metrics, and the private dashboard references nothing of the cortex;</text>
+  <text x="312" y="473" text-anchor="middle" fill="#57606a" font-size="11">no dashboard is committed before the ledger holds enough records to compare</text>
+
+  <rect x="615" y="386" width="545" height="100" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="887" y="408" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Private: the serving and usage telemetry</text>
+  <text x="887" y="428" text-anchor="middle" fill="#57606a" font-size="11">when the cortex serves inside an installation, its usage telemetry flows into that user's own</text>
+  <text x="887" y="443" text-anchor="middle" fill="#57606a" font-size="11">private metrics, like any provider's; usage data never enters the public repository:</text>
+  <text x="887" y="458" text-anchor="middle" fill="#57606a" font-size="11">two data populations, two dashboards, no shared source</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="500" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="510">what is run and what is claimed</text>
+    <rect x="290" y="500" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="310" y="510">the record and its schema</text>
+    <rect x="480" y="500" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="500" y="510">what is kept and public</text>
+    <rect x="660" y="500" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="680" y="510">what never enters the repository</text>
+  </g>
+</svg>

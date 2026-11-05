@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-010: four questions from two outside readings; the system frozen at a named commit; the parts A to E: the sealed families, the references and the cost, the scale cost probe with the cascade, the free text value deferred, the construction's ceiling delivered; the order from the declaration to the tag; what the ADR does not claim">
+  <title>ADR-010 — The independent test and the industrial door: four questions, one frozen system, the parts A to E, one order</title>
+  <rect width="1200" height="700" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The independent test and the industrial door: four questions, one frozen system, read once</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-010. Declared before any number, with a committee; the record's position unchanged: the model decides, the organ answers, the verdict is the system's.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the four questions -->
+  <text x="40" y="86" fill="#1f2328" font-size="13" font-weight="bold">Four questions, from two outside readings of the record</text>
+  <g font-size="10.5" fill="#57606a">
+    <rect x="40" y="96" width="265" height="50" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="172" y="115" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">generalisation</text>
+    <text x="172" y="132" text-anchor="middle">formulations no model and no selection has seen</text>
+    <rect x="325" y="96" width="265" height="50" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="457" y="115" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">the veto's guarantee</text>
+    <text x="457" y="132" text-anchor="middle">outside the synthetic protocol, and at scale</text>
+    <rect x="610" y="96" width="265" height="50" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="742" y="115" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">the simpler references</text>
+    <text x="742" y="132" text-anchor="middle">what a buyer's first stack does on the same questions</text>
+    <rect x="895" y="96" width="265" height="50" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="1027" y="115" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">the cost</text>
+    <text x="1027" y="132" text-anchor="middle">by stage, by configuration, and with the journal's size</text>
+  </g>
+
+  <!-- the frozen system -->
+  <rect x="40" y="162" width="1120" height="62" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="184" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The frozen system: the mechanism built and measured first, then the system frozen at a named commit before any family is planted</text>
+  <text x="600" y="202" text-anchor="middle" fill="#57606a" font-size="11">every module of the organ, the model's code, the configurations and the tests hashed at the freeze; from that commit to the tag the frozen files do not change and every build adds new modules</text>
+  <text x="600" y="217" text-anchor="middle" fill="#57606a" font-size="11">and tests only; the record test of each row compares the hashes; no checkpoint encodes a sealed text before the founder's runs; a key is never committed; the founder's files travel in his commits</text>
+
+  <!-- the parts -->
+  <rect x="40" y="240" width="370" height="250" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="225" y="262" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Part A: the sealed families, read once</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="56" y="282">three families read on the frozen system before the tag: an in</text>
+    <text x="56" y="296">template control (the protocol's templates, new names); unseen</text>
+    <text x="56" y="310">formulations (new templates and vocabularies, built to five rules</text>
+    <text x="56" y="324">pinned by tests); the value cell (the templates with the new values);</text>
+    <text x="56" y="338">a fourth, public development family is never read as a result</text>
+    <text x="56" y="358">the seal: generated from the constants and committed by content</text>
+    <text x="56" y="372">hash before any encoder runs on them; the texts regenerate from</text>
+    <text x="56" y="386">public code, the seal fixes their content and dates it, it hides nothing</text>
+    <text x="56" y="406">the label: "a synthetic set locked before execution, not a blind</text>
+    <text x="56" y="420">validation: the templates and the generating rules are public"</text>
+    <text x="56" y="440">the readings written before any number, letter by letter; the</text>
+    <text x="56" y="454">construction table written first, so that no letter counts a</text>
+    <text x="56" y="468">construction fact as a result; a refusal at the gate never stops a run</text>
+  </g>
+
+  <rect x="430" y="240" width="370" height="250" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="615" y="262" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Part B: the simple references, and the cost</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="446" y="282">one planting, three indexes over the same entries, one pass per index:</text>
+    <text x="446" y="296">the organ's own index; an exhaustive cosine over the same cues,</text>
+    <text x="446" y="310">no buckets (a component ablation); a lexical search (the stack a</text>
+    <text x="446" y="324">buyer tries first); every window with the organ's marks</text>
+    <text x="446" y="344">the rules on every index: the model alone; the veto; the veto with</text>
+    <text x="446" y="358">the organ's value; an exact key verifier, "a key rule, exact on these</text>
+    <text x="446" y="372">families by construction"; the mark oracle with no model</text>
+    <text x="446" y="392">the cost by stage, timed in one process on one thread, with the</text>
+    <text x="446" y="406">operation counts and the sizes; labelled "not a scale result"</text>
+    <text x="446" y="426">three outcomes per paired test, never written as "equal": the organ's</text>
+    <text x="446" y="440">stack better, the reference better, not separated at this size; if a buyer</text>
+    <text x="446" y="454">stack holds the conditions wherever the organ's does and no test favours</text>
+    <text x="446" y="468">the organ's, the record says the read side brings no measured advantage</text>
+  </g>
+
+  <rect x="820" y="240" width="340" height="250" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="990" y="262" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Part C: the scale cost probe with the cascade</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="836" y="282">synthetic journals larger than the protocol's, the</text>
+    <text x="836" y="296">facts in a seeded order, cues from each checkpoint's</text>
+    <text x="836" y="310">encoder, the largest draw under one; two gates;</text>
+    <text x="836" y="324">near duplicates of two kinds at a declared rate</text>
+    <text x="836" y="344">the never planted control against the threshold: the</text>
+    <text x="836" y="358">count above it at each size, with its interval, is the</text>
+    <text x="836" y="372">number at which the veto's guarantee is measured to</text>
+    <text x="836" y="386">end, never a claim that it holds beyond those sizes</text>
+    <text x="836" y="406">the cascade, its construction law stated before the</text>
+    <text x="836" y="420">run: the withdrawal check after every phase, a</text>
+    <text x="836" y="434">returned withdrawn address is a fault, attributed first</text>
+    <text x="836" y="454">the cost curves reported with their construction,</text>
+    <text x="836" y="468">no threshold to pass; the probe's own time reported</text>
+  </g>
+
+  <!-- D and E -->
+  <rect x="40" y="504" width="550" height="62" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="315" y="524" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Part E: the construction's ceiling under byte keys, delivered</text>
+  <text x="315" y="542" text-anchor="middle" fill="#57606a" font-size="10.5">no model, no journal key: the simplest reference to the model's selection, per read its top line</text>
+  <text x="315" y="556" text-anchor="middle" fill="#57606a" font-size="10.5">against the decoder's own citation, with the oracle beside; a tie at the top is not decisive</text>
+  <rect x="610" y="504" width="550" height="62" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="885" y="524" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">Part D: the free text value, deferred to the next edition</text>
+  <text x="885" y="542" text-anchor="middle" fill="#57606a" font-size="10.5">outside the templates the organ reads nothing and the system abstains; three shapes are named</text>
+  <text x="885" y="556" text-anchor="middle" fill="#57606a" font-size="10.5">for a dated amendment, to be measured on an independent family written by an outside author</text>
+
+  <!-- the order -->
+  <text x="40" y="592" fill="#1f2328" font-size="13" font-weight="bold">The order, from the declaration to the tag</text>
+  <g font-size="10.5" fill="#1f2328">
+    <rect x="40" y="602" width="186" height="40" rx="6" fill="#fff8c5" stroke="#d4a72c"/><text x="133" y="619" text-anchor="middle" font-weight="bold">declared</text><text x="133" y="634" text-anchor="middle" fill="#57606a">with a committee, before any number</text>
+    <line x1="226" y1="622" x2="246" y2="622" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="246" y="602" width="150" height="40" rx="6" fill="#fff8c5" stroke="#d4a72c"/><text x="321" y="619" text-anchor="middle" font-weight="bold">built</text><text x="321" y="634" text-anchor="middle" fill="#57606a">new modules only, tests first</text>
+    <line x1="396" y1="622" x2="416" y2="622" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="416" y="602" width="196" height="40" rx="6" fill="#ddf4ff" stroke="#54aeff"/><text x="514" y="619" text-anchor="middle" font-weight="bold">run by the founder</text><text x="514" y="634" text-anchor="middle" fill="#57606a">every file retained before any is read</text>
+    <line x1="612" y1="622" x2="632" y2="622" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="632" y="602" width="170" height="40" rx="6" fill="#dafbe1" stroke="#4ac26b"/><text x="717" y="619" text-anchor="middle" font-weight="bold">read cold</text><text x="717" y="634" text-anchor="middle" fill="#57606a">from the files, committed functions</text>
+    <line x1="802" y1="622" x2="822" y2="622" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="822" y="602" width="176" height="40" rx="6" fill="#dafbe1" stroke="#4ac26b"/><text x="910" y="619" text-anchor="middle" font-weight="bold">graved</text><text x="910" y="634" text-anchor="middle" fill="#57606a">a record test, a dated section</text>
+    <line x1="998" y1="622" x2="1018" y2="622" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="1018" y="602" width="142" height="40" rx="6" fill="#dafbe1" stroke="#4ac26b"/><text x="1089" y="619" text-anchor="middle" font-weight="bold">the tag</text><text x="1089" y="634" text-anchor="middle" fill="#57606a">after a rerun on a clean tree</text>
+  </g>
+  <text x="600" y="662" text-anchor="middle" fill="#57606a" font-size="10.5">not claimed: that the families are natural text; that the references are the best of their kind; that a cost measured on one processor is the cost; no prediction</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="680" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="690">the questions and the founder's runs</text>
+    <rect x="270" y="680" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="290" y="690">what is sealed, read and graved</text>
+    <rect x="490" y="680" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="510" y="690">what is declared and compared</text>
+    <rect x="710" y="680" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="730" y="690">the frozen system and the part deferred</text>
+  </g>
+</svg>

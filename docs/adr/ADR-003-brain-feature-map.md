@@ -1,5 +1,9 @@
 # ADR 003 — The brain-derived feature map: validated, consistent, performance-guarded
 
+![The brain derived feature map: nature is the compass, the ledger remains the judge](../figures/adr-003-brain-feature-map.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-003-brain-feature-map.svg`, drawn from this record's text and carrying no number of the record): the canonical map, a few of its rows; the consistency rulings, one owner per joint; the performance guards; the journal retention law with its lifecycle and the noise ruling. The text below is as written on its dates.*
+
 - **Status:** Accepted (validated by Nicolas Van Eeckhout, 2026-08-08)
 - **Deciders:** Nicolas Van Eeckhout
 - **Cites:** IDEAS-REGISTER (rev9), concepts/brain-atlas.md, concepts/hippocampus.md — per the register's promotion rule (dated ADR citing the register, never a silent edit).

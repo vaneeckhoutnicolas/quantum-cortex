@@ -1,5 +1,9 @@
 # ADR 005 — The data composition layer (NOW-7)
 
+![The data composition layer: a hashed graph of typed operators, and "at equal data" becomes a fact](../figures/adr-005-data-composition.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-005-data-composition.svg`, drawn from this record's text and carrying no number of the record): the composition as a graph of typed operators from licensed sources to a hashed sink, the mix hash that makes two runs comparable, the invariant harness, the decontamination algebra, the weight's seam, the legality of the engine, the data and the recipes, and what the engine never decides. The text below is as written on its dates.*
+
 - **Status:** Accepted (Nicolas Van Eeckhout, 2026-09-06)
 - **Deciders:** Nicolas Van Eeckhout
 - **Context:** NOW-7 is the mandatory prerequisite before N2 (SEQUENCE). Before comparing *architectures*, the *data terrain* must be a declared, hashed, reproducible object — otherwise "at equal data" is a claim, not a fact. The N1 control (`be1fa8139f59`) trained on a single corpus; this ADR generalises data to a composition of sources.

@@ -1,5 +1,9 @@
 # ADR 007 — C2b, the persistent tier: the organ that makes continuity measurable
 
+![The persistent tier: an episodic organ outside the weights, surviving the session boundary](../figures/adr-007-persistent-tier.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-007-persistent-tier.svg`, drawn from this record's text and carrying no number of the record): the weights and the journal; the life of an episode from the write path through the entry, the read path and the lifecycle; the guarantees across the session boundary, the boundary named in advance included; the Molaison protocol as the milestone; the asynchrony decided and not built; the reuse and the trade offs. The text below is as written on its dates.*
+
 - **Status:** Proposed (Nicolas Van Eeckhout, 2026-09-08) — design; implementation in slices, each tested before the next
 - **Deciders:** Nicolas Van Eeckhout
 - **Context:** the paper is named after continuity (D15), yet its central capability is today a *specified protocol* (Molaison (the H.M. protocol: named after Henry Molaison, the patient whose hippocampus was removed in 1953 and who formed no new episodic memory from that day while keeping every skill he had; the protocol asks the model the same question: with its journal cut, do the episodes vanish while the skills stay?), `docs/benchmarks/hm-protocol.md`) awaiting its organ. Whitepaper v1 is gated on measuring the continuity triad on a built organ. C2b is that organ: the episodic store that lives *outside* the weights and survives the session boundary. This ADR turns the scattered specifications already graved (hippocampus pipeline, retention law ADR-003 D4, the noise ruling D4.8, the Molaison thresholds) into an implementable design, and states what it reuses.

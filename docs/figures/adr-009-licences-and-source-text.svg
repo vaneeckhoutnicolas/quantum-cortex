@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="626" viewBox="0 0 1200 626" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-009: the licence gate, a component enters only under the Apache, MIT or BSD licences with no condition added; every entry keeps the source text of its address sealed beside the content; English first, multilinguality later as new rows; the dossier names the languages of the training data; the doors closed">
+  <title>ADR-009 — Components and their licences, the source text of every address, English first, the dossier</title>
+  <rect width="1200" height="626" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">No licence risk at all, the source text of every address kept, English first, the languages named</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-009. Two principles frame the four decisions: no licence risk at all, and no added complexity; the doors are closed.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- B1 the licence gate -->
+  <rect x="40" y="80" width="700" height="216" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="390" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision B1: no dependency that could become paid, and no licence risk at all</text>
+  <rect x="60" y="120" width="170" height="70" rx="8" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="145" y="142" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">a candidate component</text>
+  <text x="145" y="160" text-anchor="middle" fill="#57606a" font-size="10.5">a model, an encoder, an engine,</text>
+  <text x="145" y="174" text-anchor="middle" fill="#57606a" font-size="10.5">a library on the critical path</text>
+  <line x1="230" y1="155" x2="258" y2="155" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="258" y="120" width="200" height="70" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="358" y="142" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">the gate: the licence, as read</text>
+  <text x="358" y="160" text-anchor="middle" fill="#57606a" font-size="10.5">Apache, MIT or BSD, with no condition</text>
+  <text x="358" y="174" text-anchor="middle" fill="#57606a" font-size="10.5">added; in doubt, it does not enter</text>
+  <line x1="458" y1="140" x2="486" y2="128" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="458" y1="170" x2="486" y2="182" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="486" y="112" width="246" height="46" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="609" y="130" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">enters, listed with its licence as read</text>
+  <text x="609" y="146" text-anchor="middle" fill="#57606a" font-size="10.5">weights pinned by revision and copied locally</text>
+  <rect x="486" y="166" width="246" height="46" rx="8" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="609" y="184" text-anchor="middle" fill="#1f2328" font-size="11.5" font-weight="bold">excluded; a useful idea rewritten entirely</text>
+  <text x="609" y="200" text-anchor="middle" fill="#57606a" font-size="10.5">a sub licence, terms of use, a field or revenue limit</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="60" y="228">no component whose licence could one day impose a payment as the project grows, or that could not be removed once integrated;</text>
+    <text x="60" y="242">excluded too: a share alike clause on code, a licence that must be read twice; a fine tuned model inherits its base's licence;</text>
+    <text x="60" y="256">a standard open execution engine without proprietary extension; the organ never depends on an encoder it cannot recompute;</text>
+    <text x="60" y="270">an outside model may serve as an instrument of measurement without becoming a component, its licence read in full first,</text>
+    <text x="60" y="284">and not clean, not measured either; an outside reader, if ever, through the text contract only, two readers passing the protocol first</text>
+  </g>
+
+  <!-- B2 the source text -->
+  <rect x="760" y="80" width="400" height="216" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="960" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision B2: keep the source text of every address</text>
+  <!-- the entry -->
+  <rect x="780" y="118" width="360" height="54" rx="6" fill="#ffffff" stroke="#4ac26b"/>
+  <text x="790" y="136" fill="#1f2328" font-size="10.5">the entry: cue (the hash address) · pointer (the content hash) ·</text>
+  <text x="790" y="150" fill="#1f2328" font-size="10.5">salience · schema · times · state · <tspan font-weight="bold">source pointer</tspan>, a second pointer</text>
+  <text x="790" y="164" fill="#1f2328" font-size="10.5">to the text the address was computed from, a sealed payload of its own</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="780" y="190">same cipher, same key, same scope as the content; the entry stays</text>
+    <text x="780" y="204">under the size law; the hash address stays, language free, valid for</text>
+    <text x="780" y="218">identifiers; the day a learned encoder is added, the index is</text>
+    <text x="780" y="232">recomputed from the sealed texts and no journal is migrated;</text>
+    <text x="780" y="246">older journals declare the text absent, nothing recoded in silence;</text>
+    <text x="780" y="260">summaries and sentinels carry none, by construction (confirmed);</text>
+    <text x="780" y="274">at eviction the source text is released with the content; the phase event says so</text>
+  </g>
+
+  <!-- B3 English first -->
+  <rect x="40" y="316" width="560" height="170" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="320" y="340" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision B3: English first, multilinguality later</text>
+  <g font-size="11" fill="#57606a">
+    <text x="60" y="362">research continues in English only, the protocol, the model, the data: one variable at a time;</text>
+    <text x="60" y="377">multilinguality comes later as new rows, with its own fact generator and its own configuration hash</text>
+    <text x="60" y="396">a semantic encoder is planned as hybrid addressing, the hash for identifiers and the encoder for meaning</text>
+    <text x="60" y="411">and language; not integrated now; four consequences settled before it enters: the exact address kept</text>
+    <text x="60" y="426">beside it; the size law; the write gate under semantic addresses, the revision mechanism first;</text>
+    <text x="60" y="441">security, the system level zero measured again and the veto's threshold recalibrated language by language</text>
+    <text x="60" y="464">the encoder settles the language for finding a note, not for reading it: the reader must understand the line</text>
+  </g>
+
+  <!-- B4 the dossier -->
+  <rect x="620" y="316" width="540" height="170" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="890" y="340" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision B4: the compute dossier names the languages of the training data</text>
+  <g font-size="11" fill="#57606a">
+    <text x="640" y="362">the one thing costly to change afterwards is stated explicitly; the choice is the founder's and is pending:</text>
+    <text x="640" y="381">English only, simpler, in the continuity of the current model, other languages by a second pass;</text>
+    <text x="640" y="396">or a share of French and Dutch from the start, useful locally, each language taking capacity at small size</text>
+    <text x="640" y="415">the linked question, his as well: train from zero, full control of the data, a model built end to end in Europe;</text>
+    <text x="640" y="430">or fine tune an open base under a permissive licence, which belongs to the project with its origin kept</text>
+    <text x="640" y="449">the dossier is prepared with both options; the size study of the external arm is what sizes the request</text>
+    <text x="640" y="468">bytes need no vocabulary extension for a new language</text>
+  </g>
+
+  <!-- doors closed -->
+  <rect x="40" y="504" width="1120" height="76" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="600" y="528" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">The doors closed, by the principle of no added complexity</text>
+  <text x="600" y="550" text-anchor="middle" fill="#57606a" font-size="11">a large model out of reach of the project's machines; an outside training recipe (its hardest negative control enters the wider control already named, as a variant);</text>
+  <text x="600" y="566" text-anchor="middle" fill="#57606a" font-size="11">long context as a comparator of the organ; any model reachable only as an online service; a second frame for the external arm. Not declared; the direction fixed is finished coherently.</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="600" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="610">a candidate; one variable at a time</text>
+    <rect x="260" y="600" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="280" y="610">the gate</text>
+    <rect x="360" y="600" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="380" y="610">what enters and what is kept</text>
+    <rect x="570" y="600" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="590" y="610">what is excluded or closed</text>
+  </g>
+</svg>

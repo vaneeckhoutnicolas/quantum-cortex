@@ -1,5 +1,9 @@
 # ADR 001 — Metrics are first-class citizens, by design
 
+![One run, one record: the repository is the source of truth, and every claim of a result cites its run ids](../figures/adr-001-metrics-ledger.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-001-metrics-ledger.svg`, drawn from this record's text and carrying no number of the record): the chain from a run to its one record under the versioned schema, the append only ledger versioned in the repository, the claims of results that cite run ids from it, the latest state committed in the same commit; what a record carries; the two data populations, public training records and private serving telemetry. The text below is as written on its dates.*
+
 - **Status:** Proposed
 - **Date:** 2026-08-07
 - **Deciders:** Nicolas Van Eeckhout

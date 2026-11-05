@@ -1,5 +1,9 @@
 # ADR 004 — The evaluation law: a Pareto frontier, never a scalar (D16)
 
+![The evaluation law: a frontier over declared axes, never a scalar; the frontier is what is published](../figures/adr-004-pareto-frontier.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-004-pareto-frontier.svg`, drawn from this record's text and carrying no number of the record): the frontier over declared axes with the control as its lower left corner, a candidate that advances and a loss that did not move it, the perplexity guard as a floor outside the axes; the declared axes, the corollaries and the honest credit; the linked decision on what is published, from the frontier as the public object to the filtered public copy. The text below is as written on its dates.*
+
 - **Status:** Accepted (Nicolas Van Eeckhout, 2026-09-06)
 - **Deciders:** Nicolas Van Eeckhout
 - **Context:** the N1 baseline is committed (`be1fa8139f59`, val_perplexity 2.601). The frontier now has a lower-left corner to reference — so the rule for *reading* results can be fixed before the first capability ablation (N2).

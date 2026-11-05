@@ -1,5 +1,9 @@
 # ADR-008 — The journal in the decode loop: cue encoder, reader, and the cite or abstain contract
 
+![The journal in the decode loop: the model reads its organ as content, and cites or abstains](../figures/adr-008-decode-loop.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-008-decode-loop.svg`, drawn from this record's text and carrying no number of the record): the loop from the query's cue through the organ's read path, the read window with the organ's marks, the zero init reader on the router's gate and the cite or abstain contract; the abstention's one rule with its three mitigations; the two organ side decode policies; the attributable failure and the two processes; what the frozen protocol measures on the model. The text below is as written on its dates.*
+
 **Status:** implemented and green on CPU (2026-09-12); the GPU fine tune from the N1 checkpoint (REPRISE step 4) is the first measurement.
 **Date:** 2026-09-12
 **Decides:** how the C2b organ (ADR-007) enters the language model, what the model may answer about an episode, and what the frozen protocol measures on the MODEL rather than on the organ.

@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="624" viewBox="0 0 1200 624" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-004: results are read on a Pareto frontier over declared axes, never as a scalar; the perplexity guard is a floor; a candidate advances when it extends the frontier; the linked decision D17 makes the frontier the public object and the recipe the private workshop, the public switch gated on the dissociation measured on the model">
+  <title>ADR-004 — The evaluation law: a Pareto frontier over declared axes, never a scalar; and what is published</title>
+  <rect width="1200" height="624" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The evaluation law: a frontier over declared axes, never a scalar; the frontier is what is published</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-004. Features are not additive, the composition addressed varies, quality and efficiency are different axes: a single number hides all three.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+    <marker id="arrowg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4ac26b"/>
+    </marker>
+  </defs>
+
+  <!-- the frontier chart, left -->
+  <rect x="40" y="80" width="560" height="344" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="320" y="104" text-anchor="middle" fill="#1f2328" font-size="15" font-weight="bold">Decision two: Pareto, not ranking</text>
+  <!-- axes -->
+  <line x1="100" y1="360" x2="580" y2="360" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="100" y1="360" x2="100" y2="120" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="340" y="380" text-anchor="middle" fill="#57606a" font-size="11">one declared capability axis (the continuity triad, the per wave benchmarks)</text>
+  <text x="84" y="240" text-anchor="middle" fill="#57606a" font-size="11" transform="rotate(-90 84 240)">one declared efficiency axis (per parameter, per bit)</text>
+  <!-- the frontier: no point on it is better than another on both axes -->
+  <path d="M 200 170 L 310 215 L 430 290" fill="none" stroke="#4ac26b" stroke-width="2.5"/>
+  <circle cx="200" cy="170" r="6" fill="#dafbe1" stroke="#4ac26b" stroke-width="2"/>
+  <circle cx="310" cy="215" r="6" fill="#dafbe1" stroke="#4ac26b" stroke-width="2"/>
+  <circle cx="430" cy="290" r="6" fill="#dafbe1" stroke="#4ac26b" stroke-width="2"/>
+  <text x="112" y="246" fill="#57606a" font-size="10.5">the frontier: each committed</text>
+  <text x="112" y="260" fill="#57606a" font-size="10.5">record is a point; no point on</text>
+  <text x="112" y="274" fill="#57606a" font-size="10.5">it beats another on every axis</text>
+  <!-- the control -->
+  <circle cx="150" cy="330" r="6" fill="#ffffff" stroke="#1f2328" stroke-width="2"/>
+  <text x="164" y="326" fill="#1f2328" font-size="10.5">the control: the lower left corner,</text>
+  <text x="164" y="340" fill="#1f2328" font-size="10.5">organ free, a reference, not a capability result</text>
+  <!-- a loss, dominated -->
+  <circle cx="300" cy="290" r="6" fill="#ffffff" stroke="#8c959f" stroke-width="2" stroke-dasharray="3 2"/>
+  <text x="314" y="288" fill="#57606a" font-size="10.5">a loss: published, it did</text>
+  <text x="314" y="302" fill="#57606a" font-size="10.5">not move the frontier</text>
+  <!-- a candidate that advances: the frontier moves outward -->
+  <circle cx="480" cy="200" r="6" fill="#fff8c5" stroke="#d4a72c" stroke-width="2"/>
+  <path d="M 200 170 L 480 200" fill="none" stroke="#4ac26b" stroke-width="2" stroke-dasharray="5 4"/>
+  <line x1="436" y1="284" x2="474" y2="208" stroke="#4ac26b" stroke-width="2" marker-end="url(#arrowg)"/>
+  <text x="588" y="128" text-anchor="end" fill="#1f2328" font-size="10.5" font-weight="bold">advances: strictly better on at least one declared axis</text>
+  <text x="588" y="142" text-anchor="end" fill="#57606a" font-size="10.5">without regressing another beyond the guard: the frontier moves</text>
+  <text x="320" y="398" text-anchor="middle" fill="#57606a" font-size="10.5">no composite score is ever computed or published; a headline names the axis it refers to</text>
+  <!-- the guard, outside the axes -->
+  <rect x="462" y="300" width="128" height="50" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="526" y="318" text-anchor="middle" fill="#1f2328" font-size="10.5" font-weight="bold">the perplexity guard</text>
+  <text x="526" y="331" text-anchor="middle" fill="#57606a" font-size="10">a floor a candidate clears</text>
+  <text x="526" y="343" text-anchor="middle" fill="#57606a" font-size="10">to be considered; not an axis</text>
+
+  <!-- the axes and corollaries, right -->
+  <rect x="620" y="80" width="540" height="150" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="890" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision one: the declared axes, a frozen set</text>
+  <g font-size="11" fill="#57606a">
+    <text x="640" y="126">capability: the continuity triad, episodic persistence, revision under an oracle shift,</text>
+    <text x="640" y="141">non regeneration of the known; plus the declared per wave benchmarks</text>
+    <text x="640" y="160">efficiency: capability per parameter and per bit; latency, energy and cost recorded as secondary signals</text>
+    <text x="640" y="179">the perplexity guard is a guard, not an axis: a floor a candidate clears to be considered,</text>
+    <text x="640" y="194">never what makes it better; no composite score is ever computed or published;</text>
+    <text x="640" y="213">a change of the set is a dated amendment, never a silent add or drop</text>
+  </g>
+
+  <rect x="620" y="246" width="540" height="178" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="890" y="270" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decisions three and four: the corollaries, all testable, all recorded; honest credit</text>
+  <g font-size="11" fill="#57606a">
+    <text x="640" y="292">two regimes: organs are ablated in isolation to understand, the validated combination</text>
+    <text x="640" y="307">is retrained as one to decide; non additivity is expected, not a surprise</text>
+    <text x="640" y="326">interaction is declared data: the measured joint effect is recorded next to the sum</text>
+    <text x="640" y="341">of the isolated effects; synergy and interference are ledger entries, not anecdotes</text>
+    <text x="640" y="360">composition provenance: each record notes the composition that produced it,</text>
+    <text x="640" y="375">the what of the context, not only the how much</text>
+    <text x="640" y="398">honest credit: multi objective optimisation is an established field; what is ours is its application</text>
+    <text x="640" y="413">to the continuity triad; the record claims a discipline, not an invention</text>
+  </g>
+
+  <!-- D17 timeline, bottom -->
+  <rect x="40" y="440" width="1120" height="158" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="600" y="464" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The linked decision: what we measure on a frontier is what we show, and only that</text>
+  <g font-size="11" fill="#1f2328">
+    <rect x="60" y="478" width="250" height="104" rx="8" fill="#ffffff" stroke="#4ac26b"/>
+    <text x="185" y="498" text-anchor="middle" font-weight="bold" font-size="12">The frontier is the public object</text>
+    <text x="185" y="516" text-anchor="middle" fill="#57606a">the ledger, the benchmarks, the schema,</text>
+    <text x="185" y="531" text-anchor="middle" fill="#57606a">a README stating the thesis; the recipe</text>
+    <text x="185" y="546" text-anchor="middle" fill="#57606a">stays the private workshop until the</text>
+    <text x="185" y="561" text-anchor="middle" fill="#57606a">founder decides otherwise, reversibly</text>
+    <line x1="310" y1="522" x2="340" y2="522" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="340" y="478" width="260" height="104" rx="8" fill="#ffffff" stroke="#4ac26b"/>
+    <text x="470" y="498" text-anchor="middle" font-weight="bold" font-size="12">The switch has one gate</text>
+    <text x="470" y="516" text-anchor="middle" fill="#57606a">the Molaison dissociation must pass on the</text>
+    <text x="470" y="531" text-anchor="middle" fill="#57606a">language model, with the reserves stated;</text>
+    <text x="470" y="546" text-anchor="middle" fill="#57606a">the organ's own pass does not qualify;</text>
+    <text x="470" y="561" text-anchor="middle" fill="#57606a">a fail is a result and keeps the repository private</text>
+    <line x1="600" y1="522" x2="630" y2="522" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="630" y="478" width="250" height="104" rx="8" fill="#ffffff" stroke="#4ac26b"/>
+    <text x="755" y="498" text-anchor="middle" font-weight="bold" font-size="12">The condition read on the record</text>
+    <text x="755" y="516" text-anchor="middle" fill="#57606a">met by the system, the model deciding</text>
+    <text x="755" y="531" text-anchor="middle" fill="#57606a">and the organ answering, on live seeds</text>
+    <text x="755" y="546" text-anchor="middle" fill="#57606a">that did not conceive the policy; never</text>
+    <text x="755" y="561" text-anchor="middle" fill="#57606a">as a pass of the model alone</text>
+    <line x1="880" y1="522" x2="910" y2="522" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="910" y="478" width="230" height="104" rx="8" fill="#ffffff" stroke="#4ac26b"/>
+    <text x="1025" y="498" text-anchor="middle" font-weight="bold" font-size="12">Only the cortex goes public</text>
+    <text x="1025" y="516" text-anchor="middle" fill="#57606a">a filtered copy of this repository:</text>
+    <text x="1025" y="531" text-anchor="middle" fill="#57606a">same commits, same dates; the working</text>
+    <text x="1025" y="546" text-anchor="middle" fill="#57606a">files on how the author works removed</text>
+    <text x="1025" y="561" text-anchor="middle" fill="#57606a">from every commit; the hub's two governing</text>
+    <text x="1025" y="576" text-anchor="middle" fill="#57606a">pages mirrored; the secret sweep a condition</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="608" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="60" y="618">the law and a candidate under it</text>
+    <rect x="260" y="608" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="280" y="618">the frontier and what is public</text>
+    <rect x="470" y="608" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="490" y="618">the guard, outside the axes</text>
+    <rect x="700" y="608" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="720" y="618">what is recorded</text>
+  </g>
+</svg>

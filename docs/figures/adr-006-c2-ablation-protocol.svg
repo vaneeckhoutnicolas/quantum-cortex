@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-006: the associative memory layer under test in two variants behind a flag; the control identical in everything but the variable; benchmarks frozen before any run; three verdicts with a circuit breaker and a bounded refine and retry; the router of memories on a control floor; several seeds, intervals, anchors, and a retrogradation kept in the record">
+  <title>ADR-006 — The ablation protocol: one variable against a sacred control, benchmarks frozen before any run, three verdicts</title>
+  <rect width="1200" height="620" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The ablation protocol: one variable against a sacred control, benchmarks frozen before any run, three verdicts</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-006. The protocol is fixed before the first run, so that results are read honestly and losses are published.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- under test -->
+  <rect x="40" y="80" width="380" height="190" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="230" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision one: what is under test</text>
+  <text x="230" y="124" text-anchor="middle" fill="#57606a" font-size="11">an associative memory layer, a third residual sub block</text>
+  <text x="230" y="139" text-anchor="middle" fill="#57606a" font-size="11">inside every block, behind a flag, default off</text>
+  <rect x="60" y="150" width="170" height="104" rx="8" fill="#ffffff" stroke="#54aeff"/>
+  <text x="145" y="170" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">variant H, energy based</text>
+  <text x="145" y="188" text-anchor="middle" fill="#57606a" font-size="10.5">a learned key value memory read</text>
+  <text x="145" y="202" text-anchor="middle" fill="#57606a" font-size="10.5">by attention over stored patterns,</text>
+  <text x="145" y="216" text-anchor="middle" fill="#57606a" font-size="10.5">retrieval by energy descent:</text>
+  <text x="145" y="230" text-anchor="middle" fill="#57606a" font-size="10.5">the "magnetism" formulation</text>
+  <rect x="240" y="150" width="170" height="104" rx="8" fill="#ffffff" stroke="#54aeff"/>
+  <text x="325" y="170" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">variant D, gated delta rule</text>
+  <text x="325" y="188" text-anchor="middle" fill="#57606a" font-size="10.5">a per head recurrent state with an</text>
+  <text x="325" y="202" text-anchor="middle" fill="#57606a" font-size="10.5">error correcting rank one write and</text>
+  <text x="325" y="216" text-anchor="middle" fill="#57606a" font-size="10.5">a forget gate: the family's</text>
+  <text x="325" y="230" text-anchor="middle" fill="#57606a" font-size="10.5">incumbent, the honest baseline</text>
+  <text x="230" y="264" text-anchor="middle" fill="#57606a" font-size="10.5">two variants of one family: the bar is the incumbent, not only a vanilla model</text>
+
+  <!-- control and benchmarks -->
+  <rect x="440" y="80" width="350" height="190" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="615" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decisions two and three: the control, the benchmarks</text>
+  <g font-size="11" fill="#57606a">
+    <text x="460" y="126">the control is sacred and equal at everything: every run is</text>
+    <text x="460" y="141">identical to it except the feature under test, same data hash,</text>
+    <text x="460" y="156">same parameter budget, seed, tokens and schedule;</text>
+    <text x="460" y="171">flags off: the model is bit identical to the control, a test asserts it</text>
+    <text x="460" y="194">frozen before any run: associative recall by difficulty tiers;</text>
+    <text x="460" y="209">the serial position curve, primacy and recency, the curve itself</text>
+    <text x="460" y="224">the deliverable; perplexity stays the guard, never the axis;</text>
+    <text x="460" y="239">the continuity triad waits for the persistent tier</text>
+    <text x="460" y="258">no comparison is valid across different data hashes</text>
+  </g>
+
+  <!-- verdicts -->
+  <rect x="810" y="80" width="350" height="190" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="985" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decisions four and five: the verdict, in the record</text>
+  <g font-size="11">
+    <rect x="830" y="118" width="310" height="34" rx="6" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="985" y="133" text-anchor="middle" fill="#1f2328" font-weight="bold">advances</text>
+    <text x="985" y="147" text-anchor="middle" fill="#57606a" font-size="10.5">a declared capability win within the perplexity tolerance</text>
+    <rect x="830" y="160" width="310" height="34" rx="6" fill="#ffffff" stroke="#d0d7de"/>
+    <text x="985" y="175" text-anchor="middle" fill="#1f2328" font-weight="bold">held</text>
+    <text x="985" y="189" text-anchor="middle" fill="#57606a" font-size="10.5">the control stands; the loss is published, the register notes it</text>
+    <rect x="830" y="202" width="310" height="34" rx="6" fill="#ffebe9" stroke="#ff8182"/>
+    <text x="985" y="217" text-anchor="middle" fill="#1f2328" font-weight="bold">aborted, unstable</text>
+    <text x="985" y="231" text-anchor="middle" fill="#57606a" font-size="10.5">the breaker's verdict: a result on the frontier</text>
+  </g>
+  <text x="985" y="252" text-anchor="middle" fill="#57606a" font-size="10.5">the record's comparison slot carries the control's run id, that the data</text>
+  <text x="985" y="265" text-anchor="middle" fill="#57606a" font-size="10.5">hash is shared, the capability deltas, the perplexity delta, the verdict</text>
+
+  <!-- circuit breaker -->
+  <rect x="40" y="290" width="560" height="190" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="320" y="314" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision seven: the circuit breaker, aggressive abort with a bounded refine and retry</text>
+  <g font-size="11" fill="#1f2328">
+    <rect x="56" y="328" width="200" height="84" rx="6" fill="#ffffff" stroke="#ff8182"/>
+    <text x="156" y="346" text-anchor="middle" font-weight="bold" font-size="11.5">abort criteria, declared first</text>
+    <text x="156" y="362" text-anchor="middle" fill="#57606a" font-size="10">hard: a non finite loss, at once;</text>
+    <text x="156" y="376" text-anchor="middle" fill="#57606a" font-size="10">divergence from the control at the same step;</text>
+    <text x="156" y="390" text-anchor="middle" fill="#57606a" font-size="10">stagnation while the control still improves;</text>
+    <text x="156" y="404" text-anchor="middle" fill="#57606a" font-size="10">never tuned after the fact</text>
+    <line x1="256" y1="370" x2="272" y2="370" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="272" y="328" width="180" height="84" rx="6" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="362" y="346" text-anchor="middle" font-weight="bold" font-size="11.5">refine and retry, bounded</text>
+    <text x="362" y="362" text-anchor="middle" fill="#57606a" font-size="10">pre declared refinements, in order:</text>
+    <text x="362" y="376" text-anchor="middle" fill="#57606a" font-size="10">a tighter gradient clip, then a</text>
+    <text x="362" y="390" text-anchor="middle" fill="#57606a" font-size="10">lower learning rate; the bound</text>
+    <text x="362" y="404" text-anchor="middle" fill="#57606a" font-size="10">is mandatory</text>
+    <line x1="452" y1="370" x2="468" y2="370" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="468" y="328" width="120" height="84" rx="6" fill="#ffffff" stroke="#ff8182"/>
+    <text x="528" y="346" text-anchor="middle" font-weight="bold" font-size="11.5">then death</text>
+    <text x="528" y="362" text-anchor="middle" fill="#57606a" font-size="10">if the retries fail;</text>
+    <text x="528" y="376" text-anchor="middle" fill="#57606a" font-size="10">permanent; a recovery</text>
+    <text x="528" y="390" text-anchor="middle" fill="#57606a" font-size="10">is recorded as such;</text>
+    <text x="528" y="404" text-anchor="middle" fill="#57606a" font-size="10">every attempt logged</text>
+  </g>
+  <text x="320" y="430" text-anchor="middle" fill="#57606a" font-size="10.5">conservative on the slow, ruthless on the broken: a slowly converging architecture is not killed</text>
+  <text x="320" y="444" text-anchor="middle" fill="#57606a" font-size="10.5">prematurely, a non finite loss is beyond appeal; every attempt records its cause and its step in the ledger;</text>
+  <text x="320" y="460" text-anchor="middle" fill="#57606a" font-size="10.5">one primitive at three scales: kill a variable (the protocol), abort a decode on a contract violation</text>
+  <text x="320" y="474" text-anchor="middle" fill="#57606a" font-size="10.5">(the veto), evict noise (the memory): cut cleanly what destabilises to preserve the whole</text>
+
+  <!-- router and level 1 -->
+  <rect x="620" y="290" width="540" height="190" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="890" y="314" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decisions eight and nine: a router of memories on a control floor; unattackable claims</text>
+  <g font-size="11" fill="#57606a">
+    <text x="640" y="336">paths per span: the control, always available; the energy memory; the delta memory;</text>
+    <text x="640" y="351">a memory is used only where it beats the control, else the control: the layer cannot degrade the model</text>
+    <text x="640" y="366">soft routing where unsure, hard where learned and stable, migrating as it consolidates; the breaker</text>
+    <text x="640" y="381">re routes to the best remaining path above the floor, with a declared hysteresis; one router per block;</text>
+    <text x="640" y="396">a versioned contract fixed before the code: extend, never break</text>
+    <text x="640" y="419">several seeds with intervals and paired tests: a gap is claimed only when significant;</text>
+    <text x="640" y="434">one seed claims nothing; an external anchor of three families at equal size: no memory,</text>
+    <text x="640" y="449">a pure recurrent ladder, the attention control; the learned router's claim retrograded and kept</text>
+    <text x="640" y="464">in the record: proven on a synthetic routing task, open on real spans, caught before publication</text>
+  </g>
+
+  <!-- the order -->
+  <rect x="40" y="500" width="1120" height="76" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="524" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Decision six: the order, measure first, one variable at a time, each slice tested before the next</text>
+  <text x="600" y="546" text-anchor="middle" fill="#57606a" font-size="11">the layers in the model with a bit identity test and a forward shape test, no run; the benchmarks as evaluation only;</text>
+  <text x="600" y="562" text-anchor="middle" fill="#57606a" font-size="11">then the runs, every variant against the control; the advancement rule and the tolerances are frozen before numbers exist: nothing is claimed until the runs exist</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="596" width="14" height="12" fill="#ddf4ff" stroke="#54aeff"/><text x="60" y="606">what is under test</text>
+    <rect x="200" y="596" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="220" y="606">the rules fixed before any run</text>
+    <rect x="420" y="596" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="440" y="606">what advances; the router on its floor, the anchors, the claims' discipline</text>
+    <rect x="840" y="596" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="860" y="606">what is cut and published as such</text>
+  </g>
+</svg>

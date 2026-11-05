@@ -1,5 +1,9 @@
 # ADR 002 — Training stack, and where portability actually applies
 
+![Where portability applies: one precise rule at training, everything at serving](../figures/adr-002-training-and-serving.svg)
+
+*Figure added 2026-11-05 (original, `docs/figures/adr-002-training-and-serving.svg`, drawn from this record's text and carrying no number of the record): the training side, one reference framework, device agnostic code and the one rule the compute plan dictates on custom kernels; the serving side, where portability is the runtime matrix; inference runtimes never training targets; the performance clause. The text below is as written on its dates.*
+
 - **Status:** Proposed
 - **Date:** 2026-08-07
 - **Deciders:** Nicolas Van Eeckhout

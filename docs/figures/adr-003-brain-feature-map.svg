@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="664" viewBox="0 0 1200 664" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="ADR-003: the canonical map from brain features to cortex features with an owner, a test and a wave; the consistency rulings, one owner per joint; the performance guards; the journal retention law with its lifecycle and the noise ruling">
+  <title>ADR-003 — The brain derived feature map: one table, one owner per joint, guards, and the retention law</title>
+  <rect width="1200" height="664" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">The brain derived feature map: nature is the compass, the ledger remains the judge</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure for ADR-003. Computational principles are transposed, never implementation details; a feature earns its default by the ledger, not by validation.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- the map -->
+  <rect x="40" y="80" width="1120" height="222" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="104" text-anchor="middle" fill="#1f2328" font-size="15" font-weight="bold">Decision one: the canonical map, one table rules them all</text>
+  <g font-size="11.5" font-weight="bold" fill="#1f2328">
+    <text x="70" y="128">a brain feature</text>
+    <text x="330" y="128">the cortex feature it maps to</text>
+    <text x="690" y="128">owner</text>
+    <text x="770" y="128">the test</text>
+    <text x="1040" y="128">wave</text>
+  </g>
+  <line x1="60" y1="134" x2="1140" y2="134" stroke="#d0d7de"/>
+  <g font-size="11" fill="#57606a">
+    <text x="70" y="152">semantic areas</text><text x="330" y="152">semantic expert zones</text><text x="690" y="152">C1</text><text x="770" y="152">routing specialisation</text><text x="1040" y="152">the core</text>
+    <text x="70" y="171">CA3 pattern completion</text><text x="330" y="171">associative retrieval, energy based</text><text x="690" y="171">C2 and RES-1</text><text x="770" y="171">the associative recall family</text><text x="1040" y="171">the first wave</text>
+    <text x="70" y="190">CA1 comparator</text><text x="330" y="190">a computed surprise at the memory interface</text><text x="690" y="190">RES-2's input</text><text x="770" y="190">write precision</text><text x="1040" y="190">W2</text>
+    <text x="70" y="209">dentate gyrus separation, the fly's tag</text><text x="330" y="209">expand and sparsify as a retrieval ranking, a probe only</text><text x="690" y="209">C2b, the organ</text><text x="770" y="209">the retrieval probe: the own episode among</text><text x="1040" y="209">declared, built,</text>
+    <text x="770" y="223">the candidates and in the top ranks, per ranking</text><text x="1040" y="223">measured, adopted</text>
+    <text x="70" y="242">the Molaison dissociation</text><text x="330" y="242">a standing falsifiable diagnostic: cut the journal,</text><text x="690" y="242">the eval suite</text><text x="770" y="242">the dissociation holds, or the</text><text x="1040" y="242">from N2</text>
+    <text x="330" y="256">skills intact, episodes lost</text><text x="770" y="256">memory story is wrong</text>
+    <text x="70" y="275">motor cortex, pons, medulla, spinal reflexes</text><text x="330" y="275">deliberately not transposed: the body, the transport, the runtime, the automations belong elsewhere</text>
+  </g>
+  <text x="600" y="293" text-anchor="middle" fill="#57606a" font-size="10.5">a few of the rows; features enter in wave order; parked items stay parked; a promotion from the ideas register is a dated amendment citing it, never a silent edit</text>
+
+  <!-- rulings and guards -->
+  <rect x="40" y="316" width="550" height="150" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="315" y="340" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision two: consistency rulings, one owner per joint</text>
+  <g font-size="11" fill="#57606a">
+    <text x="60" y="362">surprise has one producer, the comparator, and one consumer, the write gate;</text>
+    <text x="60" y="377">no second surprise heuristic may exist</text>
+    <text x="60" y="396">the thalamic gateway is C3's front door, not a second mechanism: it formalises the existing injection point</text>
+    <text x="60" y="411">with an admission policy; one cache: the habit cache extends the semantic cache, never a parallel store</text>
+    <text x="60" y="434">one salience score, written on entries, consumed by retrieval, consolidation priority and reverse replay alike</text>
+    <text x="60" y="453">the bus owns modulation, gates listen to the bus only; the connectome constrains everyone</text>
+  </g>
+
+  <rect x="610" y="316" width="550" height="150" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="885" y="340" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision three: performance guards, non negotiable</text>
+  <g font-size="11" fill="#57606a">
+    <text x="630" y="362">the advancement rule applies to every row: a declared capability win within the</text>
+    <text x="630" y="377">perplexity tolerance, the tolerance stated before the run; biological beauty wins nothing</text>
+    <text x="630" y="396">every brain derived feature ships behind a configuration flag, default off:</text>
+    <text x="630" y="411">controls stay pure, a feature earns its default by the ledger, not by validation</text>
+    <text x="630" y="430">portability holds: a feature that cannot ship on the runtime matrix is not done</text>
+    <text x="630" y="449">a design law without runtime cost applies at first implementation; everything else waits its wave</text>
+  </g>
+
+  <!-- the retention law -->
+  <rect x="40" y="480" width="1120" height="152" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="600" y="504" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">Decision four: the journal retention law, the design's bounds made law</text>
+  <!-- lifecycle strip -->
+  <g font-size="11" fill="#1f2328">
+    <rect x="60" y="516" width="96" height="30" rx="6" fill="#fff8c5" stroke="#d4a72c"/><text x="108" y="535" text-anchor="middle">write gate</text>
+    <line x1="156" y1="531" x2="180" y2="531" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="180" y="516" width="96" height="30" rx="6" fill="#ffffff" stroke="#4ac26b"/><text x="228" y="535" text-anchor="middle">separate</text>
+    <line x1="276" y1="531" x2="300" y2="531" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="300" y="516" width="96" height="30" rx="6" fill="#ffffff" stroke="#4ac26b"/><text x="348" y="535" text-anchor="middle">live, hot</text>
+    <line x1="396" y1="531" x2="420" y2="531" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="420" y="516" width="110" height="30" rx="6" fill="#ffffff" stroke="#4ac26b"/><text x="475" y="535" text-anchor="middle">consolidate</text>
+    <line x1="530" y1="531" x2="554" y2="531" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="554" y="516" width="96" height="30" rx="6" fill="#ffffff" stroke="#4ac26b"/><text x="602" y="535" text-anchor="middle">demote</text>
+    <line x1="650" y1="531" x2="674" y2="531" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="674" y="516" width="96" height="30" rx="6" fill="#ffebe9" stroke="#ff8182"/><text x="722" y="535" text-anchor="middle">evict</text>
+  </g>
+  <text x="60" y="562" fill="#57606a" font-size="10.5">consolidate by replay into the persistent memory; demote several entries into one summary that keeps their pointers;</text>
+  <text x="60" y="576" fill="#57606a" font-size="10.5">evict below a salience floor, once consolidated and aged; reverse replay keeps salience honest: forgetting is scheduled, never accidental</text>
+  <g font-size="10.5" fill="#57606a">
+    <text x="60" y="594">the size law: an entry is a cue, a pointer, a salience, a schema and timestamps, never a blob; content never duplicated</text>
+    <text x="60" y="608">the read law: never a scan; a fixed size associative state plus a sub linear search over cues; write admission by computed surprise</text>
+    <text x="60" y="622">budgets are homeostatic setpoints; tiering, hot, warm and cold; the Molaison diagnostic doubles as the eviction safety check</text>
+  </g>
+  <rect x="800" y="516" width="340" height="118" rx="8" fill="#ffffff" stroke="#4ac26b"/>
+  <text x="970" y="536" text-anchor="middle" fill="#1f2328" font-size="12" font-weight="bold">The noise ruling: noise is the incompressible</text>
+  <text x="970" y="554" text-anchor="middle" fill="#57606a" font-size="10.5">surprise alone is not signal: a corrupted input is maximally</text>
+  <text x="970" y="568" text-anchor="middle" fill="#57606a" font-size="10.5">surprising; two stages, never a single detector: admission filters</text>
+  <text x="970" y="582" text-anchor="middle" fill="#57606a" font-size="10.5">the redundant and the already known; the verdict is retrospective:</text>
+  <text x="970" y="596" text-anchor="middle" fill="#57606a" font-size="10.5">an entry that never consolidates, never gains salience and never</text>
+  <text x="970" y="610" text-anchor="middle" fill="#57606a" font-size="10.5">earns credit is noise; scheduled forgetting is the tribunal of noise;</text>
+  <text x="970" y="624" text-anchor="middle" fill="#57606a" font-size="10.5">the law governs storage only, randomness used elsewhere is signal</text>
+
+  <!-- legend -->
+  <g font-size="11" fill="#57606a">
+    <rect x="40" y="644" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="60" y="654">the map</text>
+    <rect x="140" y="644" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="160" y="654">the rules and the guards</text>
+    <rect x="330" y="644" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="350" y="654">the journal's law</text>
+    <rect x="490" y="644" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="510" y="654">what is forgotten on schedule</text>
+  </g>
+</svg>
