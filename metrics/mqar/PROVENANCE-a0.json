@@ -1,0 +1,818 @@
+{
+ "rows": "row 54",
+ "what": "row 54, A0 (ADR-008 part A, the construction's ceiling under byte keys; delivered and run as ADR-010 part E says): twenty seven files written by `cortex_c2b.a0` on 2026-10-30 on files of the record, no model, no key, one file per input: the E1 arm of row 48 and the E2 arm under the identity rule of row 49 on the three checkpoints (six; committed with their rows), the I0 passes of A, Av and T0 in both forms (eighteen) and the first family's I0 paraphrase passes (three), committed with the A0 files in dfe7145; read cold by the instance from the committed files alone, the whole of every file recomputed and found equal before a word of the row",
+ "command": "python -m cortex_c2b.a0 metrics\\mqar\\hm-lm-*-near-dup-E1-session-b-index16exact-mark-veto-value.json metrics\\mqar\\hm-lm-*-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json metrics\\mqar\\sealed-*-I0-*.pass.json --out metrics\\mqar 2>&1 | Tee-Object -FilePath metrics\\mqar\\logs\\a0-2026-10-30.log  (one command, the module expanding the three patterns; not through the launcher: no model, no key, no seeded order; a file of the record is never overwritten by it)",
+ "when": {
+  "files": "the A0 files carry no timestamp and no commit; the log carries the twenty seven 'retained' lines and the summaries alone",
+  "archive": "the founder's archive of 2026-10-30, 14:11 (Europe/Brussels, UTC+1) carries the files' modification times: 13:42:40 to 13:42:42 by the archive's clock, read as 12:42 UTC by the two anchors the archive and the files give together: the last cost harness file at 12:23:04 by the archive's clock against its own timestamp_utc 11:23:05 (cost-Av-2e1dc71913b1.json; its started_utc 11:19:50), the reading of rows 51 and 52 at 13:57:06 against its own timestamp_utc 12:57:07 (sealed-reading-rows51-52.json); a reading of the archive, not a number of the record",
+  "commit": "the twenty seven files and the log travelled in the founder's commit dfe7145 (2026-10-30), with the files of rows 51 and 52"
+ },
+ "code": {
+  "a0_py_sha256_lf": "ccb01702f23ff325",
+  "what": "cortex_c2b/a0.py as built (f42bf9f), unchanged through 217dd50 (the first family's second sessions record it) and at the graving of row 54; the recomputation of 2026-10-30 ran it"
+ },
+ "device": "the founder's processor (Windows 11, python 3.12.10); no model, no key, no thread pinning: the module is integer and byte arithmetic on the files",
+ "hash_note": "sha256 of the file's bytes with CRLF normalised to LF, first sixteen hexadecimal characters (the committed form; the A0 files are written in LF, so the console's printed sha256 of the raw bytes equals it); the source hash the A0 files carry is the full sixty four characters of the same convention; the log is UTF-16 as Tee-Object writes it and is hashed as committed",
+ "recomputation": {
+  "equal_files": 27,
+  "what": "the instance recomputed every A0 file from its committed source with the same module (`read_file`, `template_entity_agrees`, `letter_of`, the source hash) on 2026-10-30 and found the twenty seven equal, key for key (the reads, the blocks, the definition, the letter, the shares, the template entity agreement)"
+ },
+ "sources": {
+  "hm-lm-2e1dc71913b1-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "fc8e142b450705d3b893129262ee2bd5e5482fece10106c98d21b02f2cc58267",
+   "pinned_by": "PROVENANCE-near-duplicates.json",
+   "pinned_value": "fc8e142b450705d3"
+  },
+  "hm-lm-2e1dc71913b1-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "01cc8aa9de6d1f20f5c6bc6b7da4dcc4fe3c7125528f5f3224c5466122b56145",
+   "pinned_by": "PROVENANCE-identity-rule.json",
+   "pinned_value": "01cc8aa9de6d1f20"
+  },
+  "hm-lm-4cfd6f6e1406-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "55b4e5e5673caf5408bb194a9dd9ada5f231749c9946017e2dc3ed7f69c59dab",
+   "pinned_by": "PROVENANCE-near-duplicates.json",
+   "pinned_value": "55b4e5e5673caf54"
+  },
+  "hm-lm-4cfd6f6e1406-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "14b7ad14ccd72086d4df38927c23cc4e25e60b5de58a690f0e0885046a8d760a",
+   "pinned_by": "PROVENANCE-identity-rule.json",
+   "pinned_value": "14b7ad14ccd72086"
+  },
+  "hm-lm-8ceba5db8d0b-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "10f74507249c76823bb078041b8d2edea3a9245d2a9b488880f9a82af3116eed",
+   "pinned_by": "PROVENANCE-near-duplicates.json",
+   "pinned_value": "10f74507249c7682"
+  },
+  "hm-lm-8ceba5db8d0b-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "78c7a04846042f2f7574ece52732aa3a7405b7ef1ef3823d91dee4de303580b5",
+   "pinned_by": "PROVENANCE-identity-rule.json",
+   "pinned_value": "78c7a04846042f2f"
+  },
+  "sealed-A-2e1dc71913b1-I0-direct.pass.json": {
+   "sha256_lf": "ba5d7450d2bede0f4700aa37806d917c180be3373d6edc04c368db2cd21ce7fa",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "ba5d7450d2bede0f"
+  },
+  "sealed-A-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "35e90ddf79363a50046b86e57cdc634ecf2fb2bb91d08efad1c599b3f582caae",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "35e90ddf79363a50"
+  },
+  "sealed-A-4cfd6f6e1406-I0-direct.pass.json": {
+   "sha256_lf": "0076fcf632f68b4877e6ca95ca246081c3ce605e2f0ba4242ec8d6bac8f9011d",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "0076fcf632f68b48"
+  },
+  "sealed-A-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "fd22364264225322e1257f776b39003f200b41b14b1e34bdc54756a57310a41b",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "fd22364264225322"
+  },
+  "sealed-A-8ceba5db8d0b-I0-direct.pass.json": {
+   "sha256_lf": "5f8922768e2d9cbff577ddc235ce1be4678d80c5b65e5c347cc89e40b028f62e",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "5f8922768e2d9cbf"
+  },
+  "sealed-A-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "09c3e067445fe161a579959c8095e126b610d8859d8a86627f120f25bab54990",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "09c3e067445fe161"
+  },
+  "sealed-Av-2e1dc71913b1-I0-direct.pass.json": {
+   "sha256_lf": "88c5377696aed07e6a5798a07852fbdf0d74bedc79d0af70562dbc97ac90bfb2",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "88c5377696aed07e"
+  },
+  "sealed-Av-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "448e4fe7d31f29198ffd9b0fe716cbda4cf0c08c7c51e1e8179e9f6d1233460f",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "448e4fe7d31f2919"
+  },
+  "sealed-Av-4cfd6f6e1406-I0-direct.pass.json": {
+   "sha256_lf": "797e77486e35e20dcdacd7cd76c336cbd360064e53a57f47984440c1ea66b250",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "797e77486e35e20d"
+  },
+  "sealed-Av-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "8dadce2718d9d1ff42cedbf37a06a89c380fa13c2be16b1fe34d2be169a61f9a",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "8dadce2718d9d1ff"
+  },
+  "sealed-Av-8ceba5db8d0b-I0-direct.pass.json": {
+   "sha256_lf": "5bbbcabb4bc74de7227d0d1bd6572ac1f666a43ec837fa3d7e1336bd48b7354e",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "5bbbcabb4bc74de7"
+  },
+  "sealed-Av-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "91fcb391bcc8dc297bc5a9d13e221b1acc411b9bb1ad4298bc089d227cc0c597",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "91fcb391bcc8dc29"
+  },
+  "sealed-T0-2e1dc71913b1-I0-direct.pass.json": {
+   "sha256_lf": "705e539499b45eb0f3acb381a6e14de9497765e04d01551e34d210fa964828c9",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "705e539499b45eb0"
+  },
+  "sealed-T0-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "6d3cd69114be74092ae51e08f051d816daee79887a31b59cb0211d3468a93b09",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "6d3cd69114be7409"
+  },
+  "sealed-T0-4cfd6f6e1406-I0-direct.pass.json": {
+   "sha256_lf": "57a62a4a2a97c4e769f20aea762c5ef00eead4db7b81a75583eab8b764360067",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "57a62a4a2a97c4e7"
+  },
+  "sealed-T0-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "2e7724eb2dff3550ec7c78db7e66f297f77e33c74f8e1c2cf18624ca6c4fe39c",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "2e7724eb2dff3550"
+  },
+  "sealed-T0-8ceba5db8d0b-I0-direct.pass.json": {
+   "sha256_lf": "cd3c0eb78efd681fb3b1f254ab3ef44d7bf92892035dd66cad57271abdcf1d3e",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "cd3c0eb78efd681f"
+  },
+  "sealed-T0-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "d9592e26541c4e45a0a9343fa46e15d1c7257a3a6da4ee6ff259fd7bafe5ea59",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "d9592e26541c4e45"
+  },
+  "sealed-first-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "4a73737ad591c3d8cf915b4e4f412563b07b5f384fb4286bad7eff50120de754",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "4a73737ad591c3d8"
+  },
+  "sealed-first-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "55b83d9a56d6e2941fce1a94638aacd482ed0e890976dddba3a0c412f8936793",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "55b83d9a56d6e294"
+  },
+  "sealed-first-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "ad2dd21ebe4ab377317ab252c5805011def08ef5a52a337e4887b3a9b904a068",
+   "pinned_by": "PROVENANCE-sealed-set.json",
+   "pinned_value": "ad2dd21ebe4ab377"
+  }
+ },
+ "files": {
+  "a0-hm-lm-2e1dc71913b1-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "b638284916957303",
+   "console_sha256": "b638284916957303",
+   "source": "hm-lm-2e1dc71913b1-near-dup-E1-session-b-index16exact-mark-veto-value.json",
+   "run_id": "2e1dc71913b1",
+   "family": "E1",
+   "form": null,
+   "what": "A0 on the E1 (row 48, the legacy gate; the decoder's citation after the veto, `cited_pointer`), seed 7",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 0.96,
+   "decoder_cites_own_share_planted": 0.915,
+   "blocks": [
+    "on",
+    "negctrl"
+   ],
+   "template_entity_agreement": {
+    "parsed": 208,
+    "agree": 208,
+    "disagree": 0
+   }
+  },
+  "a0-hm-lm-2e1dc71913b1-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "a1fb67a11ff38df4",
+   "console_sha256": "a1fb67a11ff38df4",
+   "source": "hm-lm-2e1dc71913b1-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json",
+   "run_id": "2e1dc71913b1",
+   "family": "E2-identity",
+   "form": null,
+   "what": "A0 on the E2 under the identity rule (row 49; the decoder's raw citation, `raw_cited_pointer`), seed 7",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.505,
+   "blocks": [
+    "on",
+    "negctrl",
+    "reported:near_name_never_planted",
+    "reported:neighbour_questions"
+   ],
+   "template_entity_agreement": {
+    "parsed": 400,
+    "agree": 400,
+    "disagree": 0
+   }
+  },
+  "a0-hm-lm-4cfd6f6e1406-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "fde76624fa8a12f9",
+   "console_sha256": "fde76624fa8a12f9",
+   "source": "hm-lm-4cfd6f6e1406-near-dup-E1-session-b-index16exact-mark-veto-value.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "E1",
+   "form": null,
+   "what": "A0 on the E1 (row 48, the legacy gate; the decoder's citation after the veto, `cited_pointer`), seed 2024",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 0.99,
+   "decoder_cites_own_share_planted": 0.93,
+   "blocks": [
+    "on",
+    "negctrl"
+   ],
+   "template_entity_agreement": {
+    "parsed": 202,
+    "agree": 202,
+    "disagree": 0
+   }
+  },
+  "a0-hm-lm-4cfd6f6e1406-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "b2a14476da593a13",
+   "console_sha256": "b2a14476da593a13",
+   "source": "hm-lm-4cfd6f6e1406-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "E2-identity",
+   "form": null,
+   "what": "A0 on the E2 under the identity rule (row 49; the decoder's raw citation, `raw_cited_pointer`), seed 2024",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.425,
+   "blocks": [
+    "on",
+    "negctrl",
+    "reported:near_name_never_planted",
+    "reported:neighbour_questions"
+   ],
+   "template_entity_agreement": {
+    "parsed": 400,
+    "agree": 400,
+    "disagree": 0
+   }
+  },
+  "a0-hm-lm-8ceba5db8d0b-near-dup-E1-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "2ef13c1fafc98045",
+   "console_sha256": "2ef13c1fafc98045",
+   "source": "hm-lm-8ceba5db8d0b-near-dup-E1-session-b-index16exact-mark-veto-value.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "E1",
+   "form": null,
+   "what": "A0 on the E1 (row 48, the legacy gate; the decoder's citation after the veto, `cited_pointer`), seed 1337",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.96,
+   "blocks": [
+    "on",
+    "negctrl"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-hm-lm-8ceba5db8d0b-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json": {
+   "sha256_lf": "ccdac5d0e474fa2d",
+   "console_sha256": "ccdac5d0e474fa2d",
+   "source": "hm-lm-8ceba5db8d0b-near-dup-E2-identity-session-b-index16exact-mark-veto-value.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "E2-identity",
+   "form": null,
+   "what": "A0 on the E2 under the identity rule (row 49; the decoder's raw citation, `raw_cited_pointer`), seed 1337",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.475,
+   "blocks": [
+    "on",
+    "negctrl",
+    "reported:near_name_never_planted",
+    "reported:neighbour_questions"
+   ],
+   "template_entity_agreement": {
+    "parsed": 400,
+    "agree": 400,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-A-2e1dc71913b1-I0-direct.pass.json": {
+   "sha256_lf": "c86cbd1b66c332d9",
+   "console_sha256": "c86cbd1b66c332d9",
+   "source": "sealed-A-2e1dc71913b1-I0-direct.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "A",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family A, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "a partial ceiling: the share 0.585 lies between 0.5 and 0.9, reported as such",
+   "share_top_is_own_planted": 0.585,
+   "decoder_cites_own_share_planted": 0.145,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 0,
+    "agree": 0,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-A-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "d27114744828b87c",
+   "console_sha256": "d27114744828b87c",
+   "source": "sealed-A-2e1dc71913b1-I0-paraphrase.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "A",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family A, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "a partial ceiling: the share 0.620 lies between 0.5 and 0.9, reported as such",
+   "share_top_is_own_planted": 0.62,
+   "decoder_cites_own_share_planted": 0.17,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 0,
+    "agree": 0,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-A-4cfd6f6e1406-I0-direct.pass.json": {
+   "sha256_lf": "ad90a5752c9755da",
+   "console_sha256": "ad90a5752c9755da",
+   "source": "sealed-A-4cfd6f6e1406-I0-direct.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "A",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family A, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "a partial ceiling: the share 0.553 lies between 0.5 and 0.9, reported as such",
+   "share_top_is_own_planted": 0.5527638190954773,
+   "decoder_cites_own_share_planted": 0.16080402010050251,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 0,
+    "agree": 0,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-A-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "8c407aa19fcf1dd1",
+   "console_sha256": "8c407aa19fcf1dd1",
+   "source": "sealed-A-4cfd6f6e1406-I0-paraphrase.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "A",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family A, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "a partial ceiling: the share 0.578 lies between 0.5 and 0.9, reported as such",
+   "share_top_is_own_planted": 0.5778894472361809,
+   "decoder_cites_own_share_planted": 0.16080402010050251,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 0,
+    "agree": 0,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-A-8ceba5db8d0b-I0-direct.pass.json": {
+   "sha256_lf": "0274f9f03a2f3499",
+   "console_sha256": "0274f9f03a2f3499",
+   "source": "sealed-A-8ceba5db8d0b-I0-direct.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "A",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family A, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "a partial ceiling: the share 0.540 lies between 0.5 and 0.9, reported as such",
+   "share_top_is_own_planted": 0.54,
+   "decoder_cites_own_share_planted": 0.175,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 0,
+    "agree": 0,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-A-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "e71dc9932572fa1d",
+   "console_sha256": "e71dc9932572fa1d",
+   "source": "sealed-A-8ceba5db8d0b-I0-paraphrase.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "A",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family A, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "a partial ceiling: the share 0.610 lies between 0.5 and 0.9, reported as such",
+   "share_top_is_own_planted": 0.61,
+   "decoder_cites_own_share_planted": 0.215,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 0,
+    "agree": 0,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-Av-2e1dc71913b1-I0-direct.pass.json": {
+   "sha256_lf": "dd995657c88e42f7",
+   "console_sha256": "dd995657c88e42f7",
+   "source": "sealed-Av-2e1dc71913b1-I0-direct.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "Av",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family Av, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 0.995,
+   "decoder_cites_own_share_planted": 0.845,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-Av-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "6727e5f3a81fc72f",
+   "console_sha256": "6727e5f3a81fc72f",
+   "source": "sealed-Av-2e1dc71913b1-I0-paraphrase.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "Av",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family Av, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.87,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-Av-4cfd6f6e1406-I0-direct.pass.json": {
+   "sha256_lf": "1abd69e49e6f8c41",
+   "console_sha256": "1abd69e49e6f8c41",
+   "source": "sealed-Av-4cfd6f6e1406-I0-direct.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "Av",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family Av, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.885,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-Av-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "6696213195050d36",
+   "console_sha256": "6696213195050d36",
+   "source": "sealed-Av-4cfd6f6e1406-I0-paraphrase.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "Av",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family Av, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.865,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-Av-8ceba5db8d0b-I0-direct.pass.json": {
+   "sha256_lf": "6958e2306595996c",
+   "console_sha256": "6958e2306595996c",
+   "source": "sealed-Av-8ceba5db8d0b-I0-direct.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "Av",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family Av, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (ii): the oracle's top line is the own line almost always and the model's top line is not; the limit is in the reading, not in the keys",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.895,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-Av-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "66c74092939539a1",
+   "console_sha256": "66c74092939539a1",
+   "source": "sealed-Av-8ceba5db8d0b-I0-paraphrase.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "Av",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family Av, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.905,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-T0-2e1dc71913b1-I0-direct.pass.json": {
+   "sha256_lf": "e5fdd522caf80d01",
+   "console_sha256": "e5fdd522caf80d01",
+   "source": "sealed-T0-2e1dc71913b1-I0-direct.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "T0",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family T0, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.905,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-T0-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "bc59092689349506",
+   "console_sha256": "bc59092689349506",
+   "source": "sealed-T0-2e1dc71913b1-I0-paraphrase.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "T0",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family T0, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.95,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-T0-4cfd6f6e1406-I0-direct.pass.json": {
+   "sha256_lf": "726b2fb09628f6a8",
+   "console_sha256": "726b2fb09628f6a8",
+   "source": "sealed-T0-4cfd6f6e1406-I0-direct.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "T0",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family T0, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.93,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-T0-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "fadabc2710378e2b",
+   "console_sha256": "fadabc2710378e2b",
+   "source": "sealed-T0-4cfd6f6e1406-I0-paraphrase.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "T0",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family T0, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.94,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-T0-8ceba5db8d0b-I0-direct.pass.json": {
+   "sha256_lf": "6dddfa09c1017d75",
+   "console_sha256": "6dddfa09c1017d75",
+   "source": "sealed-T0-8ceba5db8d0b-I0-direct.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "T0",
+   "form": "direct",
+   "what": "A0 on the I0 direct pass of family T0, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.945,
+   "blocks": [
+    "planted",
+    "never_planted",
+    "cross_schema",
+    "near_name"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-T0-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "3b56ce3550cb090c",
+   "console_sha256": "3b56ce3550cb090c",
+   "source": "sealed-T0-8ceba5db8d0b-I0-paraphrase.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "T0",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of family T0, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.93,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-first-2e1dc71913b1-I0-paraphrase.pass.json": {
+   "sha256_lf": "e0c15c3e7706588f",
+   "console_sha256": "e0c15c3e7706588f",
+   "source": "sealed-first-2e1dc71913b1-I0-paraphrase.pass.json",
+   "run_id": "2e1dc71913b1",
+   "family": "first",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of the first family, seed 7 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.945,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-first-4cfd6f6e1406-I0-paraphrase.pass.json": {
+   "sha256_lf": "0cb6ed989bc6db22",
+   "console_sha256": "0cb6ed989bc6db22",
+   "source": "sealed-first-4cfd6f6e1406-I0-paraphrase.pass.json",
+   "run_id": "4cfd6f6e1406",
+   "family": "first",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of the first family, seed 2024 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.935,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  },
+  "a0-sealed-first-8ceba5db8d0b-I0-paraphrase.pass.json": {
+   "sha256_lf": "aa2fbf25d4604c11",
+   "console_sha256": "aa2fbf25d4604c11",
+   "source": "sealed-first-8ceba5db8d0b-I0-paraphrase.pass.json",
+   "run_id": "8ceba5db8d0b",
+   "family": "first",
+   "form": "paraphrase",
+   "what": "A0 on the I0 paraphrase pass of the first family, seed 1337 (the decoder's raw citation, `raw_cited_pointer`)",
+   "letter": "A0 (iii) or the oracle high with the model following it: read the decision apart (R2 of ADR-008 part A)",
+   "share_top_is_own_planted": 1.0,
+   "decoder_cites_own_share_planted": 0.96,
+   "blocks": [
+    "planted",
+    "never_planted"
+   ],
+   "template_entity_agreement": {
+    "parsed": 200,
+    "agree": 200,
+    "disagree": 0
+   }
+  }
+ },
+ "logs": {
+  "a0-2026-10-30.log": "7deb286a26ac810a"
+ },
+ "row54": {
+  "pooled_planted_block_per_family": {
+   "A_I0": {
+    "scored": 1198,
+    "with_own": 1198,
+    "own_in_window": 696,
+    "bag_top_is_own": 696,
+    "ties_with_own_present": 0,
+    "decoder_cites_own": 205,
+    "decoder_cites_another_line_own_present": 190,
+    "mark_oracle_cites_own": 631
+   },
+   "Av_I0": {
+    "scored": 1200,
+    "with_own": 1200,
+    "own_in_window": 1199,
+    "bag_top_is_own": 1199,
+    "ties_with_own_present": 0,
+    "decoder_cites_own": 1053,
+    "decoder_cites_another_line_own_present": 44,
+    "mark_oracle_cites_own": 1199
+   },
+   "T0_I0": {
+    "scored": 1200,
+    "with_own": 1200,
+    "own_in_window": 1200,
+    "bag_top_is_own": 1200,
+    "ties_with_own_present": 0,
+    "decoder_cites_own": 1120,
+    "decoder_cites_another_line_own_present": 20,
+    "mark_oracle_cites_own": 1200
+   },
+   "first_I0_paraphrase": {
+    "scored": 600,
+    "with_own": 600,
+    "own_in_window": 600,
+    "bag_top_is_own": 600,
+    "ties_with_own_present": 0,
+    "decoder_cites_own": 568,
+    "decoder_cites_another_line_own_present": 8,
+    "mark_oracle_cites_own": 600
+   },
+   "E1_row48": {
+    "scored": 600,
+    "with_own": 600,
+    "own_in_window": 600,
+    "bag_top_is_own": 590,
+    "ties_with_own_present": 10,
+    "decoder_cites_own": 561,
+    "decoder_cites_another_line_own_present": 4,
+    "mark_oracle_cites_own": 596
+   },
+   "E2_identity_row49": {
+    "scored": 600,
+    "with_own": 600,
+    "own_in_window": 600,
+    "bag_top_is_own": 600,
+    "ties_with_own_present": 0,
+    "decoder_cites_own": 281,
+    "decoder_cites_another_line_own_present": 319,
+    "mark_oracle_cites_own": 528
+   }
+  },
+  "note": "pooled over the three checkpoints and the forms, the planted block (`on` on the arms, `planted` on the passes): the reads scored, those with an own pointer, those with the own line in the window, A0's top line the own line alone (bag variant), the ties with the own line present, the decoder's own citation and its citation of another line on the reads with the own line present, the mark oracle's own citation on the same reads"
+ }
+}
