@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="What is shown, and what is not: the organ alone stores, returns and forgets what it is told to; the system holds on its own family of facts; the limit, measured on families the system had never seen; and what is not measured and not claimed">
+  <title>What is shown, and what is not: the organ alone, the system on its own family, the limit on families never seen, and what is not claimed</title>
+  <rect width="1200" height="500" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">What is shown, and what is not</text>
+  <text x="600" y="56" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure. Every number of this section has a row in docs/RESULTS.md with the file that produced it and a test that recomputes it;</text>
+  <text x="600" y="72" text-anchor="middle" fill="#57606a" font-size="13">everything at 27 million parameters, on synthetic facts built to be leak proof and written by the system's author; no natural text, no benchmark score</text>
+
+  <!-- the organ alone -->
+  <rect x="40" y="94" width="360" height="230" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="220" y="118" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The organ alone stores, returns and forgets</text>
+  <text x="220" y="135" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">what it is told to</text>
+  <g font-size="12" fill="#57606a">
+    <text x="56" y="160">planted episodes return by their address after the</text>
+    <text x="56" y="176">process that wrote them has ended, on four seeds,</text>
+    <text x="56" y="192">and nothing returns for an entity never planted</text>
+    <text x="56" y="216">by the text of a question the organ alone is at</text>
+    <text x="56" y="232">chance: it is an index, not a language</text>
+    <text x="56" y="256">an eviction withdraws the episode's address from</text>
+    <text x="56" y="272">the memory, nothing kept moved</text>
+    <text x="56" y="312" fill="#1f2328">rows 13, 13c, 42</text>
+  </g>
+
+  <!-- the system -->
+  <rect x="420" y="94" width="360" height="230" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="600" y="118" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The system holds on its own family of facts</text>
+  <g font-size="12" fill="#57606a">
+    <text x="436" y="144">with the organ's index geometry adopted and its mark</text>
+    <text x="436" y="160">on every line of the window, the model with the organ</text>
+    <text x="436" y="176">retrieves the right episode on every question and</text>
+    <text x="436" y="192">answers strictly on the share of them row 47 states,</text>
+    <text x="436" y="208">on the two seeds that did not conceive the policy, with</text>
+    <text x="436" y="224">no invalid citation and no claim on a never planted entity</text>
+    <text x="436" y="248">a near duplicate written to the journal is admitted</text>
+    <text x="436" y="264">under an identity rule and never cited in place of</text>
+    <text x="436" y="280">the original under the adopted selection rule</text>
+    <text x="436" y="312" fill="#1f2328">rows 47, 49, 50</text>
+  </g>
+
+  <!-- the limit -->
+  <rect x="800" y="94" width="360" height="230" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="980" y="118" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">The limit, measured on families</text>
+  <text x="980" y="135" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">the system had never seen</text>
+  <g font-size="12" fill="#57606a">
+    <text x="816" y="160">on formulations outside the templates it was trained</text>
+    <text x="816" y="176">on, the four frozen conditions hold on no cell; read against</text>
+    <text x="816" y="192">the organ's own mark, the mark reproduces the selection the</text>
+    <text x="816" y="208">protocol rewards; the model's measured contribution is its</text>
+    <text x="816" y="224">copy and its abstention</text>
+    <text x="816" y="244">against the simplest references the organ's stack is not</text>
+    <text x="816" y="260">separated at this size (by vacuity, letter R-b): the read side</text>
+    <text x="816" y="276">brings no measured advantage; the write side was compared</text>
+    <text x="816" y="292">with no reference, and no advantage is claimed</text>
+    <text x="816" y="312" fill="#1f2328">rows 51, 52</text>
+  </g>
+
+  <!-- not claimed -->
+  <rect x="40" y="340" width="1120" height="52" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="600" y="362" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Not measured, not claimed</text>
+  <text x="600" y="380" text-anchor="middle" fill="#57606a" font-size="12">whether any of this holds at a larger size, or on natural text (the paper, §5)</text>
+
+  <!-- rows 53 and 54 -->
+  <rect x="40" y="404" width="1120" height="52" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="600" y="426" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">Graved with this edition, their numbers in the record (rows 53, 54)</text>
+  <text x="600" y="444" text-anchor="middle" fill="#57606a" font-size="12">the organ's lifecycle on journals of eleven thousand and one hundred and ten thousand entries, and the construction's own ceiling under byte keys</text>
+
+  <!-- legend -->
+  <g font-size="12" fill="#57606a">
+    <rect x="40" y="478" width="14" height="12" fill="#dafbe1" stroke="#4ac26b"/><text x="60" y="488">holds, each with a row, a file and a test</text>
+    <rect x="340" y="478" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="360" y="488">the limit, measured (rows 51, 52), and what is not claimed</text>
+    <rect x="760" y="478" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="780" y="488">read in the record, not here</text>
+  </g>
+</svg>

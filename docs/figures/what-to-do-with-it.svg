@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="What to do with it today: three things it is for, as measured; a memory with exact withdrawal and provenance for a small model; a bench for memory organs; a worked example of a falsifiable record; not a product, not a chat model, not a claim about larger models">
+  <title>What to do with it today: a memory with exact withdrawal and provenance, a bench for memory organs, a worked example of a falsifiable record</title>
+  <rect width="1200" height="400" fill="#ffffff"/>
+  <text x="600" y="36" text-anchor="middle" fill="#1f2328" font-size="20" font-weight="bold">What to do with it today</text>
+  <text x="600" y="58" text-anchor="middle" fill="#57606a" font-size="13">quantum-cortex, original figure. Three things it is for, as measured; nothing more is claimed</text>
+
+  <!-- a memory -->
+  <rect x="40" y="80" width="360" height="232" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="220" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A memory with exact withdrawal and</text>
+  <text x="220" y="121" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">provenance for a small model</text>
+  <g font-size="12" fill="#57606a">
+    <text x="56" y="146">a long running matter (a project, a case, a</text>
+    <text x="56" y="162">correspondence) whose record a fresh session must</text>
+    <text x="56" y="178">find months later, cite line by line, and answer</text>
+    <text x="56" y="194">"no record" on what was never written</text>
+    <text x="56" y="218">the companion demonstration is that use, on the</text>
+    <text x="56" y="234">organ's own code path</text>
+    <text x="56" y="258" fill="#1f2328">what is withdrawn is withdrawn; what is cited is a</text>
+    <text x="56" y="274" fill="#1f2328">pointer to a sealed line, never a paraphrase</text>
+    <text x="56" y="298">row 42</text>
+  </g>
+
+  <!-- a bench -->
+  <rect x="420" y="80" width="360" height="232" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <text x="600" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A bench for memory organs</text>
+  <g font-size="12" fill="#57606a">
+    <text x="436" y="130">the sealed families, the references, the cost harness and</text>
+    <text x="436" y="146">the record tests are a way to measure any memory organ</text>
+    <text x="436" y="162">against the simplest stack on the same questions, with the</text>
+    <text x="436" y="178">construction's own ceiling read beside (rows 51 to 54): the</text>
+    <text x="436" y="194">measurements that made this organ's limit visible are</text>
+    <text x="436" y="210">reusable on the next one</text>
+    <text x="436" y="234" fill="#1f2328">the provenance benchmark packages that use: a bench</text>
+    <text x="436" y="250" fill="#1f2328">from the sealed generator, your system's answers scored</text>
+    <text x="436" y="266" fill="#1f2328">with the record's reading and its frozen conditions,</text>
+    <text x="436" y="282" fill="#1f2328">without the model and without the organ; your numbers are</text>
+    <text x="436" y="298" fill="#1f2328">yours, and the record claims nothing from them</text>
+  </g>
+
+  <!-- a worked example -->
+  <rect x="800" y="80" width="360" height="232" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="980" y="104" text-anchor="middle" fill="#1f2328" font-size="13" font-weight="bold">A worked example of a falsifiable record</text>
+  <g font-size="12" fill="#57606a">
+    <text x="816" y="130">every measurement declared before it ran, with the</text>
+    <text x="816" y="146">readings of every outcome</text>
+    <text x="816" y="170">every file retained before a number in it was read</text>
+    <text x="816" y="194">the failures published in the same table as the rest,</text>
+    <text x="816" y="210">and a reviewer can recompute every digit</text>
+    <text x="816" y="234" fill="#1f2328">the account of how it was made, with a language</text>
+    <text x="816" y="250" fill="#1f2328">model as design and review partner under that</text>
+    <text x="816" y="266" fill="#1f2328">discipline, is docs/JOURNEY.md</text>
+  </g>
+
+  <!-- not -->
+  <rect x="40" y="328" width="1120" height="36" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <text x="600" y="351" text-anchor="middle" fill="#1f2328" font-size="12.5" font-weight="bold">It is not a product, not a chat model, and not a claim about larger models</text>
+
+  <!-- legend -->
+  <g font-size="12" fill="#57606a">
+    <rect x="40" y="380" width="14" height="12" fill="#fff8c5" stroke="#d4a72c"/><text x="60" y="390">what you can run on your own matter or your own organ</text>
+    <rect x="420" y="380" width="14" height="12" fill="#f6f8fa" stroke="#d0d7de"/><text x="440" y="390">what you can read and recompute</text>
+    <rect x="700" y="380" width="14" height="12" fill="#ffebe9" stroke="#ff8182"/><text x="720" y="390">what it is not</text>
+  </g>
+</svg>

@@ -8,7 +8,7 @@
 
 quantum-cortex is a 27 million parameter byte level language model, trained from scratch by one researcher on a free GPU tier and a laptop, plus an *organ* that lives outside the weights: an append only journal of episodes, sealed under a key, each line carrying its address, its time and the evidence it rests on; a write gate that admits or refuses a line; an index that returns a small window of candidate lines for a question; a read path that hands the model that window with the organ's own similarity written on every line, and a veto that refuses a citation the organ marks weakly. The model reads the journal while it generates under one contract: cite the line it uses, by its pointer, or say it does not know. An episode the organ evicts is withdrawn from its memory of addresses; nothing is kept in the weights that the journal already holds. The name is the family's (Quantum Meridian, an orchestration project around existing models); nothing here is quantum computing.
 
-![How a question is answered: its cues, the cue index over the sealed journal, a window of lines with their marks, the veto and the key's selection, an answer by pointer or no record](docs/figures/read-path.svg)
+![How a question is answered: its cues, the cue index over the sealed journal, a window of lines with their marks, the veto and the key's selection, an answer by pointer or no record](https://raw.githubusercontent.com/vaneeckhoutnicolas/quantum-cortex/v1.1.0/docs/figures/read-path.svg)
 
 A one page explanation of the organ for a reader who is not a specialist is [`docs/EXPLAINER.md`](docs/EXPLAINER.md).
 
@@ -22,6 +22,8 @@ Every number below has a row in [`docs/RESULTS.md`](docs/RESULTS.md) with the fi
 
 Whether any of this holds at a larger size, or on natural text, is not measured and not claimed (`docs/WHITEPAPER.md`, §5). Rows 53 and 54, graved with this edition, read the organ's lifecycle on journals of eleven thousand and one hundred and ten thousand entries and the construction's own ceiling under byte keys; their numbers are in the record, not here.
 
+![What is shown, and what is not: the organ alone, the system on its own family, the limit on families never seen, and what is not claimed](https://raw.githubusercontent.com/vaneeckhoutnicolas/quantum-cortex/v1.1.0/docs/figures/shown-and-not-shown.svg)
+
 ## Try it in five minutes
 
 ```
@@ -30,9 +32,11 @@ python -m cortex_c2b.companion_demo
 python -m cortex_c2b.hm_protocol --persistent
 ```
 
-![The three commands: the install; the companion demonstration in two processes, the second reading the disk alone; the dissociation protocol on the organ alone and its verdict](docs/figures/try-it.svg)
+![The three commands: the install; the companion demonstration in two processes, the second reading the disk alone; the dissociation protocol on the organ alone and its verdict](https://raw.githubusercontent.com/vaneeckhoutnicolas/quantum-cortex/v1.1.0/docs/figures/try-it.svg)
 
 The first command installs the organ and the protocols (no checkpoint is needed for what follows). The second runs the organ as a component: a session writes a project's decisions into a sealed journal on disk, a second session in a new process that knows nothing but the disk answers five questions by citing the stored line with its pointer and says "no record" for three it was never told, printing the scores it decided on (seconds on a CPU). The third runs the dissociation protocol the record is built on, against the organ alone, and prints its verdict. The twenty minute way to attack the published numbers, with the command that recomputes each of them from the committed files, is [`docs/FALSIFY.md`](docs/FALSIFY.md); the record tests run with `pytest tests/ -m "not slow"` on a clone (825 of the 842, in about fifteen minutes on one processor).
+
+![The companion demonstration as it ran: a session writes the decisions of a fictional matter into a sealed journal on disk; a second session, in a new process, answers from the disk alone, citing each stored line by its pointer or saying no record](https://raw.githubusercontent.com/vaneeckhoutnicolas/quantum-cortex/v1.1.0/docs/figures/companion-demo.gif)
 
 <details>
 <summary><b>Use it with your own model, in a dozen lines</b> (the organ as a library, any model decoding, no training; the two blocks are run as printed by <code>tests/test_compose_snippet.py</code>)</summary>
@@ -93,6 +97,8 @@ Three things it is for, as measured; nothing more is claimed.
 - **A worked example of a falsifiable record.** Every measurement was declared before it ran, with the readings of every outcome; every file was retained before a number in it was read; the failures are published in the same table as the rest, and a reviewer can recompute every digit. The account of how it was made, with a language model as design and review partner under that discipline, is [`docs/JOURNEY.md`](docs/JOURNEY.md).
 
 It is not a product, not a chat model, and not a claim about larger models.
+
+![What to do with it today: a memory with exact withdrawal and provenance, a bench for memory organs, a worked example of a falsifiable record](https://raw.githubusercontent.com/vaneeckhoutnicolas/quantum-cortex/v1.1.0/docs/figures/what-to-do-with-it.svg)
 
 ## Where to go next, by question
 

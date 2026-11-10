@@ -29,7 +29,7 @@ identifiers:
     description: "The GitHub release of the landing edition (immutable; commit 6572467)."
 license: Apache-2.0
 version: "1.1.0"
-date-released: "2026-11-08"
+date-released: "2026-11-11"
 keywords:
   - language model
   - continuity
