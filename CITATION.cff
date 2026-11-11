@@ -16,6 +16,9 @@ identifiers:
     value: 10.5281/zenodo.23110775
     description: "The concept DOI of the archive: every archived version, resolving to the latest one. The v1.1.0 edition's own version DOI is minted by Zenodo from the GitHub release of its tag and recorded here by a dated commit after the deposit."
   - type: doi
+    value: 10.5281/zenodo.24122680
+    description: "The archived v1.1.0 edition on Zenodo (this edition; deposited 2026-11-11 from the GitHub release of its tag, the workshop's commit 458832b, the public copy's 50e1327)."
+  - type: doi
     value: 10.5281/zenodo.23110776
     description: "The archived v1.0.0 edition on Zenodo (the previous edition; deposited 2026-10-02 from the GitHub release of its tag)."
   - type: swh
