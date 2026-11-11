@@ -1,0 +1,5 @@
+# The record is hashed byte for byte by its tests: a clone checks every file out as it is committed, on every platform,
+# with no line ending conversion in either direction, and a file is committed with the bytes on the disk
+# (2026-11-11, after the full run on a clean clone on Windows of 2026-11-10 failed eight record tests on line endings
+# converted at checkout; ADR-010, section 12).
+* -text
