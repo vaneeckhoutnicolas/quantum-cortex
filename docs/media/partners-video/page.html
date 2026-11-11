@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>quantum-cortex, the presentation for partners (v1.1.0)</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0a0918; }
+  body { font-family: "Inter", "Inter Display", sans-serif; color: #f4f3ff; -webkit-font-smoothing: antialiased; position: relative; }
+  #bg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .scene { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; }
+  .el { opacity: 0; will-change: opacity, transform; }
+  .label { position: absolute; font-size: 15px; letter-spacing: 0.26em; text-transform: uppercase; color: #a99af7; font-weight: 600; }
+  .title { position: absolute; font-size: 54px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; color: #f4f3ff; }
+  .title .ac { color: #b9adfc; }
+  .sub { position: absolute; font-size: 22px; color: #b3b0cf; line-height: 1.45; }
+  .amber { color: #f5b942; }
+  .card { position: absolute; box-sizing: border-box; background: rgba(21, 18, 50, 0.92); border: 1px solid rgba(167, 139, 250, 0.28); border-radius: 18px; padding: 24px 28px; }
+  .card.red { background: rgba(44, 20, 34, 0.92); border-color: rgba(244, 113, 116, 0.35); }
+  .card.green { background: rgba(14, 36, 34, 0.92); border-color: rgba(74, 222, 128, 0.32); }
+  .card h3 { margin: 0 0 6px 0; font-size: 23px; font-weight: 600; color: #f4f3ff; letter-spacing: -0.005em; }
+  .card .small { font-size: 16px; color: #a8a5c8; line-height: 1.4; }
+  .card p { margin: 10px 0 0 0; font-size: 16px; color: #b3b0cf; line-height: 1.45; }
+  .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 13px; padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(167, 139, 250, 0.4); color: #cfc8ff; background: rgba(167, 139, 250, 0.08); letter-spacing: 0.02em; }
+  .chip.on { background: rgba(185, 173, 252, 0.28); border-color: #b9adfc; color: #ffffff; }
+  .tag { position: absolute; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 4px 9px; border-radius: 6px; font-weight: 700; }
+  .tag.amber { background: #f5b942; color: #1a1300; }
+  .tag.lav { background: #b9adfc; color: #130f33; }
+  .tag.red { background: #f47174; color: #2a0a0b; }
+  .tag.grey { background: #3b3860; color: #d8d5f0; }
+  .tag.green { background: #4ade80; color: #06220f; }
+  .foot { position: absolute; right: 70px; bottom: 34px; font-size: 13px; color: #6e6b90; letter-spacing: 0.04em; }
+  .mono { font-family: "DejaVu Sans Mono", "Liberation Mono", monospace; }
+  .caption { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 24px; color: #d9d6f2; }
+  .caption .ac { color: #b9adfc; }
+  .caption .am { color: #f5b942; }
+  /* console */
+  .console { position: absolute; box-sizing: border-box; background: rgba(14, 12, 36, 0.96); border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 16px; overflow: hidden; }
+  .console .bar { height: 40px; border-bottom: 1px solid rgba(167, 139, 250, 0.18); display: flex; align-items: center; padding: 0 18px; font-size: 12px; color: #8f8bb8; letter-spacing: 0.1em; }
+  .console .bar i { width: 10px; height: 10px; border-radius: 50%; background: #3b3860; display: inline-block; margin-right: 7px; }
+  .console .pane-title { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #8f8bb8; margin-bottom: 12px; }
+  .jl { font-size: 14.5px; color: #c9c6e6; line-height: 1.5; margin: 0 0 9px 0; white-space: nowrap; }
+  .jl .ptr { color: #b9adfc; }
+  .jl .lk { color: #f5b942; margin-right: 8px; }
+  .jl .d { color: #8f8bb8; margin: 0 8px; }
+  .jl.ev { color: #6e6b90; text-decoration: line-through; }
+  .jl.ev .ptr { color: #6e6b90; }
+  .ask { font-size: 18px; color: #ffffff; background: rgba(167, 139, 250, 0.08); border: 1px solid rgba(167, 139, 250, 0.35); border-radius: 10px; padding: 12px 16px; min-height: 24px; }
+  .cur { display: inline-block; width: 9px; height: 20px; background: #ffffff; vertical-align: -3px; margin-left: 2px; }
+  .answer { font-size: 17px; line-height: 1.55; color: #d9d6f2; background: rgba(74, 222, 128, 0.06); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; padding: 14px 16px; }
+  .answer.no { background: rgba(244, 113, 116, 0.06); border-color: rgba(244, 113, 116, 0.35); }
+  .answer b.c { color: #4ade80; font-weight: 700; }
+  .answer b.p { color: #b9adfc; font-weight: 600; }
+  .answer b.n { color: #f47174; font-weight: 700; }
+  .score { position: relative; height: 10px; border-radius: 5px; background: rgba(255,255,255,0.08); margin: 8px 0 0 0; }
+  .score .fill { position: absolute; left: 0; top: 0; height: 10px; border-radius: 5px; background: #4ade80; }
+  .score .fill.weak { background: #f47174; }
+  .score .line { position: absolute; top: -6px; width: 2px; height: 22px; background: #f5b942; }
+  .score .ll { position: absolute; top: 16px; font-size: 12px; color: #f5b942; transform: translateX(-50%); white-space: nowrap; }
+  .note { font-size: 14px; color: #8f8bb8; line-height: 1.5; }
+  .statement { font-size: 19px; line-height: 1.5; color: #e4e2f6; background: rgba(245, 185, 66, 0.06); border: 1px dashed rgba(245, 185, 66, 0.5); border-radius: 10px; padding: 18px 20px; }
+  /* terminal */
+  .term { position: absolute; box-sizing: border-box; background: rgba(14, 12, 36, 0.96); border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 16px; padding: 26px 34px; }
+  .term .cmd { font-size: 21px; color: #ffffff; margin: 0; line-height: 1.5; }
+  .term .cmd .dol { color: #b9adfc; margin-right: 10px; }
+  .term .out { font-size: 16px; color: #9d9ac0; margin: 2px 0 18px 32px; line-height: 1.5; white-space: pre; }
+  .term .out .g { color: #4ade80; } .term .out .k { color: #cfc8ff; }
+  .term .cap { font-family: "Inter", sans-serif; font-size: 16px; color: #8f8bb8; margin: 2px 0 18px 32px; line-height: 1.5; font-style: italic; }
+  /* measured tiles */
+  .tile { position: absolute; box-sizing: border-box; width: 540px; height: 150px; background: rgba(21, 18, 50, 0.92); border: 1px solid rgba(167, 139, 250, 0.28); border-radius: 18px; padding: 22px 26px; }
+  .tile .t { font-size: 21px; font-weight: 600; color: #ffffff; line-height: 1.3; padding-right: 40px; }
+  .tile .r { position: absolute; left: 26px; bottom: 18px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: #a99af7; }
+  .tile .ok { position: absolute; right: 22px; top: 20px; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #4ade80; color: #4ade80; font-size: 15px; text-align: center; line-height: 26px; }
+  /* fail rows */
+  .frow { position: absolute; box-sizing: border-box; width: 1680px; height: 92px; background: rgba(40, 18, 32, 0.92); border: 1px solid rgba(244, 113, 116, 0.3); border-radius: 14px; padding: 0 28px; display: flex; align-items: center; }
+  .frow.grey { background: rgba(24, 22, 48, 0.92); border-color: rgba(167, 139, 250, 0.28); }
+  .frow .x { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #f47174; color: #f47174; text-align: center; line-height: 28px; font-size: 16px; margin-right: 22px; flex: none; }
+  .frow.grey .x { border-color: #8f8bb8; color: #8f8bb8; }
+  .frow .w { font-size: 22px; font-weight: 600; color: #ffffff; width: 400px; flex: none; line-height: 1.2; }
+  .frow .v { font-size: 18px; color: #d9d6f2; line-height: 1.35; }
+  .frow .v .row { color: #a99af7; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; margin-left: 14px; white-space: nowrap; }
+  /* security cards */
+  .sec { position: absolute; box-sizing: border-box; width: 540px; height: 480px; padding: 48px 26px 24px 26px; border-radius: 18px; }
+  .sec .it { margin: 0 0 14px 0; }
+  .sec .it b { display: block; font-size: 18px; color: #ffffff; font-weight: 600; }
+  .sec .it span { display: block; font-size: 15px; color: #a8a5c8; line-height: 1.4; margin-top: 2px; }
+  .sec .foot2 { position: absolute; left: 26px; right: 26px; bottom: 22px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; }
+  /* pillars */
+  .pil { position: absolute; width: 380px; text-align: center; }
+  .pil .ic { width: 56px; height: 56px; margin: 0 auto 18px auto; border-radius: 50%; border: 1.5px solid #b9adfc; color: #b9adfc; font-size: 24px; line-height: 56px; }
+  .pil .n { font-size: 30px; font-weight: 700; color: #ffffff; }
+  .pil .d { font-size: 18px; color: #b3b0cf; margin-top: 8px; line-height: 1.4; }
+  /* roadmap */
+  .stop { position: absolute; width: 230px; }
+  .stop .k { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: #a99af7; font-weight: 700; }
+  .stop .k.now { color: #f5b942; }
+  .stop .v { font-size: 30px; font-weight: 700; color: #ffffff; margin-top: 4px; }
+  .stop .th { font-size: 17px; font-weight: 600; color: #e4e2f6; margin-top: 92px; line-height: 1.3; }
+  .stop .c { font-size: 14.5px; color: #a8a5c8; margin-top: 8px; line-height: 1.4; }
+  .logo { position: absolute; left: 0; width: 1920px; text-align: center; }
+  .logo .mark { width: 72px; height: 72px; margin: 0 auto 26px auto; border-radius: 50%; border: 2px solid #b9adfc; position: relative; background: rgba(167,139,250,0.08); }
+  .logo .mark i { position: absolute; left: 20px; height: 3px; border-radius: 2px; background: #b9adfc; }
+  .logo .name { font-size: 50px; font-weight: 700; letter-spacing: 0.22em; color: #ffffff; }
+  .logo .tl { font-size: 24px; color: #c9c6e6; margin-top: 16px; }
+  .logo .by { font-size: 17px; color: #8f8bb8; margin-top: 12px; }
+  .cta { display: inline-block; font-size: 17px; font-weight: 600; color: #130f33; background: #b9adfc; border-radius: 999px; padding: 12px 30px; margin-top: 26px; }
+  .links { font-size: 16px; color: #9d9ac0; margin-top: 20px; line-height: 1.7; }
+  .links b { color: #d9d6f2; font-weight: 500; }
+  svg.flow { position: absolute; left: 0; top: 0; }
+</style>
+</head>
+<body>
+<canvas id="bg" width="1920" height="1080"></canvas>
+
+<!-- S0 the hook -->
+<section class="scene" id="s0" data-t0="0" data-t1="8.5" data-globe="1">
+  <div class="label el" data-in="0.3" style="left:0;width:1920px;text-align:center;top:250px;color:#8f8bb8">the starting point, as the author sees it &nbsp;·&nbsp; not measured</div>
+  <div class="title el" data-in="0.5" style="left:0;width:1920px;text-align:center;top:330px;font-size:60px">Can your AI show where its answer came from?</div>
+  <div class="sub el" data-in="2.2" style="left:0;width:1920px;text-align:center;top:470px;font-size:26px"><span class="amber">Locked</span> to one model vendor.</div>
+  <div class="sub el" data-in="3.7" style="left:0;width:1920px;text-align:center;top:520px;font-size:26px"><span class="amber">Billed</span> by the query, again and again.</div>
+  <div class="sub el" data-in="5.2" style="left:0;width:1920px;text-align:center;top:570px;font-size:26px"><span class="amber">Blind</span>, too often, on its own sources.</div>
+</section>
+
+<!-- S1 the title -->
+<section class="scene" id="s1" data-t0="8.5" data-t1="15.0" data-globe="1">
+  <div class="logo el" data-in="0.1" style="top:330px">
+    <div class="mark"><i style="top:22px;width:30px"></i><i style="top:33px;width:22px"></i><i style="top:44px;width:30px"></i></div>
+    <div class="name">QUANTUM-CORTEX</div>
+  </div>
+  <div class="logo el" data-in="1.2" style="top:520px"><div class="tl">A memory that belongs to the node, not to the model.</div></div>
+  <div class="logo el" data-in="2.4" style="top:575px"><div class="by">Created by Nicolas Van Eeckhout &nbsp;·&nbsp; v1.1.0, an open research record</div></div>
+</section>
+
+<!-- S2 how it is built -->
+<section class="scene" id="s2" data-t0="15.0" data-t1="39.0" data-globe="0.6">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">How it is built</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">The model reads. <span class="ac">The organ remembers.</span></div>
+
+  <svg class="flow" width="1920" height="1080" viewBox="0 0 1920 1080">
+    <defs>
+      <radialGradient id="dotg"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#b9adfc"/><stop offset="1" stop-color="#b9adfc" stop-opacity="0"/></radialGradient>
+    </defs>
+    <path id="p-q" d="M 1240 348 C 1200 348, 1120 420, 1080 490" fill="none" stroke="#b9adfc" stroke-opacity="0" stroke-width="2"/>
+    <path id="p-oj" d="M 1180 600 L 1330 600" fill="none" stroke="#b9adfc" stroke-opacity="0.35" stroke-width="2"/>
+    <path id="p-om" d="M 740 600 L 590 600" fill="none" stroke="#b9adfc" stroke-opacity="0.35" stroke-width="2"/>
+    <path id="p-mo" d="M 590 640 L 740 640" fill="none" stroke="#b9adfc" stroke-opacity="0.2" stroke-width="2"/>
+    <path id="p-ans" d="M 380 700 C 380 760, 420 800, 500 800" fill="none" stroke="#b9adfc" stroke-opacity="0" stroke-width="2"/>
+    <g id="flowdots"></g>
+  </svg>
+
+  <div class="card el" data-in="1.0" style="left:160px;top:500px;width:440px;height:230px">
+    <h3>Your models</h3><div class="small">of any size, behind any runtime; the one decoding today</div>
+    <div class="chips"><span class="chip" id="mA">Model A</span><span class="chip" id="mB">Model B</span><span class="chip" id="mC">Model C</span></div>
+    <p>reads the window, decides, cites by pointer or abstains</p>
+  </div>
+  <div class="card el" data-in="1.5" style="left:740px;top:500px;width:440px;height:230px">
+    <h3>The organ</h3><div class="small">outside the weights</div>
+    <div class="chips"><span class="chip">keeps</span><span class="chip">marks</span><span class="chip">vetoes</span><span class="chip">forgets</span></div>
+    <p>a write gate, a cue index, a mark on every line, a veto, a lifecycle</p>
+  </div>
+  <div class="card el" data-in="2.0" style="left:1320px;top:500px;width:440px;height:230px">
+    <span class="tag amber" style="right:18px;top:-13px">your node</span>
+    <h3>Sealed journal</h3><div class="small">a file on your disk, under a key the organ never writes</div>
+    <div class="chips"><span class="chip">AES-256-GCM</span><span class="chip">one key per scope</span><span class="chip">append only</span></div>
+    <p>each line carries its address, its time and the evidence it rests on</p>
+  </div>
+
+  <div class="el" data-in="3.4" style="position:absolute;left:1240px;top:322px;font-size:18px;color:#ffffff;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.45);border-radius:999px;padding:10px 22px"><span style="color:#b9adfc;margin-right:8px">?</span>A question arrives</div>
+
+  <div class="el" data-in="7.0" data-out="10.4" style="position:absolute;left:760px;top:440px;display:flex;gap:8px">
+    <span class="chip" style="background:rgba(185,173,252,0.2)">line · mark</span><span class="chip" style="background:rgba(185,173,252,0.2)">line · mark</span><span class="chip" style="background:rgba(185,173,252,0.2)">line · mark</span>
+  </div>
+  <div class="el" data-in="16.6" style="position:absolute;left:500px;top:778px;font-size:18px;color:#ffffff;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.45);border-radius:999px;padding:10px 22px"><b style="color:#4ade80;margin-right:8px">cite</b><span class="mono" style="color:#b9adfc">e76765c23f0b</span><span style="color:#9d9ac0;margin:0 10px">or</span><b style="color:#f47174">no record</b></div>
+
+  <div class="sub el" data-in="3.4" data-out="6.5" style="left:0;width:1920px;text-align:center;top:860px;font-size:22px"><span style="color:#b9adfc">1</span>&nbsp; a question arrives: its cues index the sealed journal</div>
+  <div class="sub el" data-in="6.9" data-out="10.0" style="left:0;width:1920px;text-align:center;top:860px;font-size:22px"><span style="color:#b9adfc">2</span>&nbsp; the organ returns a window of lines, each with its own mark</div>
+  <div class="sub el" data-in="10.4" data-out="13.3" style="left:0;width:1920px;text-align:center;top:860px;font-size:22px"><span style="color:#b9adfc">3</span>&nbsp; the model reads the window and decides</div>
+  <div class="sub el" data-in="13.7" data-out="16.4" style="left:0;width:1920px;text-align:center;top:860px;font-size:22px"><span style="color:#b9adfc">4</span>&nbsp; a citation of a weakly marked line is vetoed by the organ</div>
+  <div class="sub el" data-in="16.8" data-out="19.4" style="left:0;width:1920px;text-align:center;top:860px;font-size:22px"><span style="color:#b9adfc">5</span>&nbsp; the answer cites its line by pointer, or says no record</div>
+  <div class="caption el" data-in="19.8" style="top:860px">Each answer cites its line, <span class="ac">or says no record.</span></div>
+  <div class="caption el" data-in="19.8" style="top:910px;font-size:21px;color:#9d9ac0">Change the model, keep the memory: <span class="am">planned for v1.2.0, not yet measured.</span></div>
+</section>
+
+<!-- S3 the experience -->
+<section class="scene" id="s3" data-t0="39.0" data-t1="67.0" data-globe="0.5">
+  <div class="label el" data-in="0.1" style="left:120px;top:210px">The experience</div>
+  <div class="title el" data-in="0.3" data-out="10.6" style="left:120px;top:246px;font-size:40px;width:480px">It cites <span class="ac">the exact line.</span></div>
+  <div class="title el" data-in="11.0" data-out="19.0" style="left:120px;top:246px;font-size:40px;width:480px">Nothing stored? <span class="ac">It says so.</span></div>
+  <div class="title el" data-in="19.4" style="left:120px;top:246px;font-size:40px;width:480px">Evicted means <span class="ac">gone from recall.</span></div>
+  <div class="sub el" data-in="0.9" data-out="19.0" style="left:120px;top:360px;width:470px;font-size:18px;color:#a8a5c8">The companion demonstration, as it ran, the organ alone and no model: one session writes the decisions of a fictional matter into a sealed journal; a second process, knowing nothing but the disk and the key, answers.</div>
+  <div class="sub el" data-in="2.6" data-out="19.0" style="left:120px;top:500px;width:470px;font-size:16px;color:#8f8bb8">The organ is an index: each question is asked at its address, the entity. Reading a question's wording is the model's job, measured apart.</div>
+  <div class="sub el" data-in="19.4" style="left:120px;top:360px;width:470px;font-size:18px;color:#a8a5c8">The lifecycle evicts a line that falls under its floor, and an eviction withdraws the line's address from the memory of addresses.</div>
+  <div class="sub el" data-in="20.8" style="left:120px;top:480px;width:470px;font-size:16px;color:#8f8bb8">Measured on the record's own journals, its rows 41 and 42; the demonstration itself does not evict.</div>
+
+  <div class="console el" data-in="0.5" style="left:680px;top:230px;width:1160px;height:640px">
+    <div class="bar"><i></i><i></i><i></i><span style="margin-left:8px">organ console &nbsp;·&nbsp; scope: the matter (fictional)</span><span id="cons-tag" style="margin-left:auto">python -m cortex_c2b.companion_demo</span></div>
+    <div style="position:absolute;left:0;top:41px;width:500px;height:599px;border-right:1px solid rgba(167,139,250,0.18);padding:22px 24px;box-sizing:border-box">
+      <div class="pane-title">sealed journal</div>
+      <div class="jl mono el" data-in="1.0"><span class="lk">&#9679;</span><span class="ptr">e76765c23f0b</span><span class="d">12 Jan</span>originality argument set aside</div>
+      <div class="jl mono el" data-in="1.2"><span class="lk">&#9679;</span><span class="ptr">23eb789fda14</span><span class="d">2 Feb</span>court expert: method challenged</div>
+      <div class="jl mono el" data-in="1.4"><span class="lk">&#9679;</span><span class="ptr">e3a4b91f3f58</span><span class="d">3 Mar</span>exhibit 12, proof of authorship</div>
+      <div class="jl mono el" data-in="1.6" id="jl-ev"><span class="lk">&#9679;</span><span class="ptr">46d63c08690c</span><span class="d">21 Mar</span>settlement offer declined</div>
+      <div class="jl mono el" data-in="1.8"><span class="lk">&#9679;</span><span class="ptr">a440242eb72d</span><span class="d">8 Apr</span>hearing of 4 May: its scope</div>
+      <div class="note el" data-in="2.2" style="margin-top:26px">five of the twelve lines written in session A; session B, a new process, holds the key and the disk, nothing else</div>
+      <div class="el" data-in="20.0" style="margin-top:14px"><span class="tag red" style="position:static">evicted: 46d63c08690c</span></div>
+    </div>
+    <div style="position:absolute;left:500px;top:41px;width:660px;height:599px;padding:22px 26px;box-sizing:border-box">
+      <!-- beat 1 -->
+      <div class="el" data-in="1.6" data-out="10.6" style="position:absolute;left:26px;top:22px;width:608px">
+        <div class="pane-title">ask</div>
+        <div class="ask mono"><span data-type="1.8,2.0">what was decided about the originality argument, and on what ground?</span><span class="cur"></span></div>
+        <div class="pane-title" style="margin-top:22px">score</div>
+        <div class="score"><div class="fill" data-bar="4.0,0.6,1.0"></div><div class="line" style="left:50%"></div><div class="ll" style="left:50%">the line declared at 0.5</div></div>
+        <div class="pane-title" style="margin-top:40px">answer</div>
+        <div class="answer el mono" data-in="4.5"><b class="c">cite</b> <b class="p">e76765c23f0b</b> (score 1.0): 12 Jan: the originality argument is set aside on the strength of ruling 2024/AR/512 (Brussels Court of Appeal, 8 Nov 2023), which denies originality to template based layouts</div>
+      </div>
+      <!-- beat 2 -->
+      <div class="el" data-in="11.0" data-out="19.0" style="position:absolute;left:26px;top:22px;width:608px">
+        <div class="pane-title">ask</div>
+        <div class="ask mono"><span data-type="11.2,1.3">what did witness Dupont say?</span><span class="cur"></span></div>
+        <div class="pane-title" style="margin-top:22px">score</div>
+        <div class="score"><div class="fill weak" data-bar="12.8,0.6,0.328"></div><div class="line" style="left:50%"></div><div class="ll" style="left:50%">the line declared at 0.5</div></div>
+        <div class="pane-title" style="margin-top:40px">answer</div>
+        <div class="answer no el mono" data-in="13.3"><b class="n">no record</b> for witness:Dupont (best score 0.328 &lt; 0.5): <b class="n">abstain</b></div>
+        <div class="note el" data-in="14.6" style="margin-top:16px">the organ scores its best line against the line declared at 0.5; under it, no record, not a guess; no model runs in this demonstration</div>
+      </div>
+      <!-- beat 3: an illustration, not the program -->
+      <div class="el" data-in="19.6" style="position:absolute;left:26px;top:22px;width:608px">
+        <div class="pane-title" style="color:#f5b942">illustration · the record's rows 41 and 42 · the demonstration does not evict · not the program's output</div>
+        <div class="statement el" data-in="20.4" style="margin-top:14px">After an eviction, the address of <span class="mono" style="color:#b9adfc">46d63c08690c</span> is withdrawn: no read returns it, and no pattern of it stays in the memory of addresses.</div>
+        <div class="note el" data-in="22.0" style="margin-top:18px">the record, rows 41 and 42: an evicted episode is returned by no read and holds no pattern in the memory</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 try it -->
+<section class="scene" id="s4" data-t0="67.0" data-t1="80.0" data-globe="0.5">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">Try it in five minutes</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">Three commands. <span class="ac">No checkpoint needed.</span></div>
+  <div class="term el" data-in="1.0" style="left:120px;top:250px;width:1680px;height:440px">
+    <p class="cmd mono el" data-in="1.2"><span class="dol">$</span>pip install quantum-cortex</p>
+    <p class="cap el" data-in="1.9">installs the organ and the protocols</p>
+    <p class="cmd mono el" data-in="2.9"><span class="dol">$</span>python -m cortex_c2b.companion_demo</p>
+    <p class="out mono el" data-in="3.7"><span class="k">"planted_questions"</span>: 5,  <span class="k">"cited_with_the_right_pointer"</span>: <span class="g">5</span>,  <span class="k">"never_written_questions"</span>: 3,  <span class="k">"abstained"</span>: <span class="g">3</span>,  …</p>
+    <p class="cmd mono el" data-in="5.2"><span class="dol">$</span>python -m cortex_c2b.hm_protocol --persistent</p>
+    <p class="out mono el" data-in="6.0"><span class="k">"verdict"</span>: <span class="g">"PASS — the dissociation holds: episodes live in the journal, skills are journal-independent"</span></p>
+    <p class="cap el" data-in="7.2" style="color:#b3b0cf;font-style:normal;font-size:17px;margin-top:6px">A session writes, a second process reads the disk alone: five questions cited with the right pointer, three never written ones abstained on. Then the dissociation protocol the record is built on, against the organ alone, and its verdict. Seconds on a processor.</p>
+  </div>
+  <div class="caption el" data-in="9.0" style="top:770px;font-size:23px">With your own model: <span class="ac">the organ as a library, any model decoding, no training, in a dozen lines.</span></div>
+</section>
+
+<!-- S5 measured -->
+<section class="scene" id="s5" data-t0="80.0" data-t1="98.0" data-globe="0.5">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">Measured · v1.1.0</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">Every claim has <span class="ac">a row, a file and a test.</span></div>
+  <div class="sub el" data-in="0.8" style="left:120px;top:200px;width:1680px;font-size:19px;color:#a8a5c8">A row is one numbered line of the record, the file <span class="mono" style="color:#cfc8ff">docs/RESULTS.md</span>: the claim, the file that produced its numbers, and the test that recomputes them.</div>
+  <div class="tile el" data-in="1.2" style="left:120px;top:250px"><div class="t">the right episode retrieved on every question of its own family of facts</div><div class="r">the record · row 47</div><div class="ok">&#10003;</div></div>
+  <div class="tile el" data-in="2.2" style="left:690px;top:250px"><div class="t">no invalid citation, on the two seeds that did not conceive the policy</div><div class="r">the record · row 47</div><div class="ok">&#10003;</div></div>
+  <div class="tile el" data-in="3.2" style="left:1260px;top:250px"><div class="t">no claim on a fact that was never stored</div><div class="r">the record · row 47</div><div class="ok">&#10003;</div></div>
+  <div class="tile el" data-in="4.2" style="left:120px;top:430px"><div class="t">every withdrawn address stays withdrawn, nothing kept moved</div><div class="r">the record · row 42</div><div class="ok">&#10003;</div></div>
+  <div class="tile el" data-in="5.2" style="left:690px;top:430px"><div class="t">a near duplicate is never cited in place of the original, under the adopted selection rule</div><div class="r">the record · rows 49 and 50</div><div class="ok">&#10003;</div></div>
+  <div class="tile el" data-in="6.2" style="left:1260px;top:430px"><div class="t">the withdrawal holds under the lifecycle at eleven thousand and one hundred and ten thousand entries</div><div class="r">the record · row 53</div><div class="ok">&#10003;</div></div>
+  <div class="caption el" data-in="8.4" style="top:660px;font-size:22px">The system: a 27 million parameter model and the organ outside its weights, on synthetic facts built to be leak proof and written by the author.</div>
+  <div class="caption el" data-in="9.6" style="top:706px;font-size:20px;color:#9d9ac0">Nothing here is natural text, and nothing here is a benchmark score.</div>
+  <div class="caption el" data-in="11.4" style="top:790px;font-size:22px">The numbers are in the record, each with the file that produced it <span class="ac">and a test that can fail.</span></div>
+</section>
+
+<!-- S6 failures -->
+<section class="scene" id="s6" data-t0="98.0" data-t1="117.0" data-globe="0.5">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">What fails, and what is not claimed</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">Failures are recorded <span class="ac">like successes.</span></div>
+  <div class="frow el" data-in="1.2" style="left:120px;top:240px"><div class="x">&#10005;</div><div class="w">The model alone</div><div class="v">INVALID on every one of its eleven measurements, each with its attribution in the same table<span class="row">the record · eleven rows from 21 to 39</span></div></div>
+  <div class="frow el" data-in="3.0" style="left:120px;top:350px"><div class="x">&#10005;</div><div class="w">Outside its training templates</div><div class="v">the four frozen conditions hold on no cell<span class="row">the record · row 51</span></div></div>
+  <div class="frow el" data-in="4.8" style="left:120px;top:460px"><div class="x">&#10005;</div><div class="w">Against the simplest references</div><div class="v">not separated at this size; the read side brings no measured advantage over a classical stack on these families<span class="row">the record · row 52</span></div></div>
+  <div class="frow el" data-in="6.6" style="left:120px;top:570px"><div class="x">&#10005;</div><div class="w">Beyond the protocol's size</div><div class="v">the mark's guarantee against never planted names is measured to end at eleven thousand and one hundred and ten thousand entries; what refuses them there is not measured<span class="row">the record · row 53</span></div></div>
+  <div class="frow grey el" data-in="8.4" style="left:120px;top:680px"><div class="x">&#8211;</div><div class="w">A larger size, natural text</div><div class="v">not measured, not claimed<span class="row">the paper, §5</span></div></div>
+  <div class="caption el" data-in="10.8" style="top:830px;font-size:22px">What holds is the system: <span class="ac">the model deciding, the organ answering.</span></div>
+  <div class="caption el" data-in="12.8" style="top:876px;font-size:20px;color:#9d9ac0">The fastest check of this record is to read the rows that did not pass.</div>
+</section>
+
+<!-- S7 security -->
+<section class="scene" id="s7" data-t0="117.0" data-t1="143.0" data-globe="0.5">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">Security · in two registers</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">Measured first. <span class="ac">Declared where it falls short.</span></div>
+  <div class="card sec green el" data-in="1.2" style="left:120px;top:250px">
+    <span class="tag green" style="left:22px;top:-13px">measured · the record, row 40</span>
+    <h3>Another domain's key</h3>
+    <div class="small" style="margin-bottom:16px">the questions of one domain, asked with only another domain's journal open, on three seeds</div>
+    <div class="it"><b>no line of the first domain in any read</b><span>a construction assertion at the organ's level</span></div>
+    <div class="it"><b>the system claimed nothing</b><span>no claim and no strict recall of the foreign domain, on the three seeds</span></div>
+    <div class="it"><b>the margin is written next to the zero</b><span>the veto's margin on one seed, a measured limit; where the mark's guarantee ends at eleven thousand entries is measured in the record's row 53</span></div>
+  </div>
+  <div class="card sec el" data-in="8.0" style="left:690px;top:250px">
+    <span class="tag lav" style="left:22px;top:-13px">by design · verified on code</span>
+    <div class="it"><b>Every line and file sealed</b><span>AES-256-GCM, authenticated; the plaintext's hash checked against its pointer at every read</span></div>
+    <div class="it"><b>Altered line or wrong key</b><span>the read stops, loudly</span></div>
+    <div class="it"><b>One key per scope</b><span>one journal per scope; the organ never writes the key</span></div>
+    <div class="it"><b>A citation the organ does not mark</b><span>becomes an abstention: fail closed</span></div>
+  </div>
+  <div class="card sec red el" data-in="14.8" style="left:1260px;top:250px">
+    <span class="tag red" style="left:22px;top:-13px">declared · not built</span>
+    <div class="it"><b>Order of lines</b><span>not yet protected: a deleted or reordered line passes the cipher</span></div>
+    <div class="it"><b>Fix named</b><span>a chained counter in every line, checked at replay</span></div>
+    <div class="it"><b>Rule of silence</b><span>designed, not yet in the code</span></div>
+    <div class="foot2"><span class="tag grey" style="position:static">not detected · not claimed</span><div class="it" style="margin-top:10px"><span>the intent of a query: an attacker asking a legitimate question about his own domain is, to this design, a user</span></div></div>
+  </div>
+  <div class="caption el" data-in="20.4" style="top:790px;font-size:22px">Every guarantee says <span class="ac">which register it belongs to.</span></div>
+  <div class="caption el" data-in="21.8" style="top:836px;font-size:20px;color:#9d9ac0">A design is a promise and a measurement is a fact; the second is the one carried as the value.</div>
+</section>
+
+<!-- S8 for integrators -->
+<section class="scene" id="s8" data-t0="143.0" data-t1="163.0" data-globe="0.5">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">For integrators</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">A building block <span class="ac">for your own offer.</span></div>
+  <div class="el" data-in="1.0" style="position:absolute;left:120px;top:250px;width:1680px;height:300px;border:1px dashed rgba(167,139,250,0.3);border-radius:22px"></div>
+  <div class="label el" data-in="1.0" style="left:150px;top:272px;color:#8f8bb8">your offer to your clients</div>
+  <div class="card el" data-in="1.4" style="left:150px;top:310px;width:390px;height:210px"><h3>Your client's models</h3><div class="small">of any size, behind any runtime</div></div>
+  <div class="card el" data-in="2.2" style="left:560px;top:310px;width:390px;height:210px;border-color:#b9adfc;background:rgba(185,173,252,0.14)"><span class="tag lav" style="right:16px;top:-13px">Apache 2.0</span><h3>quantum-cortex organ</h3><div class="small">keeps, marks, vetoes, forgets; sealed on disk; the NOTICE travels with every copy</div></div>
+  <div class="card el" data-in="3.0" style="left:970px;top:310px;width:390px;height:210px"><h3>Your services</h3><div class="small">integration, hosting, support; the key's custody is the deployment's</div></div>
+  <div class="card el" data-in="3.8" style="left:1380px;top:310px;width:390px;height:210px"><h3>Your client's data</h3><div class="small">sealed where it is deployed, under a key the organ never writes</div></div>
+  <div class="card el" data-in="5.6" style="left:120px;top:590px;width:1680px;height:118px;display:flex;align-items:center;gap:30px">
+    <span class="tag amber" style="position:static;flex:none">the bench</span>
+    <div style="font-size:19px;color:#d9d6f2;line-height:1.45">The provenance benchmark: measure a memory system of your own on the record's questions, with the record's reading and its frozen conditions, without the model and without the organ. <span style="color:#a8a5c8">Your numbers are yours; the record claims nothing from them.</span></div>
+  </div>
+  <div class="caption el" data-in="8.4" style="top:770px;font-size:22px">Your model decodes and cites under the contract; <span class="ac">the organ keeps, seals, marks and vetoes.</span> The pair's numbers belong to the pair: the record's protocol measures them.</div>
+  <div class="caption el" data-in="12.4" style="top:826px;font-size:19px;color:#9d9ac0">Measured on one model people use, through a prompt and no training: the episodic conditions hold, the skill arm fails; a window in front of a frozen model has a cost on everything else it does (the record, row 46).</div>
+</section>
+
+<!-- S9 assumptions -->
+<section class="scene" id="s9" data-t0="163.0" data-t1="173.0" data-globe="0.8">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">The author's assumptions · not measured</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">Where AI is heading.</div>
+  <div class="card el" data-in="1.2" style="left:120px;top:270px;width:540px;height:260px"><div style="font-size:30px;color:#b9adfc;margin-bottom:14px">&#8962;</div><h3>AI moves local and offline</h3><p>on premises and on laptops; data kept where its owner is</p><span class="tag grey" style="left:28px;bottom:20px">assumption</span></div>
+  <div class="card el" data-in="2.0" style="left:690px;top:270px;width:540px;height:260px"><div style="font-size:30px;color:#b9adfc;margin-bottom:14px">&euro;</div><h3>Rented models weigh on budgets</h3><p>usage billed per query, most of all for end users</p><span class="tag grey" style="left:28px;bottom:20px">assumption</span></div>
+  <div class="card el" data-in="2.8" style="left:1260px;top:270px;width:540px;height:260px"><div style="font-size:30px;color:#b9adfc;margin-bottom:14px">&#8644;</div><h3>One memory, many models</h3><p>pick the model per task; the memory stays, sealed, on the node</p><span class="tag grey" style="left:28px;bottom:20px">assumption</span></div>
+  <div class="caption el" data-in="4.6" style="top:640px;font-size:26px">One memory, many models: <span class="ac">intelligence orchestration.</span></div>
+  <div class="caption el" data-in="6.0" style="top:690px;font-size:19px;color:#9d9ac0">These are the author's assumptions; none of them is a measurement of the record.</div>
+</section>
+
+<!-- S10 roadmap -->
+<section class="scene" id="s10" data-t0="173.0" data-t1="193.0" data-globe="0.6">
+  <div class="label el" data-in="0.1" style="left:120px;top:96px">Roadmap</div>
+  <div class="title el" data-in="0.3" style="left:120px;top:122px">Released now. <span class="ac">Then one story per release.</span></div>
+  <svg class="flow" width="1920" height="1080" viewBox="0 0 1920 1080">
+    <line x1="130" y1="440" x2="1660" y2="440" stroke="#3b3860" stroke-width="3"/>
+    <line id="rm-prog" x1="130" y1="440" x2="130" y2="440" stroke="#b9adfc" stroke-width="3"/>
+    <g id="rm-dots"></g>
+  </svg>
+  <div class="stop el" data-in="1.0" style="left:130px;top:320px"><div class="k now">now</div><div class="v">v1.1.0</div><div class="th">The organ, its protocol, the provenance bench</div><div class="c">the record up to row 54; pip install quantum-cortex</div></div>
+  <div class="stop el" data-in="3.2" style="left:385px;top:320px"><div class="k">planned</div><div class="v">v1.2.0</div><div class="th">Change the model, keep the memory</div><div class="c">the version question corrected; one sealed journal read by several readers; the organ on a local model in five minutes; a first issue for contributors</div></div>
+  <div class="stop el" data-in="5.4" style="left:640px;top:320px"><div class="k">planned</div><div class="v">v1.3.0</div><div class="th">The memory survives the replacement of its model</div></div>
+  <div class="stop el" data-in="7.6" style="left:895px;top:320px"><div class="k">planned</div><div class="v">v1.4.0</div><div class="th">What the model learns, what it reads</div></div>
+  <div class="stop el" data-in="9.8" style="left:1150px;top:320px"><div class="k">planned</div><div class="v">v1.5.0</div><div class="th">The memory reads meaning</div></div>
+  <div class="stop el" data-in="12.0" style="left:1405px;top:320px"><div class="k">planned</div><div class="v">v1.6.0</div><div class="th">The organ and the model evolve apart</div></div>
+  <div class="stop el" data-in="14.2" style="left:1660px;top:320px"><div class="k">planned</div><div class="v">v1.7.0</div><div class="th">Towards size</div><div class="c">the throughput at one hundred million parameters on a short run</div></div>
+  <div class="caption el" data-in="15.4" style="top:800px;font-size:22px">Each release: one story, <span class="ac">at least one measured row, one thing to try, its own DOI;</span> each item named, not declared, until its dated declaration.</div>
+  <div class="caption el" data-in="17.0" style="top:846px;font-size:20px;color:#9d9ac0">The order follows the dependencies, not a calendar; a release leaves when its story is measured and written into the record.</div>
+</section>
+
+<!-- S11 pillars -->
+<section class="scene" id="s11" data-t0="193.0" data-t1="201.0" data-globe="1">
+  <div class="pil el" data-in="0.2" style="left:140px;top:400px"><div class="ic">&#9673;</div><div class="n">Traceable</div><div class="d">cites its line by pointer, or abstains</div></div>
+  <div class="pil el" data-in="0.9" style="left:550px;top:400px"><div class="ic">&#9679;</div><div class="n">Sealed</div><div class="d">one key per scope, on your own node</div></div>
+  <div class="pil el" data-in="1.6" style="left:960px;top:400px"><div class="ic">{ }</div><div class="n">Open</div><div class="d">Apache 2.0 code, CC BY 4.0 documentation, a DOI; every number recomputable</div></div>
+  <div class="pil el" data-in="2.3" style="left:1370px;top:400px"><div class="ic">&#10005;</div><div class="n">Falsifiable</div><div class="d">declared before measured; the failures published with the rest</div></div>
+</section>
+
+<!-- S12 the end card -->
+<section class="scene" id="s12" data-t0="201.0" data-t1="215.0" data-globe="1">
+  <div class="logo el" data-in="0.2" style="top:220px">
+    <div class="mark"><i style="top:22px;width:30px"></i><i style="top:33px;width:22px"></i><i style="top:44px;width:30px"></i></div>
+    <div class="name">QUANTUM-CORTEX</div>
+  </div>
+  <div class="logo el" data-in="1.0" style="top:400px"><div class="tl">A sealed memory your model must cite or abstain from.</div></div>
+  <div class="logo el" data-in="1.8" style="top:442px"><div class="tl" style="font-size:21px;color:#a8a5c8">An open research record: not a product, not a chat model, not a claim about larger models.</div></div>
+  <div class="logo el" data-in="2.8" style="top:500px"><div class="by">Created by Nicolas Van Eeckhout &nbsp;·&nbsp; Win2Win SRL, Brussels</div></div>
+  <div class="logo el" data-in="3.6" style="top:546px"><div class="by" style="color:#b3b0cf">code Apache 2.0 &nbsp;·&nbsp; documentation CC BY 4.0 &nbsp;·&nbsp; concept DOI 10.5281/zenodo.23110775 &nbsp;·&nbsp; the next releases, built in the open</div></div>
+  <div class="logo el" data-in="4.6" style="top:590px"><span class="cta">Build on it with us</span></div>
+  <div class="logo el" data-in="5.4" style="top:666px"><div class="by" style="color:#a8a5c8">A result of your model on the protocol is a row published next to ours, with its attribution.</div></div>
+  <div class="logo el" data-in="6.2" style="top:720px"><div class="links mono"><b>github.com/vaneeckhoutnicolas/quantum-cortex</b><br>linkedin.com/in/vaneeckhout</div></div>
+</section>
+
+<div class="foot">quantum-cortex &nbsp;·&nbsp; © 2026 Nicolas Van Eeckhout, Win2Win SRL</div>
+
+<script>
+// ---------- deterministic helpers ----------
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const easeOut = p => 1 - Math.pow(1 - p, 3);
+const easeInOut = p => p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+// ---------- the background: a globe of nodes and arcs, continuous across the scenes, dimmed under the dense scenes ----------
+const cv = document.getElementById('bg'), ctx = cv.getContext('2d');
+const G = { cx: 1210, cy: 760, R: 600, tilt: 0.38, omega: 0.045 };
+const rng = mulberry32(20261111);
+const nodes = [];
+for (let i = 0; i < 90; i++) { const u = rng() * 2 - 1, ph = rng() * Math.PI * 2; const r = Math.sqrt(1 - u * u); nodes.push({ x: r * Math.cos(ph), y: u, z: r * Math.sin(ph), s: 1.5 + rng() * 2 }); }
+const arcs = [];
+for (let i = 0; i < nodes.length; i++) {
+  const d = nodes.map((n, j) => ({ j, d: Math.hypot(n.x - nodes[i].x, n.y - nodes[i].y, n.z - nodes[i].z) })).filter(o => o.j !== i).sort((a, b) => a.d - b.d).slice(0, 2);
+  for (const o of d) if (!arcs.some(a => (a.a === i && a.b === o.j) || (a.a === o.j && a.b === i))) arcs.push({ a: i, b: o.j, period: 6 + rng() * 8, phase: rng(), dir: rng() < 0.5 ? 1 : -1 });
+}
+function rot(n, t) {
+  const th = G.omega * t; const x = n.x * Math.cos(th) + n.z * Math.sin(th), z = -n.x * Math.sin(th) + n.z * Math.cos(th);
+  const y = n.y * Math.cos(G.tilt) - z * Math.sin(G.tilt), z2 = n.y * Math.sin(G.tilt) + z * Math.cos(G.tilt);
+  return { X: G.cx + G.R * x, Y: G.cy - G.R * y, Z: z2 };
+}
+function slerp(a, b, p) {
+  const dot = clamp(a.x * b.x + a.y * b.y + a.z * b.z, -1, 1), om = Math.acos(dot), so = Math.sin(om) || 1e-6;
+  const wa = Math.sin((1 - p) * om) / so, wb = Math.sin(p * om) / so;
+  const v = { x: wa * a.x + wb * b.x, y: wa * a.y + wb * b.y, z: wa * a.z + wb * b.z };
+  const lift = 1 + 0.06 * Math.sin(p * Math.PI); return { x: v.x * lift, y: v.y * lift, z: v.z * lift };
+}
+function drawBackground(t, gain) {
+  ctx.clearRect(0, 0, 1920, 1080);
+  let g = ctx.createLinearGradient(0, 0, 0, 1080); g.addColorStop(0, '#0b0a1d'); g.addColorStop(1, '#09081a'); ctx.fillStyle = g; ctx.fillRect(0, 0, 1920, 1080);
+  g = ctx.createRadialGradient(420, 260, 0, 420, 260, 820); g.addColorStop(0, 'rgba(120, 100, 255, 0.16)'); g.addColorStop(1, 'rgba(120, 100, 255, 0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 1920, 1080);
+  g = ctx.createRadialGradient(1500, 900, 0, 1500, 900, 900); g.addColorStop(0, 'rgba(90, 70, 220, 0.16)'); g.addColorStop(1, 'rgba(90, 70, 220, 0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 1920, 1080);
+  ctx.globalAlpha = gain;
+  const proj = (lat, lon) => rot({ x: Math.cos(lat) * Math.cos(lon), y: Math.sin(lat), z: Math.cos(lat) * Math.sin(lon) }, t);
+  ctx.lineWidth = 1;
+  for (const pass of [0, 1]) {
+    ctx.strokeStyle = pass ? 'rgba(167, 139, 250, 0.11)' : 'rgba(167, 139, 250, 0.035)';
+    for (let la = -80; la <= 80; la += 20) { const lat = la * Math.PI / 180; ctx.beginPath(); let on = false; for (let lo = 0; lo <= 360; lo += 3) { const p = proj(lat, lo * Math.PI / 180); const front = p.Z > 0; if (front === !!pass) { if (!on) { ctx.moveTo(p.X, p.Y); on = true; } else ctx.lineTo(p.X, p.Y); } else on = false; } ctx.stroke(); }
+    for (let lo = 0; lo < 360; lo += 20) { const lon = lo * Math.PI / 180; ctx.beginPath(); let on = false; for (let la = -90; la <= 90; la += 3) { const p = proj(la * Math.PI / 180, lon); const front = p.Z > 0; if (front === !!pass) { if (!on) { ctx.moveTo(p.X, p.Y); on = true; } else ctx.lineTo(p.X, p.Y); } else on = false; } ctx.stroke(); }
+  }
+  const P = nodes.map(n => rot(n, t));
+  for (const a of arcs) {
+    const A = nodes[a.a], B = nodes[a.b]; const pts = []; for (let k = 0; k <= 16; k++) pts.push(rot(slerp(A, B, k / 16), t));
+    const front = (P[a.a].Z + P[a.b].Z) / 2 > 0;
+    ctx.strokeStyle = front ? 'rgba(185, 173, 252, 0.15)' : 'rgba(185, 173, 252, 0.04)'; ctx.lineWidth = 1.1; ctx.beginPath(); pts.forEach((p, k) => k ? ctx.lineTo(p.X, p.Y) : ctx.moveTo(p.X, p.Y)); ctx.stroke();
+    if (front) { let ph = ((t / a.period) + a.phase) % 1; if (a.dir < 0) ph = 1 - ph; const q = rot(slerp(A, B, ph), t); const gg = ctx.createRadialGradient(q.X, q.Y, 0, q.X, q.Y, 6); gg.addColorStop(0, 'rgba(255,255,255,0.8)'); gg.addColorStop(0.35, 'rgba(185,173,252,0.55)'); gg.addColorStop(1, 'rgba(185,173,252,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(q.X, q.Y, 6, 0, Math.PI * 2); ctx.fill(); }
+  }
+  for (const p of P) { const front = p.Z > 0; ctx.fillStyle = front ? 'rgba(207, 200, 255, 0.5)' : 'rgba(207, 200, 255, 0.1)'; ctx.beginPath(); ctx.arc(p.X, p.Y, front ? 2.0 : 1.4, 0, Math.PI * 2); ctx.fill(); }
+  ctx.globalAlpha = 1;
+  g = ctx.createLinearGradient(0, 0, 1920, 0); g.addColorStop(0, 'rgba(10, 9, 24, 0.6)'); g.addColorStop(0.6, 'rgba(10, 9, 24, 0.3)'); g.addColorStop(1, 'rgba(10, 9, 24, 0.2)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 1920, 1080);
+}
+
+// ---------- the scenes ----------
+const FADE_IN = 0.6, FADE_OUT = 0.5, EL_IN = 0.7, EL_OUT = 0.4;
+const scenes = [...document.querySelectorAll('.scene')].map(s => ({ el: s, t0: +s.dataset.t0, t1: +s.dataset.t1, globe: +(s.dataset.globe || 1), items: [...s.querySelectorAll('.el')], typed: [...s.querySelectorAll('[data-type]')], bars: [...s.querySelectorAll('[data-bar]')] }));
+for (const s of scenes) for (const x of s.typed) { x.dataset.full = x.textContent; }
+
+function globeGain(t) {
+  let gain = 1; for (const s of scenes) { if (t >= s.t0 && t < s.t1) { gain = s.globe; const nxt = scenes.find(x => x.t0 === s.t1); if (nxt && t > s.t1 - 1.0) gain = s.globe + (nxt.globe - s.globe) * (t - (s.t1 - 1.0)); } }
+  return gain;
+}
+
+function seek(t) {
+  drawBackground(t, globeGain(t));
+  for (const s of scenes) {
+    let a = 0;
+    if (t >= s.t0 && t < s.t1) a = Math.min(easeOut(clamp((t - s.t0) / FADE_IN, 0, 1)), 1 - easeInOut(clamp((t - (s.t1 - FADE_OUT)) / FADE_OUT, 0, 1)));
+    s.el.style.opacity = a.toFixed(3); s.el.style.display = a > 0 ? 'block' : 'none';
+    if (a <= 0) continue;
+    const lt = t - s.t0;
+    for (const e of s.items) {
+      const tin = +e.dataset.in, p = easeOut(clamp((lt - tin) / EL_IN, 0, 1));
+      let o = p, y = (1 - p) * 16;
+      if (e.dataset.out !== undefined) { const q = clamp((lt - (+e.dataset.out)) / EL_OUT, 0, 1); o = Math.min(o, 1 - q); if (q >= 1) o = 0; }
+      e.style.opacity = o.toFixed(3); e.style.transform = `translateY(${y.toFixed(2)}px)`;
+    }
+    for (const x of s.typed) { const [st, du] = x.dataset.type.split(',').map(Number); const full = x.dataset.full; const n = Math.round(clamp((lt - st) / du, 0, 1) * full.length); x.textContent = full.slice(0, n); const cur = x.nextElementSibling; if (cur) cur.style.opacity = (lt >= st && lt < st + du + 0.6) ? ((Math.floor(lt * 3) % 2) ? 1 : 0.2) : 0; }
+    for (const b of s.bars) { const [st, du, v] = b.dataset.bar.split(',').map(Number); b.style.width = (easeOut(clamp((lt - st) / du, 0, 1)) * v * 100).toFixed(2) + '%'; }
+    if (s.el.id === 's2') animS2(lt);
+    if (s.el.id === 's3') animS3(lt);
+    if (s.el.id === 's10') animS10(lt);
+  }
+}
+
+// ----- S2: the question's path through the organ, the journal and the model (the step times follow the captions) -----
+const svgNS = 'http://www.w3.org/2000/svg';
+function dotAt(group, path, p, r, color) {
+  const L = path.getTotalLength(); const pt = path.getPointAtLength(clamp(p, 0, 1) * L);
+  const c = document.createElementNS(svgNS, 'circle'); c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', r); c.setAttribute('fill', color || 'url(#dotg)'); group.appendChild(c);
+  const h = document.createElementNS(svgNS, 'circle'); h.setAttribute('cx', pt.x); h.setAttribute('cy', pt.y); h.setAttribute('r', r * 2.6); h.setAttribute('fill', color && color !== 'url(#dotg)' ? color : '#b9adfc'); h.setAttribute('fill-opacity', '0.18'); group.appendChild(h);
+}
+function trail(group, path, p, n, r, color) { for (let k = 1; k <= n; k++) dotAt(group, path, p - k * 0.035, r * (1 - k / (n + 1)), color); }
+function animS2(lt) {
+  const g = document.getElementById('flowdots'); while (g.firstChild) g.removeChild(g.firstChild);
+  const pq = document.getElementById('p-q'), poj = document.getElementById('p-oj'), pom = document.getElementById('p-om'), pmo = document.getElementById('p-mo'), pans = document.getElementById('p-ans');
+  // step 1 (3.4 to 6.5): the question's path appears and the dot travels it to the organ
+  pq.setAttribute('stroke-opacity', (0.5 * easeOut(clamp((lt - 3.4) / 0.6, 0, 1))).toFixed(3));
+  if (lt >= 4.0 && lt < 6.2) { const p = easeInOut((lt - 4.0) / 2.2); trail(g, pq, p, 4, 6); dotAt(g, pq, p, 8); }
+  // step 2 (6.9 to 10.0): the organ and the journal exchange, a pulse to the journal and back; the window chips appear in the DOM
+  if (lt >= 7.0 && lt < 8.2) { const p = easeInOut((lt - 7.0) / 1.2); trail(g, poj, p, 3, 5); dotAt(g, poj, p, 7); }
+  if (lt >= 8.2 && lt < 9.4) { const p = 1 - easeInOut((lt - 8.2) / 1.2); dotAt(g, poj, p, 7); dotAt(g, poj, clamp(p + 0.08, 0, 1), 5); dotAt(g, poj, clamp(p + 0.16, 0, 1), 4); }
+  // step 3 (10.4 to 13.3): the window travels to the model
+  if (lt >= 10.6 && lt < 12.4) { const p = easeInOut((lt - 10.6) / 1.8); dotAt(g, pom, p, 8); dotAt(g, pom, clamp(p - 0.1, 0, 1), 6); dotAt(g, pom, clamp(p - 0.2, 0, 1), 5); }
+  // step 4 (13.7 to 16.4): the model's citation goes back to the organ for the veto (amber), and returns admitted (green)
+  if (lt >= 14.0 && lt < 15.1) { const p = easeInOut((lt - 14.0) / 1.1); trail(g, pmo, p, 3, 5, '#f5b942'); dotAt(g, pmo, p, 7, '#f5b942'); }
+  if (lt >= 15.1 && lt < 16.2) { const p = 1 - easeInOut((lt - 15.1) / 1.1); dotAt(g, pmo, p, 7, '#4ade80'); }
+  // step 5 (16.8 to 19.4): the answer leaves the model
+  pans.setAttribute('stroke-opacity', (0.5 * easeOut(clamp((lt - 16.6) / 0.5, 0, 1))).toFixed(3));
+  if (lt >= 16.6 && lt < 18.0) { const p = easeInOut((lt - 16.6) / 1.4); trail(g, pans, p, 3, 5, '#4ade80'); dotAt(g, pans, p, 8, '#4ade80'); }
+  // the model chips: the one decoding today, then the swap named at the end
+  const chips = ['mA', 'mB', 'mC'].map(id => document.getElementById(id));
+  let on = 1; if (lt >= 20.2) on = Math.floor((lt - 20.2) / 0.9) % 3;
+  chips.forEach((c, i) => c.classList.toggle('on', i === on));
+}
+
+// ----- S3: the evicted line and the console's tag -----
+function animS3(lt) { document.getElementById('jl-ev').classList.toggle('ev', lt >= 20.0); document.getElementById('cons-tag').textContent = lt >= 19.4 ? 'illustration · not the program' : 'python -m cortex_c2b.companion_demo'; }
+
+// ----- S10: the roadmap's progress line and its stops -----
+const stopsX = [130, 385, 640, 895, 1150, 1405, 1660], stopsT = [1.0, 3.2, 5.4, 7.6, 9.8, 12.0, 14.2];
+function animS10(lt) {
+  const g = document.getElementById('rm-dots'); while (g.firstChild) g.removeChild(g.firstChild);
+  let x = 130; for (let i = 1; i < stopsT.length; i++) { if (lt >= stopsT[i]) x = stopsX[i]; else if (lt >= stopsT[i - 1]) { x = stopsX[i - 1] + (stopsX[i] - stopsX[i - 1]) * easeInOut(clamp((lt - stopsT[i - 1]) / (stopsT[i] - stopsT[i - 1]), 0, 1)); break; } }
+  const line = document.getElementById('rm-prog'); line.setAttribute('x2', x.toFixed(1));
+  stopsX.forEach((sx, i) => { if (lt < stopsT[i] - 0.3) return; const c = document.createElementNS(svgNS, 'circle'); c.setAttribute('cx', sx); c.setAttribute('cy', 440); c.setAttribute('r', i === 0 ? 11 : 9); c.setAttribute('fill', i === 0 ? '#f5b942' : '#0b0a1d'); c.setAttribute('stroke', i === 0 ? '#f5b942' : '#b9adfc'); c.setAttribute('stroke-width', '3'); g.appendChild(c); });
+  if (lt >= 1.0 && lt < stopsT[stopsT.length - 1]) { const c = document.createElementNS(svgNS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', 440); c.setAttribute('r', 7); c.setAttribute('fill', 'url(#dotg2)'); g.appendChild(c); const h = document.createElementNS(svgNS, 'circle'); h.setAttribute('cx', x.toFixed(1)); h.setAttribute('cy', 440); h.setAttribute('r', 18); h.setAttribute('fill', '#b9adfc'); h.setAttribute('fill-opacity', '0.18'); g.appendChild(h); }
+}
+(function () { const svg = document.querySelector('#s10 svg'); const d = document.createElementNS(svgNS, 'defs'); d.innerHTML = '<radialGradient id="dotg2"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#b9adfc"/><stop offset="1" stop-color="#b9adfc" stop-opacity="0"/></radialGradient>'; svg.insertBefore(d, svg.firstChild); })();
+
+window.seek = seek;
+window.TOTAL = 215.0;
+seek(0);
+</script>
+</body>
+</html>

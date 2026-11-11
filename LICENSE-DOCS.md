@@ -21,6 +21,12 @@ Where a file mixes code and prose (a notebook, a docstring), the Apache License 
 pretraining data is not part of this repository and carries its own licence (FineWeb-Edu,
 ODC-By 1.0, attributed in `NOTICE`).
 
+*Dated 2026-11-11.* The source files of the presentation video for partners under `docs/media/partners-video/`
+(`page.html`, `render.js`, `concat.sh`, `preview.js`, `script.js`, `music.py`) are source code and fall under the
+Apache License 2.0 by the scope paragraph above, although they sit under `docs/`; the folder's `README.md`, the
+poster `docs/figures/partners-video-poster.jpg` and the video file `docs/media/quantum-cortex-partners-v1.1.0-720p.mp4`
+are documentation under this licence.
+
 **Citing.** To cite the whitepaper or the repository, use `CITATION.cff`; the tag of each edition
 is the citable object.
 

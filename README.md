@@ -4,6 +4,12 @@
 
 **A small language model with a memory outside its weights: a sealed journal of episodes that the model must cite or abstain from, built so that every claim about it has a row, a file and a test that can fail.**
 
+<p align="center">
+  <a href="https://github.com/vaneeckhoutnicolas/quantum-cortex/blob/main/docs/media/quantum-cortex-partners-v1.1.0-720p.mp4" title="Watch the presentation for partners (3 min 35 s)"><img src="https://raw.githubusercontent.com/vaneeckhoutnicolas/quantum-cortex/main/docs/figures/partners-video-poster.jpg" alt="The presentation for partners, a video of 3 min 35 s: click to play" width="720"></a>
+  <br>
+  <sub><b>quantum-cortex for partners, in 3 min 35 s</b> (the state at v1.1.0): what the organ does and what the model does not, what the record claims and what it does not, what fails, what comes next. Click the image to play it (a 720p copy, 8.7 MB, <code>docs/media/</code>). The video carries no measured value of the record; the files that make it again from text are under <a href="https://github.com/vaneeckhoutnicolas/quantum-cortex/tree/main/docs/media/partners-video">docs/media/partners-video/</a>.</sub>
+</p>
+
 ## What it is
 
 quantum-cortex is a 27 million parameter byte level language model, trained from scratch by one researcher on a free GPU tier and a laptop, plus an *organ* that lives outside the weights: an append only journal of episodes, sealed under a key, each line carrying its address, its time and the evidence it rests on; a write gate that admits or refuses a line; an index that returns a small window of candidate lines for a question; a read path that hands the model that window with the organ's own similarity written on every line, and a veto that refuses a citation the organ marks weakly. The model reads the journal while it generates under one contract: cite the line it uses, by its pointer, or say it does not know. An episode the organ evicts is withdrawn from its memory of addresses; nothing is kept in the weights that the journal already holds. The name is the family's (Quantum Meridian, an orchestration project around existing models); nothing here is quantum computing.
